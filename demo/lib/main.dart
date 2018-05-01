@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pulltorefresh/pulltorefresh.dart';
 
 void main() => runApp(new MyApp());
 
@@ -44,6 +45,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+
+  List<Widget> _getDatas(){
+    List<Widget> data = [];
+    for(int i = 0;i<25;i++){
+      data.add(new Text('Data $i'));
+    }
+    return data;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -58,7 +69,15 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
       ),
-      body: new Container()
+      body: new SmartRefresher(
+
+        child: new ListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemExtent: 40.0,
+          children: _getDatas()
+        ),
+      )
     );
   }
 }
