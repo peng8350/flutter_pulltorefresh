@@ -18,11 +18,16 @@ class SmartRefresher extends StatefulWidget {
 
   final double triggerDistance;
 
+  final Color headerColor, footerColor;
+
   SmartRefresher(
       {@required this.child,
       this.enablePulldownRefresh: true,
       this.enablePullUpLoad: false,
-      this.header,this.triggerDistance:150.0,
+      this.headerColor: const Color(0xffdddddd),
+      this.footerColor: const Color(0xffdddddd),
+      this.header,
+      this.triggerDistance: 150.0,
       this.footer})
       : assert(child != null);
 
@@ -33,42 +38,57 @@ class SmartRefresher extends StatefulWidget {
 class _SmartRefresherState extends State<SmartRefresher>
     with TickerProviderStateMixin {
   AnimationController _headerController, _footerController;
-  double startDragY=0.0;
+  double _startDragY = 0.0;
+  GlobalKey _headerKey,_footerKey;
+  void _dismiss() {
+    if (!_headerController.isDismissed)
+      _headerController.animateTo(0.01,
+          curve: new Cubic(0.0, 0.0, 1.0, 1.0),
+          duration: const Duration(milliseconds: 150));
+    if (!_footerController.isDismissed)
+      _footerController.animateTo(0.01,
+          curve: new ElasticOutCurve(),
+          duration: const Duration(milliseconds: 150));
+  }
 
-  void _disapperate(){
-    if(!_headerController.isDismissed)
-    _headerController.animateTo(0.01,curve: new Cubic(0.0, 0.0, 1.0, 1.0),duration: const Duration(milliseconds: 100));
-    if(!_footerController.isDismissed)
-      _footerController.animateTo(0.01,curve: new Cubic(0.0, 0.0, 1.0, 1.0),duration: const Duration(milliseconds: 100));
+  // This method calculates the size of the head or tail that should be resized.
+  double _measureRatio(double nowY,double layoutSize,bool up){
+    double widgetSize=  context.size.height;
+    double ratio = ((nowY-_startDragY)/widgetSize)*0.5*(widgetSize/layoutSize);
+    if(up)
+      ratio=-ratio;
+    return ratio;
   }
 
   bool _onScrollUpdate(ScrollNotification notification) {
-    if(notification is ScrollStartNotification){
-      startDragY = notification.dragDetails.globalPosition.dy;
+    if (notification is ScrollStartNotification) {
+      _startDragY = notification.dragDetails.globalPosition.dy;
     }
-    if(notification is OverscrollNotification){
-        // This means that the distance that the user dragged occupies the height of the control.
-        final ratio = ((notification.dragDetails.globalPosition.dy-startDragY)/context.size.height)*7.0;
-        print(ratio);
-        _headerController.value= ratio;
-    }
-    if(notification is ScrollEndNotification){
-        _disapperate();
-    }
+    else if (notification is OverscrollNotification) {
 
-
+      if(notification.metrics.extentBefore==0){
+        final ratio =_measureRatio(notification.dragDetails.globalPosition.dy, _headerKey.currentContext.size.height,false);
+        _headerController.value = ratio;
+      }
+      else if(notification.metrics.extentAfter==0){
+        print(notification.dragDetails.globalPosition);
+        final ratio =_measureRatio(notification.dragDetails.globalPosition.dy, _footerKey.currentContext.size.height,true);
+        _footerController.value = ratio;
+      }
+    }
+    else if (notification is ScrollEndNotification) {
+      _startDragY= 0.0;
+      _dismiss();
+    }
 
     return false;
   }
 
-  bool _isiOS(){
-    return Theme.of(context).platform==TargetPlatform.iOS;
-  }
 
   // if your renderHeader null, it will be replaced by it
   Widget _buildDefaultHeader() {
     return new Container(
-      height:50.0,
+      height: 50.0,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -97,40 +117,48 @@ class _SmartRefresherState extends State<SmartRefresher>
   void initState() {
     // TODO: implement initState
     super.initState();
+    _headerKey = new GlobalKey();
+    _footerKey = new GlobalKey();
+    _headerController = new AnimationController(
+        vsync: this,
+        lowerBound: 0.0,
+        upperBound: double.infinity,
+        duration: const Duration(milliseconds: 200),
+        );
+    _footerController = new AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 200),
+        lowerBound: 0.0,
+        upperBound: double.infinity);
   }
-  
+
+
+  Widget _buildTopBottom(color,axisAlign,key,sizeFactor,layout){
+    return new Container(
+        color: color,
+        child: new SizeTransition(
+          axisAlignment: axisAlign,
+            sizeFactor : sizeFactor,
+        child: new Container(
+          key: key,
+          child: layout,
+        )),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    if(_isiOS()){
-
-      _headerController = new AnimationController(vsync: this,duration: const Duration(milliseconds: 200),lowerBound: 0.0,upperBound: 25.0);
-      _footerController = new AnimationController(vsync: this,duration: const Duration(milliseconds: 200),lowerBound: 0.0,upperBound: 1.0);
-    }
-    else{
-
-    }
 
     return new NotificationListener(
       child: new ListView(
         physics: new ClampingScrollPhysics(),
         children: <Widget>[
-
-         new Container(color:const Color(0xffdddddd),child:  new SizeTransition(
-
-             axisAlignment: 1.0,
-             sizeFactor: _headerController,
-             child: _buildDefaultHeader()),),
+          _buildTopBottom(widget.headerColor,1.0, _headerKey, _headerController, _buildDefaultHeader()),
           widget.child,
-          new SizeTransition(
-              axisAlignment: -1.0,
-              sizeFactor: _headerController,
-              child: _buildDefaultFooter())
+          _buildTopBottom(widget.footerColor,-1.0, _footerKey, _footerController, _buildDefaultFooter())
         ],
       ),
       onNotification: _onScrollUpdate,
     );
   }
-  
-  
 }
