@@ -48,48 +48,52 @@ class _SmartRefresherState extends State<SmartRefresher>
   double _dragPointY;
   GlobalKey _topKey, _bottomKey;
 
-  void _dismiss() {
-    if (!_topController.isDismissed)
-      _topController.animateTo(0.0,
-          curve: new Cubic(0.0, 0.0, 1.0, 1.0),
-          duration: const Duration(milliseconds: 150));
-    if (!_bottomController.isDismissed)
-      _bottomController.animateTo(0.0,
-          curve: new Cubic(0.0, 0.0, 1.0, 1.0),
-          duration: const Duration(milliseconds: 150));
+  //handle the scrollStartEvent
+  bool _handleScrollStart(ScrollStartNotification notification){
+    print("start");
+    _isDraging = true;
+    _dragPointY = notification.dragDetails.globalPosition.dy;
+    return false;
   }
 
-  // This method calculates the size of the head or tail that should be resized.
-  double _measureRatio(double offset) {
-    return offset.abs() / widget.triggerDistance;
+  //handle the scrollMoveEvent
+  bool _handleScrollMoving(ScrollUpdateNotification notification){
+    print("move");
+    if (notification.metrics.extentBefore == 0 ) {
+      _topController.value = _measureRatio(
+          notification.dragDetails.globalPosition.dy - _dragPointY);
+    }
+    if (notification.metrics.extentAfter == 0 ) {
+      _bottomController.value = _measureRatio(
+          _dragPointY - notification.dragDetails.globalPosition.dy);
+    }
+    return false;
+  }
+
+  //handle the scrollEndEvent
+  bool _handleScrollEnd(ScrollUpdateNotification notification){
+    print("end");
+    _isDraging = false;
+    _dragPointY = 0.0;
+    _dismiss();
+    return false;
   }
 
   /**
     this will handle the Scroll Event in ListView
    */
-  bool _onScrollUpdate(ScrollNotification notification) {
+  bool _dispatchScrollEvent(ScrollNotification notification) {
     if (notification is ScrollStartNotification) {
-      _isDraging = true;
-      _dragPointY = notification.dragDetails.globalPosition.dy;
+      return _handleScrollStart(notification);
     }
-
     if (notification is ScrollUpdateNotification) {
-      if (notification.metrics.extentBefore == 0 &&
-          notification.dragDetails != null) {
-        _topController.value = _measureRatio(
-            notification.dragDetails.globalPosition.dy - _dragPointY);
-        print(_topController.value);
-      }
-      if (notification.metrics.extentAfter == 0 &&
-          notification.dragDetails != null) {
-        _bottomController.value = _measureRatio(
-            _dragPointY - notification.dragDetails.globalPosition.dy);
-      }
+      //if dragDetails is null,This represents the user's finger out of the screen
       if (notification.dragDetails == null && _isDraging) {
-        _isDraging = false;
-        _dragPointY = 0.0;
-        _dismiss();
+        return _handleScrollEnd(notification);
       }
+      if (notification.dragDetails != null)
+      return _handleScrollMoving(notification);
+
     }
 
     return false;
@@ -123,6 +127,23 @@ class _SmartRefresherState extends State<SmartRefresher>
         ],
       ),
     );
+  }
+
+
+  void _dismiss() {
+    if (!_topController.isDismissed)
+      _topController.animateTo(0.0,
+          curve: new Cubic(0.0, 0.0, 1.0, 1.0),
+          duration: const Duration(milliseconds: 150));
+    if (!_bottomController.isDismissed)
+      _bottomController.animateTo(0.0,
+          curve: new Cubic(0.0, 0.0, 1.0, 1.0),
+          duration: const Duration(milliseconds: 150));
+  }
+
+  // This method calculates the size of the head or tail that should be resized.
+  double _measureRatio(double offset) {
+    return offset.abs() / widget.triggerDistance;
   }
 
   @override
@@ -170,7 +191,7 @@ class _SmartRefresherState extends State<SmartRefresher>
               _buildEmptySpace(_bottomKey, _bottomController),
             ],
           ),
-          onNotification: _onScrollUpdate,
+          onNotification: _dispatchScrollEvent,
         ),
       )
       ;
