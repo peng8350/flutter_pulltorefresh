@@ -6,6 +6,8 @@
 
 library pulltorefresh;
 
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +32,8 @@ class SmartRefresher extends StatefulWidget {
   final bool enablePulldownRefresh;
   // This value represents the distance that can be refreshed and trigger the callback drag.
   final double triggerDistance;
-
+  // completed show time
+  final int completDuration;
   final Color bottomColor;
   // upper and downer callback when you drag out of the distance
   final OnRefresh onRefresh;
@@ -46,6 +49,7 @@ class SmartRefresher extends StatefulWidget {
       this.header,
       this.refreshing: false,
       this.loading: false,
+      this.completDuration:500,
       this.onRefresh,
       this.onLoadmore,
       this.triggerDistance: 100.0,
@@ -183,6 +187,7 @@ class _SmartRefresherState extends State<SmartRefresher>
     _mDragPointY = null;
   }
 
+  //up indicate drag from top (pull down)
   void _dismiss(bool up) {
     /*
      why the value is 0.01?
@@ -193,12 +198,12 @@ class _SmartRefresherState extends State<SmartRefresher>
       if (!_mTopController.isDismissed)
         _mTopController.animateTo(0.01,
             curve: new Cubic(0.0, 0.0, 1.0, 1.0),
-            duration: const Duration(milliseconds: 150));
+            duration: const Duration(milliseconds: 200));
     } else {
       if (!_mBottomController.isDismissed)
         _mBottomController.animateTo(0.01,
             curve: new Cubic(0.0, 0.0, 1.0, 1.0),
-            duration: const Duration(milliseconds: 300));
+            duration: const Duration(milliseconds: 200));
     }
   }
 
@@ -218,6 +223,23 @@ class _SmartRefresherState extends State<SmartRefresher>
     }
   }
 
+  //up indicate drag from top (pull down)
+  void _changeMode2(bool isUp, mode) {
+    if (isUp) {
+      if (_mTopMode == mode) return;
+      if (_mTopMode == RefreshMode.refreshing) return;
+      setState(() {
+        _mTopMode = mode;
+      });
+    } else {
+      if (_mBottomMode == mode) return;
+      if (_mBottomMode == RefreshMode.refreshing) return;
+      setState(() {
+        _mBottomMode = mode;
+      });
+    }
+  }
+
   bool _isPullUp(ScrollNotification noti) {
     return noti.metrics.extentAfter == 0;
   }
@@ -229,6 +251,15 @@ class _SmartRefresherState extends State<SmartRefresher>
   // This method calculates the size of the head or tail that should be resized.
   double _measureRatio(double offset) {
     return offset / widget.triggerDistance;
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _mScrollController.dispose();
+    _mBottomController.dispose();
+    _mTopController.dispose();
+    super.dispose();
   }
 
   @override
@@ -259,15 +290,23 @@ class _SmartRefresherState extends State<SmartRefresher>
       if (widget.refreshing) {
         this._mTopMode = RefreshMode.refreshing;
       } else {
-        this._mTopMode = RefreshMode.idel;
-        _dismiss(true);
+
+        this._mTopMode = RefreshMode.completed;
+        new Future<Null>.delayed(new Duration(milliseconds: widget.completDuration),(){
+          this._mTopMode = RefreshMode.idel;
+          _dismiss(true);
+        });
       }
     } else if (oldWidget.loading != widget.loading) {
       if (widget.loading) {
         this._mBottomMode = RefreshMode.refreshing;
       } else {
-        this._mBottomMode = RefreshMode.idel;
-        _dismiss(false);
+        this._mBottomMode = RefreshMode.completed;
+        new Future<Null>.delayed(new Duration(milliseconds: widget.completDuration),(){
+          this._mBottomMode = RefreshMode.idel;
+          _dismiss(false);
+        });
+
       }
     }
     super.didUpdateWidget(oldWidget);
