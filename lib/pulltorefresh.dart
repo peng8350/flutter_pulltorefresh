@@ -1,4 +1,12 @@
+/**
+ Author: Jpeng
+ Email: peng8350@gmail.com
+ createTime:2018-05-01 11:39
+ */
+
 library pulltorefresh;
+
+import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -38,8 +46,8 @@ class SmartRefresher extends StatefulWidget {
       this.headerColor: const Color(0xffdddddd),
       this.footerColor: const Color(0xffdddddd),
       this.header,
-      this.refreshing,
-      this.loading,
+      this.refreshing: false,
+      this.loading: false,
       this.onRefresh,
       this.onLoadmore,
       this.triggerDistance: 100.0,
@@ -64,6 +72,8 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
+    // This is used to interupt useless callback when the pull up load rolls back.
+    if(notification.metrics.outOfRange&&notification.dragDetails==null){print("out"); return true;}
     if (_mIsDraging) return false;
     _mIsDraging = true;
     if (_mDragPointY == null &&
@@ -75,6 +85,7 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollMoveEvent
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
+
     bool isDown = _isPullDown(notification);
     bool isUp = _isPullUp(notification);
     // the reason why should do this,because Early touch at a specific location makes triggerdistance smaller.
@@ -110,16 +121,15 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _handleScrollEnd(ScrollNotification notification) {
     bool down = _isPullDown(notification);
     bool up = _isPullUp(notification);
+
     if ((!down && !up) ||
         (down && _mTopMode == RefreshMode.refreshing) ||
         (up && _mBottomMode == RefreshMode.refreshing)) {
-      _mIsDraging = false;
-      _mDragPointY = null;
+      _resumeVal();
       return false;
     }
     if (!_mReachMax) {
       _changeMode(notification, RefreshMode.idel);
-
       _dismiss(down ? down : false);
     } else {
       if (up) {
@@ -131,16 +141,20 @@ class _SmartRefresherState extends State<SmartRefresher>
           widget.onRefresh();
         }
       }
-      _changeMode(notification, RefreshMode.refreshing);
     }
-    _mReachMax = false;
-    _mIsDraging = false;
-    _mDragPointY = null;
+    _resumeVal();
     return false;
   }
 
   /**
-    this will handle the Scroll Event in ListView
+    this will handle the Scroll Event in ListView,
+    I find flutter one Bug:the doc said:Return true to cancel
+      the notification bubbling. Return false (or null) to
+      allow the notification to continue to be dispatched to
+      further ancestors.
+
+     I tried to return true,  But it didn't work,the event still
+      pass to me
    */
   bool _dispatchScrollEvent(ScrollNotification notification) {
     if (notification is ScrollStartNotification) {
@@ -160,7 +174,7 @@ class _SmartRefresherState extends State<SmartRefresher>
       }
     }
 
-    return false;
+    return true;
   }
 
   // if your renderHeader null, it will be replaced by it
@@ -205,7 +219,7 @@ class _SmartRefresherState extends State<SmartRefresher>
     );
   }
 
-  void _changeMode(notifi, mode) {
+  void _changeMode(ScrollNotification notifi, mode) {
     if (_isPullDown(notifi)) {
       if (_mTopMode == mode) return;
       if (_mTopMode == RefreshMode.refreshing) return;
@@ -221,6 +235,7 @@ class _SmartRefresherState extends State<SmartRefresher>
     }
   }
 
+
   bool _isPullUp(ScrollNotification noti) {
     return noti.metrics.extentAfter == 0;
   }
@@ -229,9 +244,21 @@ class _SmartRefresherState extends State<SmartRefresher>
     return noti.metrics.extentBefore == 0;
   }
 
+
+  // This method calculates the size of the head or tail that should be resized.
+  double _measureRatio(double offset) {
+    return offset / widget.triggerDistance;
+  }
+
+  void _resumeVal(){
+    _mReachMax = false;
+    _mIsDraging = false;
+    _mDragPointY = null;
+  }
+
   void _dismiss(bool up) {
     /*
-     why the value is 0.01? if you set the value to 0.01?
+     why the value is 0.01?
      If this value is 0, no controls will
      cause Flutter to automatically retrieve controls.
     */
@@ -244,13 +271,17 @@ class _SmartRefresherState extends State<SmartRefresher>
       if (!_mBottomController.isDismissed)
         _mBottomController.animateTo(0.01,
             curve: new Cubic(0.0, 0.0, 1.0, 1.0),
-            duration: const Duration(milliseconds: 150));
+            duration: const Duration(milliseconds: 300));
     }
   }
 
-  // This method calculates the size of the head or tail that should be resized.
-  double _measureRatio(double offset) {
-    return offset / widget.triggerDistance;
+  Widget _buildEmptySpace(controller) {
+    return new SizeTransition(
+        sizeFactor: controller,
+        child: new Container(
+          color: Colors.red,
+          height: 50.0,
+        ));
   }
 
   @override
@@ -262,23 +293,39 @@ class _SmartRefresherState extends State<SmartRefresher>
     _mScrollController = new ScrollController();
     _mTopController = new AnimationController(
       vsync: this,
-      value: 0.01,
+      lowerBound: 0.01,
       duration: const Duration(milliseconds: 200),
     );
     _mBottomController = new AnimationController(
       vsync: this,
-      value: 0.01,
+      lowerBound: 0.01,
       duration: const Duration(milliseconds: 200),
     );
   }
 
-  Widget _buildEmptySpace(controller) {
-    return new SizeTransition(
-        sizeFactor: controller,
-        child: new Container(
-          color: Colors.red,
-          height: 50.0,
-        ));
+  @override
+  void didUpdateWidget(SmartRefresher oldWidget) {
+    // TODO: implement didUpdateWidget
+    if(widget.refreshing==oldWidget.refreshing&&
+        oldWidget.loading==widget.loading)return;
+    if(widget.refreshing!=oldWidget.refreshing) {
+      if (widget.refreshing) {
+        this._mTopMode = RefreshMode.refreshing;
+      } else {
+        this._mTopMode = RefreshMode.idel;
+        _dismiss(true);
+      }
+    }
+    else if(oldWidget.loading!=widget.loading) {
+      if (widget.loading) {
+        this._mBottomMode = RefreshMode.refreshing;
+      } else {
+        this._mBottomMode = RefreshMode.idel;
+        _dismiss(false);
+      }
+    }
+    super.didUpdateWidget(oldWidget);
+
   }
 
   @override
@@ -304,3 +351,4 @@ class _SmartRefresherState extends State<SmartRefresher>
     });
   }
 }
+

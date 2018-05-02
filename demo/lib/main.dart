@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:pulltorefresh/pulltorefresh.dart';
 
 void main() => runApp(new MyApp());
@@ -45,6 +48,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  bool loading,refreshing;
+
   List<Widget> _getDatas(){
     List<Widget> data = [];
     for(int i = 0;i<25;i++){
@@ -52,7 +57,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return data;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: new Text(widget.title),
       ),
       body: new SmartRefresher(
+        refreshing: this.refreshing,
+        loading: this.loading,
         child: new ListView(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -76,10 +82,31 @@ class _MyHomePageState extends State<MyHomePage> {
           children: _getDatas()
         ),
         onRefresh: (){
-          print("Refreshed!!!");
+          setState(() {
+            refreshing = true;
+          });
+          new Future.delayed(const Duration(milliseconds: 2000),(){
+            setState(() {
+              refreshing = false;
+            });
+            print("Refreshed!!!");
+          });
+
         },
         onLoadmore: (){
-          print("Loadmored!!!");
+          setState(() {
+            loading = true;
+          });
+          new Future<Null>.delayed(const Duration(milliseconds: 2000),(){
+
+            return null;
+          }).then((Null val){
+            setState(() {
+              loading = false;
+            });
+            print("LoadComplete!!!");
+          });
+
         },
       )
     );
