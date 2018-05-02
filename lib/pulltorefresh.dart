@@ -18,7 +18,7 @@ class SmartRefresher extends StatefulWidget {
   final bool enablePullUpLoad;
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePulldownRefresh;
-
+  // This value represents the distance that can be refreshed and trigger the callback drag.
   final double triggerDistance;
 
   final Color headerColor, footerColor;
@@ -40,12 +40,14 @@ class SmartRefresher extends StatefulWidget {
 
 class _SmartRefresherState extends State<SmartRefresher>
     with TickerProviderStateMixin {
+  // the two controllers can controll the top and bottom empty spacing widgets.
   AnimationController _topController, _bottomController;
-  ScrollController _scrollController = new ScrollController();
-  RefreshMode _topMode = RefreshMode.idel, _bottomMode = RefreshMode.idel;
-  // the bool will check the user if dragging on the screen
-  bool _isDraging,_reachMax;
-  double _dragPointY;
+  // Represents the state of the upper and lower two refreshes.
+  RefreshMode _topMode, _bottomMode;
+  // the bool will check the user if dragging on the screen.
+  bool _isDraging = false, _reachMax = false;
+  // the ScrollStart Drag Point Y
+  double _dragPointY = 0.0;
 
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
@@ -57,34 +59,54 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollMoveEvent
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
-    if (isPullUp(notification)&&_topMode!=RefreshMode.refreshing) {
-
+    bool isDown = _isPullDown(notification);
+    bool isUp = _isPullUp(notification);
+    if (!isDown && !isUp) {
+      return false;
+    }
+    if (isDown && _topMode != RefreshMode.refreshing) {
       _topController.value = _measureRatio(
           notification.dragDetails.globalPosition.dy - _dragPointY);
       _reachMax = _topController.value == 1.0;
-    } else if(_bottomMode!=RefreshMode.refreshing){
+
+      if (_reachMax) {
+        _changeMode(notification, RefreshMode.canRefresh);
+      } else {
+        _changeMode(notification, RefreshMode.startDrag);
+      }
+    } else if (isUp && _bottomMode != RefreshMode.refreshing) {
       _bottomController.value = _measureRatio(
           _dragPointY - notification.dragDetails.globalPosition.dy);
       _reachMax = _bottomController.value == 1.0;
+      if (_reachMax) {
+        _changeMode(notification, RefreshMode.canRefresh);
+      } else {
+        _changeMode(notification, RefreshMode.startDrag);
+      }
     }
-    if (_reachMax) {
-      _changeMode(notification, RefreshMode.canRefresh);
-    } else {
-      _changeMode(notification, RefreshMode.startDrag);
-    }
+
     return false;
   }
 
   //handle the scrollEndEvent
-  bool _handleScrollEnd(ScrollUpdateNotification notification) {
-
-    if(!_reachMax) {
+  bool _handleScrollEnd(ScrollNotification notification) {
+    print(_isDraging);
+    bool down = _isPullDown(notification);
+    bool up = _isPullUp(notification);
+    if ((!down && !up) ||
+        (down && _topMode == RefreshMode.refreshing) ||
+        (up && _bottomMode == RefreshMode.refreshing)) {
+      _isDraging = false;
+      _dragPointY = 0.0;
+      return false;
+    }
+    if (!_reachMax) {
       _changeMode(notification, RefreshMode.idel);
       _dismiss();
-    }
-    else{
+    } else {
       _changeMode(notification, RefreshMode.refreshing);
     }
+    _reachMax = false;
     _isDraging = false;
     _dragPointY = 0.0;
     return false;
@@ -101,9 +123,14 @@ class _SmartRefresherState extends State<SmartRefresher>
       //if dragDetails is null,This represents the user's finger out of the screen
       if (notification.dragDetails == null && _isDraging) {
         return _handleScrollEnd(notification);
-      }
-      if (notification.dragDetails != null)
+      } else if (notification.dragDetails != null) {
         return _handleScrollMoving(notification);
+      }
+    }
+    if (notification is ScrollEndNotification) {
+      if (_isDraging) {
+        return _handleScrollEnd(notification);
+      }
     }
 
     return false;
@@ -118,11 +145,13 @@ class _SmartRefresherState extends State<SmartRefresher>
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           const CupertinoActivityIndicator(),
-          new Text(mode == RefreshMode.startDrag
-              ? 'pull down refresh'
-              : mode == RefreshMode.canRefresh
-                  ? 'Refresh when release'
-                  : mode == RefreshMode.completed?'Refresh Completed': 'Refreshing....')
+          new Text(mode == RefreshMode.canRefresh
+              ? 'Refresh when release'
+              : mode == RefreshMode.completed
+                  ? 'Refresh Completed'
+                  : mode == RefreshMode.refreshing
+                      ? 'Refreshing....'
+                      : 'pull down refresh')
         ],
       ),
     );
@@ -140,41 +169,51 @@ class _SmartRefresherState extends State<SmartRefresher>
           new Text(mode == RefreshMode.startDrag
               ? 'pull up load'
               : mode == RefreshMode.canRefresh
-              ? 'Loadmore when release'
-              : mode == RefreshMode.completed?'Load Completed': 'LoadMore....')
+                  ? 'Loadmore when release'
+                  : mode == RefreshMode.completed
+                      ? 'Load Completed'
+                      : 'LoadMore....')
         ],
       ),
     );
   }
 
-  void _changeMode(ScrollNotification notifi, RefreshMode mode) {
-
-    if (notifi.metrics.extentBefore == 0) {
+  void _changeMode(notifi, mode) {
+    if (_isPullDown(notifi)) {
       if (_topMode == mode) return;
-      if(_topMode==RefreshMode.refreshing)return;
-        setState(() {
+      if (_topMode == RefreshMode.refreshing) return;
+      setState(() {
         _topMode = mode;
       });
-    } else {
+    } else if (_isPullUp(notifi)) {
       if (_bottomMode == mode) return;
-      if(_bottomMode==RefreshMode.refreshing)return;
+      if (_bottomMode == RefreshMode.refreshing) return;
       setState(() {
         _bottomMode = mode;
       });
     }
   }
 
-  bool isPullUp(ScrollNotification noti) {
+  bool _isPullUp(ScrollNotification noti) {
+    return noti.metrics.extentAfter == 0;
+  }
+
+  bool _isPullDown(ScrollNotification noti) {
     return noti.metrics.extentBefore == 0;
   }
 
   void _dismiss() {
+    /*
+     why the value is 0.01? if you set the value to 0.01?
+     If this value is 0, no controls will
+     cause Flutter to automatically retrieve controls.
+    */
     if (!_topController.isDismissed)
-      _topController.animateTo(0.0,
+      _topController.animateTo(0.01,
           curve: new Cubic(0.0, 0.0, 1.0, 1.0),
           duration: const Duration(milliseconds: 150));
     if (!_bottomController.isDismissed)
-      _bottomController.animateTo(0.0,
+      _bottomController.animateTo(0.01,
           curve: new Cubic(0.0, 0.0, 1.0, 1.0),
           duration: const Duration(milliseconds: 150));
   }
@@ -188,35 +227,36 @@ class _SmartRefresherState extends State<SmartRefresher>
   void initState() {
     // TODO: implement initState
     super.initState();
+    _bottomMode = RefreshMode.idel;
+    _topMode = RefreshMode.idel;
     _topController = new AnimationController(
       vsync: this,
+      value: 0.01,
       duration: const Duration(milliseconds: 200),
     );
     _bottomController = new AnimationController(
       vsync: this,
+      value: 0.01,
       duration: const Duration(milliseconds: 200),
     );
   }
 
-  Widget _buildEmptySpace(sizeFactor) {
-    return new Container(
-      child: new SizeTransition(
-          sizeFactor: sizeFactor,
-          child: new Container(
-            height: 50.0,
-          )),
-    );
+  Widget _buildEmptySpace(controller) {
+    return new SizeTransition(
+        sizeFactor: controller,
+        child: new Container(
+          color: Colors.red,
+          height: 50.0,
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
     return new LayoutBuilder(builder: (context, BoxConstraints size) {
-      print(size.biggest.height);
       return new OverflowBox(
         maxHeight: size.biggest.height + 100.0,
         child: new NotificationListener(
           child: new ListView(
-            controller: _scrollController,
             physics: new RefreshScrollPhysics(),
             children: <Widget>[
               _buildEmptySpace(_topController),
