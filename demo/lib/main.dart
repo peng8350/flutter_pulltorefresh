@@ -127,6 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
         footerBuilder: _buildHeader,
         refreshing: this.refreshing,
         loading: this.loading,
+        completDuration: 10000,
         child: new Container(
           color: const Color(0xffffffff),
           child: new ListView(

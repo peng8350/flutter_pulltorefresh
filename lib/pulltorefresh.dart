@@ -78,8 +78,7 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _handleScrollStart(ScrollStartNotification notification) {
     // This is used to interupt useless callback when the pull up load rolls back.
     if (notification.metrics.outOfRange && notification.dragDetails == null) {
-      print("out");
-      return true;
+      return false;
     }
     if (_mIsDraging) return false;
     _mIsDraging = true;
@@ -92,15 +91,10 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollMoveEvent
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
-    bool isDown = _isPullDown(notification);
-    bool isUp = _isPullUp(notification);
-    // the reason why should do this,because Early touch at a specific location makes triggerdistance smaller.
-
-    if (!isDown && !isUp) {
-      return false;
-    }
+    bool down = _isPullDown(notification);
+    bool up = _isPullUp(notification);
     if (_mDragPointY == null) _mDragPointY = _mScrollController.offset;
-    if (isDown && _mTopMode != RefreshMode.refreshing) {
+    if (down ) {
       _mTopController.value =
           _measureRatio(_mDragPointY - _mScrollController.offset);
       _mReachMax = _mTopController.value == 1.0;
@@ -109,7 +103,7 @@ class _SmartRefresherState extends State<SmartRefresher>
       } else {
         _changeMode(notification, RefreshMode.startDrag);
       }
-    } else if (isUp && _mBottomMode != RefreshMode.refreshing) {
+    } else{
       _mBottomController.value =
           _measureRatio(_mScrollController.offset - _mDragPointY);
       _mReachMax = _mBottomController.value == 1.0;
@@ -127,13 +121,6 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _handleScrollEnd(ScrollNotification notification) {
     bool down = _isPullDown(notification);
     bool up = _isPullUp(notification);
-
-    if ((!down && !up) ||
-        (down && _mTopMode == RefreshMode.refreshing) ||
-        (up && _mBottomMode == RefreshMode.refreshing)) {
-      _resumeVal();
-      return false;
-    }
     if (!_mReachMax) {
       _changeMode(notification, RefreshMode.idel);
       _dismiss(down ? down : false);
@@ -162,6 +149,15 @@ class _SmartRefresherState extends State<SmartRefresher>
       pass to me
    */
   bool _dispatchScrollEvent(ScrollNotification notification) {
+
+    bool down = _isPullDown(notification);
+    bool up = _isPullUp(notification);
+    // the reason why should do this,because Early touch at a specific location makes triggerdistance smaller.
+    if ((!down && !up) ||
+        (down && (_mTopMode == RefreshMode.refreshing||_mTopMode==RefreshMode.completed)) ||
+        (up && (_mBottomMode == RefreshMode.refreshing||_mBottomMode==RefreshMode.completed))) {
+      return false;
+    }
     if (notification is ScrollStartNotification) {
       return _handleScrollStart(notification);
     }
@@ -216,23 +212,6 @@ class _SmartRefresherState extends State<SmartRefresher>
         _mTopMode = mode;
       });
     } else if (_isPullUp(notifi)) {
-      if (_mBottomMode == mode) return;
-      if (_mBottomMode == RefreshMode.refreshing) return;
-      setState(() {
-        _mBottomMode = mode;
-      });
-    }
-  }
-
-  //up indicate drag from top (pull down)
-  void _changeMode2(bool isUp, mode) {
-    if (isUp) {
-      if (_mTopMode == mode) return;
-      if (_mTopMode == RefreshMode.refreshing) return;
-      setState(() {
-        _mTopMode = mode;
-      });
-    } else {
       if (_mBottomMode == mode) return;
       if (_mBottomMode == RefreshMode.refreshing) return;
       setState(() {

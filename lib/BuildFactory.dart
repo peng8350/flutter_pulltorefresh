@@ -55,13 +55,11 @@ class BuildFactory{
     );
   }
 
-  Widget buildEmptySpace(controller) {
-    return new SizeTransition(
-        sizeFactor: controller,
-        child: new Container(
-          color: Colors.red,
-          height: 50.0,
-        ));
-  }
+  Widget buildEmptySpace(controller) => new SizeTransition(
+      sizeFactor: controller,
+      child: new Container(
+        height: 50.0,
+      )
+  );
 
 }
