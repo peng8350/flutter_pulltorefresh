@@ -5,6 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'refreshPhysics.dart';
 
+typedef void OnRefresh();
+typedef void OnLoadmore();
+
 enum RefreshMode { idel, startDrag, canRefresh, refreshing, completed }
 
 class SmartRefresher extends StatefulWidget {
@@ -22,6 +25,10 @@ class SmartRefresher extends StatefulWidget {
   final double triggerDistance;
 
   final Color headerColor, footerColor;
+  // upper and downer callback when you drag out of the distance
+  final OnRefresh onRefresh;
+  final OnLoadmore onLoadmore;
+
 
   SmartRefresher(
       {@required this.child,
@@ -29,7 +36,7 @@ class SmartRefresher extends StatefulWidget {
       this.enablePullUpLoad: false,
       this.headerColor: const Color(0xffdddddd),
       this.footerColor: const Color(0xffdddddd),
-      this.header,
+      this.header,this.onRefresh,this.onLoadmore,
       this.triggerDistance: 150.0,
       this.footer})
       : assert(child != null);
@@ -90,7 +97,6 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollEndEvent
   bool _handleScrollEnd(ScrollNotification notification) {
-    print(_isDraging);
     bool down = _isPullDown(notification);
     bool up = _isPullUp(notification);
     if ((!down && !up) ||
@@ -102,8 +108,19 @@ class _SmartRefresherState extends State<SmartRefresher>
     }
     if (!_reachMax) {
       _changeMode(notification, RefreshMode.idel);
+
       _dismiss();
     } else {
+      if(up){
+        if(widget.onLoadmore!=null){
+          widget.onLoadmore();
+        }
+      }
+      else{
+        if(widget.onRefresh!=null){
+          widget.onRefresh();
+        }
+      }
       _changeMode(notification, RefreshMode.refreshing);
     }
     _reachMax = false;

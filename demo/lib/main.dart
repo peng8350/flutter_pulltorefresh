@@ -75,6 +75,12 @@ class _MyHomePageState extends State<MyHomePage> {
           itemExtent: 40.0,
           children: _getDatas()
         ),
+        onRefresh: (){
+          print("Refreshed!!!");
+        },
+        onLoadmore: (){
+          print("Loadmored!!!");
+        },
       )
     );
   }
