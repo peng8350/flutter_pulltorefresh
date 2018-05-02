@@ -3,10 +3,9 @@ library pulltorefresh;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'refreshPhysics.dart';
 
-enum RefreshMode{
-  idel,startDrag,canRefresh,refreshing,completed
-}
+enum RefreshMode { idel, startDrag, canRefresh, refreshing, completed }
 
 class SmartRefresher extends StatefulWidget {
   /*
@@ -31,7 +30,7 @@ class SmartRefresher extends StatefulWidget {
       this.headerColor: const Color(0xffdddddd),
       this.footerColor: const Color(0xffdddddd),
       this.header,
-      this.triggerDistance: 150.0,
+      this.triggerDistance: 80.0,
       this.footer})
       : assert(child != null);
 
@@ -42,31 +41,54 @@ class SmartRefresher extends StatefulWidget {
 class _SmartRefresherState extends State<SmartRefresher>
     with TickerProviderStateMixin {
   AnimationController _topController, _bottomController;
-  ScrollController _scrollController=new ScrollController();
-  RefreshMode _topMode,_bottomMode;
+  ScrollController _scrollController = new ScrollController();
+  RefreshMode _topMode = RefreshMode.idel, _bottomMode = RefreshMode.idel;
+  // the bool will check the user if dragging on the screen
+  bool _isDraging;
+  double _dragPointY;
   GlobalKey _topKey, _bottomKey;
 
   void _dismiss() {
     if (!_topController.isDismissed)
-      _topController.animateTo(0.01,
+      _topController.animateTo(0.0,
           curve: new Cubic(0.0, 0.0, 1.0, 1.0),
           duration: const Duration(milliseconds: 150));
     if (!_bottomController.isDismissed)
-      _bottomController.animateTo(0.01,
+      _bottomController.animateTo(0.0,
           curve: new Cubic(0.0, 0.0, 1.0, 1.0),
           duration: const Duration(milliseconds: 150));
   }
 
   // This method calculates the size of the head or tail that should be resized.
   double _measureRatio(double offset) {
-    return offset.abs()/40.0;
+    return offset.abs() / widget.triggerDistance;
   }
 
+  /**
+    this will handle the Scroll Event in ListView
+   */
   bool _onScrollUpdate(ScrollNotification notification) {
-    if (notification is ScrollUpdateNotification) {
+    if (notification is ScrollStartNotification) {
+      _isDraging = true;
+      _dragPointY = notification.dragDetails.globalPosition.dy;
+    }
 
-      if(notification.metrics.extentBefore==0&&notification.dragDetails!=null){
-        _topController.value =_measureRatio(_scrollController.offset);
+    if (notification is ScrollUpdateNotification) {
+      if (notification.metrics.extentBefore == 0 &&
+          notification.dragDetails != null) {
+        _topController.value = _measureRatio(
+            notification.dragDetails.globalPosition.dy - _dragPointY);
+        print(_topController.value);
+      }
+      if (notification.metrics.extentAfter == 0 &&
+          notification.dragDetails != null) {
+        _bottomController.value = _measureRatio(
+            _dragPointY - notification.dragDetails.globalPosition.dy);
+      }
+      if (notification.dragDetails == null && _isDraging) {
+        _isDraging = false;
+        _dragPointY = 0.0;
+        _dismiss();
       }
     }
 
@@ -74,9 +96,10 @@ class _SmartRefresherState extends State<SmartRefresher>
   }
 
   // if your renderHeader null, it will be replaced by it
-  Widget _buildDefaultHeader() {
+  Widget _buildDefaultHeader(BuildContext context, RefreshMode mode) {
     return new Container(
       height: 50.0,
+      alignment: Alignment.bottomCenter,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -88,9 +111,10 @@ class _SmartRefresherState extends State<SmartRefresher>
   }
 
   // if your renderFooter null, it will be replaced by it
-  Widget _buildDefaultFooter() {
+  Widget _buildDefaultFooter(BuildContext context, RefreshMode mode) {
     return new Container(
       height: 50.0,
+      alignment: Alignment.topCenter,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -109,13 +133,12 @@ class _SmartRefresherState extends State<SmartRefresher>
     _bottomKey = new GlobalKey();
     _topController = new AnimationController(
       vsync: this,
-
       duration: const Duration(milliseconds: 200),
     );
     _bottomController = new AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 200),
-  );
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
   }
 
   Widget _buildEmptySpace(key, sizeFactor) {
@@ -132,27 +155,26 @@ class _SmartRefresherState extends State<SmartRefresher>
   @override
   Widget build(BuildContext context) {
     return new LayoutBuilder(builder: (context, BoxConstraints size) {
+      print(size.biggest.height );
       return new OverflowBox(
         maxHeight: size.biggest.height+100.0,
-        alignment: Alignment.center,
         child: new NotificationListener(
-          child:
-             new ListView(
-               controller: _scrollController,
-              physics: new BouncingScrollPhysics(),
-              children: <Widget>[
-                _buildEmptySpace(_topKey,_topController),
-                _buildDefaultHeader(),
-                widget.child,
-                _buildDefaultFooter(),
-                _buildEmptySpace(_bottomKey,_bottomController),
-              ],
-            ),
-
+          child: new ListView(
+            controller: _scrollController,
+            physics: new RefreshScrollPhysics(),
+            children: <Widget>[
+              _buildEmptySpace(_topKey, _topController),
+              _buildDefaultHeader(context, _topMode),
+              widget.child,
+              _buildDefaultFooter(context, _bottomMode),
+              _buildEmptySpace(_bottomKey, _bottomController),
+            ],
+          ),
           onNotification: _onScrollUpdate,
         ),
-
-      );
+      )
+      ;
     });
   }
 }
+

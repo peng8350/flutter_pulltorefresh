@@ -45,10 +45,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-
   List<Widget> _getDatas(){
     List<Widget> data = [];
-    for(int i = 0;i<25;i++){
+    for(int i = 0;i<5;i++){
       data.add(new Text('Data $i'));
     }
     return data;
@@ -70,10 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: new Text(widget.title),
       ),
       body: new SmartRefresher(
-
         child: new ListView(
-          shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
           itemExtent: 40.0,
           children: _getDatas()
         ),
