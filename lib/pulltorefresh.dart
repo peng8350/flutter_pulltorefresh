@@ -32,7 +32,7 @@ class SmartRefresher extends StatefulWidget {
   // This value represents the distance that can be refreshed and trigger the callback drag.
   final double triggerDistance;
 
-  final Color headerColor, footerColor;
+  final Color bottomColor;
   // upper and downer callback when you drag out of the distance
   final OnRefresh onRefresh;
   final OnLoadmore onLoadmore;
@@ -43,8 +43,7 @@ class SmartRefresher extends StatefulWidget {
       {@required this.child,
       this.enablePulldownRefresh: true,
       this.enablePullUpLoad: false,
-      this.headerColor: const Color(0xffdddddd),
-      this.footerColor: const Color(0xffdddddd),
+      this.bottomColor: const Color(0xffdddddd),
       this.header,
       this.refreshing: false,
       this.loading: false,
@@ -331,21 +330,24 @@ class _SmartRefresherState extends State<SmartRefresher>
   @override
   Widget build(BuildContext context) {
     return new LayoutBuilder(builder: (context, BoxConstraints size) {
-      return new OverflowBox(
-        maxHeight: size.biggest.height + 100.0,
-        child: new NotificationListener(
-          child: new ListView(
-            controller: _mScrollController,
-            physics: new RefreshScrollPhysics(),
-            children: <Widget>[
-              _buildEmptySpace(_mTopController),
-              _buildDefaultHeader(context, _mTopMode),
-              widget.child,
-              _buildDefaultFooter(context, _mBottomMode),
-              _buildEmptySpace(_mBottomController),
-            ],
+      return new Container(
+        color:widget.bottomColor,
+        child: new OverflowBox(
+          maxHeight: size.biggest.height + 100.0,
+          child: new NotificationListener(
+            child: new ListView(
+              controller: _mScrollController,
+              physics: new RefreshScrollPhysics(),
+              children: <Widget>[
+                _buildEmptySpace(_mTopController),
+                _buildDefaultHeader(context, _mTopMode),
+                widget.child,
+                _buildDefaultFooter(context, _mBottomMode),
+                _buildEmptySpace(_mBottomController),
+              ],
+            ),
+            onNotification: _dispatchScrollEvent,
           ),
-          onNotification: _dispatchScrollEvent,
         ),
       );
     });

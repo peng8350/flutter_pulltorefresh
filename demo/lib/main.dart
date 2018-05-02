@@ -58,6 +58,35 @@ class _MyHomePageState extends State<MyHomePage> {
     return data;
   }
 
+  void _onLoadMore(){
+    setState(() {
+      loading = true;
+    });
+    new Future<Null>.delayed(const Duration(milliseconds: 2000),(){
+
+      return null;
+    }).then((Null val){
+      setState(() {
+        loading = false;
+      });
+      print("LoadComplete!!!");
+    });
+
+  }
+
+  void _onRefresh(){
+    setState(() {
+      refreshing = true;
+    });
+    new Future.delayed(const Duration(milliseconds: 2000),(){
+      setState(() {
+        refreshing = false;
+      });
+      print("Refreshed!!!");
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -75,39 +104,17 @@ class _MyHomePageState extends State<MyHomePage> {
       body: new SmartRefresher(
         refreshing: this.refreshing,
         loading: this.loading,
-        child: new ListView(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemExtent: 40.0,
-          children: _getDatas()
+        child: new Container(
+          color: const Color(0xffffffff),
+          child: new ListView(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemExtent: 40.0,
+              children: _getDatas()
+          ),
         ),
-        onRefresh: (){
-          setState(() {
-            refreshing = true;
-          });
-          new Future.delayed(const Duration(milliseconds: 2000),(){
-            setState(() {
-              refreshing = false;
-            });
-            print("Refreshed!!!");
-          });
-
-        },
-        onLoadmore: (){
-          setState(() {
-            loading = true;
-          });
-          new Future<Null>.delayed(const Duration(milliseconds: 2000),(){
-
-            return null;
-          }).then((Null val){
-            setState(() {
-              loading = false;
-            });
-            print("LoadComplete!!!");
-          });
-
-        },
+        onRefresh: _onRefresh,
+        onLoadmore: _onLoadMore,
       )
     );
   }
