@@ -28,7 +28,8 @@ class SmartRefresher extends StatefulWidget {
   // upper and downer callback when you drag out of the distance
   final OnRefresh onRefresh;
   final OnLoadmore onLoadmore;
-
+  //this will influerence the RefreshMode
+  final bool refreshing, loading;
 
   SmartRefresher(
       {@required this.child,
@@ -36,8 +37,12 @@ class SmartRefresher extends StatefulWidget {
       this.enablePullUpLoad: false,
       this.headerColor: const Color(0xffdddddd),
       this.footerColor: const Color(0xffdddddd),
-      this.header,this.onRefresh,this.onLoadmore,
-      this.triggerDistance: 150.0,
+      this.header,
+      this.refreshing,
+      this.loading,
+      this.onRefresh,
+      this.onLoadmore,
+      this.triggerDistance: 100.0,
       this.footer})
       : assert(child != null);
 
@@ -48,18 +53,22 @@ class SmartRefresher extends StatefulWidget {
 class _SmartRefresherState extends State<SmartRefresher>
     with TickerProviderStateMixin {
   // the two controllers can controll the top and bottom empty spacing widgets.
-  AnimationController _topController, _bottomController;
+  AnimationController _mTopController, _mBottomController;
+  ScrollController _mScrollController;
   // Represents the state of the upper and lower two refreshes.
-  RefreshMode _topMode, _bottomMode;
+  RefreshMode _mTopMode, _mBottomMode;
   // the bool will check the user if dragging on the screen.
-  bool _isDraging = false, _reachMax = false;
+  bool _mIsDraging = false, _mReachMax = false;
   // the ScrollStart Drag Point Y
-  double _dragPointY = 0.0;
+  double _mDragPointY = 0.0;
 
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
-    _isDraging = true;
-    _dragPointY = notification.dragDetails.globalPosition.dy;
+    if (_mIsDraging) return false;
+    _mIsDraging = true;
+    if (_mDragPointY == null &&
+        (_isPullUp(notification) || _isPullDown(notification)))
+      _mDragPointY = _mScrollController.offset;
     _changeMode(notification, RefreshMode.startDrag);
     return false;
   }
@@ -68,24 +77,26 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
     bool isDown = _isPullDown(notification);
     bool isUp = _isPullUp(notification);
+    // the reason why should do this,because Early touch at a specific location makes triggerdistance smaller.
+
     if (!isDown && !isUp) {
       return false;
     }
-    if (isDown && _topMode != RefreshMode.refreshing) {
-      _topController.value = _measureRatio(
-          notification.dragDetails.globalPosition.dy - _dragPointY);
-      _reachMax = _topController.value == 1.0;
-
-      if (_reachMax) {
+    if (_mDragPointY == null) _mDragPointY = _mScrollController.offset;
+    if (isDown && _mTopMode != RefreshMode.refreshing) {
+      _mTopController.value =
+          _measureRatio(_mDragPointY - _mScrollController.offset);
+      _mReachMax = _mTopController.value == 1.0;
+      if (_mReachMax) {
         _changeMode(notification, RefreshMode.canRefresh);
       } else {
         _changeMode(notification, RefreshMode.startDrag);
       }
-    } else if (isUp && _bottomMode != RefreshMode.refreshing) {
-      _bottomController.value = _measureRatio(
-          _dragPointY - notification.dragDetails.globalPosition.dy);
-      _reachMax = _bottomController.value == 1.0;
-      if (_reachMax) {
+    } else if (isUp && _mBottomMode != RefreshMode.refreshing) {
+      _mBottomController.value =
+          _measureRatio(_mScrollController.offset - _mDragPointY);
+      _mReachMax = _mBottomController.value == 1.0;
+      if (_mReachMax) {
         _changeMode(notification, RefreshMode.canRefresh);
       } else {
         _changeMode(notification, RefreshMode.startDrag);
@@ -100,32 +111,31 @@ class _SmartRefresherState extends State<SmartRefresher>
     bool down = _isPullDown(notification);
     bool up = _isPullUp(notification);
     if ((!down && !up) ||
-        (down && _topMode == RefreshMode.refreshing) ||
-        (up && _bottomMode == RefreshMode.refreshing)) {
-      _isDraging = false;
-      _dragPointY = 0.0;
+        (down && _mTopMode == RefreshMode.refreshing) ||
+        (up && _mBottomMode == RefreshMode.refreshing)) {
+      _mIsDraging = false;
+      _mDragPointY = null;
       return false;
     }
-    if (!_reachMax) {
+    if (!_mReachMax) {
       _changeMode(notification, RefreshMode.idel);
 
-      _dismiss();
+      _dismiss(down ? down : false);
     } else {
-      if(up){
-        if(widget.onLoadmore!=null){
+      if (up) {
+        if (widget.onLoadmore != null) {
           widget.onLoadmore();
         }
-      }
-      else{
-        if(widget.onRefresh!=null){
+      } else {
+        if (widget.onRefresh != null) {
           widget.onRefresh();
         }
       }
       _changeMode(notification, RefreshMode.refreshing);
     }
-    _reachMax = false;
-    _isDraging = false;
-    _dragPointY = 0.0;
+    _mReachMax = false;
+    _mIsDraging = false;
+    _mDragPointY = null;
     return false;
   }
 
@@ -138,14 +148,14 @@ class _SmartRefresherState extends State<SmartRefresher>
     }
     if (notification is ScrollUpdateNotification) {
       //if dragDetails is null,This represents the user's finger out of the screen
-      if (notification.dragDetails == null && _isDraging) {
+      if (notification.dragDetails == null && _mIsDraging) {
         return _handleScrollEnd(notification);
       } else if (notification.dragDetails != null) {
         return _handleScrollMoving(notification);
       }
     }
     if (notification is ScrollEndNotification) {
-      if (_isDraging) {
+      if (_mIsDraging) {
         return _handleScrollEnd(notification);
       }
     }
@@ -197,16 +207,16 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   void _changeMode(notifi, mode) {
     if (_isPullDown(notifi)) {
-      if (_topMode == mode) return;
-      if (_topMode == RefreshMode.refreshing) return;
+      if (_mTopMode == mode) return;
+      if (_mTopMode == RefreshMode.refreshing) return;
       setState(() {
-        _topMode = mode;
+        _mTopMode = mode;
       });
     } else if (_isPullUp(notifi)) {
-      if (_bottomMode == mode) return;
-      if (_bottomMode == RefreshMode.refreshing) return;
+      if (_mBottomMode == mode) return;
+      if (_mBottomMode == RefreshMode.refreshing) return;
       setState(() {
-        _bottomMode = mode;
+        _mBottomMode = mode;
       });
     }
   }
@@ -219,39 +229,43 @@ class _SmartRefresherState extends State<SmartRefresher>
     return noti.metrics.extentBefore == 0;
   }
 
-  void _dismiss() {
+  void _dismiss(bool up) {
     /*
      why the value is 0.01? if you set the value to 0.01?
      If this value is 0, no controls will
      cause Flutter to automatically retrieve controls.
     */
-    if (!_topController.isDismissed)
-      _topController.animateTo(0.01,
-          curve: new Cubic(0.0, 0.0, 1.0, 1.0),
-          duration: const Duration(milliseconds: 150));
-    if (!_bottomController.isDismissed)
-      _bottomController.animateTo(0.01,
-          curve: new Cubic(0.0, 0.0, 1.0, 1.0),
-          duration: const Duration(milliseconds: 150));
+    if (up) {
+      if (!_mTopController.isDismissed)
+        _mTopController.animateTo(0.01,
+            curve: new Cubic(0.0, 0.0, 1.0, 1.0),
+            duration: const Duration(milliseconds: 150));
+    } else {
+      if (!_mBottomController.isDismissed)
+        _mBottomController.animateTo(0.01,
+            curve: new Cubic(0.0, 0.0, 1.0, 1.0),
+            duration: const Duration(milliseconds: 150));
+    }
   }
 
   // This method calculates the size of the head or tail that should be resized.
   double _measureRatio(double offset) {
-    return offset.abs() / widget.triggerDistance;
+    return offset / widget.triggerDistance;
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _bottomMode = RefreshMode.idel;
-    _topMode = RefreshMode.idel;
-    _topController = new AnimationController(
+    _mBottomMode = RefreshMode.idel;
+    _mTopMode = RefreshMode.idel;
+    _mScrollController = new ScrollController();
+    _mTopController = new AnimationController(
       vsync: this,
       value: 0.01,
       duration: const Duration(milliseconds: 200),
     );
-    _bottomController = new AnimationController(
+    _mBottomController = new AnimationController(
       vsync: this,
       value: 0.01,
       duration: const Duration(milliseconds: 200),
@@ -274,13 +288,14 @@ class _SmartRefresherState extends State<SmartRefresher>
         maxHeight: size.biggest.height + 100.0,
         child: new NotificationListener(
           child: new ListView(
+            controller: _mScrollController,
             physics: new RefreshScrollPhysics(),
             children: <Widget>[
-              _buildEmptySpace(_topController),
-              _buildDefaultHeader(context, _topMode),
+              _buildEmptySpace(_mTopController),
+              _buildDefaultHeader(context, _mTopMode),
               widget.child,
-              _buildDefaultFooter(context, _bottomMode),
-              _buildEmptySpace(_bottomController),
+              _buildDefaultFooter(context, _mBottomMode),
+              _buildEmptySpace(_mBottomController),
             ],
           ),
           onNotification: _dispatchScrollEvent,
