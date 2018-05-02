@@ -6,11 +6,10 @@
 
 library pulltorefresh;
 
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pulltorefresh/BuildFactory.dart';
 import 'refreshPhysics.dart';
 
 typedef void OnRefresh();
@@ -58,7 +57,7 @@ class SmartRefresher extends StatefulWidget {
 }
 
 class _SmartRefresherState extends State<SmartRefresher>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, BuildFactory {
   // the two controllers can controll the top and bottom empty spacing widgets.
   AnimationController _mTopController, _mBottomController;
   ScrollController _mScrollController;
@@ -72,7 +71,10 @@ class _SmartRefresherState extends State<SmartRefresher>
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
     // This is used to interupt useless callback when the pull up load rolls back.
-    if(notification.metrics.outOfRange&&notification.dragDetails==null){print("out"); return true;}
+    if (notification.metrics.outOfRange && notification.dragDetails == null) {
+      print("out");
+      return true;
+    }
     if (_mIsDraging) return false;
     _mIsDraging = true;
     if (_mDragPointY == null &&
@@ -84,7 +86,6 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollMoveEvent
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
-
     bool isDown = _isPullDown(notification);
     bool isUp = _isPullUp(notification);
     // the reason why should do this,because Early touch at a specific location makes triggerdistance smaller.
@@ -176,80 +177,7 @@ class _SmartRefresherState extends State<SmartRefresher>
     return true;
   }
 
-  // if your renderHeader null, it will be replaced by it
-  Widget _buildDefaultHeader(BuildContext context, RefreshMode mode) {
-    return new Container(
-      height: 50.0,
-      alignment: Alignment.center,
-      child: new Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const CupertinoActivityIndicator(),
-          new Text(mode == RefreshMode.canRefresh
-              ? 'Refresh when release'
-              : mode == RefreshMode.completed
-                  ? 'Refresh Completed'
-                  : mode == RefreshMode.refreshing
-                      ? 'Refreshing....'
-                      : 'pull down refresh')
-        ],
-      ),
-    );
-  }
-
-  // if your renderFooter null, it will be replaced by it
-  Widget _buildDefaultFooter(BuildContext context, RefreshMode mode) {
-    return new Container(
-      height: 50.0,
-      alignment: Alignment.center,
-      child: new Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const CupertinoActivityIndicator(),
-          new Text(mode == RefreshMode.startDrag
-              ? 'pull up load'
-              : mode == RefreshMode.canRefresh
-                  ? 'Loadmore when release'
-                  : mode == RefreshMode.completed
-                      ? 'Load Completed'
-                      : 'LoadMore....')
-        ],
-      ),
-    );
-  }
-
-  void _changeMode(ScrollNotification notifi, mode) {
-    if (_isPullDown(notifi)) {
-      if (_mTopMode == mode) return;
-      if (_mTopMode == RefreshMode.refreshing) return;
-      setState(() {
-        _mTopMode = mode;
-      });
-    } else if (_isPullUp(notifi)) {
-      if (_mBottomMode == mode) return;
-      if (_mBottomMode == RefreshMode.refreshing) return;
-      setState(() {
-        _mBottomMode = mode;
-      });
-    }
-  }
-
-
-  bool _isPullUp(ScrollNotification noti) {
-    return noti.metrics.extentAfter == 0;
-  }
-
-  bool _isPullDown(ScrollNotification noti) {
-    return noti.metrics.extentBefore == 0;
-  }
-
-
-  // This method calculates the size of the head or tail that should be resized.
-  double _measureRatio(double offset) {
-    return offset / widget.triggerDistance;
-  }
-
-  void _resumeVal(){
+  void _resumeVal() {
     _mReachMax = false;
     _mIsDraging = false;
     _mDragPointY = null;
@@ -274,13 +202,33 @@ class _SmartRefresherState extends State<SmartRefresher>
     }
   }
 
-  Widget _buildEmptySpace(controller) {
-    return new SizeTransition(
-        sizeFactor: controller,
-        child: new Container(
-          color: Colors.red,
-          height: 50.0,
-        ));
+  void _changeMode(ScrollNotification notifi, mode) {
+    if (_isPullDown(notifi)) {
+      if (_mTopMode == mode) return;
+      if (_mTopMode == RefreshMode.refreshing) return;
+      setState(() {
+        _mTopMode = mode;
+      });
+    } else if (_isPullUp(notifi)) {
+      if (_mBottomMode == mode) return;
+      if (_mBottomMode == RefreshMode.refreshing) return;
+      setState(() {
+        _mBottomMode = mode;
+      });
+    }
+  }
+
+  bool _isPullUp(ScrollNotification noti) {
+    return noti.metrics.extentAfter == 0;
+  }
+
+  bool _isPullDown(ScrollNotification noti) {
+    return noti.metrics.extentBefore == 0;
+  }
+
+  // This method calculates the size of the head or tail that should be resized.
+  double _measureRatio(double offset) {
+    return offset / widget.triggerDistance;
   }
 
   @override
@@ -305,17 +253,16 @@ class _SmartRefresherState extends State<SmartRefresher>
   @override
   void didUpdateWidget(SmartRefresher oldWidget) {
     // TODO: implement didUpdateWidget
-    if(widget.refreshing==oldWidget.refreshing&&
-        oldWidget.loading==widget.loading)return;
-    if(widget.refreshing!=oldWidget.refreshing) {
+    if (widget.refreshing == oldWidget.refreshing &&
+        oldWidget.loading == widget.loading) return;
+    if (widget.refreshing != oldWidget.refreshing) {
       if (widget.refreshing) {
         this._mTopMode = RefreshMode.refreshing;
       } else {
         this._mTopMode = RefreshMode.idel;
         _dismiss(true);
       }
-    }
-    else if(oldWidget.loading!=widget.loading) {
+    } else if (oldWidget.loading != widget.loading) {
       if (widget.loading) {
         this._mBottomMode = RefreshMode.refreshing;
       } else {
@@ -324,14 +271,13 @@ class _SmartRefresherState extends State<SmartRefresher>
       }
     }
     super.didUpdateWidget(oldWidget);
-
   }
 
   @override
   Widget build(BuildContext context) {
     return new LayoutBuilder(builder: (context, BoxConstraints size) {
       return new Container(
-        color:widget.bottomColor,
+        color: widget.bottomColor,
         child: new OverflowBox(
           maxHeight: size.biggest.height + 100.0,
           child: new NotificationListener(
@@ -339,11 +285,11 @@ class _SmartRefresherState extends State<SmartRefresher>
               controller: _mScrollController,
               physics: new RefreshScrollPhysics(),
               children: <Widget>[
-                _buildEmptySpace(_mTopController),
-                _buildDefaultHeader(context, _mTopMode),
+                buildEmptySpace(_mTopController),
+                buildDefaultHeader(context, _mTopMode),
                 widget.child,
-                _buildDefaultFooter(context, _mBottomMode),
-                _buildEmptySpace(_mBottomController),
+                buildDefaultFooter(context, _mBottomMode),
+                buildEmptySpace(_mBottomController),
               ],
             ),
             onNotification: _dispatchScrollEvent,
@@ -353,4 +299,3 @@ class _SmartRefresherState extends State<SmartRefresher>
     });
   }
 }
-
