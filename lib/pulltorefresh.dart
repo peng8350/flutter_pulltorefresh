@@ -30,7 +30,7 @@ class SmartRefresher extends StatefulWidget {
       this.headerColor: const Color(0xffdddddd),
       this.footerColor: const Color(0xffdddddd),
       this.header,
-      this.triggerDistance: 80.0,
+      this.triggerDistance: 150.0,
       this.footer})
       : assert(child != null);
 
@@ -44,7 +44,7 @@ class _SmartRefresherState extends State<SmartRefresher>
   ScrollController _scrollController = new ScrollController();
   RefreshMode _topMode = RefreshMode.idel, _bottomMode = RefreshMode.idel;
   // the bool will check the user if dragging on the screen
-  bool _isDraging;
+  bool _isDraging,_reachMax;
   double _dragPointY;
 
   //handle the scrollStartEvent
@@ -57,17 +57,17 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollMoveEvent
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
-    bool reachMax = false;
-    if (isPullUp(notification)) {
+    if (isPullUp(notification)&&_topMode!=RefreshMode.refreshing) {
+
       _topController.value = _measureRatio(
           notification.dragDetails.globalPosition.dy - _dragPointY);
-      reachMax = _topController.value == 1.0;
-    } else {
+      _reachMax = _topController.value == 1.0;
+    } else if(_bottomMode!=RefreshMode.refreshing){
       _bottomController.value = _measureRatio(
           _dragPointY - notification.dragDetails.globalPosition.dy);
-      reachMax = _bottomController.value == 1.0;
+      _reachMax = _bottomController.value == 1.0;
     }
-    if (reachMax) {
+    if (_reachMax) {
       _changeMode(notification, RefreshMode.canRefresh);
     } else {
       _changeMode(notification, RefreshMode.startDrag);
@@ -77,10 +77,16 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollEndEvent
   bool _handleScrollEnd(ScrollUpdateNotification notification) {
+
+    if(!_reachMax) {
+      _changeMode(notification, RefreshMode.idel);
+      _dismiss();
+    }
+    else{
+      _changeMode(notification, RefreshMode.refreshing);
+    }
     _isDraging = false;
     _dragPointY = 0.0;
-    _changeMode(notification, RefreshMode.idel);
-    _dismiss();
     return false;
   }
 
@@ -107,16 +113,16 @@ class _SmartRefresherState extends State<SmartRefresher>
   Widget _buildDefaultHeader(BuildContext context, RefreshMode mode) {
     return new Container(
       height: 50.0,
-      alignment: Alignment.bottomCenter,
+      alignment: Alignment.center,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           const CupertinoActivityIndicator(),
           new Text(mode == RefreshMode.startDrag
-              ? 'pull up refresh'
+              ? 'pull down refresh'
               : mode == RefreshMode.canRefresh
                   ? 'Refresh when release'
-                  : 'Refreshing....')
+                  : mode == RefreshMode.completed?'Refresh Completed': 'Refreshing....')
         ],
       ),
     );
@@ -126,25 +132,32 @@ class _SmartRefresherState extends State<SmartRefresher>
   Widget _buildDefaultFooter(BuildContext context, RefreshMode mode) {
     return new Container(
       height: 50.0,
-      alignment: Alignment.topCenter,
+      alignment: Alignment.center,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           const CupertinoActivityIndicator(),
-          new Text('LoadMore....')
+          new Text(mode == RefreshMode.startDrag
+              ? 'pull up load'
+              : mode == RefreshMode.canRefresh
+              ? 'Loadmore when release'
+              : mode == RefreshMode.completed?'Load Completed': 'LoadMore....')
         ],
       ),
     );
   }
 
   void _changeMode(ScrollNotification notifi, RefreshMode mode) {
+
     if (notifi.metrics.extentBefore == 0) {
       if (_topMode == mode) return;
-      setState(() {
+      if(_topMode==RefreshMode.refreshing)return;
+        setState(() {
         _topMode = mode;
       });
     } else {
       if (_bottomMode == mode) return;
+      if(_bottomMode==RefreshMode.refreshing)return;
       setState(() {
         _bottomMode = mode;
       });
