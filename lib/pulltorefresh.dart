@@ -16,16 +16,18 @@ import 'refreshPhysics.dart';
 
 typedef void OnRefresh();
 typedef void OnLoadmore();
+typedef Widget HeaderBuilder(BuildContext context,RefreshMode mode);
+typedef Widget FooterBuilder(BuildContext context,RefreshMode mode);
 
 enum RefreshMode { idel, startDrag, canRefresh, refreshing, completed }
 
 class SmartRefresher extends StatefulWidget {
-  /*
-     first:indicate your listView
-     second: the View when you pull down
-     third: the View when you pull up
-   */
-  final Widget child, header, footer;
+  //indicate your listView
+  final Widget child;
+  //the indicator View when you pull down
+  final HeaderBuilder headerBuilder;
+  //the indicator View when you pull up
+  final FooterBuilder footerBuilder;
   // This bool will affect whether or not to have the function of drop-up load.
   final bool enablePullUpLoad;
   //This bool will affect whether or not to have the function of drop-down refresh.
@@ -46,14 +48,14 @@ class SmartRefresher extends StatefulWidget {
       this.enablePulldownRefresh: true,
       this.enablePullUpLoad: false,
       this.bottomColor: const Color(0xffdddddd),
-      this.header,
+      this.headerBuilder,this.footerBuilder,
       this.refreshing: false,
       this.loading: false,
-      this.completDuration:500,
+      this.completDuration:800,
       this.onRefresh,
       this.onLoadmore,
       this.triggerDistance: 100.0,
-      this.footer})
+      })
       : assert(child != null);
 
   @override
@@ -156,7 +158,6 @@ class _SmartRefresherState extends State<SmartRefresher>
       the notification bubbling. Return false (or null) to
       allow the notification to continue to be dispatched to
       further ancestors.
-
      I tried to return true,  But it didn't work,the event still
       pass to me
    */
@@ -325,9 +326,9 @@ class _SmartRefresherState extends State<SmartRefresher>
               physics: new RefreshScrollPhysics(),
               children: <Widget>[
                 buildEmptySpace(_mTopController),
-                buildDefaultHeader(context, _mTopMode),
+                widget.headerBuilder!=null?widget.headerBuilder(context,_mTopMode):buildDefaultHeader(context, _mTopMode),
                 widget.child,
-                buildDefaultFooter(context, _mBottomMode),
+                widget.footerBuilder!=null?widget.footerBuilder(context, _mBottomMode):buildDefaultFooter(context, _mBottomMode),
                 buildEmptySpace(_mBottomController),
               ],
             ),

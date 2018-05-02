@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:pulltorefresh/pulltorefresh.dart';
@@ -58,6 +59,26 @@ class _MyHomePageState extends State<MyHomePage> {
     return data;
   }
 
+  Widget _buildHeader(context,mode){
+    return new Container(
+      height: 50.0,
+      alignment: Alignment.center,
+      child: new Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const CupertinoActivityIndicator(),
+          new Text(mode == RefreshMode.canRefresh
+              ? 'Refresh when releaseaa'
+              : mode == RefreshMode.completed
+              ? 'Refresh Completed'
+              : mode == RefreshMode.refreshing
+              ? 'Refreshing....'
+              : 'pull down refresh')
+        ],
+      ),
+    );
+  }
+
   void _onLoadMore(){
     setState(() {
       loading = true;
@@ -102,6 +123,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: new Text(widget.title),
       ),
       body: new SmartRefresher(
+        headerBuilder: _buildHeader,
+        footerBuilder: _buildHeader,
         refreshing: this.refreshing,
         loading: this.loading,
         child: new Container(
