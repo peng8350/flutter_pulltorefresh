@@ -16,6 +16,7 @@ import 'refreshPhysics.dart';
 
 typedef void OnRefresh();
 typedef void OnLoadmore();
+typedef void OnOffsetChange(double offset);
 typedef Widget HeaderBuilder(BuildContext context, RefreshMode mode);
 typedef Widget FooterBuilder(BuildContext context, RefreshMode mode);
 
@@ -40,6 +41,8 @@ class SmartRefresher extends StatefulWidget {
   // upper and downer callback when you drag out of the distance
   final OnRefresh onRefresh;
   final OnLoadmore onLoadmore;
+  // This method will callback when the indicator changes from edge to edge.
+  final OnOffsetChange onOffsetChange;
   //this will influerence the RefreshMode
   final bool refreshing, loading;
 
@@ -48,6 +51,7 @@ class SmartRefresher extends StatefulWidget {
   final double headerHeight,footerHeight;
 
   SmartRefresher({
+    Key key,
     @required this.child,
     this.enablePulldownRefresh: true,
     this.enablePullUpLoad: false,
@@ -63,8 +67,9 @@ class SmartRefresher extends StatefulWidget {
     this.completDuration: 800,
     this.onRefresh,
     this.onLoadmore,
+    this.onOffsetChange,
     this.triggerDistance: 100.0,
-  }) : assert(child != null);
+  }) : assert(child != null),super(key:key);
 
   @override
   _SmartRefresherState createState() => new _SmartRefresherState();
@@ -81,7 +86,6 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _mIsDraging = false, _mReachMax = false;
   // the ScrollStart Drag Point Y
   double _mDragPointY = null;
-
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
     // This is used to interupt useless callback when the pull up load rolls back.
@@ -101,21 +105,21 @@ class _SmartRefresherState extends State<SmartRefresher>
   //handle the scrollMoveEvent
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
     bool down = _isPullDown(notification);
-    print(_mDragPointY);
     if (_mDragPointY == null && notification.metrics.outOfRange)
       _mDragPointY = _mScrollController.offset;
     if (down) {
-//      _mTopController.value = ;
-      _mReachMax = _measureRatio(-_mScrollController.offset)> 1.0;
+      double offset=_measureRatio(-_mScrollController.offset);
+      _mReachMax = offset >= 1.0;
+      if(widget.onOffsetChange!=null)widget.onOffsetChange(offset);
       if (_mReachMax) {
         _changeMode(notification, RefreshMode.canRefresh);
       } else {
         _changeMode(notification, RefreshMode.startDrag);
       }
     } else {
-//      _mBottomController.value =
-//          _measureRatio(_mScrollController.offset - _mDragPointY);
-      _mReachMax =  _measureRatio(_mScrollController.offset - _mDragPointY)>  1.0;
+      double offset = _measureRatio(_mScrollController.offset - _mDragPointY);
+      _mReachMax = offset >=  1.0;
+      if(widget.onOffsetChange!=null)widget.onOffsetChange(offset);
       if (_mReachMax) {
         _changeMode(notification, RefreshMode.canRefresh);
       } else {

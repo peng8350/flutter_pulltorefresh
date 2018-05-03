@@ -109,6 +109,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   }
 
+  void _onOffsetCallback(double offset){
+    // if you want change some widgets state ,you should rewrite the callback
+    print(offset);
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -124,16 +129,14 @@ class _MyHomePageState extends State<MyHomePage> {
         title: new Text(widget.title),
       ),
       body: new SmartRefresher(
-        headerBuilder: _buildHeader,
-        footerBuilder: _buildHeader,
         enablePulldownRefresh: true,
         enablePullUpLoad: true,
-        headerHeight: 100.0,
-        topVisibleRange: 80.0,
+
         refreshing: this.refreshing,
         loading: this.loading,
         child: new Container(
           color: const Color(0xffffffff),
+
           child: new ListView(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -143,6 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         onRefresh: _onRefresh,
         onLoadmore: _onLoadMore,
+        onOffsetChange: _onOffsetCallback,
       )
     );
   }
