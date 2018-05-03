@@ -40,7 +40,6 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-
   final String title;
 
   @override
@@ -48,51 +47,51 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool loading, refreshing;
 
-  bool loading,refreshing;
-
-  List<Widget> _getDatas(){
+  List<Widget> _getDatas() {
     List<Widget> data = [];
-    for(int i = 0;i<24;i++){
+    for (int i = 0; i < 24; i++) {
       data.add(new Text('Data $i'));
     }
     return data;
   }
 
-  Widget _buildHeader(context,mode){
-    return new Image.asset("images/animate.gif",height: 100.0,fit: BoxFit.cover,);
+  Widget _buildHeader(context, mode) {
+    return new Image.asset(
+      "images/animate.gif",
+      height: 100.0,
+      fit: BoxFit.cover,
+    );
   }
 
-  void _onLoadMore(){
+  void _onLoadMore() {
     setState(() {
       loading = true;
     });
-    new Future<Null>.delayed(const Duration(milliseconds: 2000),(){
-
+    new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
       return null;
-    }).then((Null val){
+    }).then((Null val) {
       setState(() {
         loading = false;
       });
       print("LoadComplete!!!");
     });
-
   }
 
-  void _onRefresh(){
+  void _onRefresh() {
     setState(() {
       refreshing = true;
     });
-    new Future.delayed(const Duration(milliseconds: 2000),(){
+    new Future.delayed(const Duration(milliseconds: 2000), () {
       setState(() {
         refreshing = false;
       });
       print("Refreshed!!!");
     });
-
   }
 
-  void _onOffsetCallback(double offset){
+  void _onOffsetCallback(double offset) {
     // if you want change some widgets state ,you should rewrite the callback
 //    print(offset);
   }
@@ -106,33 +105,27 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return new Scaffold(
-      appBar: new AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: new Text(widget.title),
-      ),
-      body: new SmartRefresher(
-        enablePulldownRefresh: true,
-        enablePullUpLoad: true,
-        headerBuilder: _buildHeader,
-        refreshing: this.refreshing,
-        headerHeight: 100.0,
-        topVisibleRange: 100.0,
-        loading: this.loading,
-        child: new Container(
-          color: const Color(0xffffffff),
-
+        appBar: new AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: new Text(widget.title),
+        ),
+        body: new SmartRefresher(
+          enablePulldownRefresh: true,
+          enablePullUpLoad: true,
+          headerBuilder: _buildHeader,
+          refreshing: this.refreshing,
+          headerHeight: 100.0,
+          topVisibleRange: 100.0,
+          loading: this.loading,
           child: new ListView(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemExtent: 40.0,
-              children: _getDatas()
-          ),
-        ),
-        onRefresh: _onRefresh,
-        onLoadmore: _onLoadMore,
-        onOffsetChange: _onOffsetCallback,
-      )
-    );
+              children: _getDatas()),
+          onRefresh: _onRefresh,
+          onLoadmore: _onLoadMore,
+          onOffsetChange: _onOffsetCallback,
+        ));
   }
 }
