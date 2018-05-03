@@ -61,7 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildHeader(context,mode){
     return new Container(
-      height: 50.0,
+      height: 100.0,
+      color:Colors.red,
       alignment: Alignment.center,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -127,6 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
         footerBuilder: _buildHeader,
         enablePulldownRefresh: true,
         enablePullUpLoad: true,
+        headerHeight: 100.0,
+        topVisibleRange: 80.0,
         refreshing: this.refreshing,
         loading: this.loading,
         child: new Container(

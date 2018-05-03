@@ -38,6 +38,7 @@ class BuildFactory{
   Widget buildDefaultFooter(BuildContext context, RefreshMode mode) {
     return new Container(
       height: 50.0,
+
       alignment: Alignment.center,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -55,10 +56,10 @@ class BuildFactory{
     );
   }
 
-  Widget buildEmptySpace(controller) => new SizeTransition(
+  Widget buildEmptySpace(controller,spacing) => new SizeTransition(
       sizeFactor: controller,
       child: new Container(
-        height: 50.0,
+        height: spacing,
       )
   );
 

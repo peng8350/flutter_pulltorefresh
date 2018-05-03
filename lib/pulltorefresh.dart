@@ -16,8 +16,8 @@ import 'refreshPhysics.dart';
 
 typedef void OnRefresh();
 typedef void OnLoadmore();
-typedef Widget HeaderBuilder(BuildContext context,RefreshMode mode);
-typedef Widget FooterBuilder(BuildContext context,RefreshMode mode);
+typedef Widget HeaderBuilder(BuildContext context, RefreshMode mode);
+typedef Widget FooterBuilder(BuildContext context, RefreshMode mode);
 
 enum RefreshMode { idel, startDrag, canRefresh, refreshing, completed }
 
@@ -43,20 +43,28 @@ class SmartRefresher extends StatefulWidget {
   //this will influerence the RefreshMode
   final bool refreshing, loading;
 
-  SmartRefresher(
-      {@required this.child,
-      this.enablePulldownRefresh: true,
-      this.enablePullUpLoad: false,
-      this.bottomColor: const Color(0xffdddddd),
-      this.headerBuilder,this.footerBuilder,
-      this.refreshing: false,
-      this.loading: false,
-      this.completDuration:800,
-      this.onRefresh,
-      this.onLoadmore,
-      this.triggerDistance: 100.0,
-      })
-      : assert(child != null);
+  final double topVisibleRange, bottomVisibleRange;
+
+  final double headerHeight,footerHeight;
+
+  SmartRefresher({
+    @required this.child,
+    this.enablePulldownRefresh: true,
+    this.enablePullUpLoad: false,
+    this.bottomColor: const Color(0x00ffffff),
+    this.headerBuilder,
+    this.footerBuilder,
+    this.refreshing: false,
+    this.bottomVisibleRange:50.0,
+    this.topVisibleRange:50.0,
+    this.headerHeight:50.0,
+    this.footerHeight:50.0,
+    this.loading: false,
+    this.completDuration: 800,
+    this.onRefresh,
+    this.onLoadmore,
+    this.triggerDistance: 100.0,
+  }) : assert(child != null);
 
   @override
   _SmartRefresherState createState() => new _SmartRefresherState();
@@ -82,7 +90,8 @@ class _SmartRefresherState extends State<SmartRefresher>
     }
     if (_mIsDraging) return false;
     _mIsDraging = true;
-    if (notification.metrics.outOfRange&&_mDragPointY == null &&
+    if (notification.metrics.outOfRange &&
+        _mDragPointY == null &&
         (_isPullUp(notification) || _isPullDown(notification)))
       _mDragPointY = _mScrollController.offset;
     _changeMode(notification, RefreshMode.startDrag);
@@ -93,20 +102,20 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
     bool down = _isPullDown(notification);
     print(_mDragPointY);
-    if (_mDragPointY == null&&notification.metrics.outOfRange) _mDragPointY = _mScrollController.offset;
-    if (down ) {
-      _mTopController.value =
-          _measureRatio( - _mScrollController.offset);
-      _mReachMax = _mTopController.value == 1.0;
+    if (_mDragPointY == null && notification.metrics.outOfRange)
+      _mDragPointY = _mScrollController.offset;
+    if (down) {
+//      _mTopController.value = ;
+      _mReachMax = _measureRatio(-_mScrollController.offset)> 1.0;
       if (_mReachMax) {
         _changeMode(notification, RefreshMode.canRefresh);
       } else {
         _changeMode(notification, RefreshMode.startDrag);
       }
-    } else{
-      _mBottomController.value =
-          _measureRatio(_mScrollController.offset - _mDragPointY);
-      _mReachMax = _mBottomController.value == 1.0;
+    } else {
+//      _mBottomController.value =
+//          _measureRatio(_mScrollController.offset - _mDragPointY);
+      _mReachMax =  _measureRatio(_mScrollController.offset - _mDragPointY)>  1.0;
       if (_mReachMax) {
         _changeMode(notification, RefreshMode.canRefresh);
       } else {
@@ -149,21 +158,23 @@ class _SmartRefresherState extends State<SmartRefresher>
       pass to me
    */
   bool _dispatchScrollEvent(ScrollNotification notification) {
-
     bool down = _isPullDown(notification);
     bool up = _isPullUp(notification);
     // the reason why should do this,because Early touch at a specific location makes triggerdistance smaller.
-    if(!down && !up){
-      _mDragPointY=null;
+    if (!down && !up) {
+      _mDragPointY = null;
       return false;
     }
-    if (
-        (down && (_mTopMode == RefreshMode.refreshing||_mTopMode==RefreshMode.completed)) ||
-        (up && (_mBottomMode == RefreshMode.refreshing||_mBottomMode==RefreshMode.completed))) {
-
+    if ((down &&
+            (_mTopMode == RefreshMode.refreshing ||
+                _mTopMode == RefreshMode.completed)) ||
+        (up &&
+            (_mBottomMode == RefreshMode.refreshing ||
+                _mBottomMode == RefreshMode.completed))) {
       return false;
     }
-    if((up&&!widget.enablePullUpLoad)||(down&&!widget.enablePulldownRefresh))return false;
+    if ((up && !widget.enablePullUpLoad) ||
+        (down && !widget.enablePulldownRefresh)) return false;
     if (notification is ScrollStartNotification) {
       return _handleScrollStart(notification);
     }
@@ -199,14 +210,10 @@ class _SmartRefresherState extends State<SmartRefresher>
     */
     if (up) {
       if (!_mTopController.isDismissed)
-        _mTopController.animateTo(0.01,
-            curve: new Cubic(0.0, 0.0, 1.0, 1.0),
-            duration: const Duration(milliseconds: 200));
+        _mTopController.animateTo(0.000001);
     } else {
       if (!_mBottomController.isDismissed)
-        _mBottomController.animateTo(0.01,
-            curve: new Cubic(0.0, 0.0, 1.0, 1.0),
-            duration: const Duration(milliseconds: 200));
+        _mBottomController.animateTo(0.000001);
     }
   }
 
@@ -257,12 +264,12 @@ class _SmartRefresherState extends State<SmartRefresher>
     _mScrollController = new ScrollController();
     _mTopController = new AnimationController(
       vsync: this,
-      lowerBound: 0.01,
+      lowerBound: 0.000001,
       duration: const Duration(milliseconds: 200),
     );
     _mBottomController = new AnimationController(
       vsync: this,
-      lowerBound: 0.01,
+      lowerBound: 0.000001,
       duration: const Duration(milliseconds: 200),
     );
   }
@@ -274,25 +281,27 @@ class _SmartRefresherState extends State<SmartRefresher>
         oldWidget.loading == widget.loading) return;
     if (widget.refreshing != oldWidget.refreshing) {
       if (widget.refreshing) {
+        _mTopController.animateTo(1.0);
         this._mTopMode = RefreshMode.refreshing;
       } else {
-
         this._mTopMode = RefreshMode.completed;
-        new Future<Null>.delayed(new Duration(milliseconds: widget.completDuration),(){
+        new Future<Null>.delayed(
+            new Duration(milliseconds: widget.completDuration), () {
           this._mTopMode = RefreshMode.idel;
           _dismiss(true);
         });
       }
     } else if (oldWidget.loading != widget.loading) {
       if (widget.loading) {
+        _mBottomController.animateTo(1.0);
         this._mBottomMode = RefreshMode.refreshing;
       } else {
         this._mBottomMode = RefreshMode.completed;
-        new Future<Null>.delayed(new Duration(milliseconds: widget.completDuration),(){
+        new Future<Null>.delayed(
+            new Duration(milliseconds: widget.completDuration), () {
           this._mBottomMode = RefreshMode.idel;
           _dismiss(false);
         });
-
       }
     }
     super.didUpdateWidget(oldWidget);
@@ -300,41 +309,44 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   @override
   Widget build(BuildContext context) {
-
     return new LayoutBuilder(builder: (context, BoxConstraints size) {
-      double boxHeight = size.biggest.height;
-      Alignment boxAlign = Alignment.center;
-      boxHeight+= widget.enablePulldownRefresh?50.0:0.0;
-      boxHeight+= widget.enablePullUpLoad?50.0:0.0;
-      if(widget.enablePullUpLoad&&widget.enablePulldownRefresh){
-        boxAlign = Alignment.center;
-      }
-      else if(widget.enablePulldownRefresh){
-        boxAlign = Alignment.bottomCenter;
-      }
-      else{
-        boxAlign = Alignment.topCenter;
-      }
-      return new Container(
-        color: widget.bottomColor,
-        child: new OverflowBox(
-          alignment: boxAlign,
-          maxHeight: boxHeight,
-          child: new NotificationListener(
-            child: new ListView(
-              controller: _mScrollController,
-              physics: new RefreshScrollPhysics(),
-              children: <Widget>[
-                !widget.enablePulldownRefresh?new Container():buildEmptySpace(_mTopController),
-                !widget.enablePulldownRefresh?new Container():widget.headerBuilder!=null?widget.headerBuilder(context,_mTopMode):buildDefaultHeader(context, _mTopMode),
-                widget.child,
-                !widget.enablePullUpLoad?new Container():widget.footerBuilder!=null?widget.footerBuilder(context, _mBottomMode):buildDefaultFooter(context, _mBottomMode),
-                !widget.enablePullUpLoad?new Container():buildEmptySpace(_mBottomController),
-              ],
-            ),
-            onNotification: _dispatchScrollEvent,
-          ),
-        ),
+      return new Stack(
+        children: <Widget>[
+          new Positioned(
+              top: !widget.enablePulldownRefresh?0.0:-widget.headerHeight,
+              bottom:!widget.enablePullUpLoad?0.0: -widget.footerHeight,
+              left: 0.0,
+              right: 0.0,
+              child: new NotificationListener(
+                child: new Container(
+                  color:widget.bottomColor,
+                  child: new ListView(
+                    controller: _mScrollController,
+                    physics: new RefreshScrollPhysics(),
+                    children: <Widget>[
+                      !widget.enablePulldownRefresh
+                          ? new Container()
+                          : buildEmptySpace(_mTopController,widget.topVisibleRange),
+                      !widget.enablePulldownRefresh
+                          ? new Container()
+                          : widget.headerBuilder != null
+                          ? widget.headerBuilder(context, _mTopMode)
+                          : buildDefaultHeader(context, _mTopMode),
+                      widget.child,
+                      !widget.enablePullUpLoad
+                          ? new Container()
+                          : widget.footerBuilder != null
+                          ? widget.footerBuilder(context, _mBottomMode)
+                          : buildDefaultFooter(context, _mBottomMode),
+                      !widget.enablePullUpLoad
+                          ? new Container()
+                          : buildEmptySpace(_mBottomController,widget.bottomVisibleRange),
+                    ],
+                  ),
+                ),
+                onNotification: _dispatchScrollEvent,
+              ))
+        ],
       );
     });
   }
