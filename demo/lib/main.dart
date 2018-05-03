@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> _getDatas(){
     List<Widget> data = [];
-    for(int i = 0;i<25;i++){
+    for(int i = 0;i<19;i++){
       data.add(new Text('Data $i'));
     }
     return data;
@@ -125,9 +125,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: new SmartRefresher(
         headerBuilder: _buildHeader,
         footerBuilder: _buildHeader,
+        enablePulldownRefresh: true,
+        enablePullUpLoad: true,
         refreshing: this.refreshing,
         loading: this.loading,
-        completDuration: 10000,
         child: new Container(
           color: const Color(0xffffffff),
           child: new ListView(

@@ -72,17 +72,17 @@ class _SmartRefresherState extends State<SmartRefresher>
   // the bool will check the user if dragging on the screen.
   bool _mIsDraging = false, _mReachMax = false;
   // the ScrollStart Drag Point Y
-  double _mDragPointY = 0.0;
+  double _mDragPointY = null;
 
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
     // This is used to interupt useless callback when the pull up load rolls back.
-    if (notification.metrics.outOfRange && notification.dragDetails == null) {
+    if ((notification.metrics.outOfRange && notification.dragDetails == null)) {
       return false;
     }
     if (_mIsDraging) return false;
     _mIsDraging = true;
-    if (_mDragPointY == null &&
+    if (notification.metrics.outOfRange&&_mDragPointY == null &&
         (_isPullUp(notification) || _isPullDown(notification)))
       _mDragPointY = _mScrollController.offset;
     _changeMode(notification, RefreshMode.startDrag);
@@ -92,11 +92,11 @@ class _SmartRefresherState extends State<SmartRefresher>
   //handle the scrollMoveEvent
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
     bool down = _isPullDown(notification);
-    bool up = _isPullUp(notification);
-    if (_mDragPointY == null) _mDragPointY = _mScrollController.offset;
+    print(_mDragPointY);
+    if (_mDragPointY == null&&notification.metrics.outOfRange) _mDragPointY = _mScrollController.offset;
     if (down ) {
       _mTopController.value =
-          _measureRatio(_mDragPointY - _mScrollController.offset);
+          _measureRatio( - _mScrollController.offset);
       _mReachMax = _mTopController.value == 1.0;
       if (_mReachMax) {
         _changeMode(notification, RefreshMode.canRefresh);
@@ -153,11 +153,17 @@ class _SmartRefresherState extends State<SmartRefresher>
     bool down = _isPullDown(notification);
     bool up = _isPullUp(notification);
     // the reason why should do this,because Early touch at a specific location makes triggerdistance smaller.
-    if ((!down && !up) ||
-        (down && (_mTopMode == RefreshMode.refreshing||_mTopMode==RefreshMode.completed)) ||
-        (up && (_mBottomMode == RefreshMode.refreshing||_mBottomMode==RefreshMode.completed))) {
+    if(!down && !up){
+      _mDragPointY=null;
       return false;
     }
+    if (
+        (down && (_mTopMode == RefreshMode.refreshing||_mTopMode==RefreshMode.completed)) ||
+        (up && (_mBottomMode == RefreshMode.refreshing||_mBottomMode==RefreshMode.completed))) {
+
+      return false;
+    }
+    if((up&&!widget.enablePullUpLoad)||(down&&!widget.enablePulldownRefresh))return false;
     if (notification is ScrollStartNotification) {
       return _handleScrollStart(notification);
     }
@@ -294,21 +300,36 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   @override
   Widget build(BuildContext context) {
+
     return new LayoutBuilder(builder: (context, BoxConstraints size) {
+      double boxHeight = size.biggest.height;
+      Alignment boxAlign = Alignment.center;
+      boxHeight+= widget.enablePulldownRefresh?50.0:0.0;
+      boxHeight+= widget.enablePullUpLoad?50.0:0.0;
+      if(widget.enablePullUpLoad&&widget.enablePulldownRefresh){
+        boxAlign = Alignment.center;
+      }
+      else if(widget.enablePulldownRefresh){
+        boxAlign = Alignment.bottomCenter;
+      }
+      else{
+        boxAlign = Alignment.topCenter;
+      }
       return new Container(
         color: widget.bottomColor,
         child: new OverflowBox(
-          maxHeight: size.biggest.height + 100.0,
+          alignment: boxAlign,
+          maxHeight: boxHeight,
           child: new NotificationListener(
             child: new ListView(
               controller: _mScrollController,
               physics: new RefreshScrollPhysics(),
               children: <Widget>[
-                buildEmptySpace(_mTopController),
-                widget.headerBuilder!=null?widget.headerBuilder(context,_mTopMode):buildDefaultHeader(context, _mTopMode),
+                !widget.enablePulldownRefresh?new Container():buildEmptySpace(_mTopController),
+                !widget.enablePulldownRefresh?new Container():widget.headerBuilder!=null?widget.headerBuilder(context,_mTopMode):buildDefaultHeader(context, _mTopMode),
                 widget.child,
-                widget.footerBuilder!=null?widget.footerBuilder(context, _mBottomMode):buildDefaultFooter(context, _mBottomMode),
-                buildEmptySpace(_mBottomController),
+                !widget.enablePullUpLoad?new Container():widget.footerBuilder!=null?widget.footerBuilder(context, _mBottomMode):buildDefaultFooter(context, _mBottomMode),
+                !widget.enablePullUpLoad?new Container():buildEmptySpace(_mBottomController),
               ],
             ),
             onNotification: _dispatchScrollEvent,
