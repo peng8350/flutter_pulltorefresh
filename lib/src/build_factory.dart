@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/src/smart_refresher.dart';
 
@@ -9,6 +8,9 @@ import 'package:pull_to_refresh/src/smart_refresher.dart';
     createTime:2018-05-03 00:39
  */
 
+/**
+  use it to build some widget
+ */
 class BuildFactory {
   // if your renderHeader null, it will be replaced by it
   Widget buildDefaultHeader(BuildContext context, RefreshMode mode) {

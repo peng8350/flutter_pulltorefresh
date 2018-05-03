@@ -5,14 +5,10 @@
  */
 
 
-
 import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/src/build_factory.dart';
-
 import 'package:pull_to_refresh/src/refresh_physics.dart';
 
 typedef void OnRefresh();
@@ -23,6 +19,9 @@ typedef Widget FooterBuilder(BuildContext context, RefreshMode mode);
 
 enum RefreshMode { idel, startDrag, canRefresh, refreshing, completed }
 
+/**
+    This is the most important component that provides drop-down refresh and up loading.
+ */
 class SmartRefresher extends StatefulWidget {
   //indicate your listView
   final Widget child;
@@ -46,9 +45,9 @@ class SmartRefresher extends StatefulWidget {
   final OnOffsetChange onOffsetChange;
   //this will influerence the RefreshMode
   final bool refreshing, loading;
-
+  // The scope of the display when the indicator enters a refresh state
   final double topVisibleRange, bottomVisibleRange;
-
+  // the height must be  equals your headerBuilder
   final double headerHeight,footerHeight;
 
   SmartRefresher({
@@ -80,6 +79,7 @@ class _SmartRefresherState extends State<SmartRefresher>
     with TickerProviderStateMixin, BuildFactory {
   // the two controllers can controll the top and bottom empty spacing widgets.
   AnimationController _mTopController, _mBottomController;
+  // listen the listen offset or on...
   ScrollController _mScrollController;
   // Represents the state of the upper and lower two refreshes.
   RefreshMode _mTopMode, _mBottomMode;
@@ -87,6 +87,7 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _mIsDraging = false, _mReachMax = false;
   // the ScrollStart Drag Point Y
   double _mDragPointY = null;
+
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
     // This is used to interupt useless callback when the pull up load rolls back.
@@ -200,18 +201,21 @@ class _SmartRefresherState extends State<SmartRefresher>
     return true;
   }
 
+  //After the end of the drag, some variables are reduced to the default value
   void _resumeVal() {
     _mReachMax = false;
     _mIsDraging = false;
     _mDragPointY = null;
   }
 
-  //up indicate drag from top (pull down)
+  /**
+    up indicate drag from top (pull down)
+   */
   void _dismiss(bool up) {
-    /*
-     why the value is 0.01?
+    /**
+     why the value is 0.00001?
      If this value is 0, no controls will
-     cause Flutter to automatically retrieve controls.
+     cause Flutter to automatically retrieve widget.
     */
     if (up) {
       if (!_mTopController.isDismissed)
@@ -222,6 +226,7 @@ class _SmartRefresherState extends State<SmartRefresher>
     }
   }
 
+  // change the top or bottom mode
   void _changeMode(ScrollNotification notifi, mode) {
     if (_isPullDown(notifi)) {
       if (_mTopMode == mode) return;
@@ -238,15 +243,19 @@ class _SmartRefresherState extends State<SmartRefresher>
     }
   }
 
+  //check user is pulling up
   bool _isPullUp(ScrollNotification noti) {
     return noti.metrics.extentAfter == 0;
   }
 
+  //check user is pulling down
   bool _isPullDown(ScrollNotification noti) {
     return noti.metrics.extentBefore == 0;
   }
 
-  // This method calculates the size of the head or tail that should be resized.
+  /**
+      This method takes accounting to figure out how many distances the user dragged.
+   */
   double _measureRatio(double offset) {
     return offset / widget.triggerDistance;
   }

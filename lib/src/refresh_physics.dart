@@ -7,6 +7,11 @@
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
+/**
+    this class  is copy from BouncingScrollPhysics,
+    because it doesn't fit my idea,
+    Fixed the problem that child parts could not be dragged without data.
+ */
 class RefreshScrollPhysics extends ScrollPhysics {
   /// Creates scroll physics that bounce back from the edge.
   const RefreshScrollPhysics({ ScrollPhysics parent }) : super(parent: parent);
