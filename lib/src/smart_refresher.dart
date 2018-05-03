@@ -4,15 +4,16 @@
  createTime:2018-05-01 11:39
  */
 
-library pulltorefresh;
+
 
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:pulltorefresh/BuildFactory.dart';
-import 'refreshPhysics.dart';
+import 'package:pull_to_refresh/src/build_factory.dart';
+
+import 'package:pull_to_refresh/src/refresh_physics.dart';
 
 typedef void OnRefresh();
 typedef void OnLoadmore();

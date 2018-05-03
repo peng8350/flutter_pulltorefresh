@@ -4,12 +4,15 @@ description: A new Flutter project.
 dependencies:
   flutter:
     sdk: flutter
-  pulltorefresh:
+  pull_to_refresh:
     path: ../
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
+
 
 
 # For information on the generic Dart part of this file, see the
@@ -18,6 +21,8 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
 
+  assets:
+    - images/animate.gif
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

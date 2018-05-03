@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:pulltorefresh/pulltorefresh.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 void main() => runApp(new MyApp());
 
@@ -53,31 +53,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> _getDatas(){
     List<Widget> data = [];
-    for(int i = 0;i<19;i++){
+    for(int i = 0;i<24;i++){
       data.add(new Text('Data $i'));
     }
     return data;
   }
 
   Widget _buildHeader(context,mode){
-    return new Container(
-      height: 100.0,
-      color:Colors.red,
-      alignment: Alignment.center,
-      child: new Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const CupertinoActivityIndicator(),
-          new Text(mode == RefreshMode.canRefresh
-              ? 'Refresh when releaseaa'
-              : mode == RefreshMode.completed
-              ? 'Refresh Completed'
-              : mode == RefreshMode.refreshing
-              ? 'Refreshing....'
-              : 'pull down refresh')
-        ],
-      ),
-    );
+    return new Image.asset("images/animate.gif",height: 100.0,fit: BoxFit.cover,);
   }
 
   void _onLoadMore(){
@@ -111,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _onOffsetCallback(double offset){
     // if you want change some widgets state ,you should rewrite the callback
-    print(offset);
+//    print(offset);
   }
 
   @override
@@ -131,8 +114,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: new SmartRefresher(
         enablePulldownRefresh: true,
         enablePullUpLoad: true,
-
+        headerBuilder: _buildHeader,
         refreshing: this.refreshing,
+        headerHeight: 100.0,
+        topVisibleRange: 100.0,
         loading: this.loading,
         child: new Container(
           color: const Color(0xffffffff),
