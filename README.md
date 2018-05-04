@@ -8,25 +8,36 @@ a widget provided to the flutter scroll component drop-down refresh and pull up 
 * Android and iOS both spported
 * pull up and pull down
 * It's almost fit for all witgets,like GridView,ListView,Container,Text...
-* High extensibility
-* smart Bouncing
+* High extensibility,High degree of freedom
+* powerful Bouncing
 
 ## Screenshots
 ![](arts/ios1.gif)
 ![](arts/ios2.gif)
 
 ## How to use?
-this is an example:
+1.the first declare following in your pubspec.yml
 
 ```
+
    dependencies:
      pull_to_refresh: ^1.0.3
+     
 ```
 
+2.and then,import that line,SmartRefresher is a component that is wrapped outside your content View
+
 ```
+
+
+   import "package:pull_to_refresh/pull_to_refresh.dart";
+   ....
+   
+   build() =>
+   
     new SmartRefresher(
         enablePullDownRefresh: true,
-        enablePullUpLoad: true,
+        enablePullUpLoad: true, 
         refreshMode: this.refreshing,
         loadMode: this.loading,
         onModeChange: _onModeChange,
@@ -48,20 +59,27 @@ this is an example:
 
 ```
 
-You should set the indicator according to the different refresh mode.
-There are six refresh modes here:idel, startDrag, canRefresh, refreshing, complete,failed
-.build footer is the same with that.
+3.You should set the indicator according to the different refresh mode.There are six refresh modes here:idel, startDrag, canRefresh, refreshing, complete,failed.build footer is the same with that.
 
 ```
+
 
   Widget _buildHeader(context,mode){
   
     return new Image.asset("images/animate.gif",height: 100.0,fit: BoxFit.cover,);
   }
+  
+ 
+  Widget _buildFooter(context,mode){
+  
+    ....
+  }
+
 
 
 ```
 
+4.
 This refresh state requires you to update yourself in the logic code.
 Refresh mode details please look at the following
 
@@ -111,7 +129,8 @@ Refresh mode details please look at the following
   }
   
 ```
-If your content view is a rolling component, such as ScrollView, ListView, GridView and so on, you assign these two attributes to the component.Because my parts are used in the ListView nested package,
+
+5.If your content view is a rolling component, such as ScrollView, ListView, GridView and so on, you assign these two attributes to the component.Because my parts are used in the ListView nested package,
 this is very important,if you don't notice it,you will get some problems.
 
 ```
@@ -125,9 +144,8 @@ new ListView(){
 
 
 ## Attention point
+You should set the same indictor height for headerHeight and footerHeight.
 
-
-* You should set the same indictor height for headerHeight and footerHeight.
 
 ```
 
@@ -144,6 +162,31 @@ footerHeight:50.0,
 
 
 ```
+
+The component is unbounded, so when you use it, be careful about the problems caused by the height, especially the column, stack, which is also a control of unrestricted height, to be extra careful.
+
+
+<a name = "point1"></a>
+
+## Props Table
+
+| Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
+|---------|--------------------------|:-----:|:-----:|:-----:|
+| child      | your content View   | Widget   |   null |  necessary
+| headerBuilder | the header indictor,if null it will be created by my default header     | (BuildContext,RefreshMode) => Widget  | null |optional |
+| footerBuilder | the footer indictor,if null it will be created by my default footer     | (BuildContext,RefreshMode) => Widget  | null |optional |
+| enablePullDownRefresh | switch of the pull down refresh     | boolean | true | optional |
+| enablePullUpLoad |   switch of the pull up load | boolean | false |optional |
+| refreshMode | It represents the state of the top indicator   | RefreshMode(enum) | RefreshMode.idel | if you enable pulldown,is necessary,else optional | 
+| loadMode | It represents the state of the bottom indicator   | RefreshMode(enum) | RefreshMode.idel | if you enable pullup,is necessary,else optional | 
+| completeDuration | It indicates the duration of display when the refresh is successful or failed.    | int | 800 | optional |
+| headerHeight | must be equals with your header indictor height    | double | 50.0 | optional |
+| footerHeight | must be equals with your footer indictor height    | double | 50.0 | optional |
+| onModeChange | will callback when the refreshmode or loadmode is prepared to changed,it requires you to change the value yourself ,first paramter is if draging from top,second is the RefreshMode changed   | (bool,RefreshMode) => Void | null | optional |
+| onOffsetChange | callback while you dragging(In addition to refreshing state and completing state)    | (double) => Void | null | optional |
+| triggerDistance | This value represents the dragging distance to be reached in the trigger refreshing mode.  | double | 100.0 | optional |
+| onOffsetChange | callback while you dragging(In addition to refreshing state and completing state)    | (double) => Void | null | optional |
+| triggerDistance | This value represents the dragging distance to be reached in the trigger refreshing mode.  | double | 100.0 | optional |
 
 ## Existing problems
 
