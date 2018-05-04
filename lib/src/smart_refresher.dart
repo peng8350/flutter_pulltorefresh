@@ -3,8 +3,6 @@
  Email: peng8350@gmail.com
  createTime:2018-05-01 11:39
  */
-
-
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
@@ -106,27 +104,14 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollMoveEvent
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
+    print(_mScrollController.offset);
     bool down = _isPullDown(notification);
     if (_mDragPointY == null && notification.metrics.outOfRange)
       _mDragPointY = _mScrollController.offset;
     if (down) {
-      double offset=_measureRatio(-_mScrollController.offset);
-      _mReachMax = offset >= 1.0;
-      if(widget.onOffsetChange!=null)widget.onOffsetChange(offset);
-      if (_mReachMax) {
-        _changeMode(notification, RefreshMode.canRefresh);
-      } else {
-        _changeMode(notification, RefreshMode.startDrag);
-      }
+      _updateIndictorIfNeed(-_mScrollController.offset, notification);
     } else {
-      double offset = _measureRatio(_mScrollController.offset - _mDragPointY);
-      _mReachMax = offset >=  1.0;
-      if(widget.onOffsetChange!=null)widget.onOffsetChange(offset);
-      if (_mReachMax) {
-        _changeMode(notification, RefreshMode.canRefresh);
-      } else {
-        _changeMode(notification, RefreshMode.startDrag);
-      }
+      _updateIndictorIfNeed(_mScrollController.offset - _mDragPointY, notification);
     }
 
     return false;
@@ -223,6 +208,17 @@ class _SmartRefresherState extends State<SmartRefresher>
     } else {
       if (!_mBottomController.isDismissed)
         _mBottomController.animateTo(0.000001);
+    }
+  }
+
+  // the indictor will update update when offset change between 1.0
+  void _updateIndictorIfNeed(double offset,ScrollUpdateNotification notification){
+    _mReachMax = offset >= 1.0;
+    if(widget.onOffsetChange!=null)widget.onOffsetChange(offset);
+    if (_mReachMax) {
+      _changeMode(notification, RefreshMode.canRefresh);
+    } else {
+      _changeMode(notification, RefreshMode.startDrag);
     }
   }
 

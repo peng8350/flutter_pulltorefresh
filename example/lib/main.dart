@@ -113,10 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: new SmartRefresher(
           enablePulldownRefresh: true,
           enablePullUpLoad: true,
-          headerBuilder: _buildHeader,
           refreshing: this.refreshing,
-          headerHeight: 100.0,
-          topVisibleRange: 100.0,
           loading: this.loading,
           child: new ListView(
               physics: const NeverScrollableScrollPhysics(),
