@@ -31,29 +31,29 @@ class SmartRefresher extends StatefulWidget {
   final bool enablePullUpLoad;
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePulldownRefresh;
-  // This value represents the distance that can be refreshed and trigger the callback drag.
-  final double triggerDistance;
+  //this will influerence the RefreshMode
+  final bool refreshing, loading;
   // completed show time
   final int completDuration;
-  final Color bottomColor;
+  // This value represents the distance that can be refreshed and trigger the callback drag.
+  final double triggerDistance;
+  // The scope of the display when the indicator enters a refresh state
+  final double topVisibleRange, bottomVisibleRange;
+  // the height must be  equals your headerBuilder
+  final double headerHeight,footerHeight;
   // upper and downer callback when you drag out of the distance
   final OnRefresh onRefresh;
   final OnLoadmore onLoadmore;
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;
-  //this will influerence the RefreshMode
-  final bool refreshing, loading;
-  // The scope of the display when the indicator enters a refresh state
-  final double topVisibleRange, bottomVisibleRange;
-  // the height must be  equals your headerBuilder
-  final double headerHeight,footerHeight;
+
+
 
   SmartRefresher({
     Key key,
     @required this.child,
     this.enablePulldownRefresh: true,
     this.enablePullUpLoad: false,
-    this.bottomColor: const Color(0x00ffffff),
     this.headerBuilder,
     this.footerBuilder,
     this.refreshing: false,
@@ -104,14 +104,13 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollMoveEvent
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
-    print(_mScrollController.offset);
     bool down = _isPullDown(notification);
     if (_mDragPointY == null && notification.metrics.outOfRange)
       _mDragPointY = _mScrollController.offset;
     if (down) {
-      _updateIndictorIfNeed(-_mScrollController.offset, notification);
+      _updateIndictorIfNeed(_measureRatio(-_mScrollController.offset), notification);
     } else {
-      _updateIndictorIfNeed(_mScrollController.offset - _mDragPointY, notification);
+      _updateIndictorIfNeed(_measureRatio(_mScrollController.offset) - _mDragPointY, notification);
     }
 
     return false;
@@ -328,9 +327,7 @@ class _SmartRefresherState extends State<SmartRefresher>
               left: 0.0,
               right: 0.0,
               child: new NotificationListener(
-                child: new Container(
-                  color:widget.bottomColor,
-                  child: new ListView(
+                child: new ListView(
                     controller: _mScrollController,
                     physics: new RefreshScrollPhysics(),
                     children: <Widget>[
@@ -353,7 +350,7 @@ class _SmartRefresherState extends State<SmartRefresher>
                           : buildEmptySpace(_mBottomController,widget.bottomVisibleRange),
                     ],
                   ),
-                ),
+
                 onNotification: _dispatchScrollEvent,
               ))
         ],

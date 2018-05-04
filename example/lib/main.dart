@@ -110,19 +110,21 @@ class _MyHomePageState extends State<MyHomePage> {
           // the App.build method, and use it to set our appbar title.
           title: new Text(widget.title),
         ),
-        body: new SmartRefresher(
-          enablePulldownRefresh: true,
-          enablePullUpLoad: true,
-          refreshing: this.refreshing,
-          loading: this.loading,
-          child: new ListView(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemExtent: 40.0,
-              children: _getDatas()),
-          onRefresh: _onRefresh,
-          onLoadmore: _onLoadMore,
-          onOffsetChange: _onOffsetCallback,
+        body: new Container(
+          child: new SmartRefresher(
+            enablePulldownRefresh: true,
+            enablePullUpLoad: true,
+            refreshing: this.refreshing,
+            loading: this.loading,
+            child: new ListView(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemExtent: 40.0,
+                children: _getDatas()),
+            onRefresh: _onRefresh,
+            onLoadmore: _onLoadMore,
+            onOffsetChange: _onOffsetCallback,
+          ),
         ));
   }
 }

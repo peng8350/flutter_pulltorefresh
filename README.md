@@ -14,6 +14,11 @@ a widget provided to the flutter scroll component drop-down refresh and pull up 
 this is an example:
 
 ```
+   dependencies:
+     pull_to_refresh: ^1.0.0
+```
+
+```
     new SmartRefresher(
             enablePulldownRefresh: true,
             enablePullUpLoad: true,

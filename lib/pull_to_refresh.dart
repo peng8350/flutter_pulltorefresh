@@ -6,6 +6,4 @@
 
 library pulltorefresh;
 
-export 'src/build_factory.dart';
-export 'src/refresh_physics.dart';
 export 'src/smart_refresher.dart';
