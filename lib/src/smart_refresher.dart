@@ -234,9 +234,9 @@ class _SmartRefresherState extends State<SmartRefresher>
       _modeChangeCallback(false, mode);
       if (widget.footerBuilder == null && widget.enablePullUpLoad) {
         if (mode == RefreshMode.canRefresh) {
-          _mBIconController.animateTo(1.0);
-        } else if (mode == RefreshMode.startDrag) {
           _mBIconController.animateTo(0.0);
+        } else if (mode == RefreshMode.startDrag) {
+          _mBIconController.animateTo(1.0);
         }
       }
     }
@@ -321,7 +321,7 @@ class _SmartRefresherState extends State<SmartRefresher>
       } else if (widget.loadMode == RefreshMode.completed||RefreshMode.failed==widget.loadMode) {
         new Future<Null>.delayed(
             new Duration(milliseconds: widget.completDuration), () {
-          _modeChangeCallback(true, RefreshMode.idel);
+          _modeChangeCallback(false, RefreshMode.idel);
           _dismiss(false);
         });
       }
