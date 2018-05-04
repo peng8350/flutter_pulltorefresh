@@ -29,11 +29,11 @@ class SmartRefresher extends StatefulWidget {
   // This bool will affect whether or not to have the function of drop-up load.
   final bool enablePullUpLoad;
   //This bool will affect whether or not to have the function of drop-down refresh.
-  final bool enablePulldownRefresh;
+  final bool enablePullDownRefresh;
   //this will influerence the RefreshMode
   final RefreshMode refreshMode, loadMode;
   // completed show time
-  final int completDuration;
+  final int completeDuration;
   // This value represents the distance that can be refreshed and trigger the callback drag.
   final double triggerDistance;
   // The scope of the display when the indicator enters a refresh state
@@ -48,7 +48,7 @@ class SmartRefresher extends StatefulWidget {
   SmartRefresher({
     Key key,
     @required this.child,
-    this.enablePulldownRefresh: true,
+    this.enablePullDownRefresh: true,
     this.enablePullUpLoad: false,
     this.headerBuilder,
     this.footerBuilder,
@@ -58,7 +58,7 @@ class SmartRefresher extends StatefulWidget {
     this.headerHeight: 50.0,
     this.footerHeight: 50.0,
     this.loadMode: RefreshMode.idel,
-    this.completDuration: 800,
+    this.completeDuration: 800,
     this.onModeChange,
     this.onOffsetChange,
     this.triggerDistance: 100.0,
@@ -158,7 +158,7 @@ class _SmartRefresherState extends State<SmartRefresher>
       return false;
     }
     if ((up && !widget.enablePullUpLoad) ||
-        (down && !widget.enablePulldownRefresh)) return false;
+        (down && !widget.enablePullDownRefresh)) return false;
     if (notification is ScrollStartNotification) {
       return _handleScrollStart(notification);
     }
@@ -221,7 +221,7 @@ class _SmartRefresherState extends State<SmartRefresher>
       if (widget.refreshMode == mode) return;
       if (widget.refreshMode == RefreshMode.refreshing) return;
       _modeChangeCallback(true, mode);
-      if (widget.headerBuilder == null && widget.enablePulldownRefresh) {
+      if (widget.headerBuilder == null && widget.enablePullDownRefresh) {
         if (mode == RefreshMode.canRefresh) {
           _mTIconController.animateTo(1.0);
         } else if (mode == RefreshMode.startDrag) {
@@ -268,6 +268,8 @@ class _SmartRefresherState extends State<SmartRefresher>
   @override
   void dispose() {
     // TODO: implement dispose
+    _mBIconController.dispose();
+    _mTIconController.dispose();
     _mScrollController.dispose();
     _mBottomController.dispose();
     _mTopController.dispose();
@@ -310,7 +312,7 @@ class _SmartRefresherState extends State<SmartRefresher>
         _mTopController.animateTo(1.0);
       } else if (RefreshMode.completed == widget.refreshMode||RefreshMode.failed==widget.refreshMode) {
         new Future<Null>.delayed(
-            new Duration(milliseconds: widget.completDuration), () {
+            new Duration(milliseconds: widget.completeDuration), () {
           _modeChangeCallback(true, RefreshMode.idel);
           _dismiss(true);
         });
@@ -320,7 +322,7 @@ class _SmartRefresherState extends State<SmartRefresher>
         _mBottomController.animateTo(1.0);
       } else if (widget.loadMode == RefreshMode.completed||RefreshMode.failed==widget.loadMode) {
         new Future<Null>.delayed(
-            new Duration(milliseconds: widget.completDuration), () {
+            new Duration(milliseconds: widget.completeDuration), () {
           _modeChangeCallback(false, RefreshMode.idel);
           _dismiss(false);
         });
@@ -335,7 +337,7 @@ class _SmartRefresherState extends State<SmartRefresher>
       return new Stack(
         children: <Widget>[
           new Positioned(
-              top: !widget.enablePulldownRefresh ? 0.0 : -widget.headerHeight,
+              top: !widget.enablePullDownRefresh ? 0.0 : -widget.headerHeight,
               bottom: !widget.enablePullUpLoad ? 0.0 : -widget.footerHeight,
               left: 0.0,
               right: 0.0,
@@ -344,11 +346,11 @@ class _SmartRefresherState extends State<SmartRefresher>
                   controller: _mScrollController,
                   physics: new RefreshScrollPhysics(),
                   children: <Widget>[
-                    !widget.enablePulldownRefresh
+                    !widget.enablePullDownRefresh
                         ? new Container()
                         : buildEmptySpace(
                             _mTopController, widget.topVisibleRange),
-                    !widget.enablePulldownRefresh
+                    !widget.enablePullDownRefresh
                         ? new Container()
                         : widget.headerBuilder != null
                             ? widget.headerBuilder(context, widget.refreshMode)

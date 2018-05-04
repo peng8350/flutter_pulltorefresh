@@ -11,24 +11,13 @@ class Example1 extends StatefulWidget {
 class _Example1State extends State<Example1> {
 
   RefreshMode loading=RefreshMode.idel, refreshing=RefreshMode.idel;
+  List<Widget> data = [];
+  void _getDatas() {
 
-  List<Widget> _getDatas() {
-    List<Widget> data = [];
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 14; i++) {
       data.add(new Text('Data $i'));
     }
-    return data;
   }
-
-  Widget _buildHeader(context, mode) {
-    return new Image.asset(
-      "images/animate.gif",
-      height: 100.0,
-      fit: BoxFit.cover,
-    );
-  }
-
-
 
 
   void _onModeChange(isUp,mode){
@@ -55,8 +44,11 @@ class _Example1State extends State<Example1> {
       // this is equals onLoaadmore()
       if(mode==RefreshMode.refreshing) {
         new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
+
           setState(() {
-            loading = RefreshMode.failed;
+             data.add(new Text('Data '));
+
+            loading = RefreshMode.completed;
           });
           print("LoadComplete!!!");
         });
@@ -69,24 +61,38 @@ class _Example1State extends State<Example1> {
 //    print(offset);
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    _getDatas();
+
+    super.initState();
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return new Container(
       child: new SmartRefresher(
-        enablePulldownRefresh: true,
+        enablePullDownRefresh: true,
         enablePullUpLoad: true,
-        headerBuilder: _buildHeader,
         refreshMode: this.refreshing,
         loadMode: this.loading,
-        child: new ListView(
+        onModeChange: _onModeChange,
+        onOffsetChange: _onOffsetCallback,
+        child: new ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemExtent: 40.0,
-            children: _getDatas()),
-        onModeChange: _onModeChange,
-        onOffsetChange: _onOffsetCallback,
-      ),
+            itemCount: data.length,
+            itemBuilder: (context,index){
+              return data[index];
+            },
+
+      )
+    )
     );
   }
 }

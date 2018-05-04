@@ -39,7 +39,7 @@ class BuildFactory {
                   : mode == RefreshMode.completed
                       ? 'Refresh Completed'
                       : mode == RefreshMode.failed
-                          ? 'Load Failed'
+                          ? 'Refresh Failed'
                           : mode == RefreshMode.refreshing
                               ? 'Refreshing....'
                               : 'pull down refresh',
