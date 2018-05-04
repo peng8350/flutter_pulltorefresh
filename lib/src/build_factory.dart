@@ -16,7 +16,6 @@ class BuildFactory {
   // if your renderHeader null, it will be replaced by it
   Widget buildDefaultHeader(
       BuildContext context, RefreshMode mode, AnimationController controller) {
-    print(mode);
     return new Container(
       height: 50.0,
       alignment: Alignment.center,
@@ -26,20 +25,24 @@ class BuildFactory {
           (mode == RefreshMode.refreshing || mode == RefreshMode.idel)
               ? const CupertinoActivityIndicator()
               : mode == RefreshMode.completed
-              ? const Icon(Icons.done, color: Colors.grey)
-              : new RotationTransition(
-              turns: controller,
-              child:
-              const Icon(Icons.arrow_downward, color: Colors.grey)),
+                  ? const Icon(Icons.done, color: Colors.grey)
+                  : mode == RefreshMode.failed
+                      ? const Icon(Icons.clear, color: Colors.grey)
+                      : new RotationTransition(
+                          turns: controller,
+                          child: const Icon(Icons.arrow_downward,
+                              color: Colors.grey)),
           new Container(
             child: new Text(
               mode == RefreshMode.canRefresh
                   ? 'Refresh when release'
                   : mode == RefreshMode.completed
-                  ? 'Refresh Completed'
-                  : mode == RefreshMode.refreshing
-                  ? 'Refreshing....'
-                  : 'pull down refresh',
+                      ? 'Refresh Completed'
+                      : mode == RefreshMode.failed
+                          ? 'Load Failed'
+                          : mode == RefreshMode.refreshing
+                              ? 'Refreshing....'
+                              : 'pull down refresh',
               style: new TextStyle(color: const Color(0xff555555)),
             ),
             margin: const EdgeInsets.only(left: 10.0),
@@ -61,21 +64,25 @@ class BuildFactory {
           (mode == RefreshMode.refreshing || mode == RefreshMode.idel)
               ? const CupertinoActivityIndicator()
               : mode == RefreshMode.completed
-              ? const Icon(Icons.done, color: Colors.grey)
-              : new RotationTransition(
-              turns: controller,
-              child:
-              const Icon(Icons.arrow_downward, color: Colors.grey)),
+                  ? const Icon(Icons.done, color: Colors.grey)
+                  : mode == RefreshMode.failed
+                      ? const Icon(Icons.clear, color: Colors.grey)
+                      : new RotationTransition(
+                          turns: controller,
+                          child: const Icon(Icons.arrow_downward,
+                              color: Colors.grey)),
           new Container(
             margin: new EdgeInsets.only(left: 10.0),
             child: new Text(
                 mode == RefreshMode.canRefresh
                     ? 'LoadMore when release'
                     : mode == RefreshMode.completed
-                    ? 'Load Completed'
-                    : mode == RefreshMode.refreshing
-                    ? 'Loading....'
-                    : 'pull up load',
+                        ? 'Load Completed'
+                        : mode == RefreshMode.failed
+                            ? 'Load Failed'
+                            : mode == RefreshMode.refreshing
+                                ? 'Loading....'
+                                : 'pull up load',
                 style: new TextStyle(color: const Color(0xff555555))),
           )
         ],

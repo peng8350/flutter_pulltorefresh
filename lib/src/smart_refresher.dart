@@ -307,9 +307,8 @@ class _SmartRefresherState extends State<SmartRefresher>
         oldWidget.loadMode == widget.loadMode) return;
     if (widget.refreshMode != oldWidget.refreshMode) {
       if (widget.refreshMode == RefreshMode.refreshing) {
-        print("qqq");
         _mTopController.animateTo(1.0);
-      } else if (RefreshMode.completed == widget.refreshMode) {
+      } else if (RefreshMode.completed == widget.refreshMode||RefreshMode.failed==widget.refreshMode) {
         new Future<Null>.delayed(
             new Duration(milliseconds: widget.completDuration), () {
           _modeChangeCallback(true, RefreshMode.idel);
@@ -319,7 +318,7 @@ class _SmartRefresherState extends State<SmartRefresher>
     } else if (oldWidget.loadMode != widget.loadMode) {
       if (widget.loadMode == RefreshMode.refreshing) {
         _mBottomController.animateTo(1.0);
-      } else if (widget.loadMode == RefreshMode.completed) {
+      } else if (widget.loadMode == RefreshMode.completed||RefreshMode.failed==widget.loadMode) {
         new Future<Null>.delayed(
             new Duration(milliseconds: widget.completDuration), () {
           _modeChangeCallback(true, RefreshMode.idel);

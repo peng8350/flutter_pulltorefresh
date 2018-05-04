@@ -69,35 +69,36 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   void _onModeChange(isUp,mode){
-    print(mode);
-    setState(() {
       if(isUp){
+        //must be do it
         setState(() {
           refreshing = mode;
         });
+        // this is equals onRefresh()
         if(mode==RefreshMode.refreshing) {
           new Future.delayed(const Duration(milliseconds: 2000), () {
             setState(() {
-              refreshing = RefreshMode.completed;
+              refreshing = RefreshMode.failed;
             });
             print("Refreshed!!!");
           });
         }
       }
       else{
+        //must be do it
         setState(() {
           loading= mode;
         });
-        new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
-          return null;
-        }).then((Null val) {
-          setState(() {
-            loading = RefreshMode.completed;
+        // this is equals onLoaadmore()
+        if(mode==RefreshMode.refreshing) {
+          new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
+            setState(() {
+              loading = RefreshMode.failed;
+            });
+            print("LoadComplete!!!");
           });
-          print("LoadComplete!!!");
-        });
+        }
       }
-    });
   }
 
   void _onOffsetCallback(double offset) {
@@ -123,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: new SmartRefresher(
             enablePulldownRefresh: true,
             enablePullUpLoad: true,
+            headerBuilder: _buildHeader,
             refreshMode: this.refreshing,
             loadMode: this.loading,
             child: new ListView(
