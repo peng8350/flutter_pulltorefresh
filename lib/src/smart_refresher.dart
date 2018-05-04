@@ -40,14 +40,12 @@ class SmartRefresher extends StatefulWidget {
   // The scope of the display when the indicator enters a refresh state
   final double topVisibleRange, bottomVisibleRange;
   // the height must be  equals your headerBuilder
-  final double headerHeight,footerHeight;
+  final double headerHeight, footerHeight;
   // upper and downer callback when you drag out of the distance
   final OnRefresh onRefresh;
   final OnLoadmore onLoadmore;
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;
-
-
 
   SmartRefresher({
     Key key,
@@ -57,17 +55,18 @@ class SmartRefresher extends StatefulWidget {
     this.headerBuilder,
     this.footerBuilder,
     this.refreshing: false,
-    this.bottomVisibleRange:50.0,
-    this.topVisibleRange:50.0,
-    this.headerHeight:50.0,
-    this.footerHeight:50.0,
+    this.bottomVisibleRange: 50.0,
+    this.topVisibleRange: 50.0,
+    this.headerHeight: 50.0,
+    this.footerHeight: 50.0,
     this.loading: false,
     this.completDuration: 800,
     this.onRefresh,
     this.onLoadmore,
     this.onOffsetChange,
     this.triggerDistance: 100.0,
-  }) : assert(child != null),super(key:key);
+  })  : assert(child != null),
+        super(key: key);
 
   @override
   _SmartRefresherState createState() => new _SmartRefresherState();
@@ -77,6 +76,8 @@ class _SmartRefresherState extends State<SmartRefresher>
     with TickerProviderStateMixin, BuildFactory {
   // the two controllers can controll the top and bottom empty spacing widgets.
   AnimationController _mTopController, _mBottomController;
+  // animate change for icon top and bottom
+  AnimationController _mTIconController, _mBIconController;
   // listen the listen offset or on...
   ScrollController _mScrollController;
   // Represents the state of the upper and lower two refreshes.
@@ -108,9 +109,12 @@ class _SmartRefresherState extends State<SmartRefresher>
     if (_mDragPointY == null && notification.metrics.outOfRange)
       _mDragPointY = _mScrollController.offset;
     if (down) {
-      _updateIndictorIfNeed(_measureRatio(-_mScrollController.offset), notification);
+      _updateIndictorIfNeed(
+          _measureRatio(-_mScrollController.offset), notification);
     } else {
-      _updateIndictorIfNeed(_measureRatio(_mScrollController.offset) - _mDragPointY, notification);
+      _updateIndictorIfNeed(
+          _measureRatio(_mScrollController.offset - _mDragPointY),
+          notification);
     }
 
     return false;
@@ -202,8 +206,7 @@ class _SmartRefresherState extends State<SmartRefresher>
      cause Flutter to automatically retrieve widget.
     */
     if (up) {
-      if (!_mTopController.isDismissed)
-        _mTopController.animateTo(0.000001);
+      if (!_mTopController.isDismissed) _mTopController.animateTo(0.000001);
     } else {
       if (!_mBottomController.isDismissed)
         _mBottomController.animateTo(0.000001);
@@ -211,9 +214,10 @@ class _SmartRefresherState extends State<SmartRefresher>
   }
 
   // the indictor will update update when offset change between 1.0
-  void _updateIndictorIfNeed(double offset,ScrollUpdateNotification notification){
+  void _updateIndictorIfNeed(
+      double offset, ScrollUpdateNotification notification) {
     _mReachMax = offset >= 1.0;
-    if(widget.onOffsetChange!=null)widget.onOffsetChange(offset);
+    if (widget.onOffsetChange != null) widget.onOffsetChange(offset);
     if (_mReachMax) {
       _changeMode(notification, RefreshMode.canRefresh);
     } else {
@@ -226,15 +230,30 @@ class _SmartRefresherState extends State<SmartRefresher>
     if (_isPullDown(notifi)) {
       if (_mTopMode == mode) return;
       if (_mTopMode == RefreshMode.refreshing) return;
+
       setState(() {
         _mTopMode = mode;
       });
+      if (widget.headerBuilder == null && widget.enablePulldownRefresh) {
+        if (mode == RefreshMode.canRefresh) {
+          _mTIconController.animateTo(1.0);
+        } else if (mode == RefreshMode.startDrag) {
+          _mTIconController.animateTo(0.0);
+        }
+      }
     } else if (_isPullUp(notifi)) {
       if (_mBottomMode == mode) return;
       if (_mBottomMode == RefreshMode.refreshing) return;
       setState(() {
         _mBottomMode = mode;
       });
+      if (widget.footerBuilder == null && widget.enablePullUpLoad) {
+        if (mode == RefreshMode.canRefresh) {
+          _mBIconController.animateTo(1.0);
+        } else if (mode == RefreshMode.startDrag) {
+          _mBIconController.animateTo(0.0);
+        }
+      }
     }
   }
 
@@ -281,6 +300,15 @@ class _SmartRefresherState extends State<SmartRefresher>
       lowerBound: 0.000001,
       duration: const Duration(milliseconds: 200),
     );
+    _mBIconController = new AnimationController(
+        vsync: this,
+        upperBound: 0.5,
+        value: 0.5,
+        duration: const Duration(milliseconds: 100));
+    _mTIconController = new AnimationController(
+        vsync: this,
+        upperBound: 0.5,
+        duration: const Duration(milliseconds: 100));
   }
 
   @override
@@ -322,35 +350,37 @@ class _SmartRefresherState extends State<SmartRefresher>
       return new Stack(
         children: <Widget>[
           new Positioned(
-              top: !widget.enablePulldownRefresh?0.0:-widget.headerHeight,
-              bottom:!widget.enablePullUpLoad?0.0: -widget.footerHeight,
+              top: !widget.enablePulldownRefresh ? 0.0 : -widget.headerHeight,
+              bottom: !widget.enablePullUpLoad ? 0.0 : -widget.footerHeight,
               left: 0.0,
               right: 0.0,
               child: new NotificationListener(
                 child: new ListView(
-                    controller: _mScrollController,
-                    physics: new RefreshScrollPhysics(),
-                    children: <Widget>[
-                      !widget.enablePulldownRefresh
-                          ? new Container()
-                          : buildEmptySpace(_mTopController,widget.topVisibleRange),
-                      !widget.enablePulldownRefresh
-                          ? new Container()
-                          : widget.headerBuilder != null
-                          ? widget.headerBuilder(context, _mTopMode)
-                          : buildDefaultHeader(context, _mTopMode),
-                      widget.child,
-                      !widget.enablePullUpLoad
-                          ? new Container()
-                          : widget.footerBuilder != null
-                          ? widget.footerBuilder(context, _mBottomMode)
-                          : buildDefaultFooter(context, _mBottomMode),
-                      !widget.enablePullUpLoad
-                          ? new Container()
-                          : buildEmptySpace(_mBottomController,widget.bottomVisibleRange),
-                    ],
-                  ),
-
+                  controller: _mScrollController,
+                  physics: new RefreshScrollPhysics(),
+                  children: <Widget>[
+                    !widget.enablePulldownRefresh
+                        ? new Container()
+                        : buildEmptySpace(
+                            _mTopController, widget.topVisibleRange),
+                    !widget.enablePulldownRefresh
+                        ? new Container()
+                        : widget.headerBuilder != null
+                            ? widget.headerBuilder(context, _mTopMode)
+                            : buildDefaultHeader(
+                                context, _mTopMode, _mTIconController),
+                    widget.child,
+                    !widget.enablePullUpLoad
+                        ? new Container()
+                        : widget.footerBuilder != null
+                            ? widget.footerBuilder(context, _mBottomMode)
+                            : buildDefaultFooter(context, _mBottomMode,_mBIconController),
+                    !widget.enablePullUpLoad
+                        ? new Container()
+                        : buildEmptySpace(
+                            _mBottomController, widget.bottomVisibleRange),
+                  ],
+                ),
                 onNotification: _dispatchScrollEvent,
               ))
         ],

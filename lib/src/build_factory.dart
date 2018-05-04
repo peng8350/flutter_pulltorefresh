@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/src/smart_refresher.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 /**
     Author: Jpeng
@@ -13,22 +14,34 @@ import 'package:pull_to_refresh/src/smart_refresher.dart';
  */
 class BuildFactory {
   // if your renderHeader null, it will be replaced by it
-  Widget buildDefaultHeader(BuildContext context, RefreshMode mode) {
+  Widget buildDefaultHeader(
+      BuildContext context, RefreshMode mode, AnimationController controller) {
+    print(mode);
     return new Container(
       height: 50.0,
       alignment: Alignment.center,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const CupertinoActivityIndicator(),
+          (mode == RefreshMode.refreshing || mode == RefreshMode.idel)
+              ? const CupertinoActivityIndicator()
+              : mode == RefreshMode.completed
+                  ? const Icon(Icons.done, color: Colors.grey)
+                  : new RotationTransition(
+                      turns: controller,
+                      child:
+                          const Icon(Icons.arrow_downward, color: Colors.grey)),
           new Container(
-            child: new Text(mode == RefreshMode.canRefresh
-                ? 'Refresh when release'
-                : mode == RefreshMode.completed
-                ? 'Refresh Completed'
-                : mode == RefreshMode.refreshing
-                ? 'Refreshing....'
-                : 'pull down refresh'),
+            child: new Text(
+              mode == RefreshMode.canRefresh
+                  ? 'Refresh when release'
+                  : mode == RefreshMode.completed
+                      ? 'Refresh Completed'
+                      : mode == RefreshMode.refreshing
+                          ? 'Refreshing....'
+                          : 'pull down refresh',
+              style: new TextStyle(color: const Color(0xff555555)),
+            ),
             margin: const EdgeInsets.only(left: 10.0),
           )
         ],
@@ -37,23 +50,33 @@ class BuildFactory {
   }
 
   // if your renderFooter null, it will be replaced by it
-  Widget buildDefaultFooter(BuildContext context, RefreshMode mode) {
+  Widget buildDefaultFooter(
+      BuildContext context, RefreshMode mode, AnimationController controller) {
     return new Container(
       height: 50.0,
       alignment: Alignment.center,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const CupertinoActivityIndicator(),
+          (mode == RefreshMode.refreshing || mode == RefreshMode.idel)
+              ? const CupertinoActivityIndicator()
+              : mode == RefreshMode.completed
+                  ? const Icon(Icons.done, color: Colors.grey)
+                  : new RotationTransition(
+                      turns: controller,
+                      child:
+                          const Icon(Icons.arrow_downward, color: Colors.grey)),
           new Container(
             margin: new EdgeInsets.only(left: 10.0),
-            child: new Text(mode == RefreshMode.startDrag
-                ? 'pull up load'
-                : mode == RefreshMode.canRefresh
-                    ? 'Loadmore when release'
+            child: new Text(
+                mode == RefreshMode.canRefresh
+                    ? 'LoadMore when release'
                     : mode == RefreshMode.completed
                         ? 'Load Completed'
-                        : 'LoadMore....'),
+                        : mode == RefreshMode.refreshing
+                            ? 'Loading....'
+                            : 'pull up load',
+                style: new TextStyle(color: const Color(0xff555555))),
           )
         ],
       ),
