@@ -1,7 +1,7 @@
-import 'package:demo/ui/Example1.dart';
-import 'package:demo/ui/Example2.dart';
-import 'package:demo/ui/Example3.dart';
-import 'package:demo/ui/Example4.dart';
+import 'Example1.dart';
+import 'Example2.dart';
+import 'Example3.dart';
+import 'Example4.dart';
 import 'package:flutter/material.dart';
 
 class MainActivity extends StatefulWidget {

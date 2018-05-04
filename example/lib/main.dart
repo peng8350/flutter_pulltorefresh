@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:demo/ui/MainActivity.dart';
+import 'package:example/ui/MainActivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

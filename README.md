@@ -1,10 +1,11 @@
 # Flutter_Pulltorefresh
 
 ## Intro
-a widget provided to the flutter scroll component drop-down refresh and pull up load.
+a widget provided to the flutter scroll component drop-down refresh and pull up load.support android and ios
 
 
 ## Features
+* Android and iOS both spported
 * pull up and pull down
 * It's almost fit for all witgets,like GridView,ListView,Container,Text...
 * High extensibility
@@ -12,13 +13,14 @@ a widget provided to the flutter scroll component drop-down refresh and pull up 
 
 ## Screenshots
 ![](arts/ios1.gif)
+![](arts/ios2.gif)
 
 ## How to use?
 this is an example:
 
 ```
    dependencies:
-     pull_to_refresh: ^1.0.0
+     pull_to_refresh: ^1.0.3
 ```
 
 ```
