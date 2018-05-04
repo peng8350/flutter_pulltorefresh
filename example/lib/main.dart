@@ -47,7 +47,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool loading, refreshing;
+  RefreshMode loading=RefreshMode.idel, refreshing=RefreshMode.idel;
 
   List<Widget> _getDatas() {
     List<Widget> data = [];
@@ -65,29 +65,38 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _onLoadMore() {
-    setState(() {
-      loading = true;
-    });
-    new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
-      return null;
-    }).then((Null val) {
-      setState(() {
-        loading = false;
-      });
-      print("LoadComplete!!!");
-    });
-  }
 
-  void _onRefresh() {
+
+
+  void _onModeChange(isUp,mode){
+    print(mode);
     setState(() {
-      refreshing = true;
-    });
-    new Future.delayed(const Duration(milliseconds: 2000), () {
-      setState(() {
-        refreshing = false;
-      });
-      print("Refreshed!!!");
+      if(isUp){
+        setState(() {
+          refreshing = mode;
+        });
+        if(mode==RefreshMode.refreshing) {
+          new Future.delayed(const Duration(milliseconds: 2000), () {
+            setState(() {
+              refreshing = RefreshMode.completed;
+            });
+            print("Refreshed!!!");
+          });
+        }
+      }
+      else{
+        setState(() {
+          loading= mode;
+        });
+        new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
+          return null;
+        }).then((Null val) {
+          setState(() {
+            loading = RefreshMode.completed;
+          });
+          print("LoadComplete!!!");
+        });
+      }
     });
   }
 
@@ -114,15 +123,14 @@ class _MyHomePageState extends State<MyHomePage> {
           child: new SmartRefresher(
             enablePulldownRefresh: true,
             enablePullUpLoad: true,
-            refreshing: this.refreshing,
-            loading: this.loading,
+            refreshMode: this.refreshing,
+            loadMode: this.loading,
             child: new ListView(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemExtent: 40.0,
                 children: _getDatas()),
-            onRefresh: _onRefresh,
-            onLoadmore: _onLoadMore,
+            onModeChange: _onModeChange,
             onOffsetChange: _onOffsetCallback,
           ),
         ));

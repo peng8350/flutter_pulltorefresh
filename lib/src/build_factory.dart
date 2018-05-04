@@ -10,7 +10,7 @@ import 'package:flutter/cupertino.dart';
  */
 
 /**
-  use it to build some widget
+    use it to build some widget
  */
 class BuildFactory {
   // if your renderHeader null, it will be replaced by it
@@ -26,20 +26,20 @@ class BuildFactory {
           (mode == RefreshMode.refreshing || mode == RefreshMode.idel)
               ? const CupertinoActivityIndicator()
               : mode == RefreshMode.completed
-                  ? const Icon(Icons.done, color: Colors.grey)
-                  : new RotationTransition(
-                      turns: controller,
-                      child:
-                          const Icon(Icons.arrow_downward, color: Colors.grey)),
+              ? const Icon(Icons.done, color: Colors.grey)
+              : new RotationTransition(
+              turns: controller,
+              child:
+              const Icon(Icons.arrow_downward, color: Colors.grey)),
           new Container(
             child: new Text(
               mode == RefreshMode.canRefresh
                   ? 'Refresh when release'
                   : mode == RefreshMode.completed
-                      ? 'Refresh Completed'
-                      : mode == RefreshMode.refreshing
-                          ? 'Refreshing....'
-                          : 'pull down refresh',
+                  ? 'Refresh Completed'
+                  : mode == RefreshMode.refreshing
+                  ? 'Refreshing....'
+                  : 'pull down refresh',
               style: new TextStyle(color: const Color(0xff555555)),
             ),
             margin: const EdgeInsets.only(left: 10.0),
@@ -61,21 +61,21 @@ class BuildFactory {
           (mode == RefreshMode.refreshing || mode == RefreshMode.idel)
               ? const CupertinoActivityIndicator()
               : mode == RefreshMode.completed
-                  ? const Icon(Icons.done, color: Colors.grey)
-                  : new RotationTransition(
-                      turns: controller,
-                      child:
-                          const Icon(Icons.arrow_downward, color: Colors.grey)),
+              ? const Icon(Icons.done, color: Colors.grey)
+              : new RotationTransition(
+              turns: controller,
+              child:
+              const Icon(Icons.arrow_downward, color: Colors.grey)),
           new Container(
             margin: new EdgeInsets.only(left: 10.0),
             child: new Text(
                 mode == RefreshMode.canRefresh
                     ? 'LoadMore when release'
                     : mode == RefreshMode.completed
-                        ? 'Load Completed'
-                        : mode == RefreshMode.refreshing
-                            ? 'Loading....'
-                            : 'pull up load',
+                    ? 'Load Completed'
+                    : mode == RefreshMode.refreshing
+                    ? 'Loading....'
+                    : 'pull up load',
                 style: new TextStyle(color: const Color(0xff555555))),
           )
         ],

@@ -9,13 +9,12 @@ import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/build_factory.dart';
 import 'package:pull_to_refresh/src/refresh_physics.dart';
 
-typedef void OnRefresh();
-typedef void OnLoadmore();
+typedef void OnModeChange(bool isUp, RefreshMode mode);
 typedef void OnOffsetChange(double offset);
 typedef Widget HeaderBuilder(BuildContext context, RefreshMode mode);
 typedef Widget FooterBuilder(BuildContext context, RefreshMode mode);
 
-enum RefreshMode { idel, startDrag, canRefresh, refreshing, completed }
+enum RefreshMode { idel, startDrag, canRefresh, refreshing, completed, failed }
 
 /**
     This is the most important component that provides drop-down refresh and up loading.
@@ -32,7 +31,7 @@ class SmartRefresher extends StatefulWidget {
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePulldownRefresh;
   //this will influerence the RefreshMode
-  final bool refreshing, loading;
+  final RefreshMode refreshMode, loadMode;
   // completed show time
   final int completDuration;
   // This value represents the distance that can be refreshed and trigger the callback drag.
@@ -42,8 +41,7 @@ class SmartRefresher extends StatefulWidget {
   // the height must be  equals your headerBuilder
   final double headerHeight, footerHeight;
   // upper and downer callback when you drag out of the distance
-  final OnRefresh onRefresh;
-  final OnLoadmore onLoadmore;
+  final OnModeChange onModeChange;
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;
 
@@ -54,15 +52,14 @@ class SmartRefresher extends StatefulWidget {
     this.enablePullUpLoad: false,
     this.headerBuilder,
     this.footerBuilder,
-    this.refreshing: false,
+    this.refreshMode: RefreshMode.idel,
     this.bottomVisibleRange: 50.0,
     this.topVisibleRange: 50.0,
     this.headerHeight: 50.0,
     this.footerHeight: 50.0,
-    this.loading: false,
+    this.loadMode: RefreshMode.idel,
     this.completDuration: 800,
-    this.onRefresh,
-    this.onLoadmore,
+    this.onModeChange,
     this.onOffsetChange,
     this.triggerDistance: 100.0,
   })  : assert(child != null),
@@ -80,8 +77,6 @@ class _SmartRefresherState extends State<SmartRefresher>
   AnimationController _mTIconController, _mBIconController;
   // listen the listen offset or on...
   ScrollController _mScrollController;
-  // Represents the state of the upper and lower two refreshes.
-  RefreshMode _mTopMode, _mBottomMode;
   // the bool will check the user if dragging on the screen.
   bool _mIsDraging = false, _mReachMax = false;
   // the ScrollStart Drag Point Y
@@ -122,20 +117,15 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollEndEvent
   bool _handleScrollEnd(ScrollNotification notification) {
-    bool down = _isPullDown(notification);
-    bool up = _isPullUp(notification);
+    bool up = _isPullDown(notification);
     if (!_mReachMax) {
       _changeMode(notification, RefreshMode.idel);
-      _dismiss(down ? down : false);
+      _dismiss(up ? up : false);
     } else {
       if (up) {
-        if (widget.onLoadmore != null) {
-          widget.onLoadmore();
-        }
+        _modeChangeCallback(true, RefreshMode.refreshing);
       } else {
-        if (widget.onRefresh != null) {
-          widget.onRefresh();
-        }
+        _modeChangeCallback(false, RefreshMode.refreshing);
       }
     }
     _resumeVal();
@@ -160,11 +150,11 @@ class _SmartRefresherState extends State<SmartRefresher>
       return false;
     }
     if ((down &&
-            (_mTopMode == RefreshMode.refreshing ||
-                _mTopMode == RefreshMode.completed)) ||
+            (widget.refreshMode == RefreshMode.refreshing ||
+                widget.refreshMode == RefreshMode.completed)) ||
         (up &&
-            (_mBottomMode == RefreshMode.refreshing ||
-                _mBottomMode == RefreshMode.completed))) {
+            (widget.loadMode == RefreshMode.refreshing ||
+                widget.loadMode == RefreshMode.completed))) {
       return false;
     }
     if ((up && !widget.enablePullUpLoad) ||
@@ -228,12 +218,9 @@ class _SmartRefresherState extends State<SmartRefresher>
   // change the top or bottom mode
   void _changeMode(ScrollNotification notifi, mode) {
     if (_isPullDown(notifi)) {
-      if (_mTopMode == mode) return;
-      if (_mTopMode == RefreshMode.refreshing) return;
-
-      setState(() {
-        _mTopMode = mode;
-      });
+      if (widget.refreshMode == mode) return;
+      if (widget.refreshMode == RefreshMode.refreshing) return;
+      _modeChangeCallback(true, mode);
       if (widget.headerBuilder == null && widget.enablePulldownRefresh) {
         if (mode == RefreshMode.canRefresh) {
           _mTIconController.animateTo(1.0);
@@ -242,11 +229,9 @@ class _SmartRefresherState extends State<SmartRefresher>
         }
       }
     } else if (_isPullUp(notifi)) {
-      if (_mBottomMode == mode) return;
-      if (_mBottomMode == RefreshMode.refreshing) return;
-      setState(() {
-        _mBottomMode = mode;
-      });
+      if (widget.loadMode == mode) return;
+      if (widget.loadMode == RefreshMode.refreshing) return;
+      _modeChangeCallback(false, mode);
       if (widget.footerBuilder == null && widget.enablePullUpLoad) {
         if (mode == RefreshMode.canRefresh) {
           _mBIconController.animateTo(1.0);
@@ -274,6 +259,12 @@ class _SmartRefresherState extends State<SmartRefresher>
     return offset / widget.triggerDistance;
   }
 
+  void _modeChangeCallback(isUp, mode) {
+    if (this.widget.onModeChange != null) {
+      widget.onModeChange(isUp, mode);
+    }
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -287,8 +278,6 @@ class _SmartRefresherState extends State<SmartRefresher>
   void initState() {
     // TODO: implement initState
     super.initState();
-    _mBottomMode = RefreshMode.idel;
-    _mTopMode = RefreshMode.idel;
     _mScrollController = new ScrollController();
     _mTopController = new AnimationController(
       vsync: this,
@@ -314,29 +303,26 @@ class _SmartRefresherState extends State<SmartRefresher>
   @override
   void didUpdateWidget(SmartRefresher oldWidget) {
     // TODO: implement didUpdateWidget
-    if (widget.refreshing == oldWidget.refreshing &&
-        oldWidget.loading == widget.loading) return;
-    if (widget.refreshing != oldWidget.refreshing) {
-      if (widget.refreshing) {
+    if (widget.refreshMode == oldWidget.refreshMode &&
+        oldWidget.loadMode == widget.loadMode) return;
+    if (widget.refreshMode != oldWidget.refreshMode) {
+      if (widget.refreshMode == RefreshMode.refreshing) {
+        print("qqq");
         _mTopController.animateTo(1.0);
-        this._mTopMode = RefreshMode.refreshing;
-      } else {
-        this._mTopMode = RefreshMode.completed;
+      } else if (RefreshMode.completed == widget.refreshMode) {
         new Future<Null>.delayed(
             new Duration(milliseconds: widget.completDuration), () {
-          this._mTopMode = RefreshMode.idel;
+          _modeChangeCallback(true, RefreshMode.idel);
           _dismiss(true);
         });
       }
-    } else if (oldWidget.loading != widget.loading) {
-      if (widget.loading) {
+    } else if (oldWidget.loadMode != widget.loadMode) {
+      if (widget.loadMode == RefreshMode.refreshing) {
         _mBottomController.animateTo(1.0);
-        this._mBottomMode = RefreshMode.refreshing;
-      } else {
-        this._mBottomMode = RefreshMode.completed;
+      } else if (widget.loadMode == RefreshMode.completed) {
         new Future<Null>.delayed(
             new Duration(milliseconds: widget.completDuration), () {
-          this._mBottomMode = RefreshMode.idel;
+          _modeChangeCallback(true, RefreshMode.idel);
           _dismiss(false);
         });
       }
@@ -366,15 +352,16 @@ class _SmartRefresherState extends State<SmartRefresher>
                     !widget.enablePulldownRefresh
                         ? new Container()
                         : widget.headerBuilder != null
-                            ? widget.headerBuilder(context, _mTopMode)
+                            ? widget.headerBuilder(context, widget.refreshMode)
                             : buildDefaultHeader(
-                                context, _mTopMode, _mTIconController),
+                                context, widget.refreshMode, _mTIconController),
                     widget.child,
                     !widget.enablePullUpLoad
                         ? new Container()
                         : widget.footerBuilder != null
-                            ? widget.footerBuilder(context, _mBottomMode)
-                            : buildDefaultFooter(context, _mBottomMode,_mBIconController),
+                            ? widget.footerBuilder(context, widget.loadMode)
+                            : buildDefaultFooter(
+                                context, widget.loadMode, _mBIconController),
                     !widget.enablePullUpLoad
                         ? new Container()
                         : buildEmptySpace(
