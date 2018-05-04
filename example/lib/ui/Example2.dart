@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class Example3 extends StatefulWidget {
+class Example2 extends StatefulWidget {
   @override
-  _Example3State createState() => new _Example3State();
+  _Example2State createState() => new _Example2State();
 }
 
-class _Example3State extends State<Example3> {
+class _Example2State extends State<Example2> {
 
   RefreshMode loading=RefreshMode.idel, refreshing=RefreshMode.idel;
   List<Widget> data = [];

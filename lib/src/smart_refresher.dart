@@ -337,46 +337,45 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   @override
   Widget build(BuildContext context) {
-    return new LayoutBuilder(builder: (context, BoxConstraints size) {
-      return new Stack(
-        children: <Widget>[
-          new Positioned(
-              top: !widget.enablePullDownRefresh ? 0.0 : -widget.headerHeight,
-              bottom: !widget.enablePullUpLoad ? 0.0 : -widget.footerHeight,
-              left: 0.0,
-              right: 0.0,
-              child: new NotificationListener(
-                child: new ListView(
-                  controller: _mScrollController,
-                  physics: new RefreshScrollPhysics(),
-                  children: <Widget>[
-                    !widget.enablePullDownRefresh
-                        ? new Container()
-                        : buildEmptySpace(
-                            _mTopController, widget.topVisibleRange),
-                    !widget.enablePullDownRefresh
-                        ? new Container()
-                        : widget.headerBuilder != null
-                            ? widget.headerBuilder(context, widget.refreshMode)
-                            : buildDefaultHeader(
-                                context, widget.refreshMode, _mTIconController),
-                    widget.child,
-                    !widget.enablePullUpLoad
-                        ? new Container()
-                        : widget.footerBuilder != null
-                            ? widget.footerBuilder(context, widget.loadMode)
-                            : buildDefaultFooter(
-                                context, widget.loadMode, _mBIconController),
-                    !widget.enablePullUpLoad
-                        ? new Container()
-                        : buildEmptySpace(
-                            _mBottomController, widget.bottomVisibleRange),
-                  ],
-                ),
-                onNotification: _dispatchScrollEvent,
-              ))
-        ],
-      );
-    });
+    return
+      new Stack(
+          children: <Widget>[
+            new Positioned(
+                top: !widget.enablePullDownRefresh ? 0.0 : -widget.headerHeight,
+                bottom: !widget.enablePullUpLoad ? 0.0 : -widget.footerHeight,
+                left: 0.0,
+                right: 0.0,
+                child: new NotificationListener(
+                  child: new ListView(
+                    controller: _mScrollController,
+                    physics: new RefreshScrollPhysics(),
+                    children: <Widget>[
+                      !widget.enablePullDownRefresh
+                          ? new Container()
+                          : buildEmptySpace(
+                          _mTopController, widget.topVisibleRange),
+                      !widget.enablePullDownRefresh
+                          ? new Container()
+                          : widget.headerBuilder != null
+                          ? widget.headerBuilder(context, widget.refreshMode)
+                          : buildDefaultHeader(
+                          context, widget.refreshMode, _mTIconController),
+                      widget.child,
+                      !widget.enablePullUpLoad
+                          ? new Container()
+                          : widget.footerBuilder != null
+                          ? widget.footerBuilder(context, widget.loadMode)
+                          : buildDefaultFooter(
+                          context, widget.loadMode, _mBIconController),
+                      !widget.enablePullUpLoad
+                          ? new Container()
+                          : buildEmptySpace(
+                          _mBottomController, widget.bottomVisibleRange),
+                    ],
+                  ),
+                  onNotification: _dispatchScrollEvent,
+                ))
+          ],
+    );
   }
 }

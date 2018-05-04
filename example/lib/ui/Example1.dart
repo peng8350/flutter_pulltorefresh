@@ -14,7 +14,7 @@ class _Example1State extends State<Example1> {
   List<Widget> data = [];
   void _getDatas() {
 
-    for (int i = 0; i < 14; i++) {
+    for (int i = 0; i < 25; i++) {
       data.add(new Text('Data $i'));
     }
   }
