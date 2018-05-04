@@ -150,10 +150,10 @@ class _SmartRefresherState extends State<SmartRefresher>
       return false;
     }
     if ((down &&
-            (widget.refreshMode == RefreshMode.refreshing ||
+            (widget.refreshMode == RefreshMode.refreshing || widget.refreshMode == RefreshMode.failed||
                 widget.refreshMode == RefreshMode.completed)) ||
         (up &&
-            (widget.loadMode == RefreshMode.refreshing ||
+            (widget.loadMode == RefreshMode.refreshing || widget.loadMode == RefreshMode.failed||
                 widget.loadMode == RefreshMode.completed))) {
       return false;
     }
@@ -285,12 +285,20 @@ class _SmartRefresherState extends State<SmartRefresher>
       vsync: this,
       lowerBound: 0.000001,
       duration: const Duration(milliseconds: 200),
-    );
+    )..addStatusListener((status){
+      if(_mTopController.value==0.000001&&status==AnimationStatus.completed){
+        _modeChangeCallback(true, RefreshMode.idel);
+      }
+    });
     _mBottomController = new AnimationController(
       vsync: this,
       lowerBound: 0.000001,
       duration: const Duration(milliseconds: 200),
-    );
+    )..addStatusListener((status){
+      if(_mBottomController.value==0.000001&&status==AnimationStatus.completed){
+       _modeChangeCallback(false, RefreshMode.idel);
+      }
+    });
     _mBIconController = new AnimationController(
         vsync: this,
         upperBound: 0.5,
@@ -313,7 +321,6 @@ class _SmartRefresherState extends State<SmartRefresher>
       } else if (RefreshMode.completed == widget.refreshMode||RefreshMode.failed==widget.refreshMode) {
         new Future<Null>.delayed(
             new Duration(milliseconds: widget.completeDuration), () {
-          _modeChangeCallback(true, RefreshMode.idel);
           _dismiss(true);
         });
       }
@@ -323,7 +330,6 @@ class _SmartRefresherState extends State<SmartRefresher>
       } else if (widget.loadMode == RefreshMode.completed||RefreshMode.failed==widget.loadMode) {
         new Future<Null>.delayed(
             new Duration(milliseconds: widget.completeDuration), () {
-          _modeChangeCallback(false, RefreshMode.idel);
           _dismiss(false);
         });
       }

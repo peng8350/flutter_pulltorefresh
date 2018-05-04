@@ -11,3 +11,7 @@
 * ReMake Default  header and footer builder
 * Replace RefreshMode,loadMode to refreshing,loading
 * Replace onModeChange to onRefresh,onLoadMore
+
+## 1.0.3
+* Fix error Props
+* Add  interupt Scroll when failure status
