@@ -1,6 +1,7 @@
 import 'dart:async';
-
+import 'dart:convert' show json;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Example2 extends StatefulWidget {
@@ -9,68 +10,72 @@ class Example2 extends StatefulWidget {
 }
 
 class _Example2State extends State<Example2> {
+  RefreshMode loading = RefreshMode.idel, refreshing = RefreshMode.idel;
+  int indexPage = 2;
+  List<String> data = [];
 
-  RefreshMode loading=RefreshMode.idel, refreshing=RefreshMode.idel;
-  List<Widget> data = [];
-  void _getDatas() {
+//  http://gank.io/api/data/%E7%A6%8F%E5%88%A9/10/1
 
-    for (int i = 0; i < 14; i++) {
-      data.add(new Text('Data $i'));
-    }
+
+  void _fetch(){
+    http.get('http://gank.io/api/data/%E7%A6%8F%E5%88%A9/30/$indexPage').then((http.Response response){
+      Map map = json.decode(response.body);
+      return map["results"];
+    }).then((array){
+      for(var item in array){
+        data.add(item["url"]);
+      }
+      indexPage++;
+      setState(() {
+        loading = RefreshMode.completed;
+      });
+    }).catchError((){
+      setState(() {
+        loading = RefreshMode.failed;
+      });
+    });
   }
 
-
-  void _onModeChange(isUp,mode){
-    if(isUp){
+  void _onModeChange(isUp, mode) {
+    if (isUp) {
       //must be do it
       setState(() {
         refreshing = mode;
       });
       // this is equals onRefresh()
-      if(mode==RefreshMode.refreshing) {
+      if (mode == RefreshMode.refreshing) {
         new Future.delayed(const Duration(milliseconds: 2000), () {
           setState(() {
-            refreshing = RefreshMode.failed;
+            refreshing = RefreshMode.completed;
           });
-          print("Refreshed!!!");
         });
       }
-    }
-    else{
+    } else {
       //must be do it
       setState(() {
-        loading= mode;
+        loading = mode;
       });
       // this is equals onLoaadmore()
-      if(mode==RefreshMode.refreshing) {
-        new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
+      if (mode == RefreshMode.refreshing) {
+        _fetch();
 
-          setState(() {
-            data.add(new Text('Data '));
-
-            loading = RefreshMode.completed;
-          });
-          print("LoadComplete!!!");
-        });
       }
     }
   }
 
+  Widget buildImage(context, index) {
+    return new Text('sdsd');
+  }
+
   void _onOffsetCallback(double offset) {
     // if you want change some widgets state ,you should rewrite the callback
-//    print(offset);
   }
 
   @override
   void initState() {
     // TODO: implement initState
-    _getDatas();
-
     super.initState();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -82,17 +87,13 @@ class _Example2State extends State<Example2> {
             loadMode: this.loading,
             onModeChange: _onModeChange,
             onOffsetChange: _onOffsetCallback,
-            child: new ListView.builder(
+            child: new GridView.builder(
+              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3),
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemExtent: 40.0,
               itemCount: data.length,
-              itemBuilder: (context,index){
-                return data[index];
-              },
-
-            )
-        )
-    );
+              itemBuilder: buildImage,
+            )));
   }
 }
