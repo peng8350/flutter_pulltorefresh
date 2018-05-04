@@ -8,7 +8,10 @@ a widget provided to the flutter scroll component drop-down refresh and pull up 
 * pull up and pull down
 * It's almost fit for all witgets,like GridView,ListView,Container,Text...
 * High extensibility
-* smart and flexible
+* smart Bouncing
+
+## Screenshots
+![](arts/ios1.gif)
 
 ## How to use?
 this is an example:
@@ -20,36 +23,37 @@ this is an example:
 
 ```
     new SmartRefresher(
-            enablePulldownRefresh: true,
-            enablePullUpLoad: true,
-            headerBuilder: _buildHeader,
-            refreshing: this.refreshing,
-            headerHeight: 100.0,
-            topVisibleRange: 100.0,
-            loading: this.loading,
-            child: new Container(
-              //this is you content view
-              child: new ListView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemExtent: 40.0,
-                  children: _getDatas()
-              ),
-            ),
-            onRefresh: _onRefresh,
-            onLoadmore: _onLoadMore,
-            onOffsetChange: _onOffsetCallback,
-          )
+        enablePullDownRefresh: true,
+        enablePullUpLoad: true,
+        refreshMode: this.refreshing,
+        loadMode: this.loading,
+        onModeChange: _onModeChange,
+        onOffsetChange: _onOffsetCallback,
+        child: new Container(
+          color: Colors.white,
+          child: new ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemExtent: 40.0,
+            itemCount: data.length,
+            itemBuilder: (context,index){
+              return data[index];
+            },
+
+          ),
+        )
+    )
 
 ```
 
 You should set the indicator according to the different refresh mode.
-There are five refresh modes here:idel, startDrag, canRefresh, refreshing, complete,
-build footer is the same with that.
+There are six refresh modes here:idel, startDrag, canRefresh, refreshing, complete,failed
+.build footer is the same with that.
 
 ```
 
   Widget _buildHeader(context,mode){
+  
     return new Image.asset("images/animate.gif",height: 100.0,fit: BoxFit.cover,);
   }
 
@@ -57,25 +61,56 @@ build footer is the same with that.
 ```
 
 This refresh state requires you to update yourself in the logic code.
+Refresh mode details please look at the following
 
 ```
 
-  void _onRefresh(){
-    setState(() {
-      refreshing = true;
-    });
-    //Simulation of a network request to obtain data
-    new Future.delayed(const Duration(milliseconds: 2000),(){
+  void _onModeChange(isUp,mode){
+    if(isUp){
+    	//when pull down refresh
+      //must be do it
       setState(() {
-        refreshing = false;
+        refreshing = mode;
       });
-      print("Refreshed!!!");
-    });
+      	 // this is equals onRefresh() mostly
+      if(mode==RefreshMode.refreshing) {
+       //Simulating a network request to capture data
+        new Future.delayed(const Duration(milliseconds: 2000), () {
+          setState(() {
+            /*
+             when you catch data failed you can. set failed, 
+             else completed
+             */	
+            refreshing = RefreshMode.failed;
+          });
+          print("Refreshed!!!");
+        });
+      }
+    }
+    else{
+      //must be do it
+      setState(() {
+        loading= mode;
+      });
+      // this is equals onLoaadmore()
+      if(mode==RefreshMode.refreshing) {
 
+        new Future<Null>.delayed(const Duration(milliseconds: 2000), 	() {
+
+          setState(() {
+             data.add(new Text('Data '));
+
+            loading = RefreshMode.completed;
+          });
+          print("LoadComplete!!!");
+        });
+      }
+    }
   }
   
 ```
-* If your content view is a rolling component, such as ScrollView, ListView, GridView and so on, you assign these two attributes to the component.Because my parts are used in the ListView nested package
+If your content view is a rolling component, such as ScrollView, ListView, GridView and so on, you assign these two attributes to the component.Because my parts are used in the ListView nested package,
+this is very important,if you don't notice it,you will get some problems.
 
 ```
 new ListView(){

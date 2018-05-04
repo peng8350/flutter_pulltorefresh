@@ -75,6 +75,7 @@ class _Example1State extends State<Example1> {
   @override
   Widget build(BuildContext context) {
     return new Container(
+      color: Colors.white30,
       child: new SmartRefresher(
         enablePullDownRefresh: true,
         enablePullUpLoad: true,
@@ -82,7 +83,9 @@ class _Example1State extends State<Example1> {
         loadMode: this.loading,
         onModeChange: _onModeChange,
         onOffsetChange: _onOffsetCallback,
-        child: new ListView.builder(
+        child: new Container(
+          color: Colors.white,
+          child: new ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemExtent: 40.0,
@@ -91,7 +94,8 @@ class _Example1State extends State<Example1> {
               return data[index];
             },
 
-      )
+          ),
+        )
     )
     );
   }
