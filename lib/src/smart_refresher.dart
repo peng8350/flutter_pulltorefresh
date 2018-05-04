@@ -171,9 +171,7 @@ class _SmartRefresherState extends State<SmartRefresher>
       }
     }
     if (notification is ScrollEndNotification) {
-      if (_mIsDraging) {
         return _handleScrollEnd(notification);
-      }
     }
 
     return true;
