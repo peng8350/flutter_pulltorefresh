@@ -4,6 +4,7 @@
  createTime:2018-05-01 11:39
  */
 import 'dart:async';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/build_factory.dart';
@@ -38,8 +39,6 @@ class SmartRefresher extends StatefulWidget {
   final double triggerDistance;
   // The scope of the display when the indicator enters a refresh state
   final double topVisibleRange, bottomVisibleRange;
-  // the height must be  equals your headerBuilder
-  final double headerHeight, footerHeight;
   // upper and downer callback when you drag out of the distance
   final OnModeChange onModeChange;
   // This method will callback when the indicator changes from edge to edge.
@@ -55,8 +54,6 @@ class SmartRefresher extends StatefulWidget {
     this.refreshMode: RefreshMode.idle,
     this.bottomVisibleRange: 50.0,
     this.topVisibleRange: 50.0,
-    this.headerHeight: 50.0,
-    this.footerHeight: 50.0,
     this.loadMode: RefreshMode.idle,
     this.completeDuration: 800,
     this.onModeChange,
@@ -81,6 +78,10 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _mIsDraging = false, _mReachMax = false;
   // the ScrollStart Drag Point Y
   double _mDragPointY = null;
+  // key to get height header of footer
+  final GlobalKey _mHeaderKey = new GlobalKey(), _mFooterKey = new GlobalKey();
+  // the height must be  equals your headerBuilder
+  double _mHeaderHeight = 0.0, _mFooterHeight = 0.0;
 
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
@@ -144,16 +145,23 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _dispatchScrollEvent(ScrollNotification notification) {
     bool down = _isPullDown(notification);
     bool up = _isPullUp(notification);
+    if(widget.enablePullUpLoad&&_mFooterHeight==0.0&&_mFooterKey.currentContext!=null){
+      setState(() {
+        _mFooterHeight = _mFooterKey.currentContext.size.height;
+      });
+    }
     // the reason why should do this,because Early touch at a specific location makes triggerdistance smaller.
     if (!down && !up) {
       _mDragPointY = null;
       return false;
     }
     if ((down &&
-            (widget.refreshMode == RefreshMode.refreshing || widget.refreshMode == RefreshMode.failed||
+            (widget.refreshMode == RefreshMode.refreshing ||
+                widget.refreshMode == RefreshMode.failed ||
                 widget.refreshMode == RefreshMode.completed)) ||
         (up &&
-            (widget.loadMode == RefreshMode.refreshing || widget.loadMode == RefreshMode.failed||
+            (widget.loadMode == RefreshMode.refreshing ||
+                widget.loadMode == RefreshMode.failed ||
                 widget.loadMode == RefreshMode.completed))) {
       return false;
     }
@@ -171,7 +179,7 @@ class _SmartRefresherState extends State<SmartRefresher>
       }
     }
     if (notification is ScrollEndNotification) {
-        return _handleScrollEnd(notification);
+      return _handleScrollEnd(notification);
     }
 
     return true;
@@ -263,6 +271,16 @@ class _SmartRefresherState extends State<SmartRefresher>
     }
   }
 
+  void _onAfterBuild() {
+    setState(() {
+      if(widget.enablePullUpLoad
+          &&_mFooterHeight==0.0&&_mFooterKey.currentContext!=null){
+          _mFooterHeight = _mFooterKey.currentContext.size.height;
+      }
+      _mHeaderHeight = _mHeaderKey.currentContext.size.height;
+    });
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -283,20 +301,23 @@ class _SmartRefresherState extends State<SmartRefresher>
       vsync: this,
       lowerBound: 0.000001,
       duration: const Duration(milliseconds: 200),
-    )..addStatusListener((status){
-      if(_mTopController.value==0.000001&&status==AnimationStatus.completed){
-        _modeChangeCallback(true, RefreshMode.idle);
-      }
-    });
+    )..addStatusListener((status) {
+        if (_mTopController.value == 0.000001 &&
+            status == AnimationStatus.completed) {
+          _modeChangeCallback(true, RefreshMode.idle);
+        }
+      });
     _mBottomController = new AnimationController(
       vsync: this,
       lowerBound: 0.000001,
       duration: const Duration(milliseconds: 200),
-    )..addStatusListener((status){
-      if(_mBottomController.value==0.000001&&status==AnimationStatus.completed){
-       _modeChangeCallback(false, RefreshMode.idle);
-      }
-    });
+    )..addStatusListener((status) {
+        if (_mBottomController.value == 0.000001 &&
+            status == AnimationStatus.completed) {
+          _modeChangeCallback(false, RefreshMode.idle);
+
+        }
+      });
     _mBIconController = new AnimationController(
         vsync: this,
         upperBound: 0.5,
@@ -306,6 +327,10 @@ class _SmartRefresherState extends State<SmartRefresher>
         vsync: this,
         upperBound: 0.5,
         duration: const Duration(milliseconds: 100));
+    // not possible insite initState
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _onAfterBuild();
+    });
   }
 
   @override
@@ -316,7 +341,8 @@ class _SmartRefresherState extends State<SmartRefresher>
     if (widget.refreshMode != oldWidget.refreshMode) {
       if (widget.refreshMode == RefreshMode.refreshing) {
         _mTopController.animateTo(1.0);
-      } else if (RefreshMode.completed == widget.refreshMode||RefreshMode.failed==widget.refreshMode) {
+      } else if (RefreshMode.completed == widget.refreshMode ||
+          RefreshMode.failed == widget.refreshMode) {
         new Future<Null>.delayed(
             new Duration(milliseconds: widget.completeDuration), () {
           _dismiss(true);
@@ -325,7 +351,8 @@ class _SmartRefresherState extends State<SmartRefresher>
     } else if (oldWidget.loadMode != widget.loadMode) {
       if (widget.loadMode == RefreshMode.refreshing) {
         _mBottomController.animateTo(1.0);
-      } else if (widget.loadMode == RefreshMode.completed||RefreshMode.failed==widget.loadMode) {
+      } else if (widget.loadMode == RefreshMode.completed ||
+          RefreshMode.failed == widget.loadMode) {
         new Future<Null>.delayed(
             new Duration(milliseconds: widget.completeDuration), () {
           _dismiss(false);
@@ -337,45 +364,53 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   @override
   Widget build(BuildContext context) {
-    return
-      new Stack(
-          children: <Widget>[
-            new Positioned(
-                top: !widget.enablePullDownRefresh ? 0.0 : -widget.headerHeight,
-                bottom: !widget.enablePullUpLoad ? 0.0 : -widget.footerHeight,
-                left: 0.0,
-                right: 0.0,
-                child: new NotificationListener(
-                  child: new ListView(
-                    controller: _mScrollController,
-                    physics: new RefreshScrollPhysics(),
-                    children: <Widget>[
-                      !widget.enablePullDownRefresh
-                          ? new Container()
-                          : buildEmptySpace(
+    return new Stack(
+      children: <Widget>[
+        new Positioned(
+            top: !widget.enablePullDownRefresh ? 0.0 : -_mHeaderHeight,
+            bottom: !widget.enablePullUpLoad ? 0.0 : -_mFooterHeight,
+            left: 0.0,
+            right: 0.0,
+            child: new NotificationListener(
+              child: new ListView(
+                controller: _mScrollController,
+                physics: new RefreshScrollPhysics(),
+                children: <Widget>[
+                  !widget.enablePullDownRefresh
+                      ? new Container()
+                      : buildEmptySpace(
                           _mTopController, widget.topVisibleRange),
-                      !widget.enablePullDownRefresh
+                  new Container(
+                      key: _mHeaderKey,
+                      child: !widget.enablePullDownRefresh
                           ? new Container()
                           : widget.headerBuilder != null
-                          ? widget.headerBuilder(context, widget.refreshMode)
-                          : buildDefaultHeader(
-                          context, widget.refreshMode, _mTIconController),
-                      widget.child,
-                      !widget.enablePullUpLoad
-                          ? new Container()
-                          : widget.footerBuilder != null
-                          ? widget.footerBuilder(context, widget.loadMode)
-                          : buildDefaultFooter(
-                          context, widget.loadMode, _mBIconController),
-                      !widget.enablePullUpLoad
-                          ? new Container()
-                          : buildEmptySpace(
-                          _mBottomController, widget.bottomVisibleRange),
-                    ],
+                              ? widget.headerBuilder(
+                                  context, widget.refreshMode)
+                              : buildDefaultHeader(context, widget.refreshMode,
+                                  _mTIconController)),
+                  widget.child,
+                  new Container(
+                    key: _mFooterKey,
+                    child: !widget.enablePullUpLoad
+                        ? new Container()
+                        : widget.footerBuilder != null
+                        ? widget.footerBuilder(context, widget.loadMode)
+                        : buildDefaultFooter(
+                        context, widget.loadMode, _mBIconController),
+
                   ),
-                  onNotification: _dispatchScrollEvent,
-                ))
-          ],
+
+                  !widget.enablePullUpLoad
+                      ? new Container()
+                      : buildEmptySpace(
+                          _mBottomController, widget.bottomVisibleRange),
+                ],
+              ),
+              onNotification: _dispatchScrollEvent,
+            )),
+
+      ],
     );
   }
 }

@@ -15,7 +15,8 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
   void _getDatas() {
     for (int i = 0; i < 14; i++) {
       data.add(new Card(
-        margin: new EdgeInsets.only(left: 10.0,right: 10.0,top: 5.0,bottom: 5.0),
+        margin:
+            new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
         child: new Center(
           child: new Text('Data $i'),
         ),
@@ -25,12 +26,10 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
 
   Widget _header(context, mode) {
     return new IntrinsicHeight(
-      child:
-      new ScaleTransition(
+      child: new ScaleTransition(
         scale: _animateControll,
         child: new Image.asset('images/animate.gif',
-            width: double.infinity,
-            height: 150.0, fit: BoxFit.cover),
+            width: double.infinity, height: 150.0, fit: BoxFit.cover),
       ),
     );
   }
@@ -72,7 +71,7 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
 
   void _onOffsetCallback(double offset) {
     // if you want change some widgets state ,you should rewrite the callback
-    _animateControll.value = offset/2+1.0;
+    _animateControll.value = offset / 2 + 1.0;
   }
 
   @override
@@ -80,8 +79,10 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
     // TODO: implement initState
     _getDatas();
     _animateControll = new AnimationController(
-      vsync: this,duration: const  Duration(milliseconds: 200),
-      lowerBound: 1.0,upperBound: 1.5,
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+      lowerBound: 1.0,
+      upperBound: 1.5,
     );
     super.initState();
   }
@@ -91,7 +92,6 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
     return new Container(
         child: new SmartRefresher(
             enablePullDownRefresh: true,
-            headerHeight: 150.0,
             topVisibleRange: 100.0,
             headerBuilder: _header,
             refreshMode: this.refreshing,
