@@ -22,7 +22,7 @@ class BuildFactory {
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          (mode == RefreshMode.refreshing || mode == RefreshMode.idel)
+          mode == RefreshMode.refreshing
               ? const CupertinoActivityIndicator()
               : mode == RefreshMode.completed
                   ? const Icon(Icons.done, color: Colors.grey)
@@ -61,7 +61,7 @@ class BuildFactory {
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          (mode == RefreshMode.refreshing || mode == RefreshMode.idel)
+          mode == RefreshMode.refreshing
               ? const CupertinoActivityIndicator()
               : mode == RefreshMode.completed
                   ? const Icon(Icons.done, color: Colors.grey)

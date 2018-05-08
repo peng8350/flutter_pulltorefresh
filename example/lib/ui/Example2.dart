@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert' show json;
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as HTTP;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Example2 extends StatefulWidget {
@@ -14,22 +14,23 @@ class _Example2State extends State<Example2> {
   int indexPage = 2;
   List<String> data = [];
 
-//  http://gank.io/api/data/%E7%A6%8F%E5%88%A9/10/1
 
-
-  void _fetch(){
-    http.get('http://gank.io/api/data/%E7%A6%8F%E5%88%A9/30/$indexPage').then((http.Response response){
+  void _fetch() {
+    HTTP
+        .get('http://image.baidu.com/channel/listjson?pn=$indexPage&rn=30&tag1=%E6%98%8E%E6%98%9F&tag2=%E5%85%A8%E9%83%A8&ie=utf8')
+        .then((HTTP.Response response) {
       Map map = json.decode(response.body);
-      return map["results"];
-    }).then((array){
-      for(var item in array){
-        data.add(item["url"]);
+
+      return map["data"];
+    }).then((array) {
+      for (var item in array) {
+        data.add(item["image_url"]);
       }
       indexPage++;
       setState(() {
         loading = RefreshMode.completed;
       });
-    }).catchError((){
+    }).catchError(() {
       setState(() {
         loading = RefreshMode.failed;
       });
@@ -58,13 +59,13 @@ class _Example2State extends State<Example2> {
       // this is equals onLoaadmore()
       if (mode == RefreshMode.refreshing) {
         _fetch();
-
       }
     }
   }
 
   Widget buildImage(context, index) {
-    return new Text('sdsd');
+    if(data[index]==null)return new Container();
+    return new Image.network(data[index]);
   }
 
   void _onOffsetCallback(double offset) {

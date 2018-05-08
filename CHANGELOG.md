@@ -15,3 +15,6 @@
 ## 1.0.3
 * Fix error Props
 * Add  interupt Scroll when failure status
+
+## 1.0.4
+* Update README and demo

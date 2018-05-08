@@ -2,8 +2,11 @@ name: example
 description: A new Flutter project.
 
 dependencies:
+
+
   flutter:
     sdk: flutter
+
   pull_to_refresh:
     path: ../
 
@@ -23,6 +26,7 @@ flutter:
 
   assets:
     - images/animate.gif
+    - images/empty.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
