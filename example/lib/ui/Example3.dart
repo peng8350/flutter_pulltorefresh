@@ -9,7 +9,7 @@ class Example3 extends StatefulWidget {
 }
 
 class _Example3State extends State<Example3> with TickerProviderStateMixin {
-  RefreshMode loading = RefreshMode.idel, refreshing = RefreshMode.idel;
+  RefreshMode loading = RefreshMode.idle, refreshing = RefreshMode.idle;
   AnimationController _animateControll;
   List<Widget> data = [];
   void _getDatas() {

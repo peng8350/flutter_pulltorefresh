@@ -10,7 +10,7 @@ class Example4 extends StatefulWidget {
 
 class _Example4State extends State<Example4> {
 
-  RefreshMode loading=RefreshMode.idel, refreshing=RefreshMode.idel;
+  RefreshMode loading=RefreshMode.idle, refreshing=RefreshMode.idle;
   List<Widget> data = [];
   void _getDatas() {
 

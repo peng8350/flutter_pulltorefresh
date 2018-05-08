@@ -14,7 +14,7 @@ typedef void OnOffsetChange(double offset);
 typedef Widget HeaderBuilder(BuildContext context, RefreshMode mode);
 typedef Widget FooterBuilder(BuildContext context, RefreshMode mode);
 
-enum RefreshMode { idel, startDrag, canRefresh, refreshing, completed, failed }
+enum RefreshMode { idle, startDrag, canRefresh, refreshing, completed, failed }
 
 /**
     This is the most important component that provides drop-down refresh and up loading.
@@ -52,12 +52,12 @@ class SmartRefresher extends StatefulWidget {
     this.enablePullUpLoad: false,
     this.headerBuilder,
     this.footerBuilder,
-    this.refreshMode: RefreshMode.idel,
+    this.refreshMode: RefreshMode.idle,
     this.bottomVisibleRange: 50.0,
     this.topVisibleRange: 50.0,
     this.headerHeight: 50.0,
     this.footerHeight: 50.0,
-    this.loadMode: RefreshMode.idel,
+    this.loadMode: RefreshMode.idle,
     this.completeDuration: 800,
     this.onModeChange,
     this.onOffsetChange,
@@ -119,7 +119,7 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _handleScrollEnd(ScrollNotification notification) {
     bool up = _isPullDown(notification);
     if (!_mReachMax) {
-      _changeMode(notification, RefreshMode.idel);
+      _changeMode(notification, RefreshMode.idle);
       _dismiss(up ? up : false);
     } else {
       if (up) {
@@ -285,7 +285,7 @@ class _SmartRefresherState extends State<SmartRefresher>
       duration: const Duration(milliseconds: 200),
     )..addStatusListener((status){
       if(_mTopController.value==0.000001&&status==AnimationStatus.completed){
-        _modeChangeCallback(true, RefreshMode.idel);
+        _modeChangeCallback(true, RefreshMode.idle);
       }
     });
     _mBottomController = new AnimationController(
@@ -294,7 +294,7 @@ class _SmartRefresherState extends State<SmartRefresher>
       duration: const Duration(milliseconds: 200),
     )..addStatusListener((status){
       if(_mBottomController.value==0.000001&&status==AnimationStatus.completed){
-       _modeChangeCallback(false, RefreshMode.idel);
+       _modeChangeCallback(false, RefreshMode.idle);
       }
     });
     _mBIconController = new AnimationController(

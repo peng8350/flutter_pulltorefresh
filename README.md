@@ -59,7 +59,7 @@ a widget provided to the flutter scroll component drop-down refresh and pull up 
 
 ```
 
-3.You should set the indicator according to the different refresh mode.There are six refresh modes here:idel, startDrag, canRefresh, refreshing, complete,failed.build footer is the same with that.
+3.You should set the indicator according to the different refresh mode.There are six refresh modes here:idle, startDrag, canRefresh, refreshing, complete,failed.build footer is the same with that.
 
 ```
 
@@ -177,8 +177,8 @@ The component is unbounded, so when you use it, be careful about the problems ca
 | footerBuilder | the footer indictor,if null it will be created by my default footer     | (BuildContext,RefreshMode) => Widget  | null |optional |
 | enablePullDownRefresh | switch of the pull down refresh     | boolean | true | optional |
 | enablePullUpLoad |   switch of the pull up load | boolean | false |optional |
-| refreshMode | It represents the state of the top indicator   | RefreshMode(enum) | RefreshMode.idel | if you enable pulldown,is necessary,else optional | 
-| loadMode | It represents the state of the bottom indicator   | RefreshMode(enum) | RefreshMode.idel | if you enable pullup,is necessary,else optional | 
+| refreshMode | It represents the state of the top indicator   | RefreshMode(enum) | RefreshMode.idle | if you enable pulldown,is necessary,else optional |
+| loadMode | It represents the state of the bottom indicator   | RefreshMode(enum) | RefreshMode.idle | if you enable pullup,is necessary,else optional |
 | completeDuration | It indicates the duration of display when the refresh is successful or failed.    | int | 800 | optional |
 | headerHeight | must be equals with your header indictor height    | double | 50.0 | optional |
 | footerHeight | must be equals with your footer indictor height    | double | 50.0 | optional |
