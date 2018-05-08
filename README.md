@@ -12,8 +12,18 @@ a widget provided to the flutter scroll component drop-down refresh and pull up 
 * powerful Bouncing
 
 ## Screenshots
+IOS:
 ![](arts/ios1.gif)
+Android:
+![](arts/android1.gif)
+IOS:
 ![](arts/ios2.gif)
+Android:
+![](arts/android2.gif)
+IOS:
+![](arts/ios3.gif)
+Android:
+![](arts/android3.gif)
 
 ## How to use?
 1.the first declare following in your pubspec.yml
