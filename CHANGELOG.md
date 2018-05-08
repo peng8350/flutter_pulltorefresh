@@ -18,3 +18,9 @@
 
 ## 1.0.4
 * Update README and demo
+
+## 1.0.5
+* Remove headerHeight,footerHeight to get height inital
+* Make footer stay at the bottom of the world forever
+* replace idle to idel(my English mistake)
+* Fix defaultIndictor error Icon display

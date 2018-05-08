@@ -21,7 +21,7 @@ a widget provided to the flutter scroll component drop-down refresh and pull up 
 ```
 
    dependencies:
-     pull_to_refresh: ^1.0.3
+     pull_to_refresh: ^1.0.5
      
 ```
 
@@ -144,29 +144,10 @@ new ListView(){
 
 
 ## Attention point
-You should set the same indictor height for headerHeight and footerHeight.
+1.The component is unbounded, so when you use it, be careful about the problems caused by the height, especially the column, stack, which is also a control of unrestricted height, to be extra careful.
 
 
-```
 
-/**
-
-    the height is your headerContainer height
-    Why do you want to set it this way?
-    Look at the Exist problem.
-*/
-
-
-headerHeight:50.0,
-footerHeight:50.0,
-
-
-```
-
-The component is unbounded, so when you use it, be careful about the problems caused by the height, especially the column, stack, which is also a control of unrestricted height, to be extra careful.
-
-
-<a name = "point1"></a>
 
 ## Props Table
 
@@ -180,26 +161,11 @@ The component is unbounded, so when you use it, be careful about the problems ca
 | refreshMode | It represents the state of the top indicator   | RefreshMode(enum) | RefreshMode.idle | if you enable pulldown,is necessary,else optional |
 | loadMode | It represents the state of the bottom indicator   | RefreshMode(enum) | RefreshMode.idle | if you enable pullup,is necessary,else optional |
 | completeDuration | It indicates the duration of display when the refresh is successful or failed.    | int | 800 | optional |
-| headerHeight | must be equals with your header indictor height    | double | 50.0 | optional |
-| footerHeight | must be equals with your footer indictor height    | double | 50.0 | optional |
 | onModeChange | will callback when the refreshmode or loadmode is prepared to changed,it requires you to change the value yourself ,first paramter is if draging from top,second is the RefreshMode changed   | (bool,RefreshMode) => Void | null | optional |
 | onOffsetChange | callback while you dragging(In addition to refreshing state and completing state)    | (double) => Void | null | optional |
 | triggerDistance | This value represents the dragging distance to be reached in the trigger refreshing mode.  | double | 100.0 | optional |
-| onOffsetChange | callback while you dragging(In addition to refreshing state and completing state)    | (double) => Void | null | optional |
-| triggerDistance | This value represents the dragging distance to be reached in the trigger refreshing mode.  | double | 100.0 | optional |
-
-## Existing problems
-
-* I don't know how to calculate the height of the subcomponents
- ahead of time in the build method, for example: I want to get
- the height of the head indicator. I've been looking for a
-  long time on the Google. I don't know how to solve this
-  problem. If you have an idea, you can mention issue or pr.
- So I had better choose to pass in a value to the component,
- but increase the complexity.
- 
-* When the content View is less than the outside container, 
- I don't know how to hide it when the View is loaded, because there is no construction complete callback method that can let me hide, or how I should get the height of the content View before the construction method.
+| topVisibleRange | The scope of the display when the indicator enters a refreshing state    | double | 50.0 | optional |
+| bottomVisibleRange | The scope of the display when the indicator enters a refreshing state  | double | 50.0 | optional |
  
 ## LICENSE
  

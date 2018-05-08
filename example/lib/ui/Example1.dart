@@ -77,7 +77,7 @@ class _Example1State extends State<Example1> {
     return new Container(
       color: Colors.white30,
       child: new SmartRefresher(
-        enablePullDownRefresh: true,
+        enablePullDownRefresh: false,
         enablePullUpLoad: true,
         refreshMode: this.refreshing,
         loadMode: this.loading,
