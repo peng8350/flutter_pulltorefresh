@@ -1,18 +1,17 @@
 # flutter_pulltorefresh
 
-## Intro
-a widget provided to the flutter scroll component drop-down refresh and pull up load.support android and ios.
-If you are Chinese,click here(![中文文档](https://github.com/peng8350/flutter_pulltorefresh/blob/master/README.md))
+## 介绍
+一个提供上拉加载和下拉刷新的组件,同时支持Android和Ios
 
 
-## Features
-* Android and iOS both spported
-* pull up and pull down
-* It's almost fit for all witgets,like GridView,ListView,Container,Text...
-* High extensibility,High degree of freedom
-* powerful Bouncing
+## 特性
+* 同时支持Android,IOS
+* 提供上拉加载和下拉刷新
+* 几乎适合所有的部件,例如GridView,ListView,Container,Text...
+* 高度扩展性和很低的限制性
+* 灵活的回弹能力
 
-## Screenshots
+## 截图
 IOS:
 ![](arts/ios1.gif)
 Android:
@@ -26,8 +25,8 @@ IOS:
 Android:
 ![](arts/android3.gif)
 
-## How to use?
-1.the first declare following in your pubspec.yml
+## 我该怎么用?
+1.第一步,在你的pubspec.yml声明
 
 ```
 
@@ -36,7 +35,7 @@ Android:
      
 ```
 
-2.and then,import that line,SmartRefresher is a component that is wrapped outside your content View
+2.然后,导入,SmartRefresher是一个组件包装在你的外部,child就是你的内容控件
 
 ```
 
@@ -70,7 +69,7 @@ Android:
 
 ```
 
-3.You should set the indicator according to the different refresh mode.There are six refresh modes here:idle, startDrag, canRefresh, refreshing, complete,failed.build footer is the same with that.
+3.你应该要根据不同的刷新模式状态下,显示不同的布局.这里有6种刷新模式状态:idle, startDrag, canRefresh, refreshing, complete,failed.buildFooter这个构造器也是同样的道理。
 
 ```
 
@@ -86,17 +85,18 @@ Android:
     ....
   }
 
+
   new SmartRefresher(
      ....
      footerBuilder: _buildFooter,
      headerBuilder: _buildHeader
   )
 
+
 ```
 
 4.
-This refresh state requires you to update yourself in the logic code.
-Refresh mode details please look at the following
+刷新状态需要你自己在逻辑代码通过setState来改变.刷新模式的细节请看下面
 
 ```
 
@@ -145,8 +145,8 @@ Refresh mode details please look at the following
   
 ```
 
-5.If your content view is a rolling component, such as ScrollView, ListView, GridView and so on, you assign these two attributes to the component.Because my parts are used in the ListView nested package,
-this is very important,if you don't notice it,you will get some problems.
+5.如果你的内容控件是一个滚动的部件, 例如 ScrollView, ListView, GridView 和 so on, 你应该给这类控件分配两个属性.因为我内部封装是通过ListView来封装的,
+这非常重要,如果你不注意这个,你会遇到某些问题.
 
 ```
 new ListView(){
@@ -161,22 +161,24 @@ new ListView(){
 
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
-| child      | your content View   | Widget   |   null |  necessary
-| headerBuilder | the header indictor,if null it will be created by my default header     | (BuildContext,RefreshMode) => Widget  | null |optional |
-| footerBuilder | the footer indictor,if null it will be created by my default footer     | (BuildContext,RefreshMode) => Widget  | null |optional |
-| enablePullDownRefresh | switch of the pull down refresh     | boolean | true | optional |
-| enablePullUpLoad |   switch of the pull up load | boolean | false |optional |
-| refreshMode | It represents the state of the top indicator   | RefreshMode(enum) | RefreshMode.idle | if you enable pulldown,is necessary,else optional |
-| loadMode | It represents the state of the bottom indicator   | RefreshMode(enum) | RefreshMode.idle | if you enable pullup,is necessary,else optional |
-| completeDuration | It indicates the duration of display when the refresh is successful or failed.    | int | 800 | optional |
-| onModeChange | will callback when the refreshmode or loadmode is prepared to changed,it requires you to change the value yourself ,first paramter is if draging from top,second is the RefreshMode changed   | (bool,RefreshMode) => Void | null | optional |
-| onOffsetChange | callback while you dragging(In addition to refreshing state and completing state)    | (double) => Void | null | optional |
-| triggerDistance | This value represents the dragging distance to be reached in the trigger refreshing mode.  | double | 100.0 | optional |
-| topVisibleRange | The scope of the display when the indicator enters a refreshing state    | double | 50.0 | optional |
-| bottomVisibleRange | The scope of the display when the indicator enters a refreshing state  | double | 50.0 | optional |
+| child      | 你的内容部件   | Widget   |   null |  必要
+| headerBuilder | 头部指示器构造,如果为空的话,默认传入我提供默认的头指示器     | (BuildContext,RefreshMode) => Widget  | null | 可选 |
+| footerBuilder | 尾部指示器构造,i如果为空的话,默认传入我提供默认的尾指示器     | (BuildContext,RefreshMode) => Widget  | null | 可选 |
+| enablePullDownRefresh | 是否允许下拉刷新     | boolean | true | 可选 |
+| enablePullUpLoad |   是否允许上拉加载 | boolean | false | 可选 |
+| refreshMode | 它代表头部指示器的刷新状态   | RefreshMode(enum) | RefreshMode.idle |  果你允许下拉刷新前提下是必要的，否则就是可选 |
+| loadMode | 它代表尾部指示器的刷新状态   | RefreshMode(enum) | RefreshMode.idle | 如果你允许上拉加载前提下是必要的，否则就是可选 |
+| completeDuration | 它代表刷新成功或失败时显示的持续时间    | int | 800 | 可选 |
+| onModeChange | 当刷新模式或加载模式准备更改时，它会回调，它要求您自己更改值，第一个参数是从是否是顶部拖动，第二个是刷新模式更改过后的状态。   | (bool,RefreshMode) => Void | null | 可选 |
+| onOffsetChange | 它将在拖动时回调（除了刷新状态和完成状态）   | (double) => Void | null | 可选 |
+| triggerDistance | 他的值表示要触发刷新种的状态模式要达到的拖动距离。  | double | 100.0 | 可选 |
+| topVisibleRange | 当指示器进入刷新状态时显示的范围   | double | 50.0 | 可选 |
+| bottomVisibleRange | 当指示器进入刷新状态时显示的范围  | double | 50.0 | 可选 |
+
+
 
 ## Attention point
-1.The component is unbounded, so when you use it, be careful about the problems caused by the height, especially the column, stack, which is also a control of unrestricted height, to be extra careful.
+1.组件是无界的，所以当你使用它时，要小心由高度引起的问题，特别是Column、Stack，这也是对无限制高度的控制，要格外小心。
  
 ## LICENSE
  
