@@ -157,7 +157,7 @@ new ListView(){
 
 ```
 
-## Props Table
+## 属性表
 
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
@@ -177,10 +177,10 @@ new ListView(){
 
 
 
-## Attention point
+## 注意点
 1.组件是无界的，所以当你使用它时，要小心由高度引起的问题，特别是Column、Stack，这也是对无限制高度的控制，要格外小心。
  
-## LICENSE
+## 开源协议
  
  ```
  
