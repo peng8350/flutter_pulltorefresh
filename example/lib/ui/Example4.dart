@@ -9,25 +9,22 @@ class Example4 extends StatefulWidget {
 }
 
 class _Example4State extends State<Example4> {
-
-  RefreshMode loading=RefreshMode.idle, refreshing=RefreshMode.idle;
+  RefreshMode loading = RefreshMode.idle, refreshing = RefreshMode.idle;
   List<Widget> data = [];
   void _getDatas() {
-
     for (int i = 0; i < 14; i++) {
       data.add(new Text('Data $i'));
     }
   }
 
-
-  void _onModeChange(isUp,mode){
-    if(isUp){
+  void _onModeChange(isUp, mode) {
+    if (isUp) {
       //must be do it
       setState(() {
         refreshing = mode;
       });
       // this is equals onRefresh()
-      if(mode==RefreshMode.refreshing) {
+      if (mode == RefreshMode.refreshing) {
         new Future.delayed(const Duration(milliseconds: 2000), () {
           setState(() {
             refreshing = RefreshMode.failed;
@@ -35,16 +32,14 @@ class _Example4State extends State<Example4> {
           print("Refreshed!!!");
         });
       }
-    }
-    else{
+    } else {
       //must be do it
       setState(() {
-        loading= mode;
+        loading = mode;
       });
       // this is equals onLoaadmore()
-      if(mode==RefreshMode.refreshing) {
+      if (mode == RefreshMode.refreshing) {
         new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
-
           setState(() {
             data.add(new Text('Data '));
 
@@ -56,7 +51,7 @@ class _Example4State extends State<Example4> {
     }
   }
 
-  void _onOffsetCallback(bool isUp,double offset) {
+  void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
 //    print(offset);
   }
@@ -68,9 +63,6 @@ class _Example4State extends State<Example4> {
 
     super.initState();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -87,12 +79,9 @@ class _Example4State extends State<Example4> {
               shrinkWrap: true,
               itemExtent: 40.0,
               itemCount: data.length,
-              itemBuilder: (context,index){
+              itemBuilder: (context, index) {
                 return data[index];
               },
-
-            )
-        )
-    );
+            )));
   }
 }

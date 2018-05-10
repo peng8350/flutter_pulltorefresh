@@ -24,7 +24,6 @@ class BuildFactory {
               ? new SizedBox(
                   width: 25.0,
                   height: 25.0,
-
                   child: const CircularProgressIndicator(strokeWidth: 2.0),
                 )
               : mode == RefreshMode.completed
@@ -66,11 +65,10 @@ class BuildFactory {
         children: <Widget>[
           mode == RefreshMode.refreshing
               ? new SizedBox(
-            width: 25.0,
-            height: 25.0,
-
-            child: const CircularProgressIndicator(strokeWidth: 2.0),
-          )
+                  width: 25.0,
+                  height: 25.0,
+                  child: const CircularProgressIndicator(strokeWidth: 2.0),
+                )
               : mode == RefreshMode.completed
                   ? const Icon(Icons.done, color: Colors.grey)
                   : mode == RefreshMode.failed

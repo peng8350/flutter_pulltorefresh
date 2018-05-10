@@ -14,10 +14,10 @@ class _Example2State extends State<Example2> {
   int indexPage = 2;
   List<String> data = [];
 
-
   void _fetch() {
     HTTP
-        .get('http://image.baidu.com/channel/listjson?pn=$indexPage&rn=30&tag1=%E6%98%8E%E6%98%9F&tag2=%E5%85%A8%E9%83%A8&ie=utf8')
+        .get(
+            'http://image.baidu.com/channel/listjson?pn=$indexPage&rn=30&tag1=%E6%98%8E%E6%98%9F&tag2=%E5%85%A8%E9%83%A8&ie=utf8')
         .then((HTTP.Response response) {
       Map map = json.decode(response.body);
 
@@ -57,24 +57,28 @@ class _Example2State extends State<Example2> {
         loading = mode;
       });
       // this is equals onLoaadmore()
-      switch(mode){
+      switch (mode) {
         case RefreshMode.refreshing:
           _fetch();
           break;
         case RefreshMode.idle:
-
           break;
       }
     }
   }
 
   Widget buildImage(context, index) {
-    if(data[index]==null)return new Container();
+    if (data[index] == null) return new Container();
     return new Image.network(data[index]);
   }
 
-  void _onOffsetCallback(bool isUp,double offset) {
+  void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
+    if(isUp){
+    }
+    else{
+
+    }
   }
 
   @override

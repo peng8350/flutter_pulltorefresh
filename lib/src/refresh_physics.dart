@@ -14,7 +14,7 @@ import 'dart:math' as math;
  */
 class RefreshScrollPhysics extends ScrollPhysics {
   /// Creates scroll physics that bounce back from the edge.
-  const RefreshScrollPhysics({ ScrollPhysics parent }) : super(parent: parent);
+  const RefreshScrollPhysics({ScrollPhysics parent}) : super(parent: parent);
 
   @override
   RefreshScrollPhysics applyTo(ScrollPhysics ancestor) {
@@ -29,7 +29,8 @@ class RefreshScrollPhysics extends ScrollPhysics {
   /// This factor starts at 0.52 and progressively becomes harder to overscroll
   /// as more of the area past the edge is dragged in (represented by an increasing
   /// `overscrollFraction` which starts at 0 when there is no overscroll).
-  double frictionFactor(double overscrollFraction) => 0.52 * math.pow(1 - overscrollFraction, 2);
+  double frictionFactor(double overscrollFraction) =>
+      0.52 * math.pow(1 - overscrollFraction, 2);
 
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) {
@@ -42,31 +43,34 @@ class RefreshScrollPhysics extends ScrollPhysics {
     assert(offset != 0.0);
     assert(position.minScrollExtent <= position.maxScrollExtent);
 
-    if (!position.outOfRange)
-      return offset;
+    if (!position.outOfRange) return offset;
 
-    final double overscrollPastStart = math.max(position.minScrollExtent - position.pixels, 0.0);
-    final double overscrollPastEnd = math.max(position.pixels - position.maxScrollExtent, 0.0);
-    final double overscrollPast = math.max(overscrollPastStart, overscrollPastEnd);
-    final bool easing = (overscrollPastStart > 0.0 && offset < 0.0)
-        || (overscrollPastEnd > 0.0 && offset > 0.0);
+    final double overscrollPastStart =
+        math.max(position.minScrollExtent - position.pixels, 0.0);
+    final double overscrollPastEnd =
+        math.max(position.pixels - position.maxScrollExtent, 0.0);
+    final double overscrollPast =
+        math.max(overscrollPastStart, overscrollPastEnd);
+    final bool easing = (overscrollPastStart > 0.0 && offset < 0.0) ||
+        (overscrollPastEnd > 0.0 && offset > 0.0);
 
     final double friction = easing
-    // Apply less resistance when easing the overscroll vs tensioning.
-        ? frictionFactor((overscrollPast - offset.abs()) / position.viewportDimension)
+        // Apply less resistance when easing the overscroll vs tensioning.
+        ? frictionFactor(
+            (overscrollPast - offset.abs()) / position.viewportDimension)
         : frictionFactor(overscrollPast / position.viewportDimension);
     final double direction = offset.sign;
 
     return direction * _applyFriction(overscrollPast, offset.abs(), friction);
   }
 
-  static double _applyFriction(double extentOutside, double absDelta, double gamma) {
+  static double _applyFriction(
+      double extentOutside, double absDelta, double gamma) {
     assert(absDelta > 0);
     double total = 0.0;
     if (extentOutside > 0) {
       final double deltaToLimit = extentOutside / gamma;
-      if (absDelta < deltaToLimit)
-        return absDelta * gamma;
+      if (absDelta < deltaToLimit) return absDelta * gamma;
       total += extentOutside;
       absDelta -= deltaToLimit;
     }
@@ -77,13 +81,15 @@ class RefreshScrollPhysics extends ScrollPhysics {
   double applyBoundaryConditions(ScrollMetrics position, double value) => 0.0;
 
   @override
-  Simulation createBallisticSimulation(ScrollMetrics position, double velocity) {
+  Simulation createBallisticSimulation(
+      ScrollMetrics position, double velocity) {
     final Tolerance tolerance = this.tolerance;
     if (velocity.abs() >= tolerance.velocity || position.outOfRange) {
       return new BouncingScrollSimulation(
         spring: spring,
         position: position.pixels,
-        velocity: velocity * 0.91, // TODO(abarth): We should move this constant closer to the drag end.
+        velocity: velocity *
+            0.91, // TODO(abarth): We should move this constant closer to the drag end.
         leadingExtent: position.minScrollExtent,
         trailingExtent: position.maxScrollExtent,
         tolerance: tolerance,
@@ -96,7 +102,7 @@ class RefreshScrollPhysics extends ScrollPhysics {
   // ClampingScrollPhysics so we require a more deliberate input gesture
   // to trigger a fling.
   @override
-  double get minFlingVelocity =>  2.5*2.0;
+  double get minFlingVelocity => 2.5 * 2.0;
 
   // Methodology:
   // 1- Use https://github.com/flutter/scroll_overlay to test with Flutter and
@@ -115,7 +121,8 @@ class RefreshScrollPhysics extends ScrollPhysics {
   @override
   double carriedMomentum(double existingVelocity) {
     return existingVelocity.sign *
-        math.min(0.000816 * math.pow(existingVelocity.abs(), 1.967).toDouble(), 40000.0);
+        math.min(0.000816 * math.pow(existingVelocity.abs(), 1.967).toDouble(),
+            40000.0);
   }
 
   // Eyeballed from observation to counter the effect of an unintended scroll
