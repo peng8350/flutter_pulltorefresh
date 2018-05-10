@@ -57,8 +57,13 @@ class _Example2State extends State<Example2> {
         loading = mode;
       });
       // this is equals onLoaadmore()
-      if (mode == RefreshMode.refreshing) {
-        _fetch();
+      switch(mode){
+        case RefreshMode.refreshing:
+          _fetch();
+          break;
+        case RefreshMode.idle:
+
+          break;
       }
     }
   }

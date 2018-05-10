@@ -41,14 +41,19 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
         refreshing = mode;
       });
       // this is equals onRefresh()
-      if (mode == RefreshMode.refreshing) {
-        _animateControll.animateTo(0.0);
-        new Future.delayed(const Duration(milliseconds: 2000), () {
-          setState(() {
-            refreshing = RefreshMode.failed;
+      switch(mode){
+        case RefreshMode.refreshing:
+          _animateControll.animateTo(0.0);
+          new Future.delayed(const Duration(milliseconds: 2000), () {
+            setState(() {
+              refreshing = RefreshMode.failed;
+            });
+            print("Refreshed!!!");
           });
-          print("Refreshed!!!");
-        });
+          break;
+        case RefreshMode.idle:
+          _animateControll.animateTo(0.0);
+          break;
       }
     } else {
       //must be do it
