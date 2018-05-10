@@ -1,7 +1,5 @@
-import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/src/smart_refresher.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 /**
     Author: Jpeng
@@ -23,7 +21,12 @@ class BuildFactory {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           mode == RefreshMode.refreshing
-              ? const CupertinoActivityIndicator()
+              ? new SizedBox(
+                  width: 25.0,
+                  height: 25.0,
+
+                  child: const CircularProgressIndicator(strokeWidth: 2.0),
+                )
               : mode == RefreshMode.completed
                   ? const Icon(Icons.done, color: Colors.grey)
                   : mode == RefreshMode.failed
@@ -62,7 +65,12 @@ class BuildFactory {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           mode == RefreshMode.refreshing
-              ? const CupertinoActivityIndicator()
+              ? new SizedBox(
+            width: 25.0,
+            height: 25.0,
+
+            child: const CircularProgressIndicator(strokeWidth: 2.0),
+          )
               : mode == RefreshMode.completed
                   ? const Icon(Icons.done, color: Colors.grey)
                   : mode == RefreshMode.failed
