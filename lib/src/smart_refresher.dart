@@ -344,9 +344,8 @@ class _SmartRefresherState extends State<SmartRefresher>
     if (widget.refreshMode != oldWidget.refreshMode) {
       if (widget.refreshMode == RefreshMode.refreshing) {
         _mTopController.value = 1.0;
-
         _mScrollController
-            .jumpTo(_mScrollController.offset + widget.topVisibleRange>0.0?0.0:_mScrollController.offset + widget.topVisibleRange);
+            .jumpTo(-widget.topVisibleRange);
       } else if (RefreshMode.completed == widget.refreshMode ||
           RefreshMode.failed == widget.refreshMode) {
         new Future<Null>.delayed(

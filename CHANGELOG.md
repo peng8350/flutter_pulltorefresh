@@ -24,3 +24,8 @@
 * Make footer stay at the bottom of the world forever
 * replace idle to idel(my English mistake)
 * Fix defaultIndictor error Icon display
+
+## 1.0.6
+* Use Material default LoadingBar
+* Add a bool paramter to onOffsetChange to know if pullup or pulldown
+* Fix Bug: when pulled up or pull-down, sizeAnimation and IOS elasticity conflict, resulting in beating.
