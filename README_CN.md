@@ -31,7 +31,7 @@ Android:
 ```
 
    dependencies:
-     pull_to_refresh: ^1.0.5
+     pull_to_refresh: ^1.0.6
      
 ```
 
@@ -69,13 +69,29 @@ Android:
 
 ```
 
-3.你应该要根据不同的刷新模式状态下,显示不同的布局.这里有6种刷新模式状态:idle, startDrag, canRefresh, refreshing, complete,failed.buildFooter这个构造器也是同样的道理。
+3.你应该要根据不同的刷新模式状态下,显示不同的布局.这里有6种刷新模式状态:idle, startDrag, canRefresh, refreshing, complete,failed.buildFooter这个构造器也是同样的道理。如果你需要默认的指示器,但是需求不太一样时,比如字体颜色,图标不太相同时,你可以从直接[这里](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/build_factory.dart)复制一份
 
 ```
 
 
   Widget _buildHeader(context,mode){
-  
+  // 你可以展示不同的东西通过传入的状态
+     /*
+     例如这样
+     return new Text(
+                     mode == RefreshMode.canRefresh
+                         ? 'LoadMore when release'
+                         : mode == RefreshMode.completed
+                             ? 'Load Completed'
+                             : mode == RefreshMode.failed
+                                 ? 'Load Failed'
+                                 : mode == RefreshMode.refreshing
+                                     ? 'Loading....'
+                                     : 'pull up load',
+                     style: new TextStyle(color: const Color(0xff555555)));
+
+     */
+     /* this return a Gif like Example3(See my [Demo](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart))*/
     return new Image.asset("images/animate.gif",height: 100.0,fit: BoxFit.cover,);
   }
   
@@ -170,7 +186,7 @@ new ListView(){
 | loadMode | 它代表尾部指示器的刷新状态   | RefreshMode(enum) | RefreshMode.idle | 如果你允许上拉加载前提下是必要的，否则就是可选 |
 | completeDuration | 它代表刷新成功或失败时显示的持续时间    | int | 800 | 可选 |
 | onModeChange | 当刷新模式或加载模式准备更改时，它会回调，它要求您自己更改值，第一个参数是从是否是顶部拖动，第二个是刷新模式更改过后的状态。   | (bool,RefreshMode) => Void | null | 可选 |
-| onOffsetChange | 它将在拖动时回调（除了刷新状态和完成状态）   | (double) => Void | null | 可选 |
+| onOffsetChange | 它将在拖动时回调（除了刷新状态和完成状态,范围在:0~实际距离/triggerDistance   | (double) => Void | null | 可选 |
 | triggerDistance | 他的值表示要触发刷新种的状态模式要达到的拖动距离。  | double | 100.0 | 可选 |
 | topVisibleRange | 当指示器进入刷新状态时显示的范围   | double | 50.0 | 可选 |
 | bottomVisibleRange | 当指示器进入刷新状态时显示的范围  | double | 50.0 | 可选 |

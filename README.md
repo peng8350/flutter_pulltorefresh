@@ -32,7 +32,7 @@ Android:
 ```
 
    dependencies:
-     pull_to_refresh: ^1.0.5
+     pull_to_refresh: ^1.0.6
      
 ```
 
@@ -71,18 +71,35 @@ Android:
 ```
 
 3.You should set the indicator according to the different refresh mode.There are six refresh modes here:idle, startDrag, canRefresh, refreshing, complete,failed.build footer is the same with that.
+If you need the default indicator, but the demand is not the same, for example, the font color and the icon are not quite the same, you can make a copy from [here](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/build_factory.dart) directly.
 
 ```
-
+https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart
 
   Widget _buildHeader(context,mode){
-  
+    // you can display different by the mode
+    /*
+     such as
+     return new Text(
+                     mode == RefreshMode.canRefresh
+                         ? 'LoadMore when release'
+                         : mode == RefreshMode.completed
+                             ? 'Load Completed'
+                             : mode == RefreshMode.failed
+                                 ? 'Load Failed'
+                                 : mode == RefreshMode.refreshing
+                                     ? 'Loading....'
+                                     : 'pull up load',
+                     style: new TextStyle(color: const Color(0xff555555)));
+
+     */
+     // this is a Gif like Example3(See my [Demo](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart))
     return new Image.asset("images/animate.gif",height: 100.0,fit: BoxFit.cover,);
   }
   
  
   Widget _buildFooter(context,mode){
-  
+    // the same with header
     ....
   }
 
@@ -170,7 +187,7 @@ new ListView(){
 | loadMode | It represents the state of the bottom indicator   | RefreshMode(enum) | RefreshMode.idle | if you enable pullup,is necessary,else optional |
 | completeDuration | It indicates the duration of display when the refresh is successful or failed.    | int | 800 | optional |
 | onModeChange | will callback when the refreshmode or loadmode is prepared to changed,it requires you to change the value yourself ,first paramter is if draging from top,second is the RefreshMode changed   | (bool,RefreshMode) => Void | null | optional |
-| onOffsetChange | callback while you dragging(In addition to refreshing state and completing state)    | (double) => Void | null | optional |
+| onOffsetChange | callback while you dragging(In addition to refreshing state and completing,failed state),range: 0~realDistance/triggerDistance     | (bool,double) => Void | null | optional |
 | triggerDistance | This value represents the dragging distance to be reached in the trigger refreshing mode.  | double | 100.0 | optional |
 | topVisibleRange | The scope of the display when the indicator enters a refreshing state    | double | 50.0 | optional |
 | bottomVisibleRange | The scope of the display when the indicator enters a refreshing state  | double | 50.0 | optional |
