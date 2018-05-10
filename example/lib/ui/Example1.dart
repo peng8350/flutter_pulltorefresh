@@ -56,7 +56,7 @@ class _Example1State extends State<Example1> {
     }
   }
 
-  void _onOffsetCallback(double offset) {
+  void _onOffsetCallback(bool isUp,double offset) {
     // if you want change some widgets state ,you should rewrite the callback
 //    print(offset);
   }

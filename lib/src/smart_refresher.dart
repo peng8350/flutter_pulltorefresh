@@ -11,7 +11,7 @@ import 'package:pull_to_refresh/src/build_factory.dart';
 import 'package:pull_to_refresh/src/refresh_physics.dart';
 
 typedef void OnModeChange(bool isUp, RefreshMode mode);
-typedef void OnOffsetChange(double offset);
+typedef void OnOffsetChange(bool isUp,double offset);
 typedef Widget HeaderBuilder(BuildContext context, RefreshMode mode);
 typedef Widget FooterBuilder(BuildContext context, RefreshMode mode);
 
@@ -213,7 +213,7 @@ class _SmartRefresherState extends State<SmartRefresher>
   void _updateIndictorIfNeed(
       double offset, ScrollUpdateNotification notification) {
     _mReachMax = offset >= 1.0;
-    if (widget.onOffsetChange != null) widget.onOffsetChange(offset);
+    if (widget.onOffsetChange != null) widget.onOffsetChange(notification.metrics.extentBefore==0,offset);
     if (_mReachMax) {
       _changeMode(notification, RefreshMode.canRefresh);
     } else {

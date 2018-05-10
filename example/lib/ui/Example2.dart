@@ -73,7 +73,7 @@ class _Example2State extends State<Example2> {
     return new Image.network(data[index]);
   }
 
-  void _onOffsetCallback(double offset) {
+  void _onOffsetCallback(bool isUp,double offset) {
     // if you want change some widgets state ,you should rewrite the callback
   }
 

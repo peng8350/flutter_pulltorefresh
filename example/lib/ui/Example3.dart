@@ -10,7 +10,7 @@ class Example3 extends StatefulWidget {
 
 class _Example3State extends State<Example3> with TickerProviderStateMixin {
   RefreshMode loading = RefreshMode.idle, refreshing = RefreshMode.idle;
-  AnimationController _animateControll;
+  AnimationController _headControll,_footControll;
   List<Widget> data = [];
   void _getDatas() {
     for (int i = 0; i < 14; i++) {
@@ -25,13 +25,34 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
   }
 
   Widget _header(context, mode) {
-    return new IntrinsicHeight(
-      child: new ScaleTransition(
-        scale: _animateControll,
-        child: new Image.asset('images/animate.gif',
-            width: double.infinity, height: 150.0, fit: BoxFit.cover),
-      ),
-    );
+    return
+       new ClipRect(
+         child: new Align(
+           alignment: Alignment.center,
+           heightFactor: 1.0,
+           child: new ScaleTransition(
+             scale: _headControll,
+             child: new Image.asset('images/animate.gif',
+                 width: double.infinity, height: 150.0, fit: BoxFit.cover),
+           ),
+         ),
+       )
+    ;
+  }
+  Widget _footer(context, mode) {
+    return
+      new ClipRect(
+        child: new Align(
+          alignment: Alignment.center,
+          heightFactor: 1.0,
+          child: new ScaleTransition(
+            scale: _headControll,
+            child: new Image.asset('images/animate.gif',
+                width: double.infinity, height: 150.0, fit: BoxFit.cover),
+          ),
+        ),
+      )
+    ;
   }
 
   void _onModeChange(isUp, mode) {
@@ -43,7 +64,7 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
       // this is equals onRefresh()
       switch(mode){
         case RefreshMode.refreshing:
-          _animateControll.animateTo(0.0);
+          _headControll.animateTo(0.0);
           new Future.delayed(const Duration(milliseconds: 2000), () {
             setState(() {
               refreshing = RefreshMode.failed;
@@ -52,7 +73,7 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
           });
           break;
         case RefreshMode.idle:
-          _animateControll.animateTo(0.0);
+          _headControll.animateTo(0.0);
           break;
       }
     } else {
@@ -60,11 +81,25 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
       setState(() {
         loading = mode;
       });
+      switch(mode){
+        case RefreshMode.refreshing:
+          _footControll.animateTo(0.0);
+          break;
+        case RefreshMode.idle:
+          _footControll.animateTo(0.0);
+          break;
+      }
       // this is equals onLoaadmore()
       if (mode == RefreshMode.refreshing) {
         new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
           setState(() {
-            data.add(new Text('Data '));
+            data.add(new Card(
+              margin:
+              new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+              child: new Center(
+                child: new Text('Data '),
+              ),
+            ));
 
             loading = RefreshMode.completed;
           });
@@ -74,16 +109,27 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
     }
   }
 
-  void _onOffsetCallback(double offset) {
+  void _onOffsetCallback(bool isUp,double offset) {
     // if you want change some widgets state ,you should rewrite the callback
-    _animateControll.value = offset / 2 + 1.0;
+    print(isUp);
+    if(isUp){
+      _headControll.value = offset / 2 + 1.0;
+    }
+    else
+    _footControll.value = offset / 2 + 1.0;
   }
 
   @override
   void initState() {
     // TODO: implement initState
     _getDatas();
-    _animateControll = new AnimationController(
+    _headControll= new AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+      lowerBound: 1.0,
+      upperBound: 1.5,
+    );
+    _footControll = new AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
       lowerBound: 1.0,
@@ -97,8 +143,11 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
     return new Container(
         child: new SmartRefresher(
             enablePullDownRefresh: true,
+            enablePullUpLoad: true,
             topVisibleRange: 100.0,
+            bottomVisibleRange: 100.0,
             headerBuilder: _header,
+            footerBuilder: _footer,
             refreshMode: this.refreshing,
             onOffsetChange: _onOffsetCallback,
             loadMode: this.loading,
