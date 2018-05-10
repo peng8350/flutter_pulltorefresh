@@ -13,18 +13,18 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 * powerful Bouncing
 
 ## Screenshots
-IOS:
-![](arts/ios1.gif)
-Android:
-![](arts/android1.gif)
-IOS:
-![](arts/ios2.gif)
-Android:
-![](arts/android2.gif)
-IOS:
-![](arts/ios3.gif)
-Android:
-![](arts/android3.gif)
+IOS:<br>
+![](arts/ios1.gif)<br>
+Android:<br>
+![](arts/android1.gif)<br>
+IOS:<br>
+![](arts/ios2.gif)<br>
+Android:<br>
+![](arts/android2.gif)<br>
+IOS:<br>
+![](arts/ios3.gif)<br>
+Android:<br>
+![](arts/android3.gif)<br>
 
 ## How to use?
 1.the first declare following in your pubspec.yml

@@ -12,18 +12,18 @@
 * 灵活的回弹能力
 
 ## 截图
-IOS:
-![](arts/ios1.gif)
-Android:
-![](arts/android1.gif)
-IOS:
-![](arts/ios2.gif)
-Android:
-![](arts/android2.gif)
-IOS:
-![](arts/ios3.gif)
-Android:
-![](arts/android3.gif)
+IOS:<br>
+![](arts/ios1.gif)<br>
+Android:<br>
+![](arts/android1.gif)<br>
+IOS:<br>
+![](arts/ios2.gif)<br>
+Android:<br>
+![](arts/android2.gif)<br>
+IOS:<br>
+![](arts/ios3.gif)<br>
+Android:<br>
+![](arts/android3.gif)<br>
 
 ## 我该怎么用?
 1.第一步,在你的pubspec.yml声明
