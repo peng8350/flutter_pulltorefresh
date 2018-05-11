@@ -145,13 +145,6 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _dispatchScrollEvent(ScrollNotification notification) {
     bool down = _isPullDown(notification);
     bool up = _isPullUp(notification);
-    if (widget.enablePullUpLoad &&
-        _mFooterHeight == 0.0 &&
-        _mFooterKey.currentContext != null) {
-      setState(() {
-        _mFooterHeight = _mFooterKey.currentContext.size.height;
-      });
-    }
     // the reason why should do this,because Early touch at a specific location makes triggerdistance smaller.
     if (!down && !up) {
       _mDragPointY = null;
@@ -204,9 +197,8 @@ class _SmartRefresherState extends State<SmartRefresher>
      cause Flutter to automatically retrieve widget.
     */
     if (up) {
-      if (!_mTopController.isDismissed) _mTopController.animateTo(0.000001);
+       _mTopController.animateTo(0.000001);
     } else {
-      if (!_mBottomController.isDismissed)
         _mBottomController.animateTo(0.000001);
     }
   }
@@ -276,12 +268,11 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   void _onAfterBuild() {
     setState(() {
-      if (widget.enablePullUpLoad &&
-          _mFooterHeight == 0.0 &&
-          _mFooterKey.currentContext != null) {
+      if (widget.enablePullUpLoad) {
         _mFooterHeight = _mFooterKey.currentContext.size.height;
       }
-      _mHeaderHeight = _mHeaderKey.currentContext.size.height;
+      if (widget.enablePullDownRefresh)
+        _mHeaderHeight = _mHeaderKey.currentContext.size.height;
     });
   }
 
@@ -339,13 +330,16 @@ class _SmartRefresherState extends State<SmartRefresher>
   @override
   void didUpdateWidget(SmartRefresher oldWidget) {
     // TODO: implement didUpdateWidget
-    if (widget.refreshMode == oldWidget.refreshMode &&
-        oldWidget.loadMode == widget.loadMode) return;
+    if(widget.refreshMode == oldWidget.refreshMode&&oldWidget.loadMode == widget.loadMode){
+      return ;
+    }
+    super.didUpdateWidget(oldWidget);
+    print(widget.refreshMode);
+    print(widget.loadMode);
     if (widget.refreshMode != oldWidget.refreshMode) {
       if (widget.refreshMode == RefreshMode.refreshing) {
         _mTopController.value = 1.0;
-        _mScrollController
-            .jumpTo(-widget.topVisibleRange);
+        _mScrollController.jumpTo(-widget.topVisibleRange);
       } else if (RefreshMode.completed == widget.refreshMode ||
           RefreshMode.failed == widget.refreshMode) {
         new Future<Null>.delayed(
@@ -353,7 +347,8 @@ class _SmartRefresherState extends State<SmartRefresher>
           _dismiss(true);
         });
       }
-    } else if (oldWidget.loadMode != widget.loadMode) {
+    }
+    if (oldWidget.loadMode != widget.loadMode) {
       if (widget.loadMode == RefreshMode.refreshing) {
         _mBottomController.value = 1.0;
       } else if (widget.loadMode == RefreshMode.completed ||
@@ -364,7 +359,7 @@ class _SmartRefresherState extends State<SmartRefresher>
         });
       }
     }
-    super.didUpdateWidget(oldWidget);
+
   }
 
   @override
@@ -378,43 +373,45 @@ class _SmartRefresherState extends State<SmartRefresher>
               left: 0.0,
               right: 0.0,
               child: new NotificationListener(
-                child: new ListView(
-                  controller: _mScrollController,
-                  physics: new RefreshScrollPhysics(),
-                  children: <Widget>[
-                    !widget.enablePullDownRefresh
-                        ? new Container()
-                        : buildEmptySpace(
-                            _mTopController, widget.topVisibleRange),
-                    new Container(
-                        key: _mHeaderKey,
-                        child: !widget.enablePullDownRefresh
+                child: new SingleChildScrollView(
+                    controller: _mScrollController,
+                    physics: new RefreshScrollPhysics(),
+                    child: new Column(
+                      children: <Widget>[
+                        !widget.enablePullDownRefresh
                             ? new Container()
-                            : widget.headerBuilder != null
-                                ? widget.headerBuilder(
-                                    context, widget.refreshMode)
-                                : buildDefaultHeader(context,
-                                    widget.refreshMode, _mTIconController)),
-                    new ConstrainedBox(
-                      constraints:
-                          new BoxConstraints(minHeight: cons.biggest.height),
-                      child: widget.child,
-                    ),
-                    new Container(
-                      key: _mFooterKey,
-                      child: !widget.enablePullUpLoad
-                          ? new Container()
-                          : widget.footerBuilder != null
-                              ? widget.footerBuilder(context, widget.loadMode)
-                              : buildDefaultFooter(
-                                  context, widget.loadMode, _mBIconController),
-                    ),
-                    !widget.enablePullUpLoad
-                        ? new Container()
-                        : buildEmptySpace(
-                            _mBottomController, widget.bottomVisibleRange),
-                  ],
-                ),
+                            : buildEmptySpace(
+                                _mTopController, widget.topVisibleRange),
+                        new Container(
+                            key: _mHeaderKey,
+                            child: !widget.enablePullDownRefresh
+                                ? new Container()
+                                : widget.headerBuilder != null
+                                    ? widget.headerBuilder(
+                                        context, widget.refreshMode)
+                                    : buildDefaultHeader(context,
+                                        widget.refreshMode, _mTIconController)),
+                        new ConstrainedBox(
+                          constraints: new BoxConstraints(
+                              minHeight: cons.biggest.height),
+                          child: widget.child,
+                        ),
+                        new Container(
+                          key: _mFooterKey,
+                          child: !widget.enablePullUpLoad
+                              ? new Container()
+                              : widget.footerBuilder != null
+                                  ? widget.footerBuilder(
+                                      context, widget.loadMode)
+                                  : buildDefaultFooter(context, widget.loadMode,
+                                      _mBIconController),
+                        ),
+                        !widget.enablePullUpLoad
+                            ? new Container()
+                            : buildEmptySpace(
+                                _mBottomController, widget.bottomVisibleRange),
+                      ],
+                    )),
                 onNotification: _dispatchScrollEvent,
               )),
         ],

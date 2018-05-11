@@ -96,9 +96,11 @@ class BuildFactory {
     );
   }
 
-  Widget buildEmptySpace(controller, spacing) => new SizeTransition(
-      sizeFactor: controller,
-      child: new Container(
-        height: spacing,
-      ));
+  Widget buildEmptySpace(controller, spacing){
+    return new SizeTransition(
+        sizeFactor: controller,
+        child: new Container(
+          height: spacing,
+        ));
+  }
 }

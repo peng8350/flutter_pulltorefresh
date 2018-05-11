@@ -12,7 +12,7 @@ class _Example4State extends State<Example4> {
   RefreshMode loading = RefreshMode.idle, refreshing = RefreshMode.idle;
   List<Widget> data = [];
   void _getDatas() {
-    for (int i = 0; i < 14; i++) {
+    for (int i = 0; i < 25; i++) {
       data.add(new Text('Data $i'));
     }
   }
