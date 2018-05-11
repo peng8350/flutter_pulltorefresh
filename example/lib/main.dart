@@ -9,10 +9,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+
       title: 'Pulltorefresh Demo',
+      debugShowCheckedModeBanner:   false,
       theme: new ThemeData(
         // This is the theme of your application.
-        //
+        //s
         // Try running your application with "flutter run". You'll see the
         // application has a blue toolbar. Then, without quitting the app, try
         // changing the primarySwatch below to Colors.green and then invoke

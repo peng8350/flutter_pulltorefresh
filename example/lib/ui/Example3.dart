@@ -144,6 +144,7 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
             enablePullDownRefresh: true,
             enablePullUpLoad: true,
             topVisibleRange: 100.0,
+            bottomVisibleRange: 100.0,
             headerBuilder: _header,
             footerBuilder: _footer,
             refreshMode: this.refreshing,

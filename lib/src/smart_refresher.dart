@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/build_factory.dart';
 import 'package:pull_to_refresh/src/refresh_physics.dart';
+import 'package:flutter/gestures.dart';
 
 typedef void OnModeChange(bool isUp, RefreshMode mode);
 typedef void OnOffsetChange(bool isUp, double offset);
@@ -197,9 +198,13 @@ class _SmartRefresherState extends State<SmartRefresher>
      cause Flutter to automatically retrieve widget.
     */
     if (up) {
-       _mTopController.animateTo(0.000001);
+       _mTopController.animateTo(0.000001).then((Null val){
+         _modeChangeCallback(true, RefreshMode.idle);
+       });
     } else {
-        _mBottomController.animateTo(0.000001);
+        _mBottomController.animateTo(0.000001).then((Null val){
+          _modeChangeCallback(false, RefreshMode.idle);
+        });
     }
   }
 
@@ -296,22 +301,12 @@ class _SmartRefresherState extends State<SmartRefresher>
       vsync: this,
       lowerBound: 0.000001,
       duration: const Duration(milliseconds: 200),
-    )..addStatusListener((status) {
-        if (_mTopController.value == 0.000001 &&
-            status == AnimationStatus.completed) {
-          _modeChangeCallback(true, RefreshMode.idle);
-        }
-      });
+    );
     _mBottomController = new AnimationController(
       vsync: this,
       lowerBound: 0.000001,
       duration: const Duration(milliseconds: 200),
-    )..addStatusListener((status) {
-        if (_mBottomController.value == 0.000001 &&
-            status == AnimationStatus.completed) {
-          _modeChangeCallback(false, RefreshMode.idle);
-        }
-      });
+    );
     _mBIconController = new AnimationController(
         vsync: this,
         upperBound: 0.5,
@@ -329,13 +324,12 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   @override
   void didUpdateWidget(SmartRefresher oldWidget) {
+
     // TODO: implement didUpdateWidget
     if(widget.refreshMode == oldWidget.refreshMode&&oldWidget.loadMode == widget.loadMode){
       return ;
     }
     super.didUpdateWidget(oldWidget);
-    print(widget.refreshMode);
-    print(widget.loadMode);
     if (widget.refreshMode != oldWidget.refreshMode) {
       if (widget.refreshMode == RefreshMode.refreshing) {
         _mTopController.value = 1.0;
@@ -364,6 +358,7 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   @override
   Widget build(BuildContext context) {
+
     return new LayoutBuilder(builder: (context, cons) {
       return new Stack(
         children: <Widget>[
