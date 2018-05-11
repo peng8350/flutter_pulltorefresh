@@ -31,7 +31,7 @@ Android:<br>
 ```
 
    dependencies:
-     pull_to_refresh: ^1.0.6
+     pull_to_refresh: ^1.0.7
      
 ```
 

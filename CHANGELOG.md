@@ -29,3 +29,7 @@
 * Use Material default LoadingBar
 * Add a bool paramter to onOffsetChange to know if pullup or pulldown
 * Fix Bug: when pulled up or pull-down, sizeAnimation and IOS elasticity conflict, resulting in beating.
+
+## 1.0.7
+* Fix Bug1: The use of ListView as a container to cause a fatal error (continuous sliding) when the bottom control is reclaimed, using the SingleChildScrollView instead of preventing the base control from recovering many times from the exception
+* Fix Bug2: When the user continues to call at the same time in the two states of pull-down and drop down, the animation has no callback problem when it enters or fails.
