@@ -31,7 +31,7 @@ Android:<br>
 ```
 
    dependencies:
-     pull_to_refresh: ^1.0.7
+     pull_to_refresh: ^1.0.8
      
 ```
 
@@ -182,14 +182,16 @@ new ListView(){
 | footerBuilder | 尾部指示器构造,i如果为空的话,默认传入我提供默认的尾指示器     | (BuildContext,RefreshMode) => Widget  | null | 可选 |
 | enablePullDownRefresh | 是否允许下拉刷新     | boolean | true | 可选 |
 | enablePullUpLoad |   是否允许上拉加载 | boolean | false | 可选 |
+| enableAutoLoadMore |  如果打开了,则一定到达底部会自动加载更多 | boolean | true |optional |
 | refreshMode | 它代表头部指示器的刷新状态   | RefreshMode(enum) | RefreshMode.idle |  果你允许下拉刷新前提下是必要的，否则就是可选 |
 | loadMode | 它代表尾部指示器的刷新状态   | RefreshMode(enum) | RefreshMode.idle | 如果你允许上拉加载前提下是必要的，否则就是可选 |
 | completeDuration | 它代表刷新成功或失败时显示的持续时间    | int | 800 | 可选 |
-| onModeChange | 当刷新模式或加载模式准备更改时，它会回调，它要求您自己更改值，第一个参数是从是否是顶部拖动，第二个是刷新模式更改过后的状态。   | (bool,RefreshMode) => Void | null | 可选 |
+| onRefreshChange | 当刷新模式准备更改时，它会回调，它要求您自己更改值，第一个参数是从是否是顶部拖动，第二个是刷新模式更改过后的状态。   | (bool,RefreshMode) => Void | null | 可选 |
+| onLoadMode | 当加载更多模式准备更改时，它会回调，它要求您自己更改值，第一个参数是从是否是顶部拖动，第二个是刷新模式更改过后的状态。   | (bool,LoadMode) => Void | null | 可选 |
 | onOffsetChange | 它将在拖动时回调（除了刷新状态和完成状态,范围在:0~实际距离/triggerDistance   | (double) => Void | null | 可选 |
 | triggerDistance | 他的值表示要触发刷新种的状态模式要达到的拖动距离。  | double | 100.0 | 可选 |
 | topVisibleRange | 当指示器进入刷新状态时显示的范围   | double | 50.0 | 可选 |
-| bottomVisibleRange | 当指示器进入刷新状态时显示的范围  | double | 50.0 | 可选 |
+
 
 
 

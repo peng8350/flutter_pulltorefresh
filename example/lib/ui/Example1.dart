@@ -76,28 +76,30 @@ class _Example1State extends State<Example1> {
   Widget build(BuildContext context) {
     return new Container(
       color: Colors.white30,
-      child: new SmartRefresher(
-        enablePullDownRefresh: false,
-        enablePullUpLoad: true,
-        refreshMode: this.refreshing,
-        loadMode: this.loading,
-        onRefreshChange: _onRefreshChange,
-        onLoadChange: _onLoadChange,
-        onOffsetChange: _onOffsetCallback,
-        child: new Container(
-          color: Colors.white,
-          child: new ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemExtent: 40.0,
-            itemCount: data.length,
-            itemBuilder: (context,index){
-              return data[index];
-            },
+      child: new RefreshIndicator(child: new SmartRefresher(
+          enablePullDownRefresh: false,
+          enablePullUpLoad: true,
+          refreshMode: this.refreshing,
+          loadMode: this.loading,
+          onRefreshChange: _onRefreshChange,
+          onLoadChange: _onLoadChange,
+          onOffsetChange: _onOffsetCallback,
+          child: new Container(
+            color: Colors.white,
+            child: new ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemExtent: 40.0,
+              itemCount: data.length,
+              itemBuilder: (context,index){
+                return data[index];
+              },
 
-          ),
-        )
-    )
+            ),
+          )
+      ), onRefresh: (){
+        return new Future.delayed(const Duration(milliseconds: 2000));
+      })
     );
   }
 }

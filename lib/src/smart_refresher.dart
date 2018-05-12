@@ -33,7 +33,7 @@ class SmartRefresher extends StatefulWidget {
   final bool enablePullUpLoad;
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePullDownRefresh;
-  // if enable auto Loadmore
+  // if enable auto Loadmore,it will loadmore when enter the bottomest
   final bool enableAutoLoadMore;
   //this will influerence the RefreshMode
   final RefreshMode refreshMode;
