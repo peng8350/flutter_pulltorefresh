@@ -17,7 +17,6 @@ typedef Widget HeaderBuilder(BuildContext context, RefreshMode mode);
 typedef Widget FooterBuilder(BuildContext context, RefreshMode mode);
 
 enum RefreshMode { idle, startDrag, canRefresh, refreshing, completed, failed }
-
 /**
     This is the most important component that provides drop-down refresh and up loading.
  */
@@ -70,9 +69,9 @@ class SmartRefresher extends StatefulWidget {
 class _SmartRefresherState extends State<SmartRefresher>
     with TickerProviderStateMixin, BuildFactory {
   // the two controllers can controll the top and bottom empty spacing widgets.
-  AnimationController _mTopController, _mBottomController;
+  AnimationController _mTopController;
   // animate change for icon top and bottom
-  AnimationController _mTIconController, _mBIconController;
+  AnimationController _mTIconController;
   // listen the listen offset or on...
   ScrollController _mScrollController;
   // the bool will check the user if dragging on the screen.
@@ -201,10 +200,6 @@ class _SmartRefresherState extends State<SmartRefresher>
        _mTopController.animateTo(0.000001).then((Null val){
          _modeChangeCallback(true, RefreshMode.idle);
        });
-    } else {
-        _mBottomController.animateTo(0.000001).then((Null val){
-          _modeChangeCallback(false, RefreshMode.idle);
-        });
     }
   }
 
@@ -238,13 +233,6 @@ class _SmartRefresherState extends State<SmartRefresher>
       if (widget.loadMode == mode) return;
       if (widget.loadMode == RefreshMode.refreshing) return;
       _modeChangeCallback(false, mode);
-      if (widget.footerBuilder == null && widget.enablePullUpLoad) {
-        if (mode == RefreshMode.canRefresh) {
-          _mBIconController.animateTo(0.0);
-        } else if (mode == RefreshMode.startDrag) {
-          _mBIconController.animateTo(1.0);
-        }
-      }
     }
   }
 
@@ -284,10 +272,8 @@ class _SmartRefresherState extends State<SmartRefresher>
   @override
   void dispose() {
     // TODO: implement dispose
-    _mBIconController.dispose();
     _mTIconController.dispose();
     _mScrollController.dispose();
-    _mBottomController.dispose();
     _mTopController.dispose();
     super.dispose();
   }
@@ -302,16 +288,6 @@ class _SmartRefresherState extends State<SmartRefresher>
       lowerBound: 0.000001,
       duration: const Duration(milliseconds: 200),
     );
-    _mBottomController = new AnimationController(
-      vsync: this,
-      lowerBound: 0.000001,
-      duration: const Duration(milliseconds: 200),
-    );
-    _mBIconController = new AnimationController(
-        vsync: this,
-        upperBound: 0.5,
-        value: 0.5,
-        duration: const Duration(milliseconds: 100));
     _mTIconController = new AnimationController(
         vsync: this,
         upperBound: 0.5,
@@ -343,13 +319,11 @@ class _SmartRefresherState extends State<SmartRefresher>
       }
     }
     if (oldWidget.loadMode != widget.loadMode) {
-      if (widget.loadMode == RefreshMode.refreshing) {
-        _mBottomController.value = 1.0;
-      } else if (widget.loadMode == RefreshMode.completed ||
+      if (widget.loadMode == RefreshMode.completed ||
           RefreshMode.failed == widget.loadMode) {
         new Future<Null>.delayed(
             new Duration(milliseconds: widget.completeDuration), () {
-          _dismiss(false);
+          _modeChangeCallback(false, RefreshMode.idle);
         });
       }
     }
@@ -364,7 +338,7 @@ class _SmartRefresherState extends State<SmartRefresher>
         children: <Widget>[
           new Positioned(
               top: !widget.enablePullDownRefresh ? 0.0 : -_mHeaderHeight,
-              bottom: !widget.enablePullUpLoad ? 0.0 : -_mFooterHeight,
+              bottom: 0.0,
               left: 0.0,
               right: 0.0,
               child: new NotificationListener(
@@ -399,12 +373,8 @@ class _SmartRefresherState extends State<SmartRefresher>
                                   ? widget.footerBuilder(
                                       context, widget.loadMode)
                                   : buildDefaultFooter(context, widget.loadMode,
-                                      _mBIconController),
+                                     ),
                         ),
-                        !widget.enablePullUpLoad
-                            ? new Container()
-                            : buildEmptySpace(
-                                _mBottomController, widget.bottomVisibleRange),
                       ],
                     )),
                 onNotification: _dispatchScrollEvent,

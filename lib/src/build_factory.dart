@@ -56,7 +56,7 @@ class BuildFactory {
 
   // if your renderFooter null, it will be replaced by it
   Widget buildDefaultFooter(
-      BuildContext context, RefreshMode mode, AnimationController controller) {
+      BuildContext context, RefreshMode mode) {
     return new Container(
       height: 50.0,
       alignment: Alignment.center,
@@ -73,10 +73,8 @@ class BuildFactory {
                   ? const Icon(Icons.done, color: Colors.grey)
                   : mode == RefreshMode.failed
                       ? const Icon(Icons.clear, color: Colors.grey)
-                      : new RotationTransition(
-                          turns: controller,
-                          child: const Icon(Icons.arrow_downward,
-                              color: Colors.grey)),
+                      : const Icon(Icons.arrow_downward,
+              color: Colors.grey),
           new Container(
             margin: new EdgeInsets.only(left: 10.0),
             child: new Text(
