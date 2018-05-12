@@ -307,16 +307,12 @@ class _SmartRefresherState extends State<SmartRefresher>
   @override
   void didUpdateWidget(SmartRefresher oldWidget) {
     // TODO: implement didUpdateWidget
-    if (widget.refreshMode == oldWidget.refreshMode &&
-        oldWidget.loadMode == widget.loadMode) {
-      return;
-    }
-    super.didUpdateWidget(oldWidget);
     if (widget.refreshMode != oldWidget.refreshMode) {
       if (widget.refreshMode == RefreshMode.refreshing) {
         _mTopController.value = 1.0;
         // if set Refresh when offset>listview.height cause bug?
-        _mScrollController.jumpTo(-widget.topVisibleRange);
+        _mScrollController.jumpTo(_mScrollController.offset>=-0.0?0.1:-widget.topVisibleRange);
+
       } else if (RefreshMode.completed == widget.refreshMode ||
           RefreshMode.failed == widget.refreshMode) {
         new Future<Null>.delayed(
@@ -325,6 +321,7 @@ class _SmartRefresherState extends State<SmartRefresher>
         });
       }
     }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

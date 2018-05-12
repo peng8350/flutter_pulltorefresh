@@ -13,7 +13,7 @@ class _Example4State extends State<Example4> {
   LoadMode loading = LoadMode.idle;
   List<Widget> data = [];
   void _getDatas() {
-    for (int i = 0; i < 25; i++) {
+    for (int i = 0; i < 4; i++) {
       data.add(new Text('Data $i'));
     }
   }
