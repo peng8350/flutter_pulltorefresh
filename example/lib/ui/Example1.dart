@@ -9,8 +9,8 @@ class Example1 extends StatefulWidget {
 }
 
 class _Example1State extends State<Example1> {
-
-  RefreshMode loading=RefreshMode.idle, refreshing=RefreshMode.idle;
+  LoadMode loading = LoadMode.idle;
+  RefreshMode  refreshing=RefreshMode.idle;
   List<Widget> data = [];
   void _getDatas() {
 
@@ -20,8 +20,8 @@ class _Example1State extends State<Example1> {
   }
 
 
-  void _onModeChange(isUp,mode){
-    if(isUp){
+  void _onRefreshChange(mode){
+
       //must be do it
       setState(() {
         refreshing = mode;
@@ -35,24 +35,25 @@ class _Example1State extends State<Example1> {
           print("Refreshed!!!");
         });
       }
-    }
-    else{
-      //must be do it
-      setState(() {
-        loading= mode;
-      });
-      // this is equals onLoaadmore()
-      if(mode==RefreshMode.refreshing) {
-        new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
 
-          setState(() {
-             data.add(new Text('Data '));
+  }
 
-            loading = RefreshMode.completed;
-          });
-          print("LoadComplete!!!");
+  void _onLoadChange(LoadMode mode){
+    //must be do it
+    setState(() {
+      loading= mode;
+    });
+    // this is equals onLoaadmore()
+    if(mode==LoadMode.loading) {
+      new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
+
+        setState(() {
+          data.add(new Text('Data '));
+
+          loading = LoadMode.idle;
         });
-      }
+        print("LoadComplete!!!");
+      });
     }
   }
 
@@ -81,7 +82,8 @@ class _Example1State extends State<Example1> {
         enablePullUpLoad: true,
         refreshMode: this.refreshing,
         loadMode: this.loading,
-        onModeChange: _onModeChange,
+        onRefreshChange: _onRefreshChange,
+        onLoadChange: _onLoadChange,
         onOffsetChange: _onOffsetCallback,
         child: new Container(
           color: Colors.white,

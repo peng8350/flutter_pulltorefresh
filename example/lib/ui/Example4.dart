@@ -9,7 +9,8 @@ class Example4 extends StatefulWidget {
 }
 
 class _Example4State extends State<Example4> {
-  RefreshMode loading = RefreshMode.idle, refreshing = RefreshMode.idle;
+  RefreshMode  refreshing = RefreshMode.idle;
+  LoadMode loading = LoadMode.idle;
   List<Widget> data = [];
   void _getDatas() {
     for (int i = 0; i < 25; i++) {
@@ -17,8 +18,7 @@ class _Example4State extends State<Example4> {
     }
   }
 
-  void _onModeChange(isUp, mode) {
-    if (isUp) {
+  void _onRefreshChange(mode) {
       //must be do it
       setState(() {
         refreshing = mode;
@@ -32,22 +32,24 @@ class _Example4State extends State<Example4> {
           print("Refreshed!!!");
         });
       }
-    } else {
-      //must be do it
-      setState(() {
-        loading = mode;
-      });
-      // this is equals onLoaadmore()
-      if (mode == RefreshMode.refreshing) {
-        new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
-          setState(() {
-            data.add(new Text('Data '));
 
-            loading = RefreshMode.completed;
-          });
-          print("LoadComplete!!!");
+  }
+
+  void _onLoadChange(mode){
+    //must be do it
+    setState(() {
+      loading = mode;
+    });
+    // this is equals onLoadmore()
+    if (mode == LoadMode.loading) {
+      new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
+        setState(() {
+          data.add(new Text('Data '));
+
+          loading = LoadMode.idle;
         });
-      }
+        print("LoadComplete!!!");
+      });
     }
   }
 
@@ -72,7 +74,8 @@ class _Example4State extends State<Example4> {
             enablePullUpLoad: true,
             refreshMode: this.refreshing,
             loadMode: this.loading,
-            onModeChange: _onModeChange,
+            onRefreshChange: _onRefreshChange,
+            onLoadChange: _onLoadChange,
             onOffsetChange: _onOffsetCallback,
             child: new ListView.builder(
               physics: const NeverScrollableScrollPhysics(),

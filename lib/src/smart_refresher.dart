@@ -9,14 +9,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/build_factory.dart';
 import 'package:pull_to_refresh/src/refresh_physics.dart';
-import 'package:flutter/gestures.dart';
 
-typedef void OnModeChange(bool isUp, RefreshMode mode);
+typedef void OnRefreshChange(RefreshMode mode);
+typedef void OnLoadChange( LoadMode mode);
 typedef void OnOffsetChange(bool isUp, double offset);
 typedef Widget HeaderBuilder(BuildContext context, RefreshMode mode);
-typedef Widget FooterBuilder(BuildContext context, RefreshMode mode);
+typedef Widget FooterBuilder(BuildContext context, LoadMode mode);
 
 enum RefreshMode { idle, startDrag, canRefresh, refreshing, completed, failed }
+enum LoadMode {idle,emptyData,failed,loading}
 /**
     This is the most important component that provides drop-down refresh and up loading.
  */
@@ -32,7 +33,8 @@ class SmartRefresher extends StatefulWidget {
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePullDownRefresh;
   //this will influerence the RefreshMode
-  final RefreshMode refreshMode, loadMode;
+  final RefreshMode refreshMode;
+  final LoadMode loadMode;
   // completed show time
   final int completeDuration;
   // This value represents the distance that can be refreshed and trigger the callback drag.
@@ -40,7 +42,8 @@ class SmartRefresher extends StatefulWidget {
   // The scope of the display when the indicator enters a refresh state
   final double topVisibleRange, bottomVisibleRange;
   // upper and downer callback when you drag out of the distance
-  final OnModeChange onModeChange;
+  final OnRefreshChange onRefreshChange;
+  final OnLoadChange onLoadChange;
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;
 
@@ -54,9 +57,10 @@ class SmartRefresher extends StatefulWidget {
     this.refreshMode: RefreshMode.idle,
     this.bottomVisibleRange: 50.0,
     this.topVisibleRange: 50.0,
-    this.loadMode: RefreshMode.idle,
+    this.loadMode:LoadMode.idle,
     this.completeDuration: 800,
-    this.onModeChange,
+    this.onRefreshChange,
+    this.onLoadChange,
     this.onOffsetChange,
     this.triggerDistance: 100.0,
   })  : assert(child != null),
@@ -81,7 +85,7 @@ class _SmartRefresherState extends State<SmartRefresher>
   // key to get height header of footer
   final GlobalKey _mHeaderKey = new GlobalKey(), _mFooterKey = new GlobalKey();
   // the height must be  equals your headerBuilder
-  double _mHeaderHeight = 0.0, _mFooterHeight = 0.0;
+  double _mHeaderHeight = 0.0;
 
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
@@ -95,6 +99,7 @@ class _SmartRefresherState extends State<SmartRefresher>
         _mDragPointY == null &&
         (_isPullUp(notification) || _isPullDown(notification)))
       _mDragPointY = _mScrollController.offset;
+    if(_isPullUp(notification))
     _changeMode(notification, RefreshMode.startDrag);
     return false;
   }
@@ -120,13 +125,14 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _handleScrollEnd(ScrollNotification notification) {
     bool up = _isPullDown(notification);
     if (!_mReachMax) {
-      _changeMode(notification, RefreshMode.idle);
+
+      _changeMode(notification, up?RefreshMode.idle:LoadMode.idle);
       _dismiss(up ? up : false);
     } else {
       if (up) {
         _modeChangeCallback(true, RefreshMode.refreshing);
       } else {
-        _modeChangeCallback(false, RefreshMode.refreshing);
+        _modeChangeCallback(false, LoadMode.loading);
       }
     }
     _resumeVal();
@@ -155,9 +161,7 @@ class _SmartRefresherState extends State<SmartRefresher>
                 widget.refreshMode == RefreshMode.failed ||
                 widget.refreshMode == RefreshMode.completed)) ||
         (up &&
-            (widget.loadMode == RefreshMode.refreshing ||
-                widget.loadMode == RefreshMode.failed ||
-                widget.loadMode == RefreshMode.completed))) {
+            (widget.loadMode == LoadMode.loading ))) {
       return false;
     }
     if ((up && !widget.enablePullUpLoad) ||
@@ -209,6 +213,7 @@ class _SmartRefresherState extends State<SmartRefresher>
     _mReachMax = offset >= 1.0;
     if (widget.onOffsetChange != null)
       widget.onOffsetChange(notification.metrics.extentBefore == 0, offset);
+    if(notification.metrics.extentBefore==0)
     if (_mReachMax) {
       _changeMode(notification, RefreshMode.canRefresh);
     } else {
@@ -231,7 +236,8 @@ class _SmartRefresherState extends State<SmartRefresher>
       }
     } else if (_isPullUp(notifi)) {
       if (widget.loadMode == mode) return;
-      if (widget.loadMode == RefreshMode.refreshing) return;
+      if (widget.loadMode == LoadMode.loading) return;
+      if(mode.runtimeType==RefreshMode)return;
       _modeChangeCallback(false, mode);
     }
   }
@@ -254,16 +260,16 @@ class _SmartRefresherState extends State<SmartRefresher>
   }
 
   void _modeChangeCallback(isUp, mode) {
-    if (this.widget.onModeChange != null) {
-      widget.onModeChange(isUp, mode);
+    if (isUp&&this.widget.onRefreshChange != null) {
+      widget.onRefreshChange(mode);
+    }
+    else if (!isUp&&this.widget.onLoadChange != null) {
+      widget.onLoadChange(mode);
     }
   }
 
   void _onAfterBuild() {
     setState(() {
-      if (widget.enablePullUpLoad) {
-        _mFooterHeight = _mFooterKey.currentContext.size.height;
-      }
       if (widget.enablePullDownRefresh)
         _mHeaderHeight = _mHeaderKey.currentContext.size.height;
     });
@@ -315,15 +321,6 @@ class _SmartRefresherState extends State<SmartRefresher>
         new Future<Null>.delayed(
             new Duration(milliseconds: widget.completeDuration), () {
           _dismiss(true);
-        });
-      }
-    }
-    if (oldWidget.loadMode != widget.loadMode) {
-      if (widget.loadMode == RefreshMode.completed ||
-          RefreshMode.failed == widget.loadMode) {
-        new Future<Null>.delayed(
-            new Duration(milliseconds: widget.completeDuration), () {
-          _modeChangeCallback(false, RefreshMode.idle);
         });
       }
     }

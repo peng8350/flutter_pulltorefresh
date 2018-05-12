@@ -9,7 +9,8 @@ class Example3 extends StatefulWidget {
 }
 
 class _Example3State extends State<Example3> with TickerProviderStateMixin {
-  RefreshMode loading = RefreshMode.idle, refreshing = RefreshMode.idle;
+  RefreshMode  refreshing = RefreshMode.idle;
+  LoadMode loading = LoadMode.idle;
   AnimationController _headControll,_footControll;
   List<Widget> data = [];
   void _getDatas() {
@@ -55,8 +56,7 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
     ;
   }
 
-  void _onModeChange(isUp, mode) {
-    if (isUp) {
+  void _onRefreshChange(mode) {
       //must be do it
       setState(() {
         refreshing = mode;
@@ -76,36 +76,37 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
           _headControll.animateTo(0.0);
           break;
       }
-    } else {
-      //must be do it
-      setState(() {
-        loading = mode;
-      });
-      switch(mode){
-        case RefreshMode.refreshing:
-          _footControll.animateTo(0.0);
-          break;
-        case RefreshMode.idle:
-          _footControll.animateTo(0.0);
-          break;
-      }
-      // this is equals onLoaadmore()
-      if (mode == RefreshMode.refreshing) {
-        new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
-          setState(() {
-            data.add(new Card(
-              margin:
-              new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-              child: new Center(
-                child: new Text('Data '),
-              ),
-            ));
+  }
 
-            loading = RefreshMode.completed;
-          });
-          print("LoadComplete!!!");
+  _onLoadChange(mode){
+    //must be do it
+    setState(() {
+      loading = mode;
+    });
+    switch(mode){
+      case RefreshMode.refreshing:
+        _footControll.animateTo(0.0);
+        break;
+      case RefreshMode.idle:
+        _footControll.animateTo(0.0);
+        break;
+    }
+    // this is equals onLoaadmore()
+    if (mode == LoadMode.loading) {
+      new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
+        setState(() {
+          data.add(new Card(
+            margin:
+            new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+            child: new Center(
+              child: new Text('Data '),
+            ),
+          ));
+
+          loading = LoadMode.idle;
         });
-      }
+        print("LoadComplete!!!");
+      });
     }
   }
 
@@ -146,11 +147,11 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
             topVisibleRange: 100.0,
             bottomVisibleRange: 100.0,
             headerBuilder: _header,
-            footerBuilder: _footer,
             refreshMode: this.refreshing,
             onOffsetChange: _onOffsetCallback,
             loadMode: this.loading,
-            onModeChange: _onModeChange,
+            onRefreshChange: _onRefreshChange,
+            onLoadChange: _onLoadChange,
             child: new Container(
               margin: new EdgeInsets.only(top: 20.0),
               color: Colors.white,

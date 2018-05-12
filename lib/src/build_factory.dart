@@ -55,46 +55,36 @@ class BuildFactory {
   }
 
   // if your renderFooter null, it will be replaced by it
-  Widget buildDefaultFooter(
-      BuildContext context, RefreshMode mode) {
-    return new Container(
-      height: 50.0,
-      alignment: Alignment.center,
-      child: new Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          mode == RefreshMode.refreshing
-              ? new SizedBox(
-                  width: 25.0,
-                  height: 25.0,
-                  child: const CircularProgressIndicator(strokeWidth: 2.0),
-                )
-              : mode == RefreshMode.completed
-                  ? const Icon(Icons.done, color: Colors.grey)
-                  : mode == RefreshMode.failed
-                      ? const Icon(Icons.clear, color: Colors.grey)
-                      : const Icon(Icons.arrow_downward,
-              color: Colors.grey),
-          new Container(
-            margin: new EdgeInsets.only(left: 10.0),
-            child: new Text(
-                mode == RefreshMode.canRefresh
-                    ? 'LoadMore when release'
-                    : mode == RefreshMode.completed
-                        ? 'Load Completed'
-                        : mode == RefreshMode.failed
-                            ? 'Load Failed'
-                            : mode == RefreshMode.refreshing
-                                ? 'Loading....'
-                                : 'pull up load',
-                style: new TextStyle(color: const Color(0xff555555))),
-          )
-        ],
-      ),
-    );
+  Widget buildDefaultFooter(BuildContext context, LoadMode mode) {
+    if (mode == LoadMode.loading) {
+      return new Container(
+        height: 50.0,
+        child: new Center(
+          child: new SizedBox(
+            width: 25.0,
+            height: 25.0,
+            child: const CircularProgressIndicator(strokeWidth: 2.0),
+          ),
+        ),
+      );
+    } else {
+      return new Container(
+        height: 50.0,
+        child: new Center(
+          child: new Text(
+            mode == LoadMode.idle
+                ? 'Load More...'
+                : mode == LoadMode.emptyData
+                    ? 'No more data'
+                    : 'Network exception!',
+            style: new TextStyle(color: const Color(0xff555555)),
+          ),
+        ),
+      );
+    }
   }
 
-  Widget buildEmptySpace(controller, spacing){
+  Widget buildEmptySpace(controller, spacing) {
     return new SizeTransition(
         sizeFactor: controller,
         child: new Container(

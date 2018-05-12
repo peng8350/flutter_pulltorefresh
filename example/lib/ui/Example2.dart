@@ -10,7 +10,8 @@ class Example2 extends StatefulWidget {
 }
 
 class _Example2State extends State<Example2> {
-  RefreshMode loading = RefreshMode.idle, refreshing = RefreshMode.idle;
+  RefreshMode refreshing = RefreshMode.idle;
+  LoadMode loading = LoadMode.idle;
   int indexPage = 2;
   List<String> data = [];
 
@@ -28,42 +29,38 @@ class _Example2State extends State<Example2> {
       }
       indexPage++;
       setState(() {
-        loading = RefreshMode.completed;
+        loading = LoadMode.idle;
       });
     }).catchError(() {
       setState(() {
-        loading = RefreshMode.failed;
+        loading = LoadMode.failed;
       });
     });
   }
 
-  void _onModeChange(isUp, mode) {
-    if (isUp) {
-      //must be do it
-      setState(() {
-        refreshing = mode;
-      });
-      // this is equals onRefresh()
-      if (mode == RefreshMode.refreshing) {
-        new Future.delayed(const Duration(milliseconds: 2000), () {
-          setState(() {
-            refreshing = RefreshMode.completed;
-          });
+  void _onModeChange(mode) {
+    //must be do it
+    setState(() {
+      refreshing = mode;
+    });
+    // this is equals onRefresh()
+    if (mode == RefreshMode.refreshing) {
+      new Future.delayed(const Duration(milliseconds: 2000), () {
+        setState(() {
+          refreshing = RefreshMode.completed;
         });
-      }
-    } else {
-      //must be do it
-      setState(() {
-        loading = mode;
       });
-      // this is equals onLoaadmore()
-      switch (mode) {
-        case RefreshMode.refreshing:
-          _fetch();
-          break;
-        case RefreshMode.idle:
-          break;
-      }
+    }
+  }
+
+  _onLoadChange(LoadMode mode) {
+    //must be do it
+    setState(() {
+      loading = mode;
+    });
+    // this is equals onLoaadmore()
+    if(mode==LoadMode.loading){
+      _fetch();
     }
   }
 
@@ -74,11 +71,8 @@ class _Example2State extends State<Example2> {
 
   void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
-    if(isUp){
-    }
-    else{
-
-    }
+    if (isUp) {
+    } else {}
   }
 
   @override
@@ -95,7 +89,8 @@ class _Example2State extends State<Example2> {
             enablePullUpLoad: true,
             refreshMode: this.refreshing,
             loadMode: this.loading,
-            onModeChange: _onModeChange,
+            onLoadChange: _onLoadChange,
+            onRefreshChange: _onModeChange,
             onOffsetChange: _onOffsetCallback,
             child: new GridView.builder(
               gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
