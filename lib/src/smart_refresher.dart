@@ -11,13 +11,14 @@ import 'package:pull_to_refresh/src/build_factory.dart';
 import 'package:pull_to_refresh/src/refresh_physics.dart';
 
 typedef void OnRefreshChange(RefreshMode mode);
-typedef void OnLoadChange( LoadMode mode);
+typedef void OnLoadChange(LoadMode mode);
 typedef void OnOffsetChange(bool isUp, double offset);
 typedef Widget HeaderBuilder(BuildContext context, RefreshMode mode);
 typedef Widget FooterBuilder(BuildContext context, LoadMode mode);
 
 enum RefreshMode { idle, startDrag, canRefresh, refreshing, completed, failed }
-enum LoadMode {idle,emptyData,failed,loading}
+enum LoadMode { idle, emptyData, failed, loading }
+
 /**
     This is the most important component that provides drop-down refresh and up loading.
  */
@@ -32,6 +33,8 @@ class SmartRefresher extends StatefulWidget {
   final bool enablePullUpLoad;
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePullDownRefresh;
+  // if enable auto Loadmore
+  final bool enableAutoLoadMore;
   //this will influerence the RefreshMode
   final RefreshMode refreshMode;
   final LoadMode loadMode;
@@ -39,8 +42,8 @@ class SmartRefresher extends StatefulWidget {
   final int completeDuration;
   // This value represents the distance that can be refreshed and trigger the callback drag.
   final double triggerDistance;
-  // The scope of the display when the indicator enters a refresh state
-  final double topVisibleRange, bottomVisibleRange;
+  // The scope of the display when the top indicator enters a refresh state
+  final double topVisibleRange;
   // upper and downer callback when you drag out of the distance
   final OnRefreshChange onRefreshChange;
   final OnLoadChange onLoadChange;
@@ -52,12 +55,12 @@ class SmartRefresher extends StatefulWidget {
     @required this.child,
     this.enablePullDownRefresh: true,
     this.enablePullUpLoad: false,
+    this.enableAutoLoadMore: true,
     this.headerBuilder,
     this.footerBuilder,
     this.refreshMode: RefreshMode.idle,
-    this.bottomVisibleRange: 50.0,
     this.topVisibleRange: 50.0,
-    this.loadMode:LoadMode.idle,
+    this.loadMode: LoadMode.idle,
     this.completeDuration: 800,
     this.onRefreshChange,
     this.onLoadChange,
@@ -99,8 +102,8 @@ class _SmartRefresherState extends State<SmartRefresher>
         _mDragPointY == null &&
         (_isPullUp(notification) || _isPullDown(notification)))
       _mDragPointY = _mScrollController.offset;
-    if(_isPullUp(notification))
-    _changeMode(notification, RefreshMode.startDrag);
+    if (_isPullUp(notification))
+      _changeMode(notification, RefreshMode.startDrag);
     return false;
   }
 
@@ -112,10 +115,6 @@ class _SmartRefresherState extends State<SmartRefresher>
     if (down) {
       _updateIndictorIfNeed(
           _measureRatio(-_mScrollController.offset), notification);
-    } else {
-      _updateIndictorIfNeed(
-          _measureRatio(_mScrollController.offset - _mDragPointY),
-          notification);
     }
 
     return false;
@@ -125,8 +124,7 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _handleScrollEnd(ScrollNotification notification) {
     bool up = _isPullDown(notification);
     if (!_mReachMax) {
-
-      _changeMode(notification, up?RefreshMode.idle:LoadMode.idle);
+      _changeMode(notification, up ? RefreshMode.idle : LoadMode.idle);
       _dismiss(up ? up : false);
     } else {
       if (up) {
@@ -156,12 +154,16 @@ class _SmartRefresherState extends State<SmartRefresher>
       _mDragPointY = null;
       return false;
     }
+    if (_mScrollController.position.outOfRange &&
+        _mScrollController.position.extentAfter == 0) {
+      if (widget.loadMode == LoadMode.idle)
+        _changeMode(notification, LoadMode.loading);
+    }
     if ((down &&
             (widget.refreshMode == RefreshMode.refreshing ||
                 widget.refreshMode == RefreshMode.failed ||
                 widget.refreshMode == RefreshMode.completed)) ||
-        (up &&
-            (widget.loadMode == LoadMode.loading ))) {
+        (up && (widget.loadMode == LoadMode.loading))) {
       return false;
     }
     if ((up && !widget.enablePullUpLoad) ||
@@ -201,9 +203,9 @@ class _SmartRefresherState extends State<SmartRefresher>
      cause Flutter to automatically retrieve widget.
     */
     if (up) {
-       _mTopController.animateTo(0.000001).then((Null val){
-         _modeChangeCallback(true, RefreshMode.idle);
-       });
+      _mTopController.animateTo(0.000001).then((Null val) {
+        _modeChangeCallback(true, RefreshMode.idle);
+      });
     }
   }
 
@@ -213,8 +215,7 @@ class _SmartRefresherState extends State<SmartRefresher>
     _mReachMax = offset >= 1.0;
     if (widget.onOffsetChange != null)
       widget.onOffsetChange(notification.metrics.extentBefore == 0, offset);
-    if(notification.metrics.extentBefore==0)
-    if (_mReachMax) {
+    if (notification.metrics.extentBefore == 0) if (_mReachMax) {
       _changeMode(notification, RefreshMode.canRefresh);
     } else {
       _changeMode(notification, RefreshMode.startDrag);
@@ -237,7 +238,7 @@ class _SmartRefresherState extends State<SmartRefresher>
     } else if (_isPullUp(notifi)) {
       if (widget.loadMode == mode) return;
       if (widget.loadMode == LoadMode.loading) return;
-      if(mode.runtimeType==RefreshMode)return;
+      if (mode.runtimeType == RefreshMode) return;
       _modeChangeCallback(false, mode);
     }
   }
@@ -260,10 +261,9 @@ class _SmartRefresherState extends State<SmartRefresher>
   }
 
   void _modeChangeCallback(isUp, mode) {
-    if (isUp&&this.widget.onRefreshChange != null) {
+    if (isUp && this.widget.onRefreshChange != null) {
       widget.onRefreshChange(mode);
-    }
-    else if (!isUp&&this.widget.onLoadChange != null) {
+    } else if (!isUp && this.widget.onLoadChange != null) {
       widget.onLoadChange(mode);
     }
   }
@@ -306,15 +306,16 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   @override
   void didUpdateWidget(SmartRefresher oldWidget) {
-
     // TODO: implement didUpdateWidget
-    if(widget.refreshMode == oldWidget.refreshMode&&oldWidget.loadMode == widget.loadMode){
-      return ;
+    if (widget.refreshMode == oldWidget.refreshMode &&
+        oldWidget.loadMode == widget.loadMode) {
+      return;
     }
     super.didUpdateWidget(oldWidget);
     if (widget.refreshMode != oldWidget.refreshMode) {
       if (widget.refreshMode == RefreshMode.refreshing) {
         _mTopController.value = 1.0;
+        // if set Refresh when offset>listview.height cause bug?
         _mScrollController.jumpTo(-widget.topVisibleRange);
       } else if (RefreshMode.completed == widget.refreshMode ||
           RefreshMode.failed == widget.refreshMode) {
@@ -324,12 +325,10 @@ class _SmartRefresherState extends State<SmartRefresher>
         });
       }
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return new LayoutBuilder(builder: (context, cons) {
       return new Stack(
         children: <Widget>[
@@ -369,8 +368,8 @@ class _SmartRefresherState extends State<SmartRefresher>
                               : widget.footerBuilder != null
                                   ? widget.footerBuilder(
                                       context, widget.loadMode)
-                                  : buildDefaultFooter(context, widget.loadMode,
-                                     ),
+                                  : buildDefaultFooter(
+                                      context, widget.loadMode),
                         ),
                       ],
                     )),

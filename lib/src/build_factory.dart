@@ -56,32 +56,26 @@ class BuildFactory {
 
   // if your renderFooter null, it will be replaced by it
   Widget buildDefaultFooter(BuildContext context, LoadMode mode) {
-    if (mode == LoadMode.loading) {
-      return new Container(
-        height: 50.0,
-        child: new Center(
-          child: new SizedBox(
+    final child = mode == LoadMode.loading
+        ? new SizedBox(
             width: 25.0,
             height: 25.0,
             child: const CircularProgressIndicator(strokeWidth: 2.0),
-          ),
-        ),
-      );
-    } else {
-      return new Container(
-        height: 50.0,
-        child: new Center(
-          child: new Text(
+          )
+        : new Text(
             mode == LoadMode.idle
                 ? 'Load More...'
                 : mode == LoadMode.emptyData
                     ? 'No more data'
                     : 'Network exception!',
             style: new TextStyle(color: const Color(0xff555555)),
-          ),
-        ),
-      );
-    }
+          );
+    return new Container(
+      height: 50.0,
+      child: new Center(
+        child: child,
+      ),
+    );
   }
 
   Widget buildEmptySpace(controller, spacing) {

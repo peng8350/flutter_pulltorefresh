@@ -35,6 +35,37 @@ class _Example4State extends State<Example4> {
 
   }
 
+  Widget buildDefaultFooter(BuildContext context, LoadMode mode) {
+
+    final child =mode ==LoadMode.loading?new SizedBox(
+      width: 25.0,
+      height: 25.0,
+      child: const CircularProgressIndicator(strokeWidth: 2.0),
+    ):new Text(
+      mode == LoadMode.idle
+          ? 'Load More...'
+          : mode == LoadMode.emptyData
+          ? 'No more data'
+          : 'Network exception!',
+      style: new TextStyle(color: const Color(0xff555555)),
+    );
+    return  new GestureDetector(
+      child: new Container(
+        height: 50.0,
+        child: new Center(
+          child: child,
+        ),
+      ),
+      onTap: (){
+        setState(() {
+          refreshing = RefreshMode.refreshing;
+        });
+      },
+    )
+    ;
+  }
+
+
   void _onLoadChange(mode){
     //must be do it
     setState(() {
@@ -72,6 +103,7 @@ class _Example4State extends State<Example4> {
         child: new SmartRefresher(
             enablePullDownRefresh: true,
             enablePullUpLoad: true,
+            footerBuilder: buildDefaultFooter,
             refreshMode: this.refreshing,
             loadMode: this.loading,
             onRefreshChange: _onRefreshChange,
