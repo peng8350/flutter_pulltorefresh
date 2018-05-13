@@ -3,6 +3,7 @@
 ## Intro
 a widget provided to the flutter scroll component drop-down refresh and pull up load.support android and ios.
 If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter_pulltorefresh/blob/master/README_CN.md))
+(Still in the development stage, the function is not perfect)
 
 
 ## Features
