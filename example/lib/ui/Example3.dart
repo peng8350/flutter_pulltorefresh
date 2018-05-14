@@ -31,6 +31,7 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
          child: new Align(
            alignment: Alignment.center,
            heightFactor: 1.0,
+
            child: new ScaleTransition(
              scale: _headControll,
              child: new Image.asset('images/animate.gif',
@@ -144,6 +145,8 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
         child: new SmartRefresher(
             enablePullDownRefresh: true,
             enablePullUpLoad: true,
+            header: new NormalIndicator(vsync: this),
+
             topVisibleRange: 100.0,
             headerBuilder: _header,
             refreshMode: this.refreshing,

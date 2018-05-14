@@ -7,3 +7,4 @@
 library pulltorefresh;
 
 export 'src/smart_refresher.dart';
+export 'src/indicator_wrap.dart';

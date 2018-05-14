@@ -8,6 +8,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/build_factory.dart';
+import 'package:pull_to_refresh/src/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/refresh_physics.dart';
 
 typedef void OnRefreshChange(RefreshMode mode);
@@ -25,6 +26,8 @@ enum LoadMode { idle, emptyData, failed, loading }
 class SmartRefresher extends StatefulWidget {
   //indicate your listView
   final Widget child;
+
+  final IndicatorImpl header;
   //the indicator View when you pull down
   final HeaderBuilder headerBuilder;
   //the indicator View when you pull up
@@ -53,6 +56,7 @@ class SmartRefresher extends StatefulWidget {
   SmartRefresher({
     Key key,
     @required this.child,
+    this.header,
     this.enablePullDownRefresh: true,
     this.enablePullUpLoad: false,
     this.enableAutoLoadMore: true,
@@ -82,9 +86,7 @@ class _SmartRefresherState extends State<SmartRefresher>
   // listen the listen offset or on...
   ScrollController _mScrollController;
   // the bool will check the user if dragging on the screen.
-  bool _mIsDraging = false, _mReachMax = false;
-  // the ScrollStart Drag Point Y
-  double _mDragPointY = null;
+  bool _mIsDraging = false;
   // key to get height header of footer
   final GlobalKey _mHeaderKey = new GlobalKey(), _mFooterKey = new GlobalKey();
   // the height must be  equals your headerBuilder
@@ -98,10 +100,10 @@ class _SmartRefresherState extends State<SmartRefresher>
     }
     if (_mIsDraging) return false;
     _mIsDraging = true;
-    if (notification.metrics.outOfRange &&
-        _mDragPointY == null &&
-        (_isPullUp(notification) || _isPullDown(notification)))
-      _mDragPointY = _mScrollController.offset;
+//    if (notification.metrics.outOfRange &&
+//        _mDragPointY == null &&
+//        (_isPullUp(notification) || _isPullDown(notification)))
+//      _mDragPointY = _mScrollController.offset;
     if (_isPullUp(notification))
       _changeMode(notification, RefreshMode.startDrag);
     return false;
@@ -110,11 +112,14 @@ class _SmartRefresherState extends State<SmartRefresher>
   //handle the scrollMoveEvent
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
     bool down = _isPullDown(notification);
-    if (_mDragPointY == null && notification.metrics.outOfRange)
-      _mDragPointY = _mScrollController.offset;
     if (down) {
-      _updateIndictorIfNeed(
-          _measureRatio(-_mScrollController.offset), notification);
+//      if (widget.onOffsetChange != null)
+//        widget.onOffsetChange(notification.metrics.extentBefore == 0, offset);
+    }
+    if(widget.header.onDragMove(notification)){
+      setState(() {
+
+      });
     }
 
     return false;
@@ -122,16 +127,22 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollEndEvent
   bool _handleScrollEnd(ScrollNotification notification) {
-    bool up = _isPullDown(notification);
-    if (!_mReachMax) {
-      _changeMode(notification, up ? RefreshMode.idle : LoadMode.idle);
-      _dismiss(up ? up : false);
-    } else {
-      if (up) {
-        _modeChangeCallback(true, RefreshMode.refreshing);
-      } else {
-        _modeChangeCallback(false, LoadMode.loading);
-      }
+//    bool up = _isPullDown(notification);
+//    if (!_mReachMax) {
+//      _changeMode(notification, up ? RefreshMode.idle : LoadMode.idle);
+////      _dismiss(up ? up : false);
+//    } else {
+//      if (up) {
+//        _modeChangeCallback(true, RefreshMode.refreshing);
+//      } else {
+//        _modeChangeCallback(false, LoadMode.loading);
+//      }
+//    }
+    if(widget.header.onDragEnd(notification)){
+      setState(() {
+
+      });
+      return false;
     }
     _resumeVal();
     return false;
@@ -149,11 +160,6 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _dispatchScrollEvent(ScrollNotification notification) {
     bool down = _isPullDown(notification);
     bool up = _isPullUp(notification);
-    // the reason why should do this,because Early touch at a specific location makes triggerdistance smaller.
-    if (!down && !up) {
-      _mDragPointY = null;
-      return false;
-    }
     if (_mScrollController.position.outOfRange &&
         _mScrollController.position.extentAfter == 0) {
       if (widget.loadMode == LoadMode.idle)
@@ -180,47 +186,20 @@ class _SmartRefresherState extends State<SmartRefresher>
       }
     }
     if (notification is ScrollEndNotification) {
-      return _handleScrollEnd(notification);
+      _handleScrollEnd(notification);
+
     }
 
-    return true;
+    return false;
   }
 
   //After the end of the drag, some variables are reduced to the default value
   void _resumeVal() {
-    _mReachMax = false;
     _mIsDraging = false;
-    _mDragPointY = null;
   }
 
-  /**
-    up indicate drag from top (pull down)
-   */
-  void _dismiss(bool up) {
-    /**
-     why the value is 0.00001?
-     If this value is 0, no controls will
-     cause Flutter to automatically retrieve widget.
-    */
-    if (up) {
-      _mTopController.animateTo(0.000001).then((Null val) {
-        _modeChangeCallback(true, RefreshMode.idle);
-      });
-    }
-  }
 
-  // the indictor will update update when offset change between 1.0
-  void _updateIndictorIfNeed(
-      double offset, ScrollUpdateNotification notification) {
-    _mReachMax = offset >= 1.0;
-    if (widget.onOffsetChange != null)
-      widget.onOffsetChange(notification.metrics.extentBefore == 0, offset);
-    if (notification.metrics.extentBefore == 0) if (_mReachMax) {
-      _changeMode(notification, RefreshMode.canRefresh);
-    } else {
-      _changeMode(notification, RefreshMode.startDrag);
-    }
-  }
+
 
   // change the top or bottom mode
   void _changeMode(ScrollNotification notifi, mode) {
@@ -253,12 +232,6 @@ class _SmartRefresherState extends State<SmartRefresher>
     return noti.metrics.extentBefore == 0;
   }
 
-  /**
-      This method takes accounting to figure out how many distances the user dragged.
-   */
-  double _measureRatio(double offset) {
-    return offset / widget.triggerDistance;
-  }
 
   void _modeChangeCallback(isUp, mode) {
     if (isUp && this.widget.onRefreshChange != null) {
@@ -304,25 +277,6 @@ class _SmartRefresherState extends State<SmartRefresher>
     });
   }
 
-  @override
-  void didUpdateWidget(SmartRefresher oldWidget) {
-    // TODO: implement didUpdateWidget
-    if (widget.refreshMode != oldWidget.refreshMode) {
-      if (widget.refreshMode == RefreshMode.refreshing) {
-        _mTopController.value = 1.0;
-        // if set Refresh when offset>listview.height cause bug?
-        _mScrollController.jumpTo(_mScrollController.offset>=-0.0?0.1:-widget.topVisibleRange);
-
-      } else if (RefreshMode.completed == widget.refreshMode ||
-          RefreshMode.failed == widget.refreshMode) {
-        new Future<Null>.delayed(
-            new Duration(milliseconds: widget.completeDuration), () {
-          _dismiss(true);
-        });
-      }
-    }
-    super.didUpdateWidget(oldWidget);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -340,19 +294,11 @@ class _SmartRefresherState extends State<SmartRefresher>
                     physics: new RefreshScrollPhysics(),
                     child: new Column(
                       children: <Widget>[
-                        !widget.enablePullDownRefresh
-                            ? new Container()
-                            : buildEmptySpace(
-                                _mTopController, widget.topVisibleRange),
                         new Container(
-                            key: _mHeaderKey,
-                            child: !widget.enablePullDownRefresh
-                                ? new Container()
-                                : widget.headerBuilder != null
-                                    ? widget.headerBuilder(
-                                        context, widget.refreshMode)
-                                    : buildDefaultHeader(context,
-                                        widget.refreshMode, _mTIconController)),
+                          key: _mHeaderKey,
+                          child: widget.header.buildWrapper(),
+                        )
+                        ,
                         new ConstrainedBox(
                           constraints: new BoxConstraints(
                               minHeight: cons.biggest.height),
