@@ -7,6 +7,8 @@
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
+import 'package:pull_to_refresh/src/indicator_wrap.dart';
+import 'package:flutter/material.dart';
 /**
     this class  is copy from BouncingScrollPhysics,
     because it doesn't fit my idea,
