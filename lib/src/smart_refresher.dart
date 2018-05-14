@@ -11,8 +11,7 @@ import 'package:pull_to_refresh/src/build_factory.dart';
 import 'package:pull_to_refresh/src/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/refresh_physics.dart';
 
-typedef void OnRefreshChange(RefreshStatus mode);
-typedef void OnLoadChange(RefreshStatus mode);
+typedef void OnRefresh(Indicator refresher);
 typedef void OnOffsetChange(bool isUp, double offset);
 typedef Widget HeaderBuilder(BuildContext context, RefreshStatus mode);
 typedef Widget FooterBuilder(BuildContext context, RefreshStatus mode);
@@ -37,46 +36,30 @@ class SmartRefresher extends StatefulWidget {
   //indicate your listView
   final Widget child;
 
-  final IndicatorImpl header;
-  //the indicator View when you pull down
-  final HeaderBuilder headerBuilder;
-  //the indicator View when you pull up
-  final FooterBuilder footerBuilder;
+  final Indicator header,footer;
   // This bool will affect whether or not to have the function of drop-up load.
   final bool enablePullUpLoad;
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePullDownRefresh;
   // if enable auto Loadmore,it will loadmore when enter the bottomest
   final bool enableAutoLoadMore;
-  //this will influerence the RefreshMode
-  final RefreshStatus refreshMode,loadMode;
-  // completed show time
-  final int completeDuration;
-  // This value represents the distance that can be refreshed and trigger the callback drag.
-  final double triggerDistance;
-  // The scope of the display when the top indicator enters a refresh state
-  final double topVisibleRange;
   // upper and downer callback when you drag out of the distance
-  final OnRefreshChange onRefreshChange;
-  final OnLoadChange onLoadChange;
+  final OnRefresh onRefresh;
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;
+
+
 
   SmartRefresher({
     Key key,
     @required this.child,
     this.header,
+    this.footer,
     this.enablePullDownRefresh: true,
     this.enablePullUpLoad: false,
     this.enableAutoLoadMore: true,
-    this.headerBuilder,
-    this.footerBuilder,
-    this.topVisibleRange: 50.0,
-    this.completeDuration: 800,
-    this.onRefreshChange,
-    this.onLoadChange,
+    this.onRefresh,
     this.onOffsetChange,
-    this.triggerDistance: 100.0,
   })  : assert(child != null),
         super(key: key);
 
@@ -86,10 +69,6 @@ class SmartRefresher extends StatefulWidget {
 
 class _SmartRefresherState extends State<SmartRefresher>
     with TickerProviderStateMixin, BuildFactory {
-  // the two controllers can controll the top and bottom empty spacing widgets.
-  AnimationController _mTopController;
-  // animate change for icon top and bottom
-  AnimationController _mTIconController;
   // listen the listen offset or on...
   ScrollController _mScrollController;
   // the bool will check the user if dragging on the screen.
@@ -97,7 +76,7 @@ class _SmartRefresherState extends State<SmartRefresher>
   // key to get height header of footer
   final GlobalKey _mHeaderKey = new GlobalKey(), _mFooterKey = new GlobalKey();
   // the height must be  equals your headerBuilder
-  double _mHeaderHeight = 0.0;
+  double _mHeaderHeight = 0.0,_mFooterHeight=0.0;
 
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
@@ -113,6 +92,10 @@ class _SmartRefresherState extends State<SmartRefresher>
 //      _mDragPointY = _mScrollController.offset;
 //    if (_isPullUp(notification))
 //      _changeMode(notification, RefreshStatus.startDrag);
+    if(widget.enablePullDownRefresh)
+      widget.header.onDragStart(notification);
+    if(widget.enablePullUpLoad)
+      widget.footer.onDragStart(notification);
     return false;
   }
 
@@ -121,12 +104,24 @@ class _SmartRefresherState extends State<SmartRefresher>
     bool down = _isPullDown(notification);
     if (down) {
 //      if (widget.onOffsetChange != null)
-//        widget.onOffsetChange(notification.metrics.extentBefore == 0, offset);
+//        widget.onOffsetChange(notification.metrics.extentBefore == 0, notification.metrics.);
     }
+    if(widget.enablePullDownRefresh)
     widget.header.onDragMove(notification);
-
+    if(widget.enablePullUpLoad)
+      widget.footer.onDragMove(notification);
     return false;
   }
+
+//  double _measure(ScrollNotification notification){
+//    if(widget.header&&widget.header!=null){
+//      return widget.header.meas
+//    }
+//    else if(notification.metrics.extentAfter==0){
+//
+//    }
+//    return 0.0;
+//  }
 
   //handle the scrollEndEvent
   bool _handleScrollEnd(ScrollNotification notification) {
@@ -141,7 +136,10 @@ class _SmartRefresherState extends State<SmartRefresher>
 //        _modeChangeCallback(false, LoadMode.loading);
 //      }
 //    }
+  if(widget.enablePullDownRefresh)
     widget.header.onDragEnd(notification);
+  if(widget.enablePullUpLoad)
+    widget.footer.onDragEnd(notification);
     _resumeVal();
     return false;
   }
@@ -203,26 +201,28 @@ class _SmartRefresherState extends State<SmartRefresher>
 
 
   void _modeChangeCallback(isUp, mode) {
-    if (isUp && this.widget.onRefreshChange != null) {
-      widget.onRefreshChange(mode);
-    } else if (!isUp && this.widget.onLoadChange != null) {
-      widget.onLoadChange(mode);
-    }
+//    if (isUp && this.widget.onRefreshChange != null) {
+//      widget.onRefreshChange(mode);
+//    } else if (!isUp && this.widget.onLoadChange != null) {
+//      widget.onLoadChange(mode);
+//    }
   }
 
   void _onAfterBuild() {
     setState(() {
       if (widget.enablePullDownRefresh)
         _mHeaderHeight = _mHeaderKey.currentContext.size.height;
+      if(widget.enablePullUpLoad)
+        _mFooterHeight =_mFooterKey.currentContext.size.height;
     });
   }
+
+
 
   @override
   void dispose() {
     // TODO: implement dispose
-    _mTIconController.dispose();
     _mScrollController.dispose();
-    _mTopController.dispose();
     super.dispose();
   }
 
@@ -231,24 +231,30 @@ class _SmartRefresherState extends State<SmartRefresher>
     // TODO: implement initState
     super.initState();
     _mScrollController = new ScrollController();
-    _mTopController = new AnimationController(
-      vsync: this,
-      lowerBound: 0.000001,
-      duration: const Duration(milliseconds: 200),
-    );
-    _mTIconController = new AnimationController(
-        vsync: this,
-        upperBound: 0.5,
-        duration: const Duration(milliseconds: 100));
-    // not possible insite initState
+    widget.header.scrollController = _mScrollController;
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _onAfterBuild();
     });
-    widget.header.scrollController = _mScrollController;
+    if(widget.enablePullDownRefresh)
     widget.header.modeListener.addListener((){
+      if(widget.header.mode==RefreshStatus.refreshing){
+        if(widget.onRefresh!=null){
+          widget.onRefresh(widget.header);
+        }
+      }
       setState(() {
       });
     });
+    if(widget.enablePullUpLoad)
+      widget.footer.modeListener.addListener((){
+        if(widget.footer.mode==RefreshStatus.refreshing){
+          if(widget.onRefresh!=null){
+            widget.onRefresh(widget.footer);
+          }
+        }
+        setState(() {
+        });
+      });
   }
 
 
@@ -259,7 +265,7 @@ class _SmartRefresherState extends State<SmartRefresher>
         children: <Widget>[
           new Positioned(
               top: !widget.enablePullDownRefresh ? 0.0 : -_mHeaderHeight,
-              bottom: 0.0,
+              bottom: !widget.enablePullUpLoad ? 0.0 : -_mFooterHeight,
               left: 0.0,
               right: 0.0,
               child: new NotificationListener(
@@ -278,7 +284,11 @@ class _SmartRefresherState extends State<SmartRefresher>
                               minHeight: cons.biggest.height),
                           child: widget.child,
                         ),
-
+                        new Container(
+                          key: _mFooterKey,
+                          child: widget.footer.buildWrapper(),
+                        )
+                        ,
                       ],
                     )),
                 onNotification: _dispatchScrollEvent,

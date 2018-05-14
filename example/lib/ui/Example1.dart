@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart' hide RefreshIndicator;
 
 class Example1 extends StatefulWidget {
   @override
@@ -74,26 +74,10 @@ class _Example1State extends State<Example1> {
 
   @override
   Widget build(BuildContext context) {
+
     return new Container(
       color: Colors.white30,
-      child: new RefreshIndicator(child: new SmartRefresher(
-          enablePullDownRefresh: false,
-          enablePullUpLoad: true,
-          onOffsetChange: _onOffsetCallback,
-          child: new Container(
-            color: Colors.white,
-            child: new ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemExtent: 40.0,
-              itemCount: data.length,
-              itemBuilder: (context,index){
-                return data[index];
-              },
-
-            ),
-          )
-      ), onRefresh: (){
+      child: new RefreshIndicator(child:new Container(), onRefresh: (){
         return new Future.delayed(const Duration(milliseconds: 2000));
       })
     );

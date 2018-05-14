@@ -145,10 +145,13 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
         child: new SmartRefresher(
             enablePullDownRefresh: true,
             enablePullUpLoad: true,
-            header: new ClassicIndicator(vsync: this),
-
-            topVisibleRange: 100.0,
-            headerBuilder: _header,
+            header: new ClassicIndicator(vsync: this,up: true),
+            footer: new ClassicIndicator(vsync: this,up: false),
+            onRefresh: (refresher){
+              new Future.delayed(const Duration(milliseconds: 2009)).then((val){
+                refresher.sendStatus(RefreshStatus.completed);
+              });
+            },
             onOffsetChange: _onOffsetCallback,
             child: new Container(
               margin: new EdgeInsets.only(top: 20.0),
