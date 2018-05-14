@@ -20,6 +20,12 @@ typedef Widget FooterBuilder(BuildContext context, LoadMode mode);
 enum RefreshMode { idle, startDrag, canRefresh, refreshing, completed, failed }
 enum LoadMode { idle, emptyData, failed, loading }
 
+//class RefreshMode{
+//
+//  static final int idle,canRefresh,refreshing,
+//}
+
+
 /**
     This is the most important component that provides drop-down refresh and up loading.
  */
@@ -116,11 +122,7 @@ class _SmartRefresherState extends State<SmartRefresher>
 //      if (widget.onOffsetChange != null)
 //        widget.onOffsetChange(notification.metrics.extentBefore == 0, offset);
     }
-    if(widget.header.onDragMove(notification)){
-      setState(() {
-
-      });
-    }
+    widget.header.onDragMove(notification);
 
     return false;
   }
@@ -138,12 +140,7 @@ class _SmartRefresherState extends State<SmartRefresher>
 //        _modeChangeCallback(false, LoadMode.loading);
 //      }
 //    }
-    if(widget.header.onDragEnd(notification)){
-      setState(() {
-
-      });
-      return false;
-    }
+    widget.header.onDragEnd(notification);
     _resumeVal();
     return false;
   }
@@ -274,6 +271,10 @@ class _SmartRefresherState extends State<SmartRefresher>
     // not possible insite initState
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _onAfterBuild();
+    });
+    widget.header.modeListener.addListener((){
+      setState(() {
+      });
     });
   }
 

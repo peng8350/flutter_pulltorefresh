@@ -145,7 +145,7 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
         child: new SmartRefresher(
             enablePullDownRefresh: true,
             enablePullUpLoad: true,
-            header: new NormalIndicator(vsync: this),
+            header: new ClassicIndicator(vsync: this),
 
             topVisibleRange: 100.0,
             headerBuilder: _header,

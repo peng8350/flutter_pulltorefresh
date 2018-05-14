@@ -1,11 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+/**
+    Author: Jpeng
+    Email: peng8350@gmail.com
+    createTime:2018-05-14 15:39
+ */
 abstract class IndicatorImpl<T> {
-  T _mode;
+  ValueNotifier<T> modeListener;
 
-  bool up=false;
+  bool up = false;
 
   IndicatorImpl({this.up});
 
@@ -13,25 +20,21 @@ abstract class IndicatorImpl<T> {
 
   void onRefresh() {}
 
-  bool onDragStart(ScrollStartNotification notification) {
-    return false;
+  void onDragStart(ScrollStartNotification notification) {
   }
 
-  bool onDragMove(ScrollUpdateNotification notification) {
-    return false;
+  void onDragMove(ScrollUpdateNotification notification) {
   }
 
-  bool onDragEnd(ScrollNotification notification) {
-    return false;
+  void onDragEnd(ScrollNotification notification) {
   }
 
-  bool changeMode(T mode) {
-    if (this._mode == mode) return false;
-    this._mode = mode;
-    return true;
+
+  set mode(T mode){
+
   }
 
-  T get mode => this._mode;
+  T get mode => this.modeListener.value;
 }
 
 abstract class RefreshWrapper extends IndicatorImpl<RefreshMode> {
@@ -50,80 +53,96 @@ abstract class RefreshWrapper extends IndicatorImpl<RefreshMode> {
   RefreshWrapper(
       {@required this.vsync,
       this.completeTime: 800,
-      this.visibleRange:50.0,
+      this.visibleRange: 50.0,
+      bool up: true,
       this.triggerDistance: 80.0})
-      : assert(vsync != null),super(up:true) {
-    _mode = RefreshMode.idle;
-    this._sizeController =
-        new AnimationController(vsync: vsync, lowerBound: minSpace,duration: const Duration(milliseconds: 300));
+      : assert(vsync != null),
+        super(up: up) {
+    modeListener = new ValueNotifier(RefreshMode.idle);
+    this._sizeController = new AnimationController(
+        vsync: vsync,
+        lowerBound: minSpace,
+        duration: const Duration(milliseconds: 300));
   }
 
   /**
       up indicate drag from top (pull down)
    */
-  void _dismiss(bool up) {
+  void _dismiss() {
     /**
         why the value is 0.00001?
         If this value is 0, no controls will
         cause Flutter to automatically retrieve widget.
      */
-    if (up) {
-      _sizeController.animateTo(minSpace).then((Null val) {
-
-      });
-    }
+    _sizeController.animateTo(minSpace).then((Null val) {});
   }
 
   @override
-  bool changeMode(RefreshMode mode) {
+  set mode(RefreshMode mode) {
     // TODO: implement changeMode
-    if(mode==_mode)return false;
-    if (mode == RefreshMode.refreshing) {
-      onRefresh();
+    if (mode == this.mode) return ;
+    this.modeListener.value = mode;
+    switch (mode) {
+      case RefreshMode.refreshing:
+        _sizeController.value = 1.0;
+        this.mode = RefreshMode.completed;
+        break;
+      case RefreshMode.completed:
+        new Future.delayed(new Duration(milliseconds: completeTime), () {
+          _dismiss();
+        }).then((val) {
+          this.mode =RefreshMode.idle;
+        });
+        break;
+      case RefreshMode.failed:
+        new Future.delayed(new Duration(milliseconds: completeTime), () {
+          _dismiss();
+        }).then((val) {
+          this.mode =RefreshMode.idle;
+        });
+        break;
     }
-    this._mode = mode;
-    return true;
+
   }
 
   @override
-  bool onDragEnd(ScrollNotification notification) {
+  void onDragEnd(ScrollNotification notification) {
     // TODO: implement onDragEnd
 //    if (widget.refreshMode == mode) return;
-    if (mode == RefreshMode.refreshing) return false;
+    if (mode == RefreshMode.refreshing) return ;
 //    _modeChangeCallback(true, mode);
-    bool reachMax = measure(notification)>=1.0;
-    if(!reachMax) {
-        _sizeController.animateTo(0.0);
-      return false;
+    bool reachMax = measure(notification) >= 1.0;
+    if (!reachMax) {
+      _sizeController.animateTo(0.0);
+      return ;
+    } else {
+      this.mode = RefreshMode.refreshing;
     }
-    else{
-      _sizeController.animateTo(1.0);
-      changeMode(RefreshMode.refreshing);
-      return true;
-    }
-    return false;
   }
+
+  bool get isRefreshing => this.mode == RefreshMode.refreshing;
 
   @override
-  bool onDragMove(ScrollUpdateNotification notification) {
+  void onDragMove(ScrollUpdateNotification notification) {
     // TODO: implement onDragMove
-    double offset =
-        measure(notification);
-    if (offset >=1.0) {
-      return changeMode(RefreshMode.canRefresh);
-
+    if (isRefreshing) return ;
+    double offset = measure(notification);
+    if (offset >= 1.0) {
+      this.mode = RefreshMode.canRefresh;
     } else {
-      return changeMode(RefreshMode.idle);
+      this.mode = RefreshMode.idle;
     }
   }
 
-
-  double measure(ScrollNotification notification){
-    if(up){
-      return (notification.metrics.minScrollExtent-notification.metrics.pixels)/triggerDistance;
-    }
-    else{
-      return (notification.metrics.pixels-notification.metrics.maxScrollExtent)/triggerDistance;
+  double measure(ScrollNotification notification) {
+    if (up) {
+      return (notification.metrics.minScrollExtent -
+              notification.metrics.pixels) /
+          triggerDistance;
+    } else {
+      return (notification.metrics.pixels -
+              notification.metrics.maxScrollExtent) /
+          triggerDistance;
     }
   }
 
@@ -146,78 +165,3 @@ abstract class RefreshWrapper extends IndicatorImpl<RefreshMode> {
 }
 
 abstract class LoadWrapper extends IndicatorImpl<LoadMode> {}
-
-class NormalIndicator extends RefreshWrapper {
-
-  AnimationController rorateController;
-
-  NormalIndicator(
-      {@required TickerProvider vsync,
-      int completeTime: 800,
-      double visibleRange:50.0,
-      double triggerDistance: 80.0})
-      : super(
-            vsync: vsync,
-            completeTime: completeTime,
-            visibleRange: visibleRange,
-            triggerDistance: triggerDistance) {
-    rorateController = new AnimationController(
-        vsync: vsync,
-        duration: const Duration(milliseconds: 100));
-  }
-
-  @override
-  bool onDragMove(ScrollUpdateNotification notification) {
-    // TODO: implement onDragMove
-    double offset = measure(notification);
-    rorateController.value = offset;
-    return super.onDragMove(notification);
-
-
-  }
-
-  @override
-  Widget buildContent() {
-    // TODO: implement buildContent
-    return new Container(
-      height: 50.0,
-      alignment: Alignment.center,
-      child: new Center(
-        child: new Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            mode == RefreshMode.refreshing
-                ? new SizedBox(
-              width: 25.0,
-              height: 25.0,
-              child: const CircularProgressIndicator(strokeWidth: 2.0),
-            )
-                : mode == RefreshMode.completed
-                ? const Icon(Icons.done, color: Colors.grey)
-                : mode == RefreshMode.failed
-                ? const Icon(Icons.clear, color: Colors.grey)
-                : new RotationTransition(
-                turns: rorateController,
-                child: const Icon(Icons.arrow_downward,
-                    color: Colors.grey)),
-            new Container(
-              child: new Text(
-                mode == RefreshMode.canRefresh
-                    ? 'Refresh when release'
-                    : mode == RefreshMode.completed
-                    ? 'Refresh Completed'
-                    : mode == RefreshMode.failed
-                    ? 'Refresh Failed'
-                    : mode == RefreshMode.refreshing
-                    ? 'Refreshing....'
-                    : 'pull down refresh',
-                style: new TextStyle(color: const Color(0xff555555)),
-              ),
-              margin: const EdgeInsets.only(left: 10.0),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
