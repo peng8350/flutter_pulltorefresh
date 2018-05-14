@@ -8,13 +8,12 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/build_factory.dart';
-import 'indicator/classic_indicator.dart';
 import 'package:pull_to_refresh/src/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/refresh_physics.dart';
 
 
 
-typedef void OnRefresh(Indicator refresher);
+typedef void OnRefresh(bool up,Indicator refresher);
 typedef void OnOffsetChange(bool isUp, double offset);
 typedef Widget HeaderBuilder(BuildContext context, RefreshStatus mode);
 typedef Widget FooterBuilder(BuildContext context, RefreshStatus mode);
@@ -114,7 +113,7 @@ class _SmartRefresherState extends State<SmartRefresher>
         widget.onOffsetChange(notification.metrics.extentAfter == 0, notification.metrics.pixels-notification.metrics.maxScrollExtent);
     }
     if(widget.enablePullDownRefresh)
-    widget.header.onDragMove(notification);
+      widget.header.onDragMove(notification);
     if(widget.enablePullUpLoad)
       widget.footer.onDragMove(notification);
     return false;
@@ -197,7 +196,7 @@ class _SmartRefresherState extends State<SmartRefresher>
       widget.header..modeListener.addListener((){
         if(widget.header.mode==RefreshStatus.refreshing){
           if(widget.onRefresh!=null){
-            widget.onRefresh(widget.header);
+            widget.onRefresh(true,widget.header);
           }
         }
         setState(() {
@@ -207,7 +206,7 @@ class _SmartRefresherState extends State<SmartRefresher>
       widget.footer..modeListener.addListener((){
         if(widget.footer.mode==RefreshStatus.refreshing){
           if(widget.onRefresh!=null){
-            widget.onRefresh(widget.footer);
+            widget.onRefresh(false,widget.footer);
           }
         }
         setState(() {

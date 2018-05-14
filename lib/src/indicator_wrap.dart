@@ -18,7 +18,16 @@ abstract class Indicator {
 
   bool up = false;
 
-  Indicator({@required this.up});
+  Builder builder;
+
+
+  Widget buildContent(){
+    return builder(mode);
+  }
+
+  Indicator({@required this.up,this.builder}){
+    modeListener = new ValueNotifier(RefreshStatus.idle);
+  }
 
   Widget buildWrapper();
 
@@ -26,7 +35,9 @@ abstract class Indicator {
 
   void onDragStart(ScrollStartNotification notification) {}
 
-  void onDragMove(ScrollUpdateNotification notification) {}
+  void onDragMove(ScrollUpdateNotification notification) {
+
+  }
 
   void onDragEnd(ScrollNotification notification) {}
 
@@ -37,7 +48,10 @@ abstract class Indicator {
   set scrollController(ScrollController controller) =>
       this._scrollController = controller;
 
-  set mode(int mode) {}
+  set mode(int mode) {
+    if (mode == this.mode) return;
+    this.modeListener.value = mode;
+  }
 
   int get mode => this.modeListener.value;
 
@@ -59,22 +73,16 @@ class RefreshIndicator extends Indicator {
 
   final double triggerDistance;
 
-  final Builder builder;
-
-  Widget buildContent(){
-    return builder(this.mode);
-  }
-
   RefreshIndicator(
       {@required this.vsync,
       this.completeTime: 800,
       this.visibleRange: 50.0,
-        this.builder,
+        Builder builder,
       bool up:false,
       this.triggerDistance: 80.0})
       : assert(vsync != null,up!=null),
-        super(up: up) {
-    modeListener = new ValueNotifier(RefreshStatus.idle);
+        super(up: up,builder:builder) {
+
     this._sizeController = new AnimationController(
         vsync: vsync,
         lowerBound: minSpace,
@@ -98,11 +106,12 @@ class RefreshIndicator extends Indicator {
   @override
   set mode(int mode) {
     // TODO: implement changeMode
-
-    if (mode == this.mode) return;
-    this.modeListener.value = mode;
+    super.mode = mode;
     switch (mode) {
       case RefreshStatus.refreshing:
+        if(up) {
+          _scrollController.jumpTo(-visibleRange);
+        }
         _sizeController.value = 1.0;
         break;
       case RefreshStatus.completed:
@@ -134,6 +143,7 @@ class RefreshIndicator extends Indicator {
       this.mode = RefreshStatus.refreshing;
     }
   }
+
 
 
 
@@ -189,4 +199,29 @@ class RefreshIndicator extends Indicator {
 
 }
 
-//abstract class LoadWrapper extends IndicatorImpl<LoadMode> {}
+//status: failed,nomore,completed,idle,refreshing
+class LoadIndicator extends Indicator {
+
+  final bool autoLoad;
+
+  final bool up;
+
+  LoadIndicator({@required this.up,Builder builder,this.autoLoad:true}):assert(up!=null),super(up:up,builder:builder);
+
+
+  @override
+  Widget buildWrapper() {
+    // TODO: implement buildWrapper
+    return buildContent();
+  }
+
+  @override
+  void onDragMove(ScrollUpdateNotification notification) {
+    // TODO: implement onDragMove
+    if(notification.metrics.outOfRange&&autoLoad){
+      this.mode = RefreshStatus.refreshing;
+    }
+  }
+
+
+}

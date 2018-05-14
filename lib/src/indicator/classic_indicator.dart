@@ -8,12 +8,10 @@ import 'package:flutter/material.dart' hide RefreshIndicator;
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-
-
-class ClassicIndicator extends RefreshIndicator {
+class ClassicRefreshIndicator extends RefreshIndicator {
   AnimationController rorateController;
 
-  ClassicIndicator(
+  ClassicRefreshIndicator(
       {@required TickerProvider vsync,
       @required bool up,
       int completeTime: 800,
@@ -21,21 +19,34 @@ class ClassicIndicator extends RefreshIndicator {
       double triggerDistance: 80.0})
       : assert(vsync != null, up != null),
         super(
-            up:up,
+            up: up,
             vsync: vsync,
             completeTime: completeTime,
             visibleRange: visibleRange,
             triggerDistance: triggerDistance) {
     rorateController = new AnimationController(
-        vsync: vsync, duration: const Duration(milliseconds: 100));
+        vsync: vsync,
+        upperBound: 0.5,
+        duration: const Duration(milliseconds: 100));
   }
 
   @override
   void onDragMove(ScrollUpdateNotification notification) {
     // TODO: implement onDragMove
-    double offset = measure(notification);
-    rorateController.value = offset;
     super.onDragMove(notification);
+  }
+
+  @override
+  set mode(int mode) {
+    // TODO: implement mode
+    if (this.mode == mode) return;
+    super.mode = mode;
+    if (this.mode == RefreshStatus.canRefresh) {
+      rorateController.animateTo(1.0);
+    }
+    if (this.mode == RefreshStatus.idle) {
+      rorateController.animateTo(0.0);
+    }
   }
 
   @override
@@ -79,6 +90,36 @@ class ClassicIndicator extends RefreshIndicator {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ClassicLoadIndicator extends LoadIndicator {
+  ClassicLoadIndicator({@required bool up, bool autoLoad: true})
+      :assert(up!=null), super(up: up, autoLoad: autoLoad);
+
+  @override
+  Widget buildContent() {
+    // TODO: implement buildContent
+    final child = mode == RefreshStatus.refreshing
+        ? new SizedBox(
+            width: 25.0,
+            height: 25.0,
+            child: const CircularProgressIndicator(strokeWidth: 2.0),
+          )
+        : new Text(
+            mode == RefreshStatus.idle
+                ? 'Load More...'
+                : mode == RefreshStatus.noMore
+                    ? 'No more data'
+                    : 'Network exception!',
+            style: new TextStyle(color: const Color(0xff555555)),
+          );
+    return new Container(
+      height: 50.0,
+      child: new Center(
+        child: child,
       ),
     );
   }

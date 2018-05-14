@@ -87,7 +87,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
         child: new SmartRefresher(
             enablePullDownRefresh: true,
             header:
-              new ClassicIndicator(vsync: this, up: true)
+              new ClassicRefreshIndicator(vsync: this, up: true)
             ,
             child: new GridView.builder(
               gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(

@@ -102,7 +102,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin{
     return new Container(
         child: new SmartRefresher(
             enablePullDownRefresh: true,
-            header: new ClassicIndicator(vsync: this, up: true),
+            header: new ClassicRefreshIndicator(vsync: this, up: true),
             child: new ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
