@@ -8,14 +8,48 @@ import 'package:flutter/material.dart' hide RefreshIndicator;
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+enum IconPosition{
+  left,right,top,bottom
+}
+
 class ClassicRefreshIndicator extends RefreshIndicator {
   AnimationController rorateController;
+
+  final String releaseText,idleText,refreshingText,completeText,failedText;
+
+  final Widget releaseIcon,idleIcon,refreshingIcon,completeIcon,failedIcon;
+
+  final double height;
+
+  final double spacing;
+
+  final IconPosition iconPos;
+
+  final TextStyle textStyle;
+
+  final bool openRotate;
+
 
   ClassicRefreshIndicator(
       {@required TickerProvider vsync,
       @required bool up,
+        this.textStyle:const TextStyle(color: const Color(0xff555555)),
+        this.releaseText:'Refresh when release',
+        this.refreshingText:'Refreshing...',
+        this.completeText:'Refresh complete!',
+        this.height:60.0,
+        this.failedText:'Refresh failed',
+        this.idleText:'Pull down refesh',
+        this.openRotate: true,
+        this.iconPos:IconPosition.left,
+        this.spacing:15.0,
+        this.refreshingIcon: const CircularProgressIndicator(strokeWidth: 2.0),
+        this.failedIcon:const Icon(Icons.clear, color: Colors.grey),
+        this.completeIcon:const Icon(Icons.done, color: Colors.grey),
+        this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
+        this.releaseIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
       int completeTime: 800,
-      double visibleRange: 50.0,
+      double visibleRange: 60.0,
       double triggerDistance: 80.0})
       : assert(vsync != null, up != null),
         super(
@@ -30,11 +64,6 @@ class ClassicRefreshIndicator extends RefreshIndicator {
         duration: const Duration(milliseconds: 100));
   }
 
-  @override
-  void onDragMove(ScrollUpdateNotification notification) {
-    // TODO: implement onDragMove
-    super.onDragMove(notification);
-  }
 
   @override
   set mode(int mode) {
@@ -49,47 +78,57 @@ class ClassicRefreshIndicator extends RefreshIndicator {
     }
   }
 
+  Widget _buildText(){
+    return new Text(mode == RefreshStatus.canRefresh
+        ? releaseText
+        : mode == RefreshStatus.completed
+        ? completeText
+        : mode == RefreshStatus.failed
+        ? failedText
+        : mode == RefreshStatus.refreshing
+        ? refreshingText
+        : idleText,
+      style: textStyle);
+  }
+
+  Widget _buildIcon(){
+    return mode==RefreshStatus.canRefresh?releaseIcon:mode==RefreshStatus.idle?idleIcon:
+        mode==RefreshStatus.completed?completeIcon:mode==RefreshStatus.failed?failedIcon:
+        new SizedBox(
+          width: 25.0,
+          height: 25.0,
+          child: const CircularProgressIndicator(strokeWidth: 2.0),
+        );
+  }
+
+
   @override
   Widget buildContent() {
     // TODO: implement buildContent
+    Widget textWidget= _buildText();
+    Widget iconWidget = _buildIcon();
+    List<Widget> childrens = <Widget>[
+      iconWidget,
+      new Container(
+        width: spacing,
+        height: spacing,
+      ),
+      textWidget
+    ];
+    Widget container = (iconPos==IconPosition.top||iconPos==IconPosition.bottom)?new Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      verticalDirection: iconPos==IconPosition.top?VerticalDirection.down:VerticalDirection.up,
+      children: childrens ,
+    ):new Row(
+      textDirection: iconPos==IconPosition.right?TextDirection.rtl:TextDirection.ltr,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: childrens,
+    );
     return new Container(
-      height: 50.0,
+      height: height,
       alignment: Alignment.center,
       child: new Center(
-        child: new Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            mode == RefreshStatus.refreshing
-                ? new SizedBox(
-                    width: 25.0,
-                    height: 25.0,
-                    child: const CircularProgressIndicator(strokeWidth: 2.0),
-                  )
-                : mode == RefreshStatus.completed
-                    ? const Icon(Icons.done, color: Colors.grey)
-                    : mode == RefreshStatus.failed
-                        ? const Icon(Icons.clear, color: Colors.grey)
-                        : new RotationTransition(
-                            turns: rorateController,
-                            child: const Icon(Icons.arrow_downward,
-                                color: Colors.grey)),
-            new Container(
-              child: new Text(
-                mode == RefreshStatus.canRefresh
-                    ? 'Refresh when release'
-                    : mode == RefreshStatus.completed
-                        ? 'Refresh Completed'
-                        : mode == RefreshStatus.failed
-                            ? 'Refresh Failed'
-                            : mode == RefreshStatus.refreshing
-                                ? 'Refreshing....'
-                                : 'pull down refresh',
-                style: new TextStyle(color: const Color(0xff555555)),
-              ),
-              margin: const EdgeInsets.only(left: 10.0),
-            )
-          ],
-        ),
+        child: container,
       ),
     );
   }

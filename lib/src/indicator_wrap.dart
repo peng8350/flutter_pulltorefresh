@@ -57,7 +57,7 @@ abstract class Indicator {
 
   bool get isRefreshing => this.mode == RefreshStatus.refreshing;
 
-  bool get isComplete => this.mode == RefreshStatus.completed|RefreshStatus.failed;
+  bool get isComplete => this.mode == RefreshStatus.completed || this.mode==RefreshStatus.failed;
 }
 
 class RefreshIndicator extends Indicator {
@@ -110,7 +110,7 @@ class RefreshIndicator extends Indicator {
     switch (mode) {
       case RefreshStatus.refreshing:
         if(up) {
-          _scrollController.jumpTo(-visibleRange);
+//          _scrollController.jumpTo(-visibleRange);
         }
         _sizeController.value = 1.0;
         break;
@@ -132,8 +132,8 @@ class RefreshIndicator extends Indicator {
   @override
   void onDragEnd(ScrollNotification notification) {
     // TODO: implement onDragEnd
+    if (isRefreshing||isComplete) return;
 //    if (widget.refreshMode == mode) return;
-    if (mode == RefreshStatus.refreshing) return;
 //    _modeChangeCallback(true, mode);
     bool reachMax = measure(notification) >= 1.0;
     if (!reachMax) {
@@ -151,7 +151,6 @@ class RefreshIndicator extends Indicator {
   void onDragMove(ScrollUpdateNotification notification) {
     // TODO: implement onDragMove
     if (isRefreshing||isComplete) return;
-
     double offset = measure(notification);
     if (offset >= 1.0) {
       this.mode = RefreshStatus.canRefresh;
