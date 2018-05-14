@@ -9,8 +9,10 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
     Email: peng8350@gmail.com
     createTime:2018-05-14 15:39
  */
-abstract class IndicatorImpl<T> {
-  ValueNotifier<T> modeListener;
+abstract class IndicatorImpl {
+
+  ScrollController _scrollController;
+  ValueNotifier<int> modeListener;
 
   bool up = false;
 
@@ -29,15 +31,17 @@ abstract class IndicatorImpl<T> {
   void onDragEnd(ScrollNotification notification) {
   }
 
+  set scrollController(ScrollController controller) => this._scrollController = controller;
 
-  set mode(T mode){
+
+  set mode(int mode){
 
   }
 
-  T get mode => this.modeListener.value;
+  int get mode => this.modeListener.value;
 }
 
-abstract class RefreshWrapper extends IndicatorImpl<RefreshMode> {
+abstract class RefreshWrapper extends IndicatorImpl{
   static final double minSpace = 0.00001;
 
   final int completeTime;
@@ -58,7 +62,7 @@ abstract class RefreshWrapper extends IndicatorImpl<RefreshMode> {
       this.triggerDistance: 80.0})
       : assert(vsync != null),
         super(up: up) {
-    modeListener = new ValueNotifier(RefreshMode.idle);
+    modeListener = new ValueNotifier(RefreshStatus.idle);
     this._sizeController = new AnimationController(
         vsync: vsync,
         lowerBound: minSpace,
@@ -74,31 +78,32 @@ abstract class RefreshWrapper extends IndicatorImpl<RefreshMode> {
         If this value is 0, no controls will
         cause Flutter to automatically retrieve widget.
      */
-    _sizeController.animateTo(minSpace).then((Null val) {});
+    _sizeController.animateTo(minSpace).then((Null val) {
+      this.mode =RefreshStatus.idle;
+    });
   }
 
   @override
-  set mode(RefreshMode mode) {
+  set mode(int mode) {
     // TODO: implement changeMode
     if (mode == this.mode) return ;
     this.modeListener.value = mode;
     switch (mode) {
-      case RefreshMode.refreshing:
+      case RefreshStatus.refreshing:
         _sizeController.value = 1.0;
-        this.mode = RefreshMode.completed;
+        this.mode = RefreshStatus.completed;
         break;
-      case RefreshMode.completed:
+      case RefreshStatus.completed:
         new Future.delayed(new Duration(milliseconds: completeTime), () {
+
           _dismiss();
-        }).then((val) {
-          this.mode =RefreshMode.idle;
         });
         break;
-      case RefreshMode.failed:
+      case RefreshStatus.failed:
         new Future.delayed(new Duration(milliseconds: completeTime), () {
           _dismiss();
         }).then((val) {
-          this.mode =RefreshMode.idle;
+          this.mode =RefreshStatus.idle;
         });
         break;
     }
@@ -109,18 +114,18 @@ abstract class RefreshWrapper extends IndicatorImpl<RefreshMode> {
   void onDragEnd(ScrollNotification notification) {
     // TODO: implement onDragEnd
 //    if (widget.refreshMode == mode) return;
-    if (mode == RefreshMode.refreshing) return ;
+    if (mode == RefreshStatus.refreshing) return ;
 //    _modeChangeCallback(true, mode);
     bool reachMax = measure(notification) >= 1.0;
     if (!reachMax) {
       _sizeController.animateTo(0.0);
       return ;
     } else {
-      this.mode = RefreshMode.refreshing;
+      this.mode = RefreshStatus.refreshing;
     }
   }
 
-  bool get isRefreshing => this.mode == RefreshMode.refreshing;
+  bool get isRefreshing => this.mode == RefreshStatus.refreshing;
 
   @override
   void onDragMove(ScrollUpdateNotification notification) {
@@ -128,9 +133,9 @@ abstract class RefreshWrapper extends IndicatorImpl<RefreshMode> {
     if (isRefreshing) return ;
     double offset = measure(notification);
     if (offset >= 1.0) {
-      this.mode = RefreshMode.canRefresh;
+      this.mode = RefreshStatus.canRefresh;
     } else {
-      this.mode = RefreshMode.idle;
+      this.mode = RefreshStatus.idle;
     }
   }
 
@@ -164,4 +169,4 @@ abstract class RefreshWrapper extends IndicatorImpl<RefreshMode> {
   Widget buildContent();
 }
 
-abstract class LoadWrapper extends IndicatorImpl<LoadMode> {}
+//abstract class LoadWrapper extends IndicatorImpl<LoadMode> {}

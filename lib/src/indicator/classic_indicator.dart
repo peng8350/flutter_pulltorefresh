@@ -46,15 +46,15 @@ class ClassicIndicator extends RefreshWrapper {
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            mode == RefreshMode.refreshing
+            mode == RefreshStatus.refreshing
                 ? new SizedBox(
               width: 25.0,
               height: 25.0,
               child: const CircularProgressIndicator(strokeWidth: 2.0),
             )
-                : mode == RefreshMode.completed
+                : mode == RefreshStatus.completed
                 ? const Icon(Icons.done, color: Colors.grey)
-                : mode == RefreshMode.failed
+                : mode == RefreshStatus.failed
                 ? const Icon(Icons.clear, color: Colors.grey)
                 : new RotationTransition(
                 turns: rorateController,
@@ -62,13 +62,13 @@ class ClassicIndicator extends RefreshWrapper {
                     color: Colors.grey)),
             new Container(
               child: new Text(
-                mode == RefreshMode.canRefresh
+                mode == RefreshStatus.canRefresh
                     ? 'Refresh when release'
-                    : mode == RefreshMode.completed
+                    : mode == RefreshStatus.completed
                     ? 'Refresh Completed'
-                    : mode == RefreshMode.failed
+                    : mode == RefreshStatus.failed
                     ? 'Refresh Failed'
-                    : mode == RefreshMode.refreshing
+                    : mode == RefreshStatus.refreshing
                     ? 'Refreshing....'
                     : 'pull down refresh',
                 style: new TextStyle(color: const Color(0xff555555)),

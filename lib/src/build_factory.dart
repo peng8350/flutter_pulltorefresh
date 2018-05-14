@@ -13,22 +13,22 @@ import 'package:flutter/material.dart';
 class BuildFactory {
   // if your renderHeader null, it will be replaced by it
   Widget buildDefaultHeader(
-      BuildContext context, RefreshMode mode, AnimationController controller) {
+      BuildContext context, int mode, AnimationController controller) {
     return new Container(
       height: 50.0,
       alignment: Alignment.center,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          mode == RefreshMode.refreshing
+          mode == RefreshStatus.refreshing
               ? new SizedBox(
                   width: 25.0,
                   height: 25.0,
                   child: const CircularProgressIndicator(strokeWidth: 2.0),
                 )
-              : mode == RefreshMode.completed
+              : mode == RefreshStatus.completed
                   ? const Icon(Icons.done, color: Colors.grey)
-                  : mode == RefreshMode.failed
+                  : mode == RefreshStatus.failed
                       ? const Icon(Icons.clear, color: Colors.grey)
                       : new RotationTransition(
                           turns: controller,
@@ -36,13 +36,13 @@ class BuildFactory {
                               color: Colors.grey)),
           new Container(
             child: new Text(
-              mode == RefreshMode.canRefresh
+              mode == RefreshStatus.canRefresh
                   ? 'Refresh when release'
-                  : mode == RefreshMode.completed
+                  : mode == RefreshStatus.completed
                       ? 'Refresh Completed'
-                      : mode == RefreshMode.failed
+                      : mode == RefreshStatus.failed
                           ? 'Refresh Failed'
-                          : mode == RefreshMode.refreshing
+                          : mode == RefreshStatus.refreshing
                               ? 'Refreshing....'
                               : 'pull down refresh',
               style: new TextStyle(color: const Color(0xff555555)),
@@ -55,17 +55,17 @@ class BuildFactory {
   }
 
   // if your renderFooter null, it will be replaced by it
-  Widget buildDefaultFooter(BuildContext context, LoadMode mode) {
-    final child = mode == LoadMode.loading
+  Widget buildDefaultFooter(BuildContext context, int mode) {
+    final child = mode == RefreshStatus.refreshing
         ? new SizedBox(
             width: 25.0,
             height: 25.0,
             child: const CircularProgressIndicator(strokeWidth: 2.0),
           )
         : new Text(
-            mode == LoadMode.idle
+            mode == RefreshStatus.idle
                 ? 'Load More...'
-                : mode == LoadMode.emptyData
+                : mode == RefreshStatus.noMore
                     ? 'No more data'
                     : 'Network exception!',
             style: new TextStyle(color: const Color(0xff555555)),

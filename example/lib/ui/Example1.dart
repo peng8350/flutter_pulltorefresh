@@ -9,8 +9,8 @@ class Example1 extends StatefulWidget {
 }
 
 class _Example1State extends State<Example1> {
-  LoadMode loading = LoadMode.idle;
-  RefreshMode  refreshing=RefreshMode.idle;
+//  LoadMode loading = LoadMode.idle;
+//  RefreshMode  refreshing=RefreshMode.idle;
   List<Widget> data = [];
   void _getDatas() {
 
@@ -20,42 +20,42 @@ class _Example1State extends State<Example1> {
   }
 
 
-  void _onRefreshChange(mode){
-
-      //must be do it
-      setState(() {
-        refreshing = mode;
-      });
-      // this is equals onRefresh()
-      if(mode==RefreshMode.refreshing) {
-        new Future.delayed(const Duration(milliseconds: 2000), () {
-          setState(() {
-            refreshing = RefreshMode.failed;
-          });
-          print("Refreshed!!!");
-        });
-      }
-
-  }
-
-  void _onLoadChange(LoadMode mode){
-    //must be do it
-    setState(() {
-      loading= mode;
-    });
-    // this is equals onLoaadmore()
-    if(mode==LoadMode.loading) {
-      new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
-
-        setState(() {
-          data.add(new Text('Data '));
-
-          loading = LoadMode.idle;
-        });
-        print("LoadComplete!!!");
-      });
-    }
-  }
+//  void _onRefreshChange(mode){
+//
+//      //must be do it
+//      setState(() {
+//        refreshing = mode;
+//      });
+//      // this is equals onRefresh()
+//      if(mode==RefreshMode.refreshing) {
+//        new Future.delayed(const Duration(milliseconds: 2000), () {
+//          setState(() {
+//            refreshing = RefreshMode.failed;
+//          });
+//          print("Refreshed!!!");
+//        });
+//      }
+//
+//  }
+//
+//  void _onLoadChange(LoadMode mode){
+//    //must be do it
+//    setState(() {
+//      loading= mode;
+//    });
+//    // this is equals onLoaadmore()
+//    if(mode==LoadMode.loading) {
+//      new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
+//
+//        setState(() {
+//          data.add(new Text('Data '));
+//
+//          loading = LoadMode.idle;
+//        });
+//        print("LoadComplete!!!");
+//      });
+//    }
+//  }
 
   void _onOffsetCallback(bool isUp,double offset) {
     // if you want change some widgets state ,you should rewrite the callback
@@ -79,10 +79,6 @@ class _Example1State extends State<Example1> {
       child: new RefreshIndicator(child: new SmartRefresher(
           enablePullDownRefresh: false,
           enablePullUpLoad: true,
-          refreshMode: this.refreshing,
-          loadMode: this.loading,
-          onRefreshChange: _onRefreshChange,
-          onLoadChange: _onLoadChange,
           onOffsetChange: _onOffsetCallback,
           child: new Container(
             color: Colors.white,

@@ -10,8 +10,8 @@ class Example2 extends StatefulWidget {
 }
 
 class _Example2State extends State<Example2> {
-  RefreshMode refreshing = RefreshMode.idle;
-  LoadMode loading = LoadMode.idle;
+//  RefreshMode refreshing = RefreshMode.idle;
+//  LoadMode loading = LoadMode.idle;
   int indexPage = 2;
   List<String> data = [];
 
@@ -29,40 +29,40 @@ class _Example2State extends State<Example2> {
       }
       indexPage++;
       setState(() {
-        loading = LoadMode.idle;
+//        loading = LoadMode.idle;
       });
     }).catchError(() {
       setState(() {
-        loading = LoadMode.failed;
+//        loading = LoadMode.failed;
       });
     });
   }
 
-  void _onModeChange(mode) {
-    //must be do it
-    setState(() {
-      refreshing = mode;
-    });
-    // this is equals onRefresh()
-    if (mode == RefreshMode.refreshing) {
-      new Future.delayed(const Duration(milliseconds: 2000), () {
-        setState(() {
-          refreshing = RefreshMode.completed;
-        });
-      });
-    }
-  }
-
-  _onLoadChange(LoadMode mode) {
-    //must be do it
-    setState(() {
-      loading = mode;
-    });
-    // this is equals onLoaadmore()
-    if(mode==LoadMode.loading){
-      _fetch();
-    }
-  }
+//  void _onModeChange(mode) {
+//    //must be do it
+//    setState(() {
+//      refreshing = mode;
+//    });
+//    // this is equals onRefresh()
+//    if (mode == RefreshMode.refreshing) {
+//      new Future.delayed(const Duration(milliseconds: 2000), () {
+//        setState(() {
+//          refreshing = RefreshMode.completed;
+//        });
+//      });
+//    }
+//  }
+//
+//  _onLoadChange(LoadMode mode) {
+//    //must be do it
+//    setState(() {
+//      loading = mode;
+//    });
+//    // this is equals onLoaadmore()
+//    if(mode==LoadMode.loading){
+//      _fetch();
+//    }
+//  }
 
   Widget buildImage(context, index) {
     if (data[index] == null) return new Container();
@@ -87,10 +87,7 @@ class _Example2State extends State<Example2> {
         child: new SmartRefresher(
             enablePullDownRefresh: true,
             enablePullUpLoad: true,
-            refreshMode: this.refreshing,
-            loadMode: this.loading,
-            onLoadChange: _onLoadChange,
-            onRefreshChange: _onModeChange,
+
             onOffsetChange: _onOffsetCallback,
             child: new GridView.builder(
               gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(

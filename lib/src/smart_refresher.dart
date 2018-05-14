@@ -11,19 +11,23 @@ import 'package:pull_to_refresh/src/build_factory.dart';
 import 'package:pull_to_refresh/src/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/refresh_physics.dart';
 
-typedef void OnRefreshChange(RefreshMode mode);
-typedef void OnLoadChange(LoadMode mode);
+typedef void OnRefreshChange(RefreshStatus mode);
+typedef void OnLoadChange(RefreshStatus mode);
 typedef void OnOffsetChange(bool isUp, double offset);
-typedef Widget HeaderBuilder(BuildContext context, RefreshMode mode);
-typedef Widget FooterBuilder(BuildContext context, LoadMode mode);
+typedef Widget HeaderBuilder(BuildContext context, RefreshStatus mode);
+typedef Widget FooterBuilder(BuildContext context, RefreshStatus mode);
 
-enum RefreshMode { idle, startDrag, canRefresh, refreshing, completed, failed }
-enum LoadMode { idle, emptyData, failed, loading }
 
-//class RefreshMode{
-//
-//  static final int idle,canRefresh,refreshing,
-//}
+class RefreshStatus{
+
+  static const int idle=0;
+  static const int canRefresh=1;
+  static const int refreshing=2;
+  static const int completed =3;
+  static const int failed=4;
+  static const int noMore=5;
+
+}
 
 
 /**
@@ -45,8 +49,7 @@ class SmartRefresher extends StatefulWidget {
   // if enable auto Loadmore,it will loadmore when enter the bottomest
   final bool enableAutoLoadMore;
   //this will influerence the RefreshMode
-  final RefreshMode refreshMode;
-  final LoadMode loadMode;
+  final RefreshStatus refreshMode,loadMode;
   // completed show time
   final int completeDuration;
   // This value represents the distance that can be refreshed and trigger the callback drag.
@@ -68,9 +71,7 @@ class SmartRefresher extends StatefulWidget {
     this.enableAutoLoadMore: true,
     this.headerBuilder,
     this.footerBuilder,
-    this.refreshMode: RefreshMode.idle,
     this.topVisibleRange: 50.0,
-    this.loadMode: LoadMode.idle,
     this.completeDuration: 800,
     this.onRefreshChange,
     this.onLoadChange,
@@ -110,8 +111,8 @@ class _SmartRefresherState extends State<SmartRefresher>
 //        _mDragPointY == null &&
 //        (_isPullUp(notification) || _isPullDown(notification)))
 //      _mDragPointY = _mScrollController.offset;
-    if (_isPullUp(notification))
-      _changeMode(notification, RefreshMode.startDrag);
+//    if (_isPullUp(notification))
+//      _changeMode(notification, RefreshStatus.startDrag);
     return false;
   }
 
@@ -157,20 +158,13 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _dispatchScrollEvent(ScrollNotification notification) {
     bool down = _isPullDown(notification);
     bool up = _isPullUp(notification);
-    if (_mScrollController.position.outOfRange &&
-        _mScrollController.position.extentAfter == 0) {
-      if (widget.loadMode == LoadMode.idle)
-        _changeMode(notification, LoadMode.loading);
-    }
-    if ((down &&
-            (widget.refreshMode == RefreshMode.refreshing ||
-                widget.refreshMode == RefreshMode.failed ||
-                widget.refreshMode == RefreshMode.completed)) ||
-        (up && (widget.loadMode == LoadMode.loading))) {
-      return false;
-    }
-    if ((up && !widget.enablePullUpLoad) ||
-        (down && !widget.enablePullDownRefresh)) return false;
+//    if ((down &&
+//            (widget.refreshMode == RefreshMode.refreshing ||
+//                widget.refreshMode == RefreshMode.failed ||
+//                widget.refreshMode == RefreshMode.completed)) ||
+//        (up && (widget.loadMode == LoadMode.loading))) {
+//      return false;
+//    }
     if (notification is ScrollStartNotification) {
       return _handleScrollStart(notification);
     }
@@ -196,28 +190,6 @@ class _SmartRefresherState extends State<SmartRefresher>
   }
 
 
-
-
-  // change the top or bottom mode
-  void _changeMode(ScrollNotification notifi, mode) {
-    if (_isPullDown(notifi)) {
-      if (widget.refreshMode == mode) return;
-      if (widget.refreshMode == RefreshMode.refreshing) return;
-      _modeChangeCallback(true, mode);
-      if (widget.headerBuilder == null && widget.enablePullDownRefresh) {
-        if (mode == RefreshMode.canRefresh) {
-          _mTIconController.animateTo(1.0);
-        } else if (mode == RefreshMode.startDrag) {
-          _mTIconController.animateTo(0.0);
-        }
-      }
-    } else if (_isPullUp(notifi)) {
-      if (widget.loadMode == mode) return;
-      if (widget.loadMode == LoadMode.loading) return;
-      if (mode.runtimeType == RefreshMode) return;
-      _modeChangeCallback(false, mode);
-    }
-  }
 
   //check user is pulling up
   bool _isPullUp(ScrollNotification noti) {
@@ -272,6 +244,7 @@ class _SmartRefresherState extends State<SmartRefresher>
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _onAfterBuild();
     });
+    widget.header.scrollController = _mScrollController;
     widget.header.modeListener.addListener((){
       setState(() {
       });
@@ -305,16 +278,7 @@ class _SmartRefresherState extends State<SmartRefresher>
                               minHeight: cons.biggest.height),
                           child: widget.child,
                         ),
-                        new Container(
-                          key: _mFooterKey,
-                          child: !widget.enablePullUpLoad
-                              ? new Container()
-                              : widget.footerBuilder != null
-                                  ? widget.footerBuilder(
-                                      context, widget.loadMode)
-                                  : buildDefaultFooter(
-                                      context, widget.loadMode),
-                        ),
+
                       ],
                     )),
                 onNotification: _dispatchScrollEvent,
