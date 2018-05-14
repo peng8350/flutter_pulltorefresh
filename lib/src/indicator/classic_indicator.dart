@@ -1,12 +1,14 @@
-import 'package:flutter/material.dart' hide RefreshIndicator;
-import 'package:flutter/widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 /**
     Author: Jpeng
     Email: peng8350@gmail.com
     createTime:2018-05-14 17:39
  */
+
+import 'package:flutter/material.dart' hide RefreshIndicator;
+import 'package:flutter/widgets.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+
 
 class ClassicIndicator extends RefreshIndicator {
   AnimationController rorateController;

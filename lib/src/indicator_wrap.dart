@@ -1,3 +1,9 @@
+/**
+    Author: Jpeng
+    Email: peng8350@gmail.com
+    createTime:2018-05-14 15:39
+ */
+
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
@@ -6,11 +12,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 typedef Widget Builder(int status);
 
-/**
-    Author: Jpeng
-    Email: peng8350@gmail.com
-    createTime:2018-05-14 15:39
- */
 abstract class Indicator {
   ScrollController _scrollController;
   ValueNotifier<int> modeListener;
@@ -140,7 +141,7 @@ class RefreshIndicator extends Indicator {
   void onDragMove(ScrollUpdateNotification notification) {
     // TODO: implement onDragMove
     if (isRefreshing||isComplete) return;
-    if((up&&notification.metrics.extentBefore!=0.0)||(!up&&notification.metrics.extentAfter!=0.0))return;
+
     double offset = measure(notification);
     if (offset >= 1.0) {
       this.mode = RefreshStatus.canRefresh;

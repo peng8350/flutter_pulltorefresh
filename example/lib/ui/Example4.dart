@@ -8,7 +8,7 @@ class Example4 extends StatefulWidget {
   _Example4State createState() => new _Example4State();
 }
 
-class _Example4State extends State<Example4> {
+class _Example4State extends State<Example4> with TickerProviderStateMixin{
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
   List<Widget> data = [];
@@ -102,9 +102,7 @@ class _Example4State extends State<Example4> {
     return new Container(
         child: new SmartRefresher(
             enablePullDownRefresh: true,
-            enablePullUpLoad: true,
-
-            onOffsetChange: _onOffsetCallback,
+            header: new ClassicIndicator(vsync: this, up: true),
             child: new ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,

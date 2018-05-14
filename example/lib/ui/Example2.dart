@@ -9,7 +9,7 @@ class Example2 extends StatefulWidget {
   _Example2State createState() => new _Example2State();
 }
 
-class _Example2State extends State<Example2> {
+class _Example2State extends State<Example2> with TickerProviderStateMixin {
 //  RefreshMode refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
   int indexPage = 2;
@@ -86,9 +86,9 @@ class _Example2State extends State<Example2> {
     return new Container(
         child: new SmartRefresher(
             enablePullDownRefresh: true,
-            enablePullUpLoad: true,
-
-            onOffsetChange: _onOffsetCallback,
+            header:
+              new ClassicIndicator(vsync: this, up: true)
+            ,
             child: new GridView.builder(
               gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3),

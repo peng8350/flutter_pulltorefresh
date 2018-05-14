@@ -1,15 +1,18 @@
 /**
- Author: Jpeng
- Email: peng8350@gmail.com
- createTime:2018-05-01 11:39
+    Author: Jpeng
+    Email: peng8350@gmail.com
+    createTime:2018-05-01 11:39
  */
-import 'dart:async';
+
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/build_factory.dart';
+import 'indicator/classic_indicator.dart';
 import 'package:pull_to_refresh/src/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/refresh_physics.dart';
+
+
 
 typedef void OnRefresh(Indicator refresher);
 typedef void OnOffsetChange(bool isUp, double offset);
@@ -64,7 +67,7 @@ class SmartRefresher extends StatefulWidget {
         super(key: key);
 
   @override
-  _SmartRefresherState createState() => new _SmartRefresherState();
+  _SmartRefresherState createState() => new _SmartRefresherState() ;
 }
 
 class _SmartRefresherState extends State<SmartRefresher>
@@ -103,8 +106,12 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
     bool down = _isPullDown(notification);
     if (down) {
-//      if (widget.onOffsetChange != null)
-//        widget.onOffsetChange(notification.metrics.extentBefore == 0, notification.metrics.);
+      if (widget.onOffsetChange != null)
+        widget.onOffsetChange(notification.metrics.extentBefore == 0, notification.metrics.minScrollExtent-notification.metrics.pixels);
+    }
+    else{
+      if (widget.onOffsetChange != null)
+        widget.onOffsetChange(notification.metrics.extentAfter == 0, notification.metrics.pixels-notification.metrics.maxScrollExtent);
     }
     if(widget.enablePullDownRefresh)
     widget.header.onDragMove(notification);
@@ -125,17 +132,6 @@ class _SmartRefresherState extends State<SmartRefresher>
 
   //handle the scrollEndEvent
   bool _handleScrollEnd(ScrollNotification notification) {
-//    bool up = _isPullDown(notification);
-//    if (!_mReachMax) {
-//      _changeMode(notification, up ? RefreshMode.idle : LoadMode.idle);
-////      _dismiss(up ? up : false);
-//    } else {
-//      if (up) {
-//        _modeChangeCallback(true, RefreshMode.refreshing);
-//      } else {
-//        _modeChangeCallback(false, LoadMode.loading);
-//      }
-//    }
   if(widget.enablePullDownRefresh)
     widget.header.onDragEnd(notification);
   if(widget.enablePullUpLoad)
@@ -154,15 +150,9 @@ class _SmartRefresherState extends State<SmartRefresher>
       pass to me
    */
   bool _dispatchScrollEvent(ScrollNotification notification) {
-    bool down = _isPullDown(notification);
-    bool up = _isPullUp(notification);
-//    if ((down &&
-//            (widget.refreshMode == RefreshMode.refreshing ||
-//                widget.refreshMode == RefreshMode.failed ||
-//                widget.refreshMode == RefreshMode.completed)) ||
-//        (up && (widget.loadMode == LoadMode.loading))) {
-//      return false;
-//    }
+
+    // when is scroll in the ScrollInside,nothing to do
+    if((!_isPullUp(notification)&&!_isPullDown(notification))) return false;
     if (notification is ScrollStartNotification) {
       return _handleScrollStart(notification);
     }
@@ -176,7 +166,6 @@ class _SmartRefresherState extends State<SmartRefresher>
     }
     if (notification is ScrollEndNotification) {
       _handleScrollEnd(notification);
-
     }
 
     return false;
@@ -186,7 +175,6 @@ class _SmartRefresherState extends State<SmartRefresher>
   void _resumeVal() {
     _mIsDraging = false;
   }
-
 
 
   //check user is pulling up
@@ -200,12 +188,31 @@ class _SmartRefresherState extends State<SmartRefresher>
   }
 
 
-  void _modeChangeCallback(isUp, mode) {
-//    if (isUp && this.widget.onRefreshChange != null) {
-//      widget.onRefreshChange(mode);
-//    } else if (!isUp && this.widget.onLoadChange != null) {
-//      widget.onLoadChange(mode);
-//    }
+  void init(){
+    _mScrollController = new ScrollController();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _onAfterBuild();
+    });
+    if(widget.enablePullDownRefresh)
+      widget.header..modeListener.addListener((){
+        if(widget.header.mode==RefreshStatus.refreshing){
+          if(widget.onRefresh!=null){
+            widget.onRefresh(widget.header);
+          }
+        }
+        setState(() {
+        });
+      })..scrollController =_mScrollController;
+    if(widget.enablePullUpLoad)
+      widget.footer..modeListener.addListener((){
+        if(widget.footer.mode==RefreshStatus.refreshing){
+          if(widget.onRefresh!=null){
+            widget.onRefresh(widget.footer);
+          }
+        }
+        setState(() {
+        });
+      })..scrollController = _mScrollController;
   }
 
   void _onAfterBuild() {
@@ -230,31 +237,8 @@ class _SmartRefresherState extends State<SmartRefresher>
   void initState() {
     // TODO: implement initState
     super.initState();
-    _mScrollController = new ScrollController();
-    widget.header.scrollController = _mScrollController;
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _onAfterBuild();
-    });
-    if(widget.enablePullDownRefresh)
-    widget.header.modeListener.addListener((){
-      if(widget.header.mode==RefreshStatus.refreshing){
-        if(widget.onRefresh!=null){
-          widget.onRefresh(widget.header);
-        }
-      }
-      setState(() {
-      });
-    });
-    if(widget.enablePullUpLoad)
-      widget.footer.modeListener.addListener((){
-        if(widget.footer.mode==RefreshStatus.refreshing){
-          if(widget.onRefresh!=null){
-            widget.onRefresh(widget.footer);
-          }
-        }
-        setState(() {
-        });
-      });
+    init();
+
   }
 
 
@@ -274,20 +258,20 @@ class _SmartRefresherState extends State<SmartRefresher>
                     physics: new RefreshScrollPhysics(),
                     child: new Column(
                       children: <Widget>[
-                        new Container(
+                        widget.header!=null&&widget.enablePullDownRefresh?new Container(
                           key: _mHeaderKey,
                           child: widget.header.buildWrapper(),
-                        )
+                        ):new Container()
                         ,
                         new ConstrainedBox(
                           constraints: new BoxConstraints(
                               minHeight: cons.biggest.height),
                           child: widget.child,
                         ),
-                        new Container(
+                        widget.footer!=null&&widget.enablePullUpLoad?new Container(
                           key: _mFooterKey,
                           child: widget.footer.buildWrapper(),
-                        )
+                        ):new Container()
                         ,
                       ],
                     )),
