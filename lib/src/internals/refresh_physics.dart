@@ -1,4 +1,4 @@
-/**
+/*
     Author: Jpeng
     Email: peng8350@gmail.com
     createTime:2018-05-02 14:39
@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-/**
+/*
     this class  is copy from BouncingScrollPhysics,
     because it doesn't fit my idea,
     Fixed the problem that child parts could not be dragged without data.

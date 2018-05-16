@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart' hide RefreshIndicator;
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../internals/indicator_wrap.dart';
 
 enum IconPosition { left, right, top, bottom }
 
@@ -26,8 +27,8 @@ class ClassicRefreshIndicator extends Indicator {
   final bool openRotate;
 
   ClassicRefreshIndicator(
-      {int mode,
-      ValueNotifier<double> offset,
+      {@required int mode,
+      @required ValueNotifier<double> offsetListener,
       this.textStyle: const TextStyle(color: const Color(0xff555555)),
       this.releaseText: 'Refresh when release',
       this.refreshingText: 'Refreshing...',
@@ -46,7 +47,7 @@ class ClassicRefreshIndicator extends Indicator {
       int completeTime: 800,
       double visibleRange: 60.0,
       double triggerDistance: 80.0})
-      : super(mode: mode);
+      : super(mode: mode, offsetListener: offsetListener);
 
   @override
   State<StatefulWidget> createState() {
@@ -74,20 +75,23 @@ class _ClassicRefreshIndicatorState extends State<ClassicRefreshIndicator>
   }
 
   Widget _buildIcon() {
-    return widget.mode == RefreshStatus.canRefresh
+    Widget icon = widget.mode == RefreshStatus.canRefresh
         ? widget.releaseIcon
         : widget.mode == RefreshStatus.idle
-            ? widget.idleIcon
-            : widget.mode == RefreshStatus.completed
-                ? widget.completeIcon
-                : widget.mode == RefreshStatus.failed
-                    ? widget.failedIcon
-                    : new SizedBox(
-                        width: 25.0,
-                        height: 25.0,
-                        child:
-                            const CircularProgressIndicator(strokeWidth: 2.0),
-                      );
+        ? widget.idleIcon
+        : widget.mode == RefreshStatus.completed
+        ? widget.completeIcon
+        : widget.mode == RefreshStatus.failed
+        ? widget.failedIcon
+        : new SizedBox(
+      width: 25.0,
+      height: 25.0,
+      child:
+      const CircularProgressIndicator(strokeWidth: 2.0),
+    );
+    if(widget.mode==RefreshStatus.idle||widget.mode==RefreshStatus.canRefresh)
+    return new RotationTransition(turns: rorateController,child: icon);
+    return icon;
   }
 
   @override
@@ -120,6 +124,7 @@ class _ClassicRefreshIndicatorState extends State<ClassicRefreshIndicator>
             children: childrens,
           );
     return new Container(
+      alignment: Alignment.center,
       height: widget.height,
       child: new Center(
         child: container,
@@ -131,17 +136,22 @@ class _ClassicRefreshIndicatorState extends State<ClassicRefreshIndicator>
   void initState() {
     // TODO: implement initState
     super.initState();
+    widget.offsetListener.addListener((){
+      rorateController.value = widget.offsetListener.value/2.0;
+      setState(() {
+
+      });
+    });
     rorateController = new AnimationController(
         vsync: this,
+        lowerBound: 0.0,
         upperBound: 0.5,
         duration: const Duration(milliseconds: 100));
   }
 }
 
 class ClassicLoadIndicator extends Indicator {
-
-
-  ClassicLoadIndicator({int mode}):super(mode:mode);
+  ClassicLoadIndicator({int mode}) : super(mode: mode);
 
   @override
   State<StatefulWidget> createState() {
@@ -150,7 +160,7 @@ class ClassicLoadIndicator extends Indicator {
   }
 }
 
-class _ClassicLoadIndicatorState extends State<ClassicLoadIndicator>{
+class _ClassicLoadIndicatorState extends State<ClassicLoadIndicator> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -162,18 +172,18 @@ class _ClassicLoadIndicatorState extends State<ClassicLoadIndicator>{
     // TODO: implement buildContent
     final child = widget.mode == RefreshStatus.refreshing
         ? new SizedBox(
-      width: 25.0,
-      height: 25.0,
-      child: const CircularProgressIndicator(strokeWidth: 2.0),
-    )
+            width: 25.0,
+            height: 25.0,
+            child: const CircularProgressIndicator(strokeWidth: 2.0),
+          )
         : new Text(
-      widget.mode== RefreshStatus.idle
-          ? 'Load More...'
-          : widget.mode == RefreshStatus.noMore
-          ? 'No more data'
-          : 'Network exception!',
-      style: new TextStyle(color: const Color(0xff555555)),
-    );
+            widget.mode == RefreshStatus.idle
+                ? 'Load More...'
+                : widget.mode == RefreshStatus.noMore
+                    ? 'No more data'
+                    : 'Network exception!',
+            style: new TextStyle(color: const Color(0xff555555)),
+          );
     return new Container(
       height: 50.0,
       child: new Center(
@@ -181,5 +191,4 @@ class _ClassicLoadIndicatorState extends State<ClassicLoadIndicator>{
       ),
     );
   }
-
 }

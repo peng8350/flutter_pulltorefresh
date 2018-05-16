@@ -1,4 +1,4 @@
-/**
+/*
     Author: Jpeng
     Email: peng8350@gmail.com
     createTime:2018-05-14 15:39
@@ -19,7 +19,9 @@ abstract class Wrapper extends StatefulWidget {
 
   final bool up;
 
-  final Function onModeChange;
+  final double triggerDistance;
+
+  final double visibleRange;
 
   bool get isRefreshing => this.mode == RefreshStatus.refreshing;
 
@@ -30,7 +32,13 @@ abstract class Wrapper extends StatefulWidget {
 
   set mode(int mode) => this.modeListener.value = mode;
 
-  Wrapper({Key key, this.modeListener, this.up, this.onModeChange, this.child})
+  Wrapper(
+      {Key key,
+      this.modeListener,
+      this.up,
+      this.child,
+      this.triggerDistance,
+      this.visibleRange})
       : super(key: key);
 
   bool isScrollToOutSide(ScrollNotification notification) {
@@ -49,7 +57,7 @@ abstract class Wrapper extends StatefulWidget {
   }
 }
 
-abstract class GestureDelegate {
+abstract class GestureProcessor {
   void onDragStart(ScrollStartNotification notification);
 
   void onDragMove(ScrollUpdateNotification notification);
@@ -60,23 +68,25 @@ abstract class GestureDelegate {
 class RefreshWrapper extends Wrapper {
   final int completeTime;
 
-  final double visibleRange;
-
-  final double triggerDistance;
-
   final Function onOffsetChange;
 
-  RefreshWrapper(
-      {this.completeTime: 800,
-      this.visibleRange: 50.0,
-      ValueNotifier<int> modeLis,
-      Widget child,
-      this.onOffsetChange,
-      bool up: true,
-      Key key,
-      this.triggerDistance: 80.0})
-      : assert(up != null),
-        super(up: up, key: key, modeListener: modeLis, child: child);
+  RefreshWrapper({
+    this.completeTime: 800,
+    ValueNotifier<int> modeLis,
+    Widget child,
+    this.onOffsetChange,
+    double triggerDistance,
+    double visibleRange,
+    bool up: true,
+    Key key,
+  })  : assert(up != null),
+        super(
+            up: up,
+            key: key,
+            modeListener: modeLis,
+            child: child,
+            triggerDistance: triggerDistance,
+            visibleRange: visibleRange);
 
   @override
   State<StatefulWidget> createState() {
@@ -87,15 +97,15 @@ class RefreshWrapper extends Wrapper {
 
 class RefreshWrapperState extends State<RefreshWrapper>
     with TickerProviderStateMixin
-    implements GestureDelegate {
+    implements GestureProcessor {
   static final double minSpace = 0.00001;
 
   AnimationController _sizeController;
-  /**
+  /*
       up indicate drag from top (pull down)
    */
   void _dismiss() {
-    /**
+    /*
         why the value is 0.00001?
         If this value is 0, no controls will
         cause Flutter to automatically retrieve widget.
@@ -223,21 +233,27 @@ abstract class Indicator extends StatefulWidget {
   const Indicator({this.mode, this.offsetListener});
 }
 
-////status: failed,nomore,completed,idle,refreshing
+//status: failed,nomore,completed,idle,refreshing
 class LoadWrapper extends Wrapper {
-  final bool autoLoad;
-
-  final bool up;
+  final bool up, autoLoad;
 
   LoadWrapper(
       {Key key,
       @required this.up,
       Builder builder,
-      this.autoLoad: true,
+      double triggerDistance,
+      double visibleRange,
+      this.autoLoad,
       ValueNotifier<int> modeLis,
       Widget child})
       : assert(up != null),
-        super(key: key, up: up, child: child, modeListener: modeLis);
+        super(
+            key: key,
+            up: up,
+            child: child,
+            modeListener: modeLis,
+            triggerDistance: triggerDistance,
+            visibleRange: visibleRange);
 
   @override
   State<StatefulWidget> createState() {
@@ -246,7 +262,7 @@ class LoadWrapper extends Wrapper {
   }
 }
 
-class LoadWrapperState extends State<LoadWrapper> implements GestureDelegate {
+class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
   @override
   void onDragMove(ScrollUpdateNotification notification) {
     // TODO: implement onDragMove
