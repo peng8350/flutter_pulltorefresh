@@ -11,7 +11,7 @@ class Example3 extends StatefulWidget {
 class _Example3State extends State<Example3> with TickerProviderStateMixin {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
-  AnimationController _headControll,_footControll;
+  AnimationController _headControll, _footControll;
   List<Widget> data = [];
   void _getDatas() {
     for (int i = 0; i < 14; i++) {
@@ -26,35 +26,31 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
   }
 
   Widget _header(context, mode) {
-    return
-       new ClipRect(
-         child: new Align(
-           alignment: Alignment.center,
-           heightFactor: 1.0,
-
-           child: new ScaleTransition(
-             scale: _headControll,
-             child: new Image.asset('images/animate.gif',
-                 width: double.infinity, height: 150.0, fit: BoxFit.cover),
-           ),
-         ),
-       )
-    ;
-  }
-  Widget _footer(context, mode) {
-    return
-      new ClipRect(
-        child: new Align(
-          alignment: Alignment.center,
-          heightFactor: 1.0,
-          child: new ScaleTransition(
-            scale: _footControll,
-            child: new Image.asset('images/animate.gif',
-                width: double.infinity, height: 150.0, fit: BoxFit.cover),
-          ),
+    return new ClipRect(
+      child: new Align(
+        alignment: Alignment.center,
+        heightFactor: 1.0,
+        child: new ScaleTransition(
+          scale: _headControll,
+          child: new Image.asset('images/animate.gif',
+              width: double.infinity, height: 150.0, fit: BoxFit.cover),
         ),
-      )
-    ;
+      ),
+    );
+  }
+
+  Widget _footer(context, mode) {
+    return new ClipRect(
+      child: new Align(
+        alignment: Alignment.center,
+        heightFactor: 1.0,
+        child: new ScaleTransition(
+          scale: _footControll,
+          child: new Image.asset('images/animate.gif',
+              width: double.infinity, height: 150.0, fit: BoxFit.cover),
+        ),
+      ),
+    );
   }
 
 //  void _onRefreshChange(mode) {
@@ -111,20 +107,19 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
 //    }
 //  }
 
-  void _onOffsetCallback(bool isUp,double offset) {
+  void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
-    if(isUp){
+    if (isUp) {
       _headControll.value = offset / 2 + 1.0;
-    }
-    else
-    _footControll.value = offset / 2 + 1.0;
+    } else
+      _footControll.value = offset / 2 + 1.0;
   }
 
   @override
   void initState() {
     // TODO: implement initState
     _getDatas();
-    _headControll= new AnimationController(
+    _headControll = new AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
       lowerBound: 1.0,
@@ -144,18 +139,32 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
     return new Container(
         child: new SmartRefresher(
             enablePullDownRefresh: true,
-            header: (context,mode,offset) =>
-            new ClassicRefresher(mode:mode,offset: offset),
-            onRefresh: (up,listener){
-
-              setState(() {
-
-              });
-              new Future.delayed(const Duration(milliseconds: 2009)).then((val){
-
-                listener.value = RefreshStatus.completed;
+            enableAutoLoadMore: true,
+            header: (context, mode, offset) =>
+                new ClassicRefresher(mode: mode, offset: offset),
+            footer: (context, mode, offset) =>
+                new ClassicLoadIndicator(mode: mode),
+            onRefresh: (up, listener) {
+              if (up)
+                new Future.delayed(const Duration(milliseconds: 2009))
+                    .then((val) {
+                  listener.value = RefreshStatus.completed;
 //                refresher.sendStatus(RefreshStatus.completed);
-              });
+                });
+              else {
+                new Future.delayed(const Duration(milliseconds: 2009))
+                    .then((val) {
+                  data.add(new Card(
+                    margin: new EdgeInsets.only(
+                        left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                    child: new Center(
+                      child: new Text('Data '),
+                    ),
+                  ));
+                  setState(() {});
+                  listener.value = RefreshStatus.idle;
+                });
+              }
             },
             onOffsetChange: _onOffsetCallback,
             child: new Container(

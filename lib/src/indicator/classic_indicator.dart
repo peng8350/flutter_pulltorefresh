@@ -91,19 +91,6 @@ class _ClassicRefresherState extends State<ClassicRefresher>
   }
 
   @override
-  void didUpdateWidget(ClassicRefresher oldWidget) {
-    // TODO: implement didUpdateWidget
-    if (widget.mode == oldWidget.mode) return;
-//    if (widget.mode == RefreshStatus.canRefresh) {
-//      rorateController.animateTo(1.0);
-//    }
-//    if (widget.mode == RefreshStatus.idle) {
-//      rorateController.animateTo(0.0);
-//    }
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   Widget build(BuildContext context) {
     // TODO: implement buildContent
     Widget textWidget = _buildText();
@@ -149,8 +136,7 @@ class _ClassicRefresherState extends State<ClassicRefresher>
 class ClassicLoadIndicator extends Indicator {
 
 
-
-
+  ClassicLoadIndicator({int mode}):super(mode:mode);
 
   @override
   State<StatefulWidget> createState() {
