@@ -99,18 +99,6 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-        child: new SmartRefresher(
-            enablePullDownRefresh: true,
-            header: new ClassicRefreshIndicator(vsync: this, up: true),
-            child: new ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemExtent: 40.0,
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return data[index];
-              },
-            )));
+    return new Container();
   }
 }

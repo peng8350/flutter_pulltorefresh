@@ -83,19 +83,6 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-        child: new SmartRefresher(
-            enablePullDownRefresh: true,
-            header:
-              new ClassicRefreshIndicator(vsync: this, up: true)
-            ,
-            child: new GridView.builder(
-              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3),
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: data.length,
-              itemBuilder: buildImage,
-            )));
+    return new Container();
   }
 }

@@ -7,5 +7,5 @@
 library pulltorefresh;
 
 export 'src/smart_refresher.dart';
-export 'src/indicator_wrap.dart';
+export 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 export 'src/indicator/classic_indicator.dart';

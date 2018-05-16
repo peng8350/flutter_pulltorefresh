@@ -4,10 +4,8 @@
     createTime:2018-05-03 00:39
  */
 
-
 import 'package:pull_to_refresh/src/smart_refresher.dart';
 import 'package:flutter/material.dart';
-
 
 /**
     use it to build some widget
@@ -88,4 +86,3 @@ class BuildFactory {
         ));
   }
 }
-
