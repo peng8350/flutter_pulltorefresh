@@ -10,7 +10,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 enum IconPosition { left, right, top, bottom }
 
-class ClassicRefresher extends Indicator {
+class ClassicRefreshIndicator extends Indicator {
   final String releaseText, idleText, refreshingText, completeText, failedText;
 
   final Widget releaseIcon, idleIcon, refreshingIcon, completeIcon, failedIcon;
@@ -25,7 +25,7 @@ class ClassicRefresher extends Indicator {
 
   final bool openRotate;
 
-  ClassicRefresher(
+  ClassicRefreshIndicator(
       {int mode,
       ValueNotifier<double> offset,
       this.textStyle: const TextStyle(color: const Color(0xff555555)),
@@ -51,11 +51,11 @@ class ClassicRefresher extends Indicator {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new _ClassicRefresherState();
+    return new _ClassicRefreshIndicatorState();
   }
 }
 
-class _ClassicRefresherState extends State<ClassicRefresher>
+class _ClassicRefreshIndicatorState extends State<ClassicRefreshIndicator>
     with TickerProviderStateMixin {
   AnimationController rorateController;
 
@@ -119,7 +119,12 @@ class _ClassicRefresherState extends State<ClassicRefresher>
             mainAxisAlignment: MainAxisAlignment.center,
             children: childrens,
           );
-    return container;
+    return new Container(
+      height: widget.height,
+      child: new Center(
+        child: container,
+      ),
+    );
   }
 
   @override

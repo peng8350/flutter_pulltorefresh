@@ -7,8 +7,6 @@
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pull_to_refresh/src/indicator/classic_indicator.dart';
-import 'package:pull_to_refresh/src/internals/build_factory.dart';
 import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
 
@@ -67,8 +65,7 @@ class SmartRefresher extends StatefulWidget {
   _SmartRefresherState createState() => new _SmartRefresherState();
 }
 
-class _SmartRefresherState extends State<SmartRefresher>
-    with TickerProviderStateMixin {
+class _SmartRefresherState extends State<SmartRefresher>{
   // listen the listen offset or on...
   ScrollController _mScrollController;
   // the bool will check the user if dragging on the screen.
@@ -93,7 +90,9 @@ class _SmartRefresherState extends State<SmartRefresher>
     _mIsDraging = true;
     GestureDelegate topWrap = _mHeaderKey.currentState as GestureDelegate;
     GestureDelegate bottomWrap = _mFooterKey.currentState as GestureDelegate;
+    if(widget.enablePullUpLoad)
     bottomWrap.onDragStart(notification);
+    if(widget.enablePullDownRefresh)
     topWrap.onDragStart(notification);
     return false;
   }
@@ -113,7 +112,9 @@ class _SmartRefresherState extends State<SmartRefresher>
     }
     GestureDelegate topWrap = _mHeaderKey.currentState as GestureDelegate;
     GestureDelegate bottomWrap = _mFooterKey.currentState as GestureDelegate;
+    if(widget.enablePullUpLoad)
     bottomWrap.onDragMove(notification);
+    if(widget.enablePullDownRefresh)
     topWrap.onDragMove(notification);
     return false;
   }
@@ -123,7 +124,10 @@ class _SmartRefresherState extends State<SmartRefresher>
   bool _handleScrollEnd(ScrollNotification notification) {
     GestureDelegate topWrap = _mHeaderKey.currentState as GestureDelegate;
     GestureDelegate bottomWrap = _mFooterKey.currentState as GestureDelegate;
+    if(widget
+    .enablePullUpLoad)
     bottomWrap.onDragEnd(notification);
+    if(widget.enablePullDownRefresh)
     topWrap.onDragEnd(notification);
 
     _resumeVal();
@@ -181,8 +185,8 @@ class _SmartRefresherState extends State<SmartRefresher>
           widget.onRefresh(up, mode);
         }
         // this will update later
-        if(up)
-        _mScrollController.jumpTo(-50.0);
+//        if(up)
+//        _mScrollController.jumpTo(-50.0);
         break;
         
     }
@@ -201,8 +205,10 @@ class _SmartRefresherState extends State<SmartRefresher>
     setState(() {
       if (widget.enablePullDownRefresh)
         _mHeaderHeight = _mHeaderKey.currentContext.size.height;
-      if(widget.enablePullUpLoad)
-        _mFooterHeight =_mFooterKey.currentContext.size.height;
+      if(widget.enablePullUpLoad) {
+        print(_mFooterKey.currentContext.size.height);
+        _mFooterHeight = _mFooterKey.currentContext.size.height;
+      }
     });
   }
 
@@ -237,7 +243,7 @@ class _SmartRefresherState extends State<SmartRefresher>
                     child: new Column(
                       children: <Widget>[
                         widget.header != null && widget.enablePullDownRefresh
-                            ? new RefreshWrapper(
+                            ? new LoadWrapper(
                                 key: _mHeaderKey,
                                 modeLis: topMode,
                                 up: true,
@@ -250,8 +256,8 @@ class _SmartRefresherState extends State<SmartRefresher>
                               minHeight: cons.biggest.height),
                           child: widget.child,
                         ),
-                        widget.footer != null && widget.enablePullDownRefresh
-                            ? new LoadWrapper(
+                        widget.footer != null && widget.enablePullUpLoad
+                            ? new RefreshWrapper(
                           key: _mFooterKey,
                           modeLis: bottomMode,
                           up: false,

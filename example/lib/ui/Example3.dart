@@ -139,13 +139,13 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
     return new Container(
         child: new SmartRefresher(
             enablePullDownRefresh: true,
-            enableAutoLoadMore: true,
-            header: (context, mode, offset) =>
-                new ClassicRefresher(mode: mode, offset: offset),
-            footer: (context, mode, offset) =>
+            enablePullUpLoad: true,
+            header: (context, mode,offset) =>
                 new ClassicLoadIndicator(mode: mode),
+            footer: (context, mode,offset) =>
+                new ClassicRefreshIndicator(mode: mode),
             onRefresh: (up, listener) {
-              if (up)
+              if (!up)
                 new Future.delayed(const Duration(milliseconds: 2009))
                     .then((val) {
                   listener.value = RefreshStatus.completed;
@@ -171,7 +171,9 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
               margin: new EdgeInsets.only(top: 20.0),
               color: Colors.white,
               child: new ListView.builder(
+
                 physics: const NeverScrollableScrollPhysics(),
+                reverse: true,
                 shrinkWrap: true,
                 itemExtent: 100.0,
                 itemCount: data.length,
