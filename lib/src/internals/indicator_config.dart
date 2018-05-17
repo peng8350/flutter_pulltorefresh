@@ -1,38 +1,35 @@
-import 'package:flutter/widgets.dart';
-
 /*
     Author: Jpeng
     Email: peng8350@gmail.com
     createTime:2018-05-14 15:39
  */
 
+import 'default_constants.dart';
 
 /*
  * This will use to configure the Wrapper action
  */
 abstract class Config {
-  final double visibleRange;
-
   final double triggerDistance;
 
-  const Config({this.visibleRange, this.triggerDistance});
+  const Config({this.triggerDistance});
 }
 
 class RefreshConfig extends Config {
-  final int completeTime;
-
+  final int completeDuration;
+  final double visibleRange;
   const RefreshConfig(
-      {double visibleRange:50.0, double triggerDistance:70.0, this.completeTime:1000})
-      : super(visibleRange: visibleRange, triggerDistance: triggerDistance);
+      {this.visibleRange: default_VisibleRange,
+      double triggerDistance: default_load_triggerDistance,
+      this.completeDuration: default_completeDuration})
+      : super(triggerDistance: triggerDistance);
 }
 
 class LoadConfig extends Config {
   final bool autoLoad;
 
   const LoadConfig({
-    this.autoLoad:true,
-    double visibleRange:50.0,
-    double triggerDistance:70.0,
-  }) : super(visibleRange: visibleRange, triggerDistance: triggerDistance);
+    this.autoLoad: default_AutoLoad,
+    double triggerDistance: default_load_triggerDistance,
+  }) : super(triggerDistance: triggerDistance);
 }
-

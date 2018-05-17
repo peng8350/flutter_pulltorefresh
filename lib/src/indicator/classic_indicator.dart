@@ -7,7 +7,6 @@
 import 'package:flutter/material.dart' hide RefreshIndicator;
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../internals/indicator_wrap.dart';
 
 enum IconPosition { left, right, top, bottom }
 
@@ -29,6 +28,7 @@ class ClassicRefreshIndicator extends Indicator {
   ClassicRefreshIndicator(
       {@required int mode,
       @required ValueNotifier<double> offsetListener,
+        Key key,
       this.textStyle: const TextStyle(color: const Color(0xff555555)),
       this.releaseText: 'Refresh when release',
       this.refreshingText: 'Refreshing...',
@@ -47,7 +47,7 @@ class ClassicRefreshIndicator extends Indicator {
       int completeTime: 800,
       double visibleRange: 60.0,
       double triggerDistance: 80.0})
-      : super(mode: mode, offsetListener: offsetListener);
+      : super(key:key,mode: mode, offsetListener: offsetListener);
 
   @override
   State<StatefulWidget> createState() {
@@ -151,7 +151,7 @@ class _ClassicRefreshIndicatorState extends State<ClassicRefreshIndicator>
 }
 
 class ClassicLoadIndicator extends Indicator {
-  ClassicLoadIndicator({int mode}) : super(mode: mode);
+  ClassicLoadIndicator({Key key,int mode}) : super(key:key,mode: mode);
 
   @override
   State<StatefulWidget> createState() {
@@ -164,11 +164,11 @@ class _ClassicLoadIndicatorState extends State<ClassicLoadIndicator> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return buildContent();
+    return _buildContent();
   }
 
   @override
-  Widget buildContent() {
+  Widget _buildContent() {
     // TODO: implement buildContent
     final child = widget.mode == RefreshStatus.refreshing
         ? new SizedBox(
