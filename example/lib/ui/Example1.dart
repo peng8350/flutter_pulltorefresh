@@ -49,23 +49,24 @@ class _Example1State extends State<Example1> {
   }
 
   Widget _headerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
-    return new ClassicRefreshIndicator(mode: mode, offsetListener: offset);
+    return new ClassicIndicator(mode: mode);
 
   }
 
 
 
   Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
-    return new ClassicLoadIndicator(mode: mode);
+    return new ClassicIndicator(mode: mode);
   }
 
   @override
   Widget build(BuildContext context) {
     return new Container(
+      color: new Color.fromARGB(100, 52, 52, 52),
         child: new SmartRefresher(
             enablePullDown: true,
             controller: _refreshController,
-            header: _footerCreate
+            header: _headerCreate
             ,
             headerConfig: new LoadConfig(),
 
@@ -73,13 +74,13 @@ class _Example1State extends State<Example1> {
               if (up)
                 new Future.delayed(const Duration(milliseconds: 2009))
                     .then((val) {
-                  data.add(new Card(
-                    margin: new EdgeInsets.only(
-                        left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                    child: new Center(
-                      child: new Text('Data '),
-                    ),
-                  ));
+                    data.add(new Card(
+                      margin: new EdgeInsets.only(
+                          left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                      child: new Center(
+                        child: new Text('Data '),
+                      ),
+                    ));
                   setState(() {
 
                   });

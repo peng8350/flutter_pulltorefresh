@@ -10,7 +10,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 enum IconPosition { left, right, top, bottom }
 
-class ClassicRefreshIndicator extends Indicator {
+class ClassicIndicator extends Indicator {
   final String releaseText, idleText, refreshingText, completeText, failedText;
 
   final Widget releaseIcon, idleIcon, refreshingIcon, completeIcon, failedIcon;
@@ -25,9 +25,8 @@ class ClassicRefreshIndicator extends Indicator {
 
   final bool openRotate;
 
-  ClassicRefreshIndicator(
+  ClassicIndicator(
       {@required int mode,
-      @required ValueNotifier<double> offsetListener,
         Key key,
       this.textStyle: const TextStyle(color: const Color(0xff555555)),
       this.releaseText: 'Refresh when release',
@@ -47,18 +46,17 @@ class ClassicRefreshIndicator extends Indicator {
       int completeTime: 800,
       double visibleRange: 60.0,
       double triggerDistance: 80.0})
-      : super(key:key,mode: mode, offsetListener: offsetListener);
+      : super(key:key,mode: mode);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new _ClassicRefreshIndicatorState();
+    return new _ClassicIndicatorState();
   }
 }
 
-class _ClassicRefreshIndicatorState extends State<ClassicRefreshIndicator>
-    with TickerProviderStateMixin {
-  AnimationController rorateController;
+class _ClassicIndicatorState extends State<ClassicIndicator>
+    {
 
   Widget _buildText() {
     return new Text(
@@ -89,8 +87,6 @@ class _ClassicRefreshIndicatorState extends State<ClassicRefreshIndicator>
       child:
       const CircularProgressIndicator(strokeWidth: 2.0),
     );
-    if(widget.mode==RefreshStatus.idle||widget.mode==RefreshStatus.canRefresh)
-    return new RotationTransition(turns: rorateController,child: icon);
     return icon;
   }
 
@@ -136,59 +132,7 @@ class _ClassicRefreshIndicatorState extends State<ClassicRefreshIndicator>
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.offsetListener.addListener((){
-      rorateController.value = widget.offsetListener.value/2.0;
-      setState(() {
-
-      });
-    });
-    rorateController = new AnimationController(
-        vsync: this,
-        lowerBound: 0.0,
-        upperBound: 0.5,
-        duration: const Duration(milliseconds: 100));
   }
 }
 
-class ClassicLoadIndicator extends Indicator {
-  ClassicLoadIndicator({Key key,int mode}) : super(key:key,mode: mode);
 
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return new _ClassicLoadIndicatorState();
-  }
-}
-
-class _ClassicLoadIndicatorState extends State<ClassicLoadIndicator> {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return _buildContent();
-  }
-
-  @override
-  Widget _buildContent() {
-    // TODO: implement buildContent
-    final child = widget.mode == RefreshStatus.refreshing
-        ? new SizedBox(
-            width: 25.0,
-            height: 25.0,
-            child: const CircularProgressIndicator(strokeWidth: 2.0),
-          )
-        : new Text(
-            widget.mode == RefreshStatus.idle
-                ? 'Load More...'
-                : widget.mode == RefreshStatus.noMore
-                    ? 'No more data'
-                    : 'Network exception!',
-            style: new TextStyle(color: const Color(0xff555555)),
-          );
-    return new Container(
-      height: 50.0,
-      child: new Center(
-        child: child,
-      ),
-    );
-  }
-}

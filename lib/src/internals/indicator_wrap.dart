@@ -55,6 +55,7 @@ abstract class Wrapper extends StatefulWidget {
   }
 }
 
+//idle,refreshing,completed,failed,canRefresh
 class RefreshWrapper extends Wrapper {
   final int completeDuration;
 
@@ -214,7 +215,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
   }
 }
 
-//status: failed,nomore,completed,idle,refreshing
+//status: failed,nomore,idle,refreshing
 class LoadWrapper extends Wrapper {
   final bool autoLoad;
 

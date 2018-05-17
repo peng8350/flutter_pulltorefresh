@@ -64,15 +64,15 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   }
 
   Widget _headerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
-    return new ClassicRefreshIndicator(mode: mode, offsetListener: offset);
+    return new ClassicIndicator(mode: mode);
 
   }
 
 
 
-  Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
-    return new ClassicLoadIndicator(mode: mode);
-  }
+//  Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
+//    return new ClassicLoadIndicator(mode: mode);
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
             controller: _refreshController,
             header: _headerCreate
                 ,
-            footer: _footerCreate
+            footer: _headerCreate
                 ,
             onRefresh: (up) {
               if (up)

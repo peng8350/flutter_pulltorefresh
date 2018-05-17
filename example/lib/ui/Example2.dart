@@ -73,13 +73,13 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
   }
 
   Widget _headerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
-    return new ClassicRefreshIndicator(mode: mode, offsetListener: offset);
+    return new ClassicIndicator(mode: mode);
   }
 
 
 
   Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
-    return new ClassicLoadIndicator(mode: mode);
+    return new ClassicIndicator(mode: mode);
   }
 
   @override
