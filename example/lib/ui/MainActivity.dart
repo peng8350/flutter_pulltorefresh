@@ -27,6 +27,8 @@ class _MainActivityState extends State<MainActivity> {
   List<Widget> views;
   PageController _controller;
 
+  GlobalKey<Example3State> example3Key= new GlobalKey();
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +39,14 @@ class _MainActivityState extends State<MainActivity> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return new Scaffold(
+
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
+        actions: <Widget>[(tabIndex==2)?new MaterialButton(onPressed: (){
+          example3Key.currentState.enterRefresh();
+        },child: new Text('refresh3',style: new TextStyle(color:Colors.white),)):new Container()],
       ),
       body: new Stack(
 
@@ -107,7 +113,7 @@ class _MainActivityState extends State<MainActivity> {
     // TODO: implement initState
 
     _controller = new PageController(initialPage: 0);
-    views = [new Example1(),new Example2(),new Example3(),new Example4()];
+    views = [new Example1(),new Example2(),new Example3(key:example3Key),new Example4()];
     super.initState();
   }
 

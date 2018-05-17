@@ -19,8 +19,6 @@ abstract class Wrapper extends StatefulWidget {
 
   final double triggerDistance;
 
-  final double visibleRange;
-
   bool get _isRefreshing => this.mode == RefreshStatus.refreshing;
 
   bool get _isComplete =>
@@ -37,8 +35,7 @@ abstract class Wrapper extends StatefulWidget {
       @required this.up,
       @required this.modeListener,
       this.child,
-      this.triggerDistance,
-      this.visibleRange})
+      this.triggerDistance})
       : assert(up != null, modeListener != null),
         super(key: key);
 
@@ -63,14 +60,16 @@ class RefreshWrapper extends Wrapper {
 
   final Function onOffsetChange;
 
+  final double visibleRange;
+
   RefreshWrapper({
     Key key,
     Widget child,
     ValueNotifier<int> modeLis,
     this.onOffsetChange,
-    this.completeDuration: 800,
+    this.completeDuration: default_completeDuration,
     double triggerDistance,
-    double visibleRange,
+    this.visibleRange:default_VisibleRange,
     bool up: true,
   })  : assert(up != null),
         super(
@@ -79,7 +78,7 @@ class RefreshWrapper extends Wrapper {
             modeListener: modeLis,
             child: child,
             triggerDistance: triggerDistance,
-            visibleRange: visibleRange);
+            );
 
   @override
   State<StatefulWidget> createState() {

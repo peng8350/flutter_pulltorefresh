@@ -10,15 +10,14 @@ class Example2 extends StatefulWidget {
 }
 
 class _Example2State extends State<Example2> with TickerProviderStateMixin {
-//  RefreshMode refreshing = RefreshMode.idle;
-//  LoadMode loading = LoadMode.idle;
+  RefreshController _controller;
   int indexPage = 2;
   List<String> data = [];
 
   void _fetch() {
     HTTP
         .get(
-            'http://image.baidu.com/channel/listjson?pn=$indexPage&rn=30&tag1=%E6%98%8E%E6%98%9F&tag2=%E5%85%A8%E9%83%A8&ie=utf8')
+        'http://image.baidu.com/channel/listjson?pn=$indexPage&rn=30&tag1=%E6%98%8E%E6%98%9F&tag2=%E5%85%A8%E9%83%A8&ie=utf8')
         .then((HTTP.Response response) {
       Map map = json.decode(response.body);
 
@@ -27,42 +26,33 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       for (var item in array) {
         data.add(item["image_url"]);
       }
+      setState(() {
+
+      });
+      _controller.sendBack(false, RefreshStatus.idle);
       indexPage++;
-      setState(() {
-//        loading = LoadMode.idle;
-      });
     }).catchError(() {
-      setState(() {
-//        loading = LoadMode.failed;
-      });
+      _controller.sendBack(false, RefreshStatus.failed);
     });
   }
 
-//  void _onModeChange(mode) {
-//    //must be do it
-//    setState(() {
-//      refreshing = mode;
-//    });
-//    // this is equals onRefresh()
-//    if (mode == RefreshMode.refreshing) {
-//      new Future.delayed(const Duration(milliseconds: 2000), () {
-//        setState(() {
-//          refreshing = RefreshMode.completed;
-//        });
-//      });
-//    }
-//  }
-//
-//  _onLoadChange(LoadMode mode) {
-//    //must be do it
-//    setState(() {
-//      loading = mode;
-//    });
-//    // this is equals onLoaadmore()
-//    if(mode==LoadMode.loading){
-//      _fetch();
-//    }
-//  }
+
+  void _onRefresh(bool up )  {
+    if (up)
+      new Future.delayed(const Duration(milliseconds: 2009))
+          .then((val) {
+        _controller.sendBack(true, RefreshStatus.completed);
+//                refresher.sendStatus(RefreshStatus.completed);
+      });
+    else {
+      new Future.delayed(const Duration(milliseconds: 2009))
+          .then((val) {
+            _fetch();
+
+      });
+    }
+  }
+
 
   Widget buildImage(context, index) {
     if (data[index] == null) return new Container();
@@ -79,10 +69,37 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _controller = new RefreshController();
+  }
+
+  Widget _headerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
+    return new ClassicRefreshIndicator(mode: mode, offsetListener: offset);
+  }
+
+
+
+  Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
+    return new ClassicLoadIndicator(mode: mode);
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Container();
+    return new Container(
+        child: new SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: true,
+            controller: _controller,
+            onRefresh: _onRefresh,
+            header: _headerCreate,
+            footer: _footerCreate,
+            onOffsetChange: _onOffsetCallback,
+            child: new GridView.builder(
+              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3),
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: data.length,
+              itemBuilder: buildImage,
+            )));
   }
 }

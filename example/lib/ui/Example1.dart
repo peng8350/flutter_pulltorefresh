@@ -9,77 +9,112 @@ class Example1 extends StatefulWidget {
 }
 
 class _Example1State extends State<Example1> {
+//  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
-//  RefreshMode  refreshing=RefreshMode.idle;
+
+  RefreshController _refreshController;
   List<Widget> data = [];
   void _getDatas() {
-
-    for (int i = 0; i < 5; i++) {
-      data.add(new Text('Data $i'));
+    for (int i = 0; i < 14; i++) {
+      data.add(new Card(
+        margin:
+        new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+        child: new Center(
+          child: new Text('Data $i'),
+        ),
+      ));
     }
   }
 
+  void enterRefresh() {
+    _refreshController.requestRefresh(true);
+  }
 
-//  void _onRefreshChange(mode){
-//
-//      //must be do it
-//      setState(() {
-//        refreshing = mode;
-//      });
-//      // this is equals onRefresh()
-//      if(mode==RefreshMode.refreshing) {
-//        new Future.delayed(const Duration(milliseconds: 2000), () {
-//          setState(() {
-//            refreshing = RefreshMode.failed;
-//          });
-//          print("Refreshed!!!");
-//        });
-//      }
-//
-//  }
-//
-//  void _onLoadChange(LoadMode mode){
-//    //must be do it
-//    setState(() {
-//      loading= mode;
-//    });
-//    // this is equals onLoaadmore()
-//    if(mode==LoadMode.loading) {
-//      new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
-//
-//        setState(() {
-//          data.add(new Text('Data '));
-//
-//          loading = LoadMode.idle;
-//        });
-//        print("LoadComplete!!!");
-//      });
-//    }
-//  }
 
-  void _onOffsetCallback(bool isUp,double offset) {
+
+  void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
-//    print(offset);
+//    if (isUp) {
+//      _headControll.value = offset / 2 + 1.0;
+//    } else
+//      _footControll.value = offset / 2 + 1.0;
   }
 
   @override
   void initState() {
     // TODO: implement initState
     _getDatas();
-
+    _refreshController = new RefreshController();
     super.initState();
+  }
+
+  Widget _headerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
+    return new ClassicRefreshIndicator(mode: mode, offsetListener: offset);
+
   }
 
 
 
+  Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
+    return new ClassicLoadIndicator(mode: mode);
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return new Container(
-      color: Colors.white30,
-      child: new RefreshIndicator(child:new Container(), onRefresh: (){
-        return new Future.delayed(const Duration(milliseconds: 2000));
-      })
-    );
+        child: new SmartRefresher(
+            enablePullDown: true,
+            controller: _refreshController,
+            header: _footerCreate
+            ,
+            headerConfig: new LoadConfig(),
+
+            onRefresh: (up) {
+              if (up)
+                new Future.delayed(const Duration(milliseconds: 2009))
+                    .then((val) {
+                  data.add(new Card(
+                    margin: new EdgeInsets.only(
+                        left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                    child: new Center(
+                      child: new Text('Data '),
+                    ),
+                  ));
+                  setState(() {
+
+                  });
+                  _refreshController.sendBack(true, RefreshStatus.idle);
+//                refresher.sendStatus(RefreshStatus.completed);
+                });
+              else {
+                new Future.delayed(const Duration(milliseconds: 2009))
+                    .then((val) {
+                  data.add(new Card(
+                    margin: new EdgeInsets.only(
+                        left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                    child: new Center(
+                      child: new Text('Data '),
+                    ),
+                  ));
+                  setState(() {});
+                  _refreshController.sendBack(false, RefreshStatus.idle);
+                });
+              }
+            },
+            onOffsetChange: _onOffsetCallback,
+            child: new Container(
+              margin: new EdgeInsets.only(top: 20.0),
+              color: Colors.white,
+              child: new ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                reverse: true,
+                shrinkWrap: true,
+                itemExtent: 100.0,
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  return data[index];
+                },
+              ),
+            )));
   }
 }

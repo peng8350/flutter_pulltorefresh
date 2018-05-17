@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Example3 extends StatefulWidget {
+  Example3({Key key}) : super(key: key);
+
   @override
-  _Example3State createState() => new _Example3State();
+  Example3State createState() => new Example3State();
 }
 
-class _Example3State extends State<Example3> with TickerProviderStateMixin {
+class Example3State extends State<Example3> with TickerProviderStateMixin {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
+
+  RefreshController _refreshController;
   AnimationController _headControll, _footControll;
   List<Widget> data = [];
   void _getDatas() {
@@ -25,87 +29,11 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
     }
   }
 
-  Widget _header(context, mode) {
-    return new ClipRect(
-      child: new Align(
-        alignment: Alignment.center,
-        heightFactor: 1.0,
-        child: new ScaleTransition(
-          scale: _headControll,
-          child: new Image.asset('images/animate.gif',
-              width: double.infinity, height: 150.0, fit: BoxFit.cover),
-        ),
-      ),
-    );
+  void enterRefresh() {
+    _refreshController.requestRefresh(true);
   }
 
-  Widget _footer(context, mode) {
-    return new ClipRect(
-      child: new Align(
-        alignment: Alignment.center,
-        heightFactor: 1.0,
-        child: new ScaleTransition(
-          scale: _footControll,
-          child: new Image.asset('images/animate.gif',
-              width: double.infinity, height: 150.0, fit: BoxFit.cover),
-        ),
-      ),
-    );
-  }
 
-//  void _onRefreshChange(mode) {
-//      //must be do it
-//      setState(() {
-//        refreshing = mode;
-//      });
-//      // this is equals onRefresh()
-//      switch(mode){
-//        case RefreshMode.refreshing:
-//          _headControll.animateTo(0.0);
-//          new Future.delayed(const Duration(milliseconds: 2000), () {
-//            setState(() {
-//              refreshing = RefreshMode.failed;
-//            });
-//            print("Refreshed!!!");
-//          });
-//          break;
-//        case RefreshMode.idle:
-//          _headControll.animateTo(0.0);
-//          break;
-//      }
-//  }
-
-//  _onLoadChange(mode){
-//    //must be do it
-//    setState(() {
-//      loading = mode;
-//    });
-//    switch(mode){
-//      case RefreshMode.refreshing:
-//        _footControll.animateTo(0.0);
-//        break;
-//      case RefreshMode.idle:
-//        _footControll.animateTo(0.0);
-//        break;
-//    }
-//    // this is equals onLoaadmore()
-//    if (mode == LoadMode.loading) {
-//      new Future<Null>.delayed(const Duration(milliseconds: 2000), () {
-//        setState(() {
-//          data.add(new Card(
-//            margin:
-//            new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-//            child: new Center(
-//              child: new Text('Data '),
-//            ),
-//          ));
-//
-//          loading = LoadMode.idle;
-//        });
-//        print("LoadComplete!!!");
-//      });
-//    }
-//  }
 
   void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
@@ -119,6 +47,7 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     _getDatas();
+    _refreshController = new RefreshController();
     _headControll = new AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
@@ -134,22 +63,33 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
     super.initState();
   }
 
+  Widget _headerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
+    return new ClassicRefreshIndicator(mode: mode, offsetListener: offset);
+
+  }
+
+
+
+  Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
+    return new ClassicLoadIndicator(mode: mode);
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Container(
         child: new SmartRefresher(
-            enablePullDownRefresh: true,
-            enablePullUpLoad: true,
-            controller: new RefreshController(),
-            header: (context, mode,offset) =>
-                new ClassicRefreshIndicator(mode: mode,offsetListener: offset ),
-            footer: (context, mode,offset) =>
-                new ClassicLoadIndicator(mode: mode),
-            onRefresh: (up, listener) {
+            enablePullDown: true,
+            enablePullUp: true,
+            controller: _refreshController,
+            header: _headerCreate
+                ,
+            footer: _footerCreate
+                ,
+            onRefresh: (up) {
               if (up)
                 new Future.delayed(const Duration(milliseconds: 2009))
                     .then((val) {
-                  listener.value = RefreshStatus.completed;
+                      _refreshController.sendBack(true, RefreshStatus.failed);
 //                refresher.sendStatus(RefreshStatus.completed);
                 });
               else {
@@ -163,7 +103,7 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
                     ),
                   ));
                   setState(() {});
-                  listener.value = RefreshStatus.idle;
+                  _refreshController.sendBack(false, RefreshStatus.idle);
                 });
               }
             },
@@ -172,7 +112,6 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
               margin: new EdgeInsets.only(top: 20.0),
               color: Colors.white,
               child: new ListView.builder(
-
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemExtent: 100.0,
