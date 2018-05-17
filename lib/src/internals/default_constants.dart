@@ -6,6 +6,7 @@
 
 
 
+
 const int default_completeDuration = 800;
 
 const double default_refresh_triggerDistance = 100.0;

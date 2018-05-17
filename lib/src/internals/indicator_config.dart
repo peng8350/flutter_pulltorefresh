@@ -20,7 +20,7 @@ class RefreshConfig extends Config {
   final double visibleRange;
   const RefreshConfig(
       {this.visibleRange: default_VisibleRange,
-      double triggerDistance: default_load_triggerDistance,
+      double triggerDistance: default_refresh_triggerDistance,
       this.completeDuration: default_completeDuration})
       : super(triggerDistance: triggerDistance);
 }

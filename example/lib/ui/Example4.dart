@@ -99,6 +99,6 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    return new Container();
+    return new SmartRefresher(child: new Container(height: 500.0,),enablePullDownRefresh: false,);
   }
 }

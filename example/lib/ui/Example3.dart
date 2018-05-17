@@ -140,6 +140,7 @@ class _Example3State extends State<Example3> with TickerProviderStateMixin {
         child: new SmartRefresher(
             enablePullDownRefresh: true,
             enablePullUpLoad: true,
+            controller: new RefreshController(),
             header: (context, mode,offset) =>
                 new ClassicRefreshIndicator(mode: mode,offsetListener: offset ),
             footer: (context, mode,offset) =>
