@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 /*
     Author: Jpeng
     Email: peng8350@gmail.com
@@ -5,7 +7,9 @@
  */
 
 
-
+typedef void OnRefresh(bool up);
+typedef void OnOffsetChange(bool up, double offset);
+typedef Widget IndicatorBuilder(BuildContext context, int mode);
 
 const int default_completeDuration = 800;
 

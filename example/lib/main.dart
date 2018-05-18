@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
 
       title: 'Pulltorefresh Demo',
       debugShowCheckedModeBanner:   false,
+      showPerformanceOverlay: true,
       theme: new ThemeData(
         // This is the theme of your application.
         //s

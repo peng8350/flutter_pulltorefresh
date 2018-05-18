@@ -13,7 +13,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 abstract class Wrapper extends StatefulWidget {
   final ValueNotifier<int> modeListener;
 
-  final Widget child;
+  final IndicatorBuilder builder;
 
   final bool up;
 
@@ -34,7 +34,7 @@ abstract class Wrapper extends StatefulWidget {
       {Key key,
       @required this.up,
       @required this.modeListener,
-      this.child,
+      this.builder,
       this.triggerDistance})
       : assert(up != null, modeListener != null),
         super(key: key);
@@ -65,7 +65,7 @@ class RefreshWrapper extends Wrapper {
 
   RefreshWrapper({
     Key key,
-    Widget child,
+    IndicatorBuilder builder,
     ValueNotifier<int> modeLis,
     this.onOffsetChange,
     this.completeDuration: default_completeDuration,
@@ -77,7 +77,7 @@ class RefreshWrapper extends Wrapper {
             up: up,
             key: key,
             modeListener: modeLis,
-            child: child,
+            builder: builder,
             triggerDistance: triggerDistance,
             );
 
@@ -186,6 +186,8 @@ class RefreshWrapperState extends State<RefreshWrapper>
           });
           break;
       }
+      print("set");
+      setState(() {});
     });
   }
 
@@ -199,13 +201,13 @@ class RefreshWrapperState extends State<RefreshWrapper>
             sizeFactor: _sizeController,
             child: new Container(height: widget.visibleRange),
           ),
-          widget.child
+          widget.builder(context,widget.mode)
         ],
       );
     }
     return new Column(
       children: <Widget>[
-        widget.child,
+        widget.builder(context,widget.mode),
         new SizeTransition(
           sizeFactor: _sizeController,
           child: new Container(height: widget.visibleRange),
@@ -225,12 +227,13 @@ class LoadWrapper extends Wrapper {
       @required ValueNotifier<int> modeListener,
       double triggerDistance,
       this.autoLoad,
-      Widget child})
+      IndicatorBuilder
+      builder})
       : assert(up != null, modeListener != null),
         super(
           key: key,
           up: up,
-          child: child,
+          builder: builder,
           modeListener: modeListener,
           triggerDistance: triggerDistance,
         );
@@ -246,7 +249,18 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return widget.child;
+    return widget.builder(context,widget.mode);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.modeListener.addListener((){
+      setState(() {
+
+      });
+    });
   }
 
   @override

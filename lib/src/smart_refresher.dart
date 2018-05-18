@@ -13,10 +13,7 @@ import 'package:pull_to_refresh/src/internals/indicator_config.dart';
 import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
 
-typedef void OnRefresh(bool up);
-typedef void OnOffsetChange(bool up, double offset);
-typedef Widget HeaderBuilder(BuildContext context, int mode,ValueNotifier<double> offset);
-typedef Widget FooterBuilder(BuildContext context, int mode,ValueNotifier<double> offset);
+
 
 enum WrapperType { Refresh, Loading }
 
@@ -37,8 +34,8 @@ class SmartRefresher extends StatefulWidget {
   //indicate your listView
   final Widget child;
   
-  final HeaderBuilder header;
-  final FooterBuilder footer;
+  final IndicatorBuilder header;
+  final IndicatorBuilder footer;
   // configure your header and footer
   final Config headerConfig, footerConfig;
   // This bool will affect whether or not to have the function of drop-up load.
@@ -210,7 +207,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
         }
         break;
     }
-    setState(() {});
+
   }
 
   void _onAfterBuild() {
@@ -252,9 +249,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
         up: up,
         autoLoad: config.autoLoad,
         triggerDistance: config.triggerDistance,
-        child: up
-            ? widget.header(context, topModeLis.value, offsetLis)
-            : widget.footer(context, bottomModeLis.value, offsetLis),
+        builder: up
+            ? widget.header
+            : widget.footer,
       );
     } else if (config is RefreshConfig) {
       return new RefreshWrapper(
@@ -264,9 +261,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
         completeDuration: config.completeDuration,
         triggerDistance: config.triggerDistance,
         visibleRange: config.visibleRange,
-        child: up
-            ? widget.header(context, topModeLis.value, offsetLis)
-            : widget.footer(context, bottomModeLis.value, offsetLis),
+        builder: up
+            ? widget.header
+            : widget.footer,
       );
     }
     return new Container();
@@ -325,11 +322,10 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
 
 abstract class Indicator extends StatefulWidget {
-  final ValueNotifier<double> offsetListener;
 
   final int mode;
   
-  const Indicator({Key key,this.mode, this.offsetListener}):super(key:key);
+  const Indicator({Key key,this.mode}):super(key:key);
 }
 
 class RefreshController{

@@ -48,14 +48,14 @@ class _Example1State extends State<Example1> {
     super.initState();
   }
 
-  Widget _headerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
+  Widget _headerCreate(BuildContext context,int mode){
     return new ClassicIndicator(mode: mode);
 
   }
 
 
 
-  Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
+  Widget _footerCreate(BuildContext context,int mode){
     return new ClassicIndicator(mode: mode);
   }
 

@@ -63,7 +63,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     super.initState();
   }
 
-  Widget _headerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
+  Widget _headerCreate(BuildContext context,int mode){
     return new ClassicIndicator(mode: mode);
 
   }
@@ -78,7 +78,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return new Container(
         child: new SmartRefresher(
-            enablePullDown: true,
             enablePullUp: true,
             controller: _refreshController,
             header: _headerCreate

@@ -42,7 +42,7 @@ class ClassicIndicator extends Indicator {
       this.failedIcon: const Icon(Icons.clear, color: Colors.grey),
       this.completeIcon: const Icon(Icons.done, color: Colors.grey),
       this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
-      this.releaseIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
+      this.releaseIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
       int completeTime: 800,
       double visibleRange: 60.0,
       double triggerDistance: 80.0})
