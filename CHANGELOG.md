@@ -37,3 +37,13 @@
 ## 1.0.8
 * Reproducing bottom indicator, no more manual drag to load more
 * Control property values change more,Mainly:1.onModeChange => onRefreshChange,onLoadChange, 2.Add enableAutoLoadMore,3.Remove bottomVisiableRange
+
+## 1.1.0
+Notice: This version of the code changes much, Api too
+* Transfer state changes to Wrapper of indicator to reduce unnecessary interface refresh.
+* No longer using Refreshmode or LoadMode,replaced int because the state is hard to determine.
+* Now support the ScrollView in the reverse mode
+* The indicators are divided into two categories, loadIndicator and refreshIndicator, and the two support header and footer
+* provided a controller to invoke some essential operations inside.
+* Move triggerDistance,completeTime such props to Config
+* Add ClassicIndicator Convenient construction indicator

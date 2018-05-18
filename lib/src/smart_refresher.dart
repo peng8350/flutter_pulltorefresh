@@ -300,6 +300,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
                             : new Container(),
                         new ConstrainedBox(
                           constraints: new BoxConstraints(
+                            maxHeight: double.MAX_FINITE-1.0,
                               minHeight: cons.biggest.height),
                           child: widget.child,
                         ),

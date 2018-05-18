@@ -186,7 +186,6 @@ class RefreshWrapperState extends State<RefreshWrapper>
           });
           break;
       }
-      print("set");
       setState(() {});
     });
   }

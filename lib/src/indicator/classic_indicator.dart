@@ -25,7 +25,7 @@ class ClassicIndicator extends Indicator {
 
   final bool openRotate;
 
-  ClassicIndicator(
+  const ClassicIndicator(
       {@required int mode,
         Key key,
       this.textStyle: const TextStyle(color: const Color(0xff555555)),

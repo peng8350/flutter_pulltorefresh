@@ -48,7 +48,7 @@ class _Example1State extends State<Example1> {
   }
 
   Widget _headerCreate(BuildContext context,int mode){
-    return new ClassicIndicator(mode: mode,refreshingText: "",);
+    return new ClassicIndicator(mode: mode,refreshingText: "",idleIcon: new Container(),idleText: "Load more...",);
 
   }
 

@@ -14,18 +14,13 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 * powerful Bouncing
 
 ## Screenshots
-IOS:<br>
-![](arts/ios1.gif)<br>
-Android:<br>
-![](arts/android1.gif)<br>
-IOS:<br>
-![](arts/ios2.gif)<br>
-Android:<br>
-![](arts/android2.gif)<br>
-IOS:<br>
-![](arts/ios3.gif)<br>
-Android:<br>
-![](arts/android3.gif)<br>
+![](arts/screen1.gif)
+![](arts/screen2.gif)<br>
+1.1.0(support reverse ScrollView)
+![](arts/screen3.gif)<br>
+
+
+
 
 ## How to use?
 1.the first declare following in your pubspec.yml
@@ -33,7 +28,7 @@ Android:<br>
 ```
 
    dependencies:
-     pull_to_refresh: ^1.0.8
+     pull_to_refresh: ^1.1.0
      
 ```
 
@@ -48,12 +43,9 @@ Android:<br>
    build() =>
    
     new SmartRefresher(
-        enablePullDownRefresh: true,
-        enablePullUpLoad: true, 
-        refreshMode: this.refreshing,
-        loadMode: this.loading,
-        onRefreshChange: _onRefreshChange,
-        onLoadChange: _onLoadChange,
+        enablePullDown: true,
+        enablePullUp: true, 
+        onRefresh: _onRefresh,
         onOffsetChange: _onOffsetCallback,
         child: new Container(
           color: Colors.white,
@@ -72,31 +64,14 @@ Android:<br>
 
 ```
 
-3.You should set the indicator according to the different refresh mode.There are six refresh modes here:idle, startDrag, canRefresh, refreshing, complete,failed.build footer is the same with that.
-If you need the default indicator, but the demand is not the same, for example, the font color and the icon are not quite the same, you can make a copy from [here](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/build_factory.dart) directly.
+3.You should set the indicator according to the different refresh mode.build footer is the same with that.
+Of course, I have built an indicator convenient to use, called ClassicIndicator. If I do not meet the requirements, I can choose to define an indicator myself.
 
 ```
-https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart
+
 
   Widget _buildHeader(context,mode){
-    // you can display different by the mode
-    /*
-     such as
-     return new Text(
-                     mode == RefreshMode.canRefresh
-                         ? 'LoadMore when release'
-                         : mode == RefreshMode.completed
-                             ? 'Load Completed'
-                             : mode == RefreshMode.failed
-                                 ? 'Load Failed'
-                                 : mode == RefreshMode.refreshing
-                                     ? 'Loading....'
-                                     : 'pull up load',
-                     style: new TextStyle(color: const Color(0xff555555)));
-
-     */
-     // this is a Gif like Example3(See my [Demo](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart))
-    return new Image.asset("images/animate.gif",height: 100.0,fit: BoxFit.cover,);
+   return new ClassicIndicator(mode: mode);
   }
   
  
@@ -111,55 +86,28 @@ https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Exa
      headerBuilder: _buildHeader
   )
 
+
 ```
 
 4.
-This refresh state requires you to update yourself in the logic code.
-Refresh mode details please look at the following
+Whether at the top or bottom, the onRefresh will be callback when the indicator state is refreshed.
+But how can I tell the result to SmartRefresher? It's very simple. It provides a RefreshController inside, you can pass the construction of a controller to SmartRefresher, and then call.SendBack (int status) can change the state of success or failure.
 
 ```
 
-    void _onRefreshChange(mode){
-    i      //must be do it
-           setState(() {
-             refreshing = mode;
-           });
-           	 // this is equals onRefresh() mostly
-           if(mode==RefreshMode.refreshing) {
-            //Simulating a network request to capture data
-             new Future.delayed(const Duration(milliseconds: 2000), () {
-               setState(() {
-                 /*
-                  when you catch data failed you can. set failed,
-                  else completed
-                  */
-                 refreshing = RefreshMode.failed;
-               });
-               print("Refreshed!!!");
-             });
-           }
+    void _onRefresh(bool up){
+		if(up){
+		   //headerIndicator callback
+		   new Future.delayed(const Duration(milliseconds: 2009))
+                               .then((val) {
+                                 _refreshController.sendBack(true, RefreshStatus.failed);
+                           });
+		   
+		}
+		else{
+			//footerIndicator Callback
+		}
     }
-
-     void _onLoadChange(mode){
-              //must be do it
-              setState(() {
-                loading= mode;
-              });
-              // this is equals onLoaadmore()
-              if(mode==RefreshMode.refreshing) {
-
-                new Future<Null>.delayed(const Duration(milliseconds: 2000), 	() {
-
-                  setState(() {
-                     data.add(new Text('Data '));
-
-                    loading = RefreshMode.completed;
-                  });
-                  print("LoadComplete!!!");
-                });
-              }
-     }
-
 
   
 ```
@@ -168,6 +116,7 @@ Refresh mode details please look at the following
 this is very important,if you don't notice it,you will get some problems.
 
 ```
+
 new ListView(){
     physics: const NeverScrollableScrollPhysics(),
     shrinkWrap: true,
@@ -178,26 +127,25 @@ new ListView(){
 
 ## Props Table
 
+SmartRefresher:
+
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | child      | your content View   | Widget   |   null |  necessary
-| headerBuilder | the header indictor,if null it will be created by my default header     | (BuildContext,RefreshMode) => Widget  | null |optional |
-| footerBuilder | the footer indictor,if null it will be created by my default footer     | (BuildContext,LoadMode) => Widget  | null |optional |
-| enablePullDownRefresh | switch of the pull down refresh     | boolean | true | optional |
-| enablePullUpLoad |   switch of the pull up load | boolean | false |optional |
-| enableAutoLoadMore |  if enable auto Loadmore,it will loadmore when enter the bottomest | boolean | true |optional |
-| refreshMode | It represents the state of the top indicator   | RefreshMode(enum) | RefreshMode.idle | if you enable pulldown,is necessary,else optional |
-| loadMode | It represents the state of the bottom indicator   | RefreshMode(enum) | RefreshMode.idle | if you enable pullup,is necessary,else optional |
-| completeDuration | It indicates the duration of display when the refresh is successful or failed.    | int | 800 | optional |
-| onRefreshChange | will callback when the refreshmode  is prepared to changed,it requires you to change the value yourself ,first paramter is if draging from top,second is the RefreshMode changed   | (bool,RefreshMode) => Void | null | optional |
-| onLoadChange | will callback when the loadmode  is prepared to changed,it requires you to change the value yourself ,first paramter is if draging from top,second is the RefreshMode changed   | (bool,LoadMode) => Void | null | optional |
+| headerBuilder | the header indictor     | (BuildContext,int) => Widget  | null |if enablePullDown is necessary,else option |
+| footerBuilder | the footer indictor     | (BuildContext,int) => Widget  | null |if enablePullUp is necessary,else option |
+| enablePullDown | switch of the pull down      | boolean | true | optional |
+| enablePullUp |   switch of the pull up  | boolean | false |optional |
+| onRefresh | will callback when the one indicator is getting refreshing   | (bool) => Void | null | optional |
 | onOffsetChange | callback while you dragging(In addition to refreshing state and completing,failed state),range: 0~realDistance/triggerDistance     | (bool,double) => Void | null | optional |
-| triggerDistance | This value represents the dragging distance to be reached in the trigger refreshing mode.  | double | 100.0 | optional |
-| topVisibleRange | The scope of the display when the indicator enters a refreshing state    | double | 50.0 | optional |
+| controller | controll inner some states  | RefreshController | null | optional |
+| headerConfig |  This setting will affect which type of indicator you use and config contains a lot props,such as triigerDistance,completedurtion...   | Config | RefreshConfig | optional |
+| footerConfig |  This setting will affect which type of indicator you use and config contains a lot props,such as triigerDistance,completedurtion...    | Config | LoadConfig | optional |
 
 
 ## Attention point
 1.The component is unbounded, so when you use it, be careful about the problems caused by the height, especially the column, stack, which is also a control of unrestricted height, to be extra careful.
+ 
  
 ## LICENSE
  

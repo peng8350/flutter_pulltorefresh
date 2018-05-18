@@ -3,6 +3,7 @@ import 'dart:convert' show json;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as HTTP;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class Example2 extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
   void _fetch() {
     HTTP
         .get(
-        'http://image.baidu.com/channel/listjson?pn=$indexPage&rn=30&tag1=%E6%98%8E%E6%98%9F&tag2=%E5%85%A8%E9%83%A8&ie=utf8')
+            'http://image.baidu.com/channel/listjson?pn=$indexPage&rn=30&tag1=%E6%98%8E%E6%98%9F&tag2=%E5%85%A8%E9%83%A8&ie=utf8')
         .then((HTTP.Response response) {
       Map map = json.decode(response.body);
 
@@ -26,9 +27,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       for (var item in array) {
         data.add(item["image_url"]);
       }
-      setState(() {
-
-      });
+      setState(() {});
       _controller.sendBack(false, RefreshStatus.idle);
       indexPage++;
     }).catchError(() {
@@ -36,27 +35,25 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
     });
   }
 
-
-  void _onRefresh(bool up )  {
+  void _onRefresh(bool up) {
     if (up)
-      new Future.delayed(const Duration(milliseconds: 2009))
-          .then((val) {
+      new Future.delayed(const Duration(milliseconds: 2009)).then((val) {
         _controller.sendBack(true, RefreshStatus.completed);
 //                refresher.sendStatus(RefreshStatus.completed);
       });
     else {
-      new Future.delayed(const Duration(milliseconds: 2009))
-          .then((val) {
-            _fetch();
-
+      new Future.delayed(const Duration(milliseconds: 2009)).then((val) {
+        _fetch();
       });
     }
   }
 
-
   Widget buildImage(context, index) {
     if (data[index] == null) return new Container();
-    return new Image.network(data[index]);
+    return new Image.network(
+      data[index],
+      fit: BoxFit.cover,
+    );
   }
 
   void _onOffsetCallback(bool isUp, double offset) {
@@ -72,34 +69,40 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
     _controller = new RefreshController();
   }
 
-  Widget _headerCreate(BuildContext context,int mode){
+  Widget _headerCreate(BuildContext context, int mode) {
     return new ClassicIndicator(mode: mode);
   }
 
-
-
-  Widget _footerCreate(BuildContext context,int mode){
-    return new ClassicIndicator(mode: mode);
+  Widget _footerCreate(BuildContext context, int mode) {
+    return new ClassicIndicator(
+      mode: mode,
+      refreshingText: 'loading...',
+      idleIcon: const Icon(Icons.arrow_upward),
+      idleText: 'Loadmore...',
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-        child: new SmartRefresher(
-            enablePullDown: true,
-            enablePullUp: true,
-            controller: _controller,
-            onRefresh: _onRefresh,
-            headerBuilder: _headerCreate,
-            footerBuilder: _footerCreate,
-            onOffsetChange: _onOffsetCallback,
-            child: new GridView.builder(
-              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3),
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: data.length,
-              itemBuilder: buildImage,
-            )));
+    return new SmartRefresher(
+      enablePullDown: true,
+      enablePullUp: true,
+      controller: _controller,
+      onRefresh: _onRefresh,
+      headerBuilder: _headerCreate,
+      footerBuilder: _footerCreate,
+      onOffsetChange: _onOffsetCallback,
+      child: new StaggeredGridView.countBuilder(
+        crossAxisCount: 4,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: data.length,
+        itemBuilder: buildImage,
+        staggeredTileBuilder: (int index) =>
+            new StaggeredTile.count(2, index.isEven ? 2 : 1),
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+      ),
+    );
   }
 }
