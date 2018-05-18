@@ -27,9 +27,10 @@ class RefreshConfig extends Config {
 
 class LoadConfig extends Config {
   final bool autoLoad;
-
+  final bool bottomWhenBuild;
   const LoadConfig({
     this.autoLoad: default_AutoLoad,
+    this.bottomWhenBuild:default_BottomWhenBuild,
     double triggerDistance: default_load_triggerDistance,
   }) : super(triggerDistance: triggerDistance);
 }

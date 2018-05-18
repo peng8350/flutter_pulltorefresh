@@ -90,8 +90,8 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
             enablePullUp: true,
             controller: _controller,
             onRefresh: _onRefresh,
-            header: _headerCreate,
-            footer: _footerCreate,
+            headerBuilder: _headerCreate,
+            footerBuilder: _footerCreate,
             onOffsetChange: _onOffsetCallback,
             child: new GridView.builder(
               gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(

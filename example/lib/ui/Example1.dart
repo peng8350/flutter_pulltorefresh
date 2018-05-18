@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart' hide RefreshIndicator;
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Example1 extends StatefulWidget {
   @override
@@ -11,7 +11,6 @@ class Example1 extends StatefulWidget {
 class _Example1State extends State<Example1> {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
-
   RefreshController _refreshController;
   List<Widget> data = [];
   void _getDatas() {
@@ -49,24 +48,23 @@ class _Example1State extends State<Example1> {
   }
 
   Widget _headerCreate(BuildContext context,int mode){
-    return new ClassicIndicator(mode: mode);
+    return new ClassicIndicator(mode: mode,refreshingText: "",);
 
   }
 
 
 
-  Widget _footerCreate(BuildContext context,int mode){
-    return new ClassicIndicator(mode: mode);
-  }
+//  Widget _footerCreate(BuildContext context,int mode){
+//    return new ClassicIndicator(mode: mode);
+//  }
 
   @override
   Widget build(BuildContext context) {
     return new Container(
-      color: new Color.fromARGB(100, 52, 52, 52),
         child: new SmartRefresher(
             enablePullDown: true,
             controller: _refreshController,
-            header: _headerCreate
+            headerBuilder: _headerCreate
             ,
             headerConfig: new LoadConfig(),
 
@@ -84,6 +82,7 @@ class _Example1State extends State<Example1> {
                   setState(() {
 
                   });
+                  _refreshController.scrollTo(50.0);
                   _refreshController.sendBack(true, RefreshStatus.idle);
 //                refresher.sendStatus(RefreshStatus.completed);
                 });
@@ -102,10 +101,13 @@ class _Example1State extends State<Example1> {
                 });
               }
             },
+
             onOffsetChange: _onOffsetCallback,
             child: new Container(
               margin: new EdgeInsets.only(top: 20.0),
               color: Colors.white,
+
+
               child: new ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 reverse: true,

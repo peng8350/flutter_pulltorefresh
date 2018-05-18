@@ -25,7 +25,6 @@ class _MainActivityState extends State<MainActivity> {
   int tabIndex = 0;
 
   List<Widget> views;
-  PageController _controller;
 
   GlobalKey<Example3State> example3Key= new GlobalKey();
 
@@ -112,7 +111,6 @@ class _MainActivityState extends State<MainActivity> {
   void initState() {
     // TODO: implement initState
 
-    _controller = new PageController(initialPage: 0);
     views = [new Example1(),new Example2(),new Example3(key:example3Key),new Example4()];
     super.initState();
   }

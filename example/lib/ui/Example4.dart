@@ -1,7 +1,5 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Example4 extends StatefulWidget {
   @override
@@ -84,10 +82,10 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin{
 //    }
 //  }
 
-  void _onOffsetCallback(bool isUp, double offset) {
-    // if you want change some widgets state ,you should rewrite the callback
-//    print(offset);
-  }
+//  void _onOffsetCal/*lback(bool isUp, double offset) {
+//    // if you want change some widgets state ,you should rewrite the callback
+////    print(offset);
+//  }*/
 
   @override
   void initState() {

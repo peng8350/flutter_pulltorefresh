@@ -80,9 +80,9 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         child: new SmartRefresher(
             enablePullUp: true,
             controller: _refreshController,
-            header: _headerCreate
+            headerBuilder: _headerCreate
                 ,
-            footer: _headerCreate
+            footerBuilder: _headerCreate
                 ,
             onRefresh: (up) {
               if (up)

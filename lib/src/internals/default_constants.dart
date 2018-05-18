@@ -25,6 +25,8 @@ const bool default_enablePullDown = true;
 
 const bool default_enablePullUp = false;
 
+const bool default_BottomWhenBuild = true;
+
 const int spaceAnimateMill=300;
 
 const double minSpace = 0.000001;
