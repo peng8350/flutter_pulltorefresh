@@ -42,6 +42,8 @@ class SmartRefresher extends StatefulWidget {
   final bool enablePullUp;
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePullDown;
+  // if open OverScroll if you use RefreshIndicator and LoadFooter
+  final bool enableOverScroll;
   // upper and downer callback when you drag out of the distance
   final OnRefresh onRefresh;
   // This method will callback when the indicator changes from edge to edge.
@@ -57,6 +59,7 @@ class SmartRefresher extends StatefulWidget {
     RefreshController controller,
     this.headerConfig: const RefreshConfig(),
     this.footerConfig: const LoadConfig(),
+    this.enableOverScroll:default_enableOverScroll,
     this.enablePullDown: default_enablePullDown,
     this.enablePullUp: default_enablePullUp,
     this.onRefresh,
@@ -279,6 +282,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     super.didUpdateWidget(oldWidget);
   }
 
+
   @override
   Widget build(BuildContext context) {
     return new LayoutBuilder(builder: (context, cons) {
@@ -292,7 +296,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
               child: new NotificationListener(
                 child: new SingleChildScrollView(
                     controller: _scrollController,
-                    physics: new RefreshScrollPhysics(),
+                    physics: new RefreshScrollPhysics(enableOverScroll:widget.enableOverScroll ),
                     child: new Column(
                       children: <Widget>[
                         widget.headerBuilder != null && widget.enablePullDown

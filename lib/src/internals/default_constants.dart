@@ -27,6 +27,8 @@ const bool default_enablePullUp = false;
 
 const bool default_BottomWhenBuild = true;
 
+const bool default_enableOverScroll = true;
+
 const int spaceAnimateMill=300;
 
 const double minSpace = 0.000001;
