@@ -161,12 +161,12 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   //check user is pulling up
   bool _isPullUp(ScrollNotification noti) {
-    return noti.metrics.extentAfter == 0;
+    return noti.metrics.pixels < 0;
   }
 
   //check user is pulling down
   bool _isPullDown(ScrollNotification noti) {
-    return noti.metrics.extentBefore == 0;
+    return noti.metrics.pixels > 0;
   }
 
   double _measure(ScrollNotification notification) {

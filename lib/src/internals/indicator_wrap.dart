@@ -70,16 +70,16 @@ class RefreshWrapper extends Wrapper {
     this.onOffsetChange,
     this.completeDuration: default_completeDuration,
     double triggerDistance,
-    this.visibleRange:default_VisibleRange,
+    this.visibleRange: default_VisibleRange,
     bool up: true,
   })  : assert(up != null),
         super(
-            up: up,
-            key: key,
-            modeListener: modeLis,
-            builder: builder,
-            triggerDistance: triggerDistance,
-            );
+          up: up,
+          key: key,
+          modeListener: modeLis,
+          builder: builder,
+          triggerDistance: triggerDistance,
+        );
 
   @override
   State<StatefulWidget> createState() {
@@ -200,13 +200,13 @@ class RefreshWrapperState extends State<RefreshWrapper>
             sizeFactor: _sizeController,
             child: new Container(height: widget.visibleRange),
           ),
-          widget.builder(context,widget.mode)
+          widget.builder(context, widget.mode)
         ],
       );
     }
     return new Column(
       children: <Widget>[
-        widget.builder(context,widget.mode),
+        widget.builder(context, widget.mode),
         new SizeTransition(
           sizeFactor: _sizeController,
           child: new Container(height: widget.visibleRange),
@@ -226,8 +226,7 @@ class LoadWrapper extends Wrapper {
       @required ValueNotifier<int> modeListener,
       double triggerDistance,
       this.autoLoad,
-      IndicatorBuilder
-      builder})
+      IndicatorBuilder builder})
       : assert(up != null, modeListener != null),
         super(
           key: key,
@@ -248,17 +247,15 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return widget.builder(context,widget.mode);
+    return widget.builder(context, widget.mode);
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.modeListener.addListener((){
-      setState(() {
-
-      });
+    widget.modeListener.addListener(() {
+      setState(() {});
     });
   }
 
@@ -270,13 +267,15 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
   @override
   void onDragMove(ScrollUpdateNotification notification) {
     // TODO: implement onDragMove
-    if (!widget._isScrollToOutSide(notification)) {
-      return;
-    }
+//    if (!widget._isScrollToOutSide(notification)) {
+//      return;
+//    }
     if (widget._isRefreshing || widget._isComplete) return;
-
-    if (notification.metrics.outOfRange && widget.autoLoad) {
-      widget.mode = RefreshStatus.refreshing;
+    if (widget.autoLoad) {
+      if (widget.up && notification.metrics.extentBefore <= widget.triggerDistance)
+        widget.mode = RefreshStatus.refreshing;
+      if (!widget.up && notification.metrics.extentAfter <= widget.triggerDistance)
+        widget.mode = RefreshStatus.refreshing;
     }
   }
 
