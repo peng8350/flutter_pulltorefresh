@@ -24,7 +24,7 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.1.0
+     pull_to_refresh: ^1.1.1
      
 ```
 
@@ -137,7 +137,7 @@ new ListView(){
 | controller | 控制内部状态  | RefreshController | null | optional |
 | headerConfig |  这个设置会影响你使用哪种指示器,config还有几个属性可以设置   | Config | RefreshConfig | optional |
 | footerConfig |  这个设置会影响你使用哪种指示器,config还有几个属性可以设置     | Config | LoadConfig | optional |
-
+| enableOverScroll |  越界回弹的开关,如果你要配合RefreshIndicator(material包)使用,有可能要关闭    | bool | true | optional |
 
 
 

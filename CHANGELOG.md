@@ -47,3 +47,7 @@ Notice: This version of the code changes much, Api too
 * provided a controller to invoke some essential operations inside.
 * Move triggerDistance,completeTime such props to Config
 * Add ClassicIndicator Convenient construction indicator
+
+## 1.1.1
+* Make triigerDistance be equally vaild for LoadWrapper
+* Add enableOverScroll attribute
