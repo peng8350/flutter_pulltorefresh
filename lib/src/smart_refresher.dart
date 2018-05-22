@@ -91,11 +91,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
     // This is used to interupt useless callback when the pull up load rolls back.
-    if ((notification.metrics.outOfRange && notification.dragDetails == null)) {
+    if ((notification.metrics.outOfRange)) {
       return false;
     }
-    if (_isDragging) return false;
-    _isDragging = true;
     GestureProcessor topWrap = _headerKey.currentState as GestureProcessor;
     GestureProcessor bottomWrap = _footerKey.currentState as GestureProcessor;
     if (widget.enablePullUp) bottomWrap.onDragStart(notification);
@@ -129,7 +127,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
     GestureProcessor bottomWrap = _footerKey.currentState as GestureProcessor;
     if (widget.enablePullUp) bottomWrap.onDragEnd(notification);
     if (widget.enablePullDown) topWrap.onDragEnd(notification);
-    _resumeVal();
     return false;
   }
 
@@ -141,23 +138,20 @@ class _SmartRefresherState extends State<SmartRefresher> {
     }
     if (notification is ScrollUpdateNotification) {
       //if dragDetails is null,This represents the user's finger out of the screen
-      if (notification.dragDetails == null && _isDragging) {
+      if (notification.dragDetails == null) {
         return _handleScrollEnd(notification);
       } else if (notification.dragDetails != null) {
         return _handleScrollMoving(notification);
       }
     }
     if (notification is ScrollEndNotification) {
+      print("end");
       _handleScrollEnd(notification);
     }
 
     return false;
   }
 
-  //After the end of the drag, some variables are reduced to the default value
-  void _resumeVal() {
-    _isDragging = false;
-  }
 
   //check user is pulling up
   bool _isPullUp(ScrollNotification noti) {

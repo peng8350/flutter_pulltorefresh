@@ -10,6 +10,7 @@ class Example4 extends StatefulWidget {
 
 class _Example4State extends State<Example4> with TickerProviderStateMixin {
   List<Widget> data = [];
+  RefreshController _refreshController;
   void _getDatas() {
     for (int i = 0; i < 4; i++) {
       data.add(new Text('Data $i'));
@@ -20,7 +21,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     _getDatas();
-
+    _refreshController = new RefreshController();
     super.initState();
   }
 
@@ -28,11 +29,19 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return new RefreshIndicator(
         child: new SmartRefresher(
-          enablePullDown: false,
-          enablePullUp: true,
+            enablePullDown: false,
+            enablePullUp: true,
             enableOverScroll: false,
             footerBuilder: (context, mode) {
               return new ClassicIndicator(mode: mode);
+            },
+            footerConfig: new LoadConfig(triggerDistance: 30.0),
+            controller: _refreshController,
+            onRefresh: (up) {
+              new Future.delayed(const Duration(milliseconds: 1000))
+                  .then((val) {
+                _refreshController.sendBack(false, RefreshStatus.idle);
+              });
             },
             child: new ListView.builder(
               physics: const NeverScrollableScrollPhysics(),

@@ -91,6 +91,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       onRefresh: _onRefresh,
       headerBuilder: _headerCreate,
       footerBuilder: _footerCreate,
+      footerConfig: new RefreshConfig(),
       onOffsetChange: _onOffsetCallback,
       child: new StaggeredGridView.countBuilder(
         crossAxisCount: 4,
