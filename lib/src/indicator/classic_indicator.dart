@@ -34,7 +34,7 @@ class ClassicIndicator extends Indicator {
       this.completeText: 'Refresh complete!',
       this.height: 60.0,
       this.failedText: 'Refresh failed',
-      this.idleText: 'Pull down refesh',
+      this.idleText: 'Pull down to refresh',
       this.openRotate: true,
       this.iconPos: IconPosition.left,
       this.spacing: 15.0,
