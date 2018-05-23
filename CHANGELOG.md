@@ -51,3 +51,7 @@ Notice: This version of the code changes much, Api too
 ## 1.1.1
 * Make triigerDistance be equally vaild for LoadWrapper
 * Add enableOverScroll attribute
+
+## 1.1.2
+* Fix Bug:Refreshing the indicator requires multiple dragging to refresh
+* Fix ClassialIndicator syntax errors and display status when no data is added.

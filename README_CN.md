@@ -24,7 +24,7 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.1.1
+     pull_to_refresh: ^1.1.2
      
 ```
 

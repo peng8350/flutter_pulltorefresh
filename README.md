@@ -28,7 +28,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ```
 
    dependencies:
-     pull_to_refresh: ^1.1.1
+     pull_to_refresh: ^1.1.2
      
 ```
 
