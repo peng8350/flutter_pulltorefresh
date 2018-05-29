@@ -103,7 +103,6 @@ class _Example1State extends State<Example1> {
             onOffsetChange: _onOffsetCallback,
             child: new ListView.builder(
               reverse: true,
-
               itemExtent: 100.0,
               itemCount: data.length,
               itemBuilder: (context,index) => new Item(),

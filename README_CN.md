@@ -24,7 +24,7 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.1.2
+     pull_to_refresh: ^1.1.3
      
 ```
 
@@ -110,30 +110,19 @@ sendBack(int status)就可以告诉它返回什么状态。
   
 ```
 
-5.如果你的内容控件是一个滚动的部件, 例如 ScrollView, ListView, GridView 和 so on, 你应该给这类控件分配两个属性.因为我内部封装是通过ListView来封装的,
-这非常重要,如果你不注意这个,你会遇到某些问题.
 
-```
-
-new ListView(){
-    physics: const NeverScrollableScrollPhysics(),
-    shrinkWrap: true,
-    child:...
-}
-
-```
 
 ## 属性表
 
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
-| child      | 你的内容部件   | Widget   |   null |  必要
+| child      | 你的内容部件   | ? extends ScrollView   |   null |  必要
 | headerBuilder | 头部指示器构造  | (BuildContext,RefreshMode) => Widget  | null | 如果你打开了下拉是必要,否则可选 |
 | footerBuilder | 尾部指示器构造     | (BuildContext,RefreshMode) => Widget  | null | 如果你打开了上拉是必要,否则可选 |
 | enablePullDown | 是否允许下拉     | boolean | true | 可选 |
 | enablePullUp |   是否允许上拉 | boolean | false | 可选 |
 | onRefresh | 进入刷新时的回调   | (bool) => Void | null | 可选 |
-| onOffsetChange | 它将在拖动时回调（除了刷新状态和完成状态,范围在:0~实际距离/triggerDistance   | (double) => Void | null | 可选 |
+| onOffsetChange | 它将在超出边缘范围拖动时回调  | (double) => Void | null | 可选 |
 | controller | 控制内部状态  | RefreshController | null | optional |
 | headerConfig |  这个设置会影响你使用哪种指示器,config还有几个属性可以设置   | Config | RefreshConfig | optional |
 | footerConfig |  这个设置会影响你使用哪种指示器,config还有几个属性可以设置     | Config | LoadConfig | optional |

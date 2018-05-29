@@ -28,7 +28,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ```
 
    dependencies:
-     pull_to_refresh: ^1.1.2
+     pull_to_refresh: ^1.1.3
      
 ```
 
@@ -112,18 +112,7 @@ But how can I tell the result to SmartRefresher? It's very simple. It provides a
   
 ```
 
-5.If your content view is a rolling component, such as ScrollView, ListView, GridView and so on, you assign these two attributes to the component.Because my parts are used in the ListView nested package,
-this is very important,if you don't notice it,you will get some problems.
 
-```
-
-new ListView(){
-    physics: const NeverScrollableScrollPhysics(),
-    shrinkWrap: true,
-    child:...
-}
-
-```
 
 ## Props Table
 
@@ -131,13 +120,13 @@ SmartRefresher:
 
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
-| child      | your content View   | Widget   |   null |  necessary
+| child      | your content View   | ? extends ScrollView   |   null |  necessary
 | headerBuilder | the header indictor     | (BuildContext,int) => Widget  | null |if enablePullDown is necessary,else option |
 | footerBuilder | the footer indictor     | (BuildContext,int) => Widget  | null |if enablePullUp is necessary,else option |
 | enablePullDown | switch of the pull down      | boolean | true | optional |
 | enablePullUp |   switch of the pull up  | boolean | false |optional |
 | onRefresh | will callback when the one indicator is getting refreshing   | (bool) => Void | null | optional |
-| onOffsetChange | callback while you dragging(In addition to refreshing state and completing,failed state),range: 0~realDistance/triggerDistance     | (bool,double) => Void | null | optional |
+| onOffsetChange | callback while you dragging and outOfrange  | (bool,double) => Void | null | optional |
 | controller | controll inner some states  | RefreshController | null | optional |
 | headerConfig |  This setting will affect which type of indicator you use and config contains a lot props,such as triigerDistance,completedurtion...   | Config | RefreshConfig | optional |
 | footerConfig |  This setting will affect which type of indicator you use and config contains a lot props,such as triigerDistance,completedurtion...    | Config | LoadConfig | optional |

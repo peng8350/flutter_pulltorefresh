@@ -55,3 +55,8 @@ Notice: This version of the code changes much, Api too
 ## 1.1.2
 * Fix Bug:Refreshing the indicator requires multiple dragging to refresh
 * Fix ClassialIndicator syntax errors and display status when no data is added.
+
+## 1.1.3
+* Fix contentList's item cannot be cached,Remove shrinkWrap,physics limit
+* Fix onOffsetChange callback error,In completion, failure, refresh state is also callback
+* Add unfollowIndicator implement in Demo(Example3)
