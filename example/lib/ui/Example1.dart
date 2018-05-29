@@ -105,21 +105,37 @@ class _Example1State extends State<Example1> {
             },
 
             onOffsetChange: _onOffsetCallback,
-            child: new Container(
-              margin: new EdgeInsets.only(top: 20.0),
-              color: Colors.white,
+            child: new ListView.builder(
+              reverse: true,
 
-
-              child: new ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                reverse: true,
-                shrinkWrap: true,
-                itemExtent: 100.0,
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  return data[index];
-                },
-              ),
+              itemExtent: 100.0,
+              itemCount: data.length,
+              itemBuilder: (context,index) => new Item(),
             )));
+  }
+}
+
+
+class Item extends StatefulWidget {
+  @override
+  _ItemState createState() => new _ItemState();
+}
+
+class _ItemState extends State<Item> {
+  @override
+  Widget build(BuildContext context) {
+    return new Card(
+      margin:
+      new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+      child: new Center(
+        child: new Text('Data'),
+      ),
+    );
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    print("销毁");
+    super.dispose();
   }
 }

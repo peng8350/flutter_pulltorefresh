@@ -44,10 +44,9 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
               });
             },
             child: new ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
               itemExtent: 100.0,
               itemCount: data.length,
+
               itemBuilder: (context, index) {
                 return data[index];
               },

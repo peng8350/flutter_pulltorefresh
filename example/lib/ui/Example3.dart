@@ -21,7 +21,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     for (int i = 0; i < 14; i++) {
       data.add(new Card(
         margin:
-            new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+        new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
         child: new Center(
           child: new Text('Data $i'),
         ),
@@ -78,17 +78,17 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return new Container(
         child: new SmartRefresher(
-            enablePullUp: false,
+            enablePullUp: true,
             controller: _refreshController,
             headerBuilder: _headerCreate
-                ,
+            ,
             footerBuilder: _headerCreate
-                ,
+            ,
             onRefresh: (up) {
               if (up)
                 new Future.delayed(const Duration(milliseconds: 2009))
                     .then((val) {
-                      _refreshController.sendBack(true, RefreshStatus.failed);
+                  _refreshController.sendBack(true, RefreshStatus.failed);
 //                refresher.sendStatus(RefreshStatus.completed);
                 });
               else {
@@ -107,18 +107,14 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
               }
             },
             onOffsetChange: _onOffsetCallback,
-            child: new Container(
-              margin: new EdgeInsets.only(top: 20.0),
-              color: Colors.white,
-              child: new ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
+            child:
+             new ListView.builder(
                 itemExtent: 100.0,
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   return data[index];
                 },
               ),
-            )));
+            ));
   }
 }
