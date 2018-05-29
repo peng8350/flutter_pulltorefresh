@@ -12,7 +12,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   List<Widget> data = [];
   RefreshController _refreshController;
   void _getDatas() {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 8; i++) {
       data.add(new Text('Data $i'));
     }
   }
@@ -42,6 +42,9 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
                   .then((val) {
                 _refreshController.sendBack(false, RefreshStatus.idle);
               });
+            },
+            onOffsetChange: (bool up,double offset){
+              print("$up:$offset");
             },
             child: new ListView.builder(
               itemExtent: 100.0,

@@ -14,16 +14,20 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
   ValueNotifier<double> topOffsetLis = new ValueNotifier(0.0);
+  ValueNotifier<double> bottomOffsetLis = new ValueNotifier(0.0);
   RefreshController _refreshController;
   AnimationController _headControll, _footControll;
   List<Widget> data = [];
   void _getDatas() {
     for (int i = 0; i < 14; i++) {
-      data.add(new Card(
-        margin:
-            new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-        child: new Center(
-          child: new Text('Data $i'),
+      data.add(new Container(
+        color:new Color.fromARGB(255, 250, 250, 250),
+        child: new Card(
+          margin:
+          new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+          child: new Center(
+            child: new Text('Data $i'),
+          ),
         ),
       ));
     }
@@ -37,6 +41,9 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     // if you want change some widgets state ,you should rewrite the callback
     if (isUp) {
       topOffsetLis.value = offset;
+    }
+    else{
+      bottomOffsetLis.value = offset;
     }
 //    if (isUp) {
 //      _headControll.value = offset / 2 + 1.0;
@@ -65,6 +72,11 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     topOffsetLis.addListener(() {
       setState(() {});
     });
+    bottomOffsetLis.addListener((){
+      setState(() {
+
+      });
+    });
   }
 
   Widget _headerCreate(BuildContext context, int mode) {
@@ -80,13 +92,27 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     return new Container(
         child: new Stack(
       children: <Widget>[
-        new ClipPath(
-          clipper: new CirclePainter(offset: topOffsetLis.value),
-          child: new Container(
-            color: const Color(0xffff0000),
-            width: double.infinity,
-            height: double.infinity,
+        new Align(
+          alignment: Alignment.topCenter,
+          child: new ClipPath(
+            clipper: new CirclePainter(offset: topOffsetLis.value,up:true),
+            child: new Container(
+              color: const Color(0xffff0000),
+              width: double.infinity,
+              height: double.infinity,
+            ),
           ),
+        ),
+        new Align(
+          child: new ClipPath(
+            clipper: new CirclePainter(offset: bottomOffsetLis.value,up:false),
+            child: new Container(
+              color: const Color(0xffff0000),
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+          alignment: Alignment.bottomCenter,
         ),
         new SmartRefresher(
           enablePullUp: true,
@@ -104,11 +130,14 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
             else {
               new Future.delayed(const Duration(milliseconds: 2009))
                   .then((val) {
-                data.add(new Card(
-                  margin: new EdgeInsets.only(
-                      left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                  child: new Center(
-                    child: new Text('Data '),
+                data.add(new Container(
+                  color:new Color.fromARGB(255, 250, 250, 250),
+                  child: new Card(
+                    margin:
+                    new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                    child: new Center(
+                      child: new Text('Data '),
+                    ),
                   ),
                 ));
                 setState(() {});
@@ -132,15 +161,17 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
 class CirclePainter extends CustomClipper<Path> {
   final double offset;
+  final bool up;
 
-  CirclePainter({this.offset});
+  CirclePainter({this.offset,this.up});
 
   @override
   Path getClip(Size size) {
     // TODO: implement getClip
     final path = new Path();
-    path.addArc(new Rect.fromLTRB(0.0, 0.0, 0.0, 0.0), 45.0, 45.0);
-    path.cubicTo(0.0, 0.0, size.width / 2, offset * 2, size.width, 0.0);
+    if(!up)
+    path.moveTo(0.0, size.height);
+    path.cubicTo(0.0, up?0.0:size.height, size.width / 2, up?offset*2.3:size.height-offset*2.3, size.width, up?0.0:size.height);
     path.close();
     return path;
   }

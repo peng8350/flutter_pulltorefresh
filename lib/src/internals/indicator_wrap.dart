@@ -166,11 +166,12 @@ class RefreshWrapperState extends State<RefreshWrapper>
         vsync: this,
         lowerBound: minSpace,
         duration: const Duration(milliseconds: spaceAnimateMill))
-    ..addListener((){
-      if(widget.onOffsetChange!=null){
-        widget.onOffsetChange(widget.up,_sizeController.value*widget.visibleRange);
-      }
-    });
+      ..addListener(() {
+        if (widget.onOffsetChange != null) {
+          widget.onOffsetChange(
+              widget.up, _sizeController.value * widget.visibleRange);
+        }
+      });
     widget.modeListener.addListener(() {
       switch (mode) {
         case RefreshStatus.refreshing:
@@ -277,9 +278,11 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
 //    }
     if (widget._isRefreshing || widget._isComplete) return;
     if (widget.autoLoad) {
-      if (widget.up && notification.metrics.extentBefore <= widget.triggerDistance)
+      if (widget.up &&
+          notification.metrics.extentBefore <= widget.triggerDistance)
         widget.mode = RefreshStatus.refreshing;
-      if (!widget.up && notification.metrics.extentAfter <= widget.triggerDistance)
+      if (!widget.up &&
+          notification.metrics.extentAfter <= widget.triggerDistance)
         widget.mode = RefreshStatus.refreshing;
     }
   }

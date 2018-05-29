@@ -183,12 +183,16 @@ class _SmartRefresherState extends State<SmartRefresher> {
           0.0);
       if (overscrollPastStart > overscrollPastEnd) {
         if (widget.headerConfig is RefreshConfig) {
-          if(topModeLis.value==RefreshStatus.refreshing){
+          if (topModeLis.value == RefreshStatus.refreshing ||
+              topModeLis.value == RefreshStatus.completed ||
+              topModeLis.value == RefreshStatus.failed) {
             if (widget.onOffsetChange != null) {
-              widget.onOffsetChange(true, overscrollPastStart+(widget.headerConfig as RefreshConfig).visibleRange);
+              widget.onOffsetChange(
+                  true,
+                  overscrollPastStart +
+                      (widget.headerConfig as RefreshConfig).visibleRange);
             }
-          }
-          else{
+          } else {
             if (widget.onOffsetChange != null) {
               widget.onOffsetChange(true, overscrollPastStart);
             }
@@ -198,14 +202,18 @@ class _SmartRefresherState extends State<SmartRefresher> {
             widget.onOffsetChange(true, overscrollPastStart);
           }
         }
-      } else if(overscrollPastEnd>0){
+      } else if (overscrollPastEnd > 0) {
         if (widget.footerConfig is RefreshConfig) {
-          if(bottomModeLis.value==RefreshStatus.refreshing){
+          if (bottomModeLis.value == RefreshStatus.refreshing ||
+              bottomModeLis.value == RefreshStatus.completed ||
+              bottomModeLis.value == RefreshStatus.failed) {
             if (widget.onOffsetChange != null) {
-              widget.onOffsetChange(false, overscrollPastEnd+(widget.footerConfig as RefreshConfig).visibleRange);
+              widget.onOffsetChange(
+                  false,
+                  overscrollPastEnd +
+                      (widget.footerConfig as RefreshConfig).visibleRange);
             }
-          }
-          else{
+          } else {
             if (widget.onOffsetChange != null) {
               widget.onOffsetChange(false, overscrollPastEnd);
             }
@@ -295,7 +303,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
                 up
                     ? -_scrollController.offset + offset
                     : _scrollController.position.pixels -
-                    _scrollController.position.maxScrollExtent +
+                        _scrollController.position.maxScrollExtent +
                         offset);
           }
         },
