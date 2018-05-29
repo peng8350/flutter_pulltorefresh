@@ -12,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/internals/indicator_config.dart';
 import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
+import 'dart:math' as math;
 
 enum WrapperType { Refresh, Loading }
 
@@ -100,16 +101,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   //handle the scrollMoveEvent
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
-    bool down = _isPullDown(notification);
-    if (down) {
-      if (widget.onOffsetChange != null)
-        widget.onOffsetChange(notification.metrics.extentBefore == 0,
-            notification.metrics.minScrollExtent - notification.metrics.pixels);
-    } else {
-      if (widget.onOffsetChange != null)
-        widget.onOffsetChange(notification.metrics.extentAfter == 0,
-            notification.metrics.pixels - notification.metrics.maxScrollExtent);
-    }
     if (_measure(notification) != -1.0)
       offsetLis.value = _measure(notification);
     GestureProcessor topWrap = _headerKey.currentState as GestureProcessor;
@@ -180,6 +171,51 @@ class _SmartRefresherState extends State<SmartRefresher> {
     widget.controller.scrollController = _scrollController;
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _onAfterBuild();
+    });
+    _scrollController.addListener(() {
+      final double overscrollPastStart = math.max(
+          _scrollController.position.minScrollExtent -
+              _scrollController.position.pixels,
+          0.0);
+      final double overscrollPastEnd = math.max(
+          _scrollController.position.pixels -
+              _scrollController.position.maxScrollExtent,
+          0.0);
+      if (overscrollPastStart > overscrollPastEnd) {
+        if (widget.headerConfig is RefreshConfig) {
+          if(topModeLis.value==RefreshStatus.refreshing){
+            if (widget.onOffsetChange != null) {
+              widget.onOffsetChange(true, overscrollPastStart+(widget.headerConfig as RefreshConfig).visibleRange);
+            }
+          }
+          else{
+            if (widget.onOffsetChange != null) {
+              widget.onOffsetChange(true, overscrollPastStart);
+            }
+          }
+        } else {
+          if (widget.onOffsetChange != null) {
+            widget.onOffsetChange(true, overscrollPastStart);
+          }
+        }
+      } else if(overscrollPastEnd>0){
+        if (widget.footerConfig is RefreshConfig) {
+          if(bottomModeLis.value==RefreshStatus.refreshing){
+            if (widget.onOffsetChange != null) {
+              widget.onOffsetChange(false, overscrollPastEnd+(widget.footerConfig as RefreshConfig).visibleRange);
+            }
+          }
+          else{
+            if (widget.onOffsetChange != null) {
+              widget.onOffsetChange(false, overscrollPastEnd);
+            }
+          }
+        } else {
+          if (widget.onOffsetChange != null) {
+            widget.onOffsetChange(false, overscrollPastEnd);
+          }
+        }
+      }
     });
     widget.controller._headerMode = topModeLis;
     widget.controller._footerMode = bottomModeLis;
@@ -252,6 +288,17 @@ class _SmartRefresherState extends State<SmartRefresher> {
         key: up ? _headerKey : _footerKey,
         modeLis: up ? topModeLis : bottomModeLis,
         up: up,
+        onOffsetChange: (bool up, double offset) {
+          if (widget.onOffsetChange != null) {
+            widget.onOffsetChange(
+                up,
+                up
+                    ? -_scrollController.offset + offset
+                    : _scrollController.position.pixels -
+                    _scrollController.position.maxScrollExtent +
+                        offset);
+          }
+        },
         completeDuration: config.completeDuration,
         triggerDistance: config.triggerDistance,
         visibleRange: config.visibleRange,

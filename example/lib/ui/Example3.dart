@@ -37,10 +37,11 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
   void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
-    if (isUp) {
-      _headControll.value = offset / 2 + 1.0;
-    } else
-      _footControll.value = offset / 2 + 1.0;
+    print("$isUp:$offset");
+//    if (isUp) {
+//      _headControll.value = offset / 2 + 1.0;
+//    } else
+//      _footControll.value = offset / 2 + 1.0;
   }
 
   @override
@@ -77,44 +78,51 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return new Container(
-        child: new SmartRefresher(
-            enablePullUp: true,
-            controller: _refreshController,
-            headerBuilder: _headerCreate
+        child: new Stack(
+          children: <Widget>[
+            new Text('dsdcc')
             ,
-            footerBuilder: _headerCreate
-            ,
-            onRefresh: (up) {
-              if (up)
-                new Future.delayed(const Duration(milliseconds: 2009))
-                    .then((val) {
-                  _refreshController.sendBack(true, RefreshStatus.failed);
+            new SmartRefresher(
+              enablePullUp: true,
+              controller: _refreshController,
+              headerBuilder: _headerCreate
+              ,
+              footerBuilder: _headerCreate
+              ,
+              footerConfig: new RefreshConfig(),
+              onRefresh: (up) {
+                if (up)
+                  new Future.delayed(const Duration(milliseconds: 2009))
+                      .then((val) {
+                    _refreshController.sendBack(true, RefreshStatus.failed);
 //                refresher.sendStatus(RefreshStatus.completed);
-                });
-              else {
-                new Future.delayed(const Duration(milliseconds: 2009))
-                    .then((val) {
-                  data.add(new Card(
-                    margin: new EdgeInsets.only(
-                        left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                    child: new Center(
-                      child: new Text('Data '),
-                    ),
-                  ));
-                  setState(() {});
-                  _refreshController.sendBack(false, RefreshStatus.idle);
-                });
-              }
-            },
-            onOffsetChange: _onOffsetCallback,
-            child:
-             new ListView.builder(
+                  });
+                else {
+                  new Future.delayed(const Duration(milliseconds: 2009))
+                      .then((val) {
+                    data.add(new Card(
+                      margin: new EdgeInsets.only(
+                          left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                      child: new Center(
+                        child: new Text('Data '),
+                      ),
+                    ));
+                    setState(() {});
+                    _refreshController.sendBack(false, RefreshStatus.completed);
+                  });
+                }
+              },
+              onOffsetChange: _onOffsetCallback,
+              child:
+              new ListView.builder(
                 itemExtent: 100.0,
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   return data[index];
                 },
               ),
-            ));
+            )
+          ],
+        ));
   }
 }

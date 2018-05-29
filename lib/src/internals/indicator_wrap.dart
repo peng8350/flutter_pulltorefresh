@@ -165,7 +165,12 @@ class RefreshWrapperState extends State<RefreshWrapper>
     this._sizeController = new AnimationController(
         vsync: this,
         lowerBound: minSpace,
-        duration: const Duration(milliseconds: spaceAnimateMill));
+        duration: const Duration(milliseconds: spaceAnimateMill))
+    ..addListener((){
+      if(widget.onOffsetChange!=null){
+        widget.onOffsetChange(widget.up,_sizeController.value*widget.visibleRange);
+      }
+    });
     widget.modeListener.addListener(() {
       switch (mode) {
         case RefreshStatus.refreshing:
