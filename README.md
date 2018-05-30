@@ -3,13 +3,13 @@
 ## Intro
 a widget provided to the flutter scroll component drop-down refresh and pull up load.support android and ios.
 If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter_pulltorefresh/blob/master/README_CN.md))
-(Still in the development stage, the function is not perfect)
+
 
 
 ## Features
 * Android and iOS both spported
 * pull up and pull down
-* It's almost fit for all witgets,like GridView,ListView,Container,Text...
+* It's almost fit for all witgets,like GridView,ListView,Container...
 * High extensibility,High degree of freedom
 * powerful Bouncing
 
@@ -44,22 +44,19 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
    
     new SmartRefresher(
         enablePullDown: true,
-        enablePullUp: true, 
+        enablePullUp: true,
         onRefresh: _onRefresh,
         onOffsetChange: _onOffsetCallback,
-        child: new Container(
-          color: Colors.white,
-          child: new ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemExtent: 40.0,
-            itemCount: data.length,
-            itemBuilder: (context,index){
-              return data[index];
-            },
+        child: new ListView.builder(
+                           physics: const NeverScrollableScrollPhysics(),
+                           shrinkWrap: true,
+                           itemExtent: 40.0,
+                           itemCount: data.length,
+                           itemBuilder: (context,index){
+                             return data[index];
+                           },
 
-          ),
-        )
+                         )
     )
 
 ```
@@ -113,7 +110,6 @@ But how can I tell the result to SmartRefresher? It's very simple. It provides a
 ```
 
 
-
 ## Props Table
 
 SmartRefresher:
@@ -132,9 +128,6 @@ SmartRefresher:
 | footerConfig |  This setting will affect which type of indicator you use and config contains a lot props,such as triigerDistance,completedurtion...    | Config | LoadConfig | optional |
 | enableOverScroll |  the switch of Overscroll,When you use  RefreshIndicator(Material), you may have to shut down.    | bool | true | optional |
 
-## Attention point
-1.The component is unbounded, so when you use it, be careful about the problems caused by the height, especially the column, stack, which is also a control of unrestricted height, to be extra careful.
- 
  
 ## LICENSE
  

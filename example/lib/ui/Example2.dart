@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert' show json;
 import 'package:flutter/material.dart';
@@ -19,7 +18,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
   void _fetch() {
     HTTP
         .get(
-        'http://image.baidu.com/channel/listjson?pn=$indexPage&rn=30&tag1=%E6%98%8E%E6%98%9F&tag2=%E5%85%A8%E9%83%A8&ie=utf8')
+            'http://image.baidu.com/channel/listjson?pn=$indexPage&rn=30&tag1=%E6%98%8E%E6%98%9F&tag2=%E5%85%A8%E9%83%A8&ie=utf8')
         .then((HTTP.Response response) {
       Map map = json.decode(response.body);
 
@@ -50,7 +49,9 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
   }
 
   Widget buildImage(context, index) {
-    return new Item(url: data[index],);
+    return new Item(
+      url: data[index],
+    );
   }
 
   void _onOffsetCallback(bool isUp, double offset) {
@@ -93,10 +94,9 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       child: new StaggeredGridView.countBuilder(
         crossAxisCount: 4,
         itemCount: data.length,
-
         itemBuilder: buildImage,
         staggeredTileBuilder: (int index) =>
-        new StaggeredTile.count(2, index.isEven ? 2 : 1),
+            new StaggeredTile.count(2, index.isEven ? 2 : 1),
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
       ),
@@ -105,7 +105,6 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
 }
 
 class Item extends StatefulWidget {
-
   final String url;
 
   Item({this.url});
@@ -118,11 +117,14 @@ class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
     if (widget.url == null) return new Container();
-    return new Image.network(
-      widget.url,
-      fit: BoxFit.cover,
+    return new RepaintBoundary(
+      child: new Image.network(
+        widget.url,
+        fit: BoxFit.cover,
+      ),
     );
   }
+
   @override
   void dispose() {
     // TODO: implement dispose

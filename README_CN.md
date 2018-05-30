@@ -2,12 +2,12 @@
 
 ## 介绍
 一个提供上拉加载和下拉刷新的组件,同时支持Android和Ios
-(仍然处于开发阶段中,功能善未完全)
+
 
 ## 特性
 * 同时支持Android,IOS
 * 提供上拉加载和下拉刷新
-* 几乎适合所有的部件,例如GridView,ListView,Container,Text...
+* 几乎适合所有的部件,例如GridView,ListView,Container...
 * 高度扩展性和很低的限制性
 * 灵活的回弹能力
 
@@ -43,18 +43,15 @@
           enablePullUp: true,
           onRefresh: _onRefresh,
           onOffsetChange: _onOffsetCallback,
-          child: new Container(
-            color: Colors.white,
-            child: new ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemExtent: 40.0,
-              itemCount: data.length,
-              itemBuilder: (context,index){
-                return data[index];
-              },
+          child: new ListView.builder(
+                               physics: const NeverScrollableScrollPhysics(),
+                               shrinkWrap: true,
+                               itemExtent: 40.0,
+                               itemCount: data.length,
+                               itemBuilder: (context,index){
+                                 return data[index];
+                               },
 
-            ),
           )
       )
 
@@ -129,10 +126,6 @@ sendBack(int status)就可以告诉它返回什么状态。
 | enableOverScroll |  越界回弹的开关,如果你要配合RefreshIndicator(material包)使用,有可能要关闭    | bool | true | optional |
 
 
-
-## 注意点
-1.组件是无界的，所以当你使用它时，要小心由高度引起的问题，特别是Column、Stack，这也是对无限制高度的控制，要格外小心。
- 
 ## 开源协议
  
  ```
