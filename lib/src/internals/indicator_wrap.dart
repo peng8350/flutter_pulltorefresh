@@ -290,6 +290,15 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
   @override
   void onDragEnd(ScrollNotification notification) {
     // TODO: implement onDragEnd
+    if (widget._isRefreshing || widget._isComplete) return;
+    if (widget.autoLoad) {
+      if (widget.up &&
+          notification.metrics.extentBefore <= widget.triggerDistance)
+        widget.mode = RefreshStatus.refreshing;
+      if (!widget.up &&
+          notification.metrics.extentAfter <= widget.triggerDistance)
+        widget.mode = RefreshStatus.refreshing;
+    }
   }
 }
 
