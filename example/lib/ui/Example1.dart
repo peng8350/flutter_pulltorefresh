@@ -61,8 +61,7 @@ class _Example1State extends State<Example1> {
             enablePullDown: true,
             enablePullUp: false,
             controller: _refreshController,
-            headerBuilder: _headerCreate
-            ,
+
             footerConfig: new LoadConfig(enableOverScroll: false),
             headerConfig: new LoadConfig(enableOverScroll: false),
 

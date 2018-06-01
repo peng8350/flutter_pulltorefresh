@@ -12,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/internals/indicator_config.dart';
 import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
+import 'indicator/classic_indicator.dart';
 import 'dart:math' as math;
 
 enum WrapperType { Refresh, Loading }
@@ -52,8 +53,8 @@ class SmartRefresher extends StatefulWidget {
   SmartRefresher({
     Key key,
     @required this.child,
-    this.headerBuilder,
-    this.footerBuilder,
+    IndicatorBuilder headerBuilder,
+    IndicatorBuilder footerBuilder,
     RefreshController controller,
     this.headerConfig: const RefreshConfig(),
     this.footerConfig: const LoadConfig(),
@@ -63,7 +64,8 @@ class SmartRefresher extends StatefulWidget {
     this.onRefresh,
     this.onOffsetChange,
   })  : assert(child != null),
-        controller = controller ?? new RefreshController(),
+        controller = controller ?? new RefreshController(),this.headerBuilder= headerBuilder ?? ((BuildContext context, int mode){return new ClassicIndicator(mode:mode);}),
+        this.footerBuilder= footerBuilder ?? ((BuildContext context, int mode){return new ClassicIndicator(mode:mode);}),
         super(key: key);
 
   @override
