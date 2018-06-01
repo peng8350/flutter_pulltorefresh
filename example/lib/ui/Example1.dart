@@ -17,7 +17,7 @@ class _Example1State extends State<Example1> {
     for (int i = 0; i < 14; i++) {
       data.add(new Card(
         margin:
-        new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+            new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
         child: new Center(
           child: new Text('Data $i'),
         ),
@@ -28,8 +28,6 @@ class _Example1State extends State<Example1> {
   void enterRefresh() {
     _refreshController.requestRefresh(true);
   }
-
-
 
   void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
@@ -43,12 +41,14 @@ class _Example1State extends State<Example1> {
     super.initState();
   }
 
-  Widget _headerCreate(BuildContext context,int mode){
-    return new ClassicIndicator(mode: mode,refreshingText: "",idleIcon: new Container(),idleText: "Load more...",);
-
+  Widget _headerCreate(BuildContext context, int mode) {
+    return new ClassicIndicator(
+      mode: mode,
+      refreshingText: "",
+      idleIcon: new Container(),
+      idleText: "Load more...",
+    );
   }
-
-
 
 //  Widget _footerCreate(BuildContext context,int mode){
 //    return new ClassicIndicator(mode: mode);
@@ -61,26 +61,23 @@ class _Example1State extends State<Example1> {
             enablePullDown: true,
             enablePullUp: false,
             controller: _refreshController,
-
             footerConfig: new LoadConfig(enableOverScroll: false),
             headerConfig: new LoadConfig(enableOverScroll: false),
-
             onRefresh: (up) {
               if (up)
                 new Future.delayed(const Duration(milliseconds: 2009))
                     .then((val) {
-                    data.add(new Card(
-                      margin: new EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                      child: new Center(
-                        child: new Text('Data '),
-                      ),
-                    ));
-                  setState(() {
+                  data.add(new Card(
+                    margin: new EdgeInsets.only(
+                        left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                    child: new Center(
+                      child: new Text('Data '),
+                    ),
+                  ));
 
-                  });
-                  _refreshController.scrollTo(50.0);
+                  _refreshController.scrollTo(_refreshController.scrollController.offset+100.0);
                   _refreshController.sendBack(true, RefreshStatus.idle);
+                  setState(() {});
 //                refresher.sendStatus(RefreshStatus.completed);
                 });
               else {
@@ -98,17 +95,15 @@ class _Example1State extends State<Example1> {
                 });
               }
             },
-
             onOffsetChange: _onOffsetCallback,
             child: new ListView.builder(
               reverse: true,
               itemExtent: 100.0,
               itemCount: data.length,
-              itemBuilder: (context,index) => new Item(),
+              itemBuilder: (context, index) => new Item(),
             )));
   }
 }
-
 
 class Item extends StatefulWidget {
   @override
@@ -120,12 +115,13 @@ class _ItemState extends State<Item> {
   Widget build(BuildContext context) {
     return new Card(
       margin:
-      new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+          new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
       child: new Center(
         child: new Text('Data'),
       ),
     );
   }
+
   @override
   void dispose() {
     // TODO: implement dispose

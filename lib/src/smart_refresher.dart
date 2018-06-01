@@ -355,7 +355,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
               right: 0.0,
               child: new NotificationListener(
                 child: new CustomScrollView(
-                  physics: const RefreshScrollPhysics(),
+                  physics: new RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
                   controller: _scrollController,
                   slivers: slivers,
                 ),
