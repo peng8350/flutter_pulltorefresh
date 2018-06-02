@@ -60,3 +60,8 @@ Notice: This version of the code changes much, Api too
 * Fix contentList's item cannot be cached,Remove shrinkWrap,physics limit
 * Fix onOffsetChange callback error,In completion, failure, refresh state is also callback
 * Add unfollowIndicator implement in Demo(Example3)
+
+## 1.1.4
+* Fix enableOverScroll does not work
+* Add default IndicatorBuilder when headerBuilder or footerBuilder is null
+* Fix cannot loading when user loosen gesture and listview enter the rebounding
