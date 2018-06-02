@@ -59,10 +59,8 @@ class _Example1State extends State<Example1> {
     return new Container(
         child: new SmartRefresher(
             enablePullDown: true,
-            enablePullUp: false,
+            enablePullUp: true,
             controller: _refreshController,
-            footerConfig: new LoadConfig(enableOverScroll: false),
-            headerConfig: new LoadConfig(enableOverScroll: false),
             onRefresh: (up) {
               if (up)
                 new Future.delayed(const Duration(milliseconds: 2009))

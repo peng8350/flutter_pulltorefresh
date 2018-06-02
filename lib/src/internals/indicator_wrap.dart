@@ -158,6 +158,44 @@ class RefreshWrapperState extends State<RefreshWrapper>
     }
   }
 
+  void _handleOffsetCallBack() {
+    if (widget.onOffsetChange != null) {
+      widget.onOffsetChange(
+          widget.up, _sizeController.value * widget.visibleRange);
+    }
+  }
+
+  void _handleModeChange() {
+    switch (mode) {
+      case RefreshStatus.refreshing:
+        _sizeController.value = 1.0;
+        break;
+      case RefreshStatus.completed:
+        new Future.delayed(new Duration(milliseconds: widget.completeDuration),
+            () {
+          _dismiss();
+        });
+        break;
+      case RefreshStatus.failed:
+        new Future.delayed(new Duration(milliseconds: widget.completeDuration),
+            () {
+          _dismiss();
+        }).then((val) {
+          widget.mode = RefreshStatus.idle;
+        });
+        break;
+    }
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    widget.modeListener.removeListener(_handleModeChange);
+    _sizeController.removeListener(_handleOffsetCallBack);
+    super.dispose();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -166,34 +204,8 @@ class RefreshWrapperState extends State<RefreshWrapper>
         vsync: this,
         lowerBound: minSpace,
         duration: const Duration(milliseconds: spaceAnimateMill))
-      ..addListener(() {
-        if (widget.onOffsetChange != null) {
-          widget.onOffsetChange(
-              widget.up, _sizeController.value * widget.visibleRange);
-        }
-      });
-    widget.modeListener.addListener(() {
-      switch (mode) {
-        case RefreshStatus.refreshing:
-          _sizeController.value = 1.0;
-          break;
-        case RefreshStatus.completed:
-          new Future.delayed(
-              new Duration(milliseconds: widget.completeDuration), () {
-            _dismiss();
-          });
-          break;
-        case RefreshStatus.failed:
-          new Future.delayed(
-              new Duration(milliseconds: widget.completeDuration), () {
-            _dismiss();
-          }).then((val) {
-            widget.mode = RefreshStatus.idle;
-          });
-          break;
-      }
-      setState(() {});
-    });
+      ..addListener(_handleOffsetCallBack);
+    widget.modeListener.addListener(_handleModeChange);
   }
 
   @override
@@ -250,6 +262,8 @@ class LoadWrapper extends Wrapper {
 }
 
 class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
+  Function _updateListener;
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -260,9 +274,17 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.modeListener.addListener(() {
+    _updateListener = () {
       setState(() {});
-    });
+    };
+    widget.modeListener.addListener(_updateListener);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    widget.modeListener.removeListener(_updateListener);
+    super.dispose();
   }
 
   @override
