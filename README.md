@@ -129,6 +129,7 @@ SmartRefresher:
 | enableOverScroll |  the switch of Overscroll,When you use  RefreshIndicator(Material), you may have to shut down.    | bool | true | optional |
 
 RefreshConfig:
+
 | Attribute Name     |     Attribute Explain     |  Default Value  |
 |---------|--------------------------|:-----:|
 | triggerDistance      | Drag distance to trigger refresh   |   100.0 |
@@ -136,11 +137,15 @@ RefreshConfig:
 | visibleRange | The scope of the indicator can be seen(refresh state)    |  50.0 |
 
 LoadConfig:
+
 | Attribute Name     |     Attribute Explain     |  Default Value  |
 |---------|--------------------------|:-----:|
 | triggerDistance      | Drag distance to trigger loading   |   5.0 |
 | autoLoad | enable open Auto Load,If false triggerDistance is invalid    |  true |
 | bottomWhenBuild | Is it at the bottom of listView when it is loaded(When your header is LoadConfig)    |  true |
+
+## FAQ
+1.
 
 
 ## LICENSE

@@ -111,6 +111,7 @@ sendBack(int status)就可以告诉它返回什么状态。
 
 ## 属性表
 SmartRefresher:
+
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | child      | 你的内容部件   | ? extends ScrollView   |   null |  必要
@@ -126,6 +127,7 @@ SmartRefresher:
 | enableOverScroll |  越界回弹的开关,如果你要配合RefreshIndicator(material包)使用,有可能要关闭    | bool | true | optional |
 
 RefreshConfig:
+
 | Attribute Name     |     Attribute Explain     |  Default Value  |
 |---------|--------------------------|:-----:|
 | triggerDistance      | 触发刷新的距离   |   100.0 |
@@ -133,11 +135,19 @@ RefreshConfig:
 | visibleRange | 指示器的可见范围(刷新状态)    |  50.0 |
 
 LoadConfig:
+
 | Attribute Name     |     Attribute Explain     |  Default Value  |
 |---------|--------------------------|:-----:|
 | triggerDistance      | 加载的触发距离   |   5.0 |
 | autoLoad | 是否打开自动进入加载   |  true |
 | bottomWhenBuild | 是否加载时处于listView最底部(当你的header是LoadConfig)    |  true |
+
+## FAQ
+<h3>1.是否支持单纯RefreshIndicator(material)+上拉加载并且没有弹性的刷新组合?<br></h3>
+可以,只要设置节点属性enableOverScroll = false, enablePullDown = false,在外面包裹一个是否支持单纯RefreshIndicator就可以了,demo里example4已经给出了例子
+
+
+
 
 
 ## 开源协议
