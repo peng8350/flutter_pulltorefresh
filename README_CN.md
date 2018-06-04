@@ -144,10 +144,14 @@ LoadConfig:
 
 ## FAQ
 <h3>1.是否支持单纯RefreshIndicator(material)+上拉加载并且没有弹性的刷新组合?<br></h3>
-可以,只要设置节点属性enableOverScroll = false, enablePullDown = false,在外面包裹一个是否支持单纯RefreshIndicator就可以了,demo里example4已经给出了例子
+可以,只要设置节点属性enableOverScroll = false, enablePullDown = false,在外面包裹一个是否支持
+单纯RefreshIndicator就可以了,demo里[example4](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example4.dart)已经给出了例子
 
 <h3>2.是否支持不跟随列表的指示器?<br></h3>
-这个我没有在库里面封装，因为就算我封装了,只会让代码逻辑复杂度增加,所以需要你自己利用onOffsetChange这个回调方法来实现,不难,利用Stack这个东西来封装,具体可以参考Example3或者我的项目flutter_gank也有实现的思路
+这个我没有在库里面封装，因为就算我封装了,只会让代码逻辑复杂度增加,所以需要你自己利用onOffsetChange
+这个回调方法来实现,不难,利用Stack这个东西来封装,具体可以参考[Example3](https://github.com/peng
+8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart)或者我的项目
+[flutter_gank](https://github.com/peng8350/flutter_gank)也有实现的思路
 
 <h3>3.为什么child属性从原来widget扩大到scrollView?<br></h3>
 因为本人疏忽的原因,没有考虑到child需要缓存里面的item的问题,所以1.1.3版本已经修正不能缓存的问题

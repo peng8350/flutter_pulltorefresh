@@ -146,14 +146,16 @@ LoadConfig:
 
 ## FAQ
 <h3>1.Does it support simple RefreshIndicator (material) + pull up loading and no elastic refresh combination?<br></h3>
-Yes, as long as you set the node properties enableOverScroll = false, enablePullDown = false, it's OK to wrap a single RefreshIndicator outside, and example4 has given an example in demo.
+Yes, as long as you set the node properties enableOverScroll = false, enablePullDown = false, it's OK to wrap a single RefreshIndicator outside, and [Example4]
+(https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart) has given an example in demo.
 
 <h3>2.Does it support an indicator that does not follow the list?<br></h3>
 This I did not package in the library, because even if I encapsulated,
 it would only make the logic complexity of the code increased,
 so you need yourself to use the onOffsetChange callback method to implement it.
 It is not difficult to use Stack to encapsulate it. It can refer to the idea of
- Example3 or my project flutter_gank.
+[Example3](https://github.com/peng
+8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart) or my project [flutter_gank](https://github.com/peng8350/flutter_gank).
 
 <h3>3.Why does child attribute extend from original widget to scrollView?<br></h3>
 Because of my negligence, I didn't take into account the problem that child needed to cache the item,
