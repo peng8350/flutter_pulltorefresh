@@ -128,7 +128,21 @@ SmartRefresher:
 | footerConfig |  This setting will affect which type of indicator you use and config contains a lot props,such as triigerDistance,completedurtion...    | Config | LoadConfig | optional |
 | enableOverScroll |  the switch of Overscroll,When you use  RefreshIndicator(Material), you may have to shut down.    | bool | true | optional |
 
- 
+RefreshConfig:
+| Attribute Name     |     Attribute Explain     |  Default Value  |
+|---------|--------------------------|:-----:|
+| triggerDistance      | Drag distance to trigger refresh   |   100.0 |
+| completeDuration | Stay in time when you return to success and failure     |  800 |
+| visibleRange | The scope of the indicator can be seen(refresh state)    |  50.0 |
+
+LoadConfig:
+| Attribute Name     |     Attribute Explain     |  Default Value  |
+|---------|--------------------------|:-----:|
+| triggerDistance      | Drag distance to trigger loading   |   5.0 |
+| autoLoad | enable open Auto Load,If false triggerDistance is invalid    |  true |
+| bottomWhenBuild | Is it at the bottom of listView when it is loaded(When your header is LoadConfig)    |  true |
+
+
 ## LICENSE
  
  ```

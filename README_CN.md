@@ -110,7 +110,7 @@ sendBack(int status)就可以告诉它返回什么状态。
 
 
 ## 属性表
-
+SmartRefresher:
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | child      | 你的内容部件   | ? extends ScrollView   |   null |  必要
@@ -124,6 +124,20 @@ sendBack(int status)就可以告诉它返回什么状态。
 | headerConfig |  这个设置会影响你使用哪种指示器,config还有几个属性可以设置   | Config | RefreshConfig | optional |
 | footerConfig |  这个设置会影响你使用哪种指示器,config还有几个属性可以设置     | Config | LoadConfig | optional |
 | enableOverScroll |  越界回弹的开关,如果你要配合RefreshIndicator(material包)使用,有可能要关闭    | bool | true | optional |
+
+RefreshConfig:
+| Attribute Name     |     Attribute Explain     |  Default Value  |
+|---------|--------------------------|:-----:|
+| triggerDistance      | 触发刷新的距离   |   100.0 |
+| completeDuration | 返回成功和失败时的停留时间     |  800 |
+| visibleRange | 指示器的可见范围(刷新状态)    |  50.0 |
+
+LoadConfig:
+| Attribute Name     |     Attribute Explain     |  Default Value  |
+|---------|--------------------------|:-----:|
+| triggerDistance      | 加载的触发距离   |   5.0 |
+| autoLoad | 是否打开自动进入加载   |  true |
+| bottomWhenBuild | 是否加载时处于listView最底部(当你的header是LoadConfig)    |  true |
 
 
 ## 开源协议
