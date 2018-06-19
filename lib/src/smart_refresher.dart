@@ -263,11 +263,11 @@ class _SmartRefresherState extends State<SmartRefresher> {
       _didChangeMode(false, bottomModeLis);
     });
     setState(() {
-      if (widget.enablePullDown)
-        _headerHeight = _headerKey.currentContext.size.height;
-      if (widget.enablePullUp) {
-        _footerHeight = _footerKey.currentContext.size.height;
-      }
+//      if (widget.enablePullDown)
+//        _headerHeight = _headerKey.currentContext.size.height;
+//      if (widget.enablePullUp) {
+//        _footerHeight = _footerKey.currentContext.size.height;
+//      }
     });
   }
 
@@ -332,7 +332,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> slivers = widget.child.buildSlivers(context);
+    List<Widget> slivers =new List.from(widget.child.buildSlivers(context),growable: true);
     slivers.add(new SliverToBoxAdapter(
       child: widget.footerBuilder != null && widget.enablePullUp
           ? _buildWrapperByConfig(widget.footerConfig, false)
@@ -360,7 +360,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
                 child: new CustomScrollView(
                   physics: new RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
                   controller: _scrollController,
-                  slivers: slivers,
+                  slivers:  slivers,
                 ),
                 onNotification: _dispatchScrollEvent,
               )),

@@ -12,8 +12,11 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   List<Widget> data = [];
   RefreshController _refreshController;
   void _getDatas() {
-    for (int i = 0; i < 8; i++) {
-      data.add(new Text('Data $i'));
+    for (int i = 0; i < 18; i++) {
+      data.add(new Container(
+        child: new Text('Data $i'),
+        height: 50.0,
+      ));
     }
   }
 
@@ -27,6 +30,14 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+//    new ListView.builder(
+//      itemExtent: 100.0,
+//      itemCount: data.length,
+//
+//      itemBuilder: (context, index) {
+//        return data[index];
+//      },
+//    )
     return new RefreshIndicator(
         child: new SmartRefresher(
             enablePullDown: false,
@@ -46,14 +57,11 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
             onOffsetChange: (bool up,double offset){
               print("$up:$offset");
             },
-            child: new ListView.builder(
-              itemExtent: 100.0,
-              itemCount: data.length,
+            child: new CustomScrollView(
+              slivers: [new SliverList(delegate: new SliverChildListDelegate(data,addRepaintBoundaries: true))],
+            )
 
-              itemBuilder: (context, index) {
-                return data[index];
-              },
-            )),
+            ),
         onRefresh: () {
           return new Future.delayed(const Duration(milliseconds: 300));
         });
