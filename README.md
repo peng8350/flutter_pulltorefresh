@@ -146,16 +146,15 @@ LoadConfig:
 
 ## FAQ
 <h3>1.Does it support simple RefreshIndicator (material) + pull up loading and no elastic refresh combination?<br></h3>
-Yes, as long as you set the node properties enableOverScroll = false, enablePullDown = false, it's OK to wrap a single RefreshIndicator outside, and [Example4]
-(https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart) has given an example in demo.
+Yes, as long as you set the node properties enableOverScroll = false, enablePullDown = false, it's OK to wrap a single RefreshIndicator outside, and
+[Example4](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart) has given an example in demo.
 
 <h3>2.Does it support an indicator that does not follow the list?<br></h3>
 This I did not package in the library, because even if I encapsulated,
 it would only make the logic complexity of the code increased,
 so you need yourself to use the onOffsetChange callback method to implement it.
 It is not difficult to use Stack to encapsulate it. It can refer to the idea of
-[Example3](https://github.com/peng
-8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart) or my project [flutter_gank](https://github.com/peng8350/flutter_gank).
+[Example3](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart) or my project [flutter_gank](https://github.com/peng8350/flutter_gank).
 
 <h3>3.Why does child attribute extend from original widget to scrollView?<br></h3>
 Because of my negligence, I didn't take into account the problem that child needed to cache the item,
@@ -171,6 +170,8 @@ The answer is negative. I know that it must be done by modifying the ScrollPhysi
 but I am not quite sure about the Api in it, but I failed.
 If you have a way to solve this problem, please come to a PR
 
+<h3>6.How to trigger refresh actively?</h3>
+Call controller.sendBack (RefreshStatus.refreshing);
 
 ## LICENSE
  
