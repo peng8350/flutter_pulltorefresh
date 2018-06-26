@@ -15,8 +15,7 @@
 ## 截图
 ![](arts/screen1.gif)
 ![](arts/screen2.gif)<br>
-1.1.0(开始支持翻转下的ScrollView)
-![](arts/screen3.gif)<br>
+
 
 ## 我该怎么用?
 1.第一步,在你的pubspec.yml声明
@@ -44,8 +43,7 @@
           onRefresh: _onRefresh,
           onOffsetChange: _onOffsetCallback,
           child: new ListView.builder(
-                               physics: const NeverScrollableScrollPhysics(),
-                               shrinkWrap: true,
+
                                itemExtent: 40.0,
                                itemCount: data.length,
                                itemBuilder: (context,index){
@@ -163,8 +161,6 @@ LoadConfig:
 答案是否定的,我知道肯定是要通过修改ScrollPhysics里面的来实现,但我对里面的Api不太明白,尝试过但失败了。如果
 你有办法解决这个问题的话,请来个PR
 
-<h3>6.如何主动触发刷新?</h3>
-调用controller.sendBack(RefreshStatus.refreshing);
 
 ## 开源协议
  

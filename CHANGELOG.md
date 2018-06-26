@@ -65,3 +65,8 @@ Notice: This version of the code changes much, Api too
 * Fix enableOverScroll does not work
 * Add default IndicatorBuilder when headerBuilder or footerBuilder is null
 * Fix cannot loading when user loosen gesture and listview enter the rebounding
+
+## 1.1.5
+* Fix problem of offsetChange
+* Fix CustomScrollView didn't work
+* Fix refreshIcon not reference in ClassialIndicator

@@ -16,8 +16,6 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ## Screenshots
 ![](arts/screen1.gif)
 ![](arts/screen2.gif)<br>
-1.1.0(support reverse ScrollView)
-![](arts/screen3.gif)<br>
 
 
 
@@ -48,8 +46,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
         onRefresh: _onRefresh,
         onOffsetChange: _onOffsetCallback,
         child: new ListView.builder(
-                           physics: const NeverScrollableScrollPhysics(),
-                           shrinkWrap: true,
+
                            itemExtent: 40.0,
                            itemCount: data.length,
                            itemBuilder: (context,index){
@@ -170,8 +167,7 @@ The answer is negative. I know that it must be done by modifying the ScrollPhysi
 but I am not quite sure about the Api in it, but I failed.
 If you have a way to solve this problem, please come to a PR
 
-<h3>6.How to trigger refresh actively?</h3>
-Call controller.sendBack (RefreshStatus.refreshing);
+
 
 ## LICENSE
  
