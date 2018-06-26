@@ -142,27 +142,27 @@ LoadConfig:
 | bottomWhenBuild | Is it at the bottom of listView when it is loaded(When your header is LoadConfig)    |  true |
 
 ## FAQ
-<h3>1.Does it support simple RefreshIndicator (material) + pull up loading and no elastic refresh combination?<br></h3>
+* <h3>Does it support simple RefreshIndicator (material) + pull up loading and no elastic refresh combination?<br></h3>
 Yes, as long as you set the node properties enableOverScroll = false, enablePullDown = false, it's OK to wrap a single RefreshIndicator outside, and
 [Example4](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart) has given an example in demo.
 
-<h3>2.Does it support an indicator that does not follow the list?<br></h3>
+* <h3>Does it support an indicator that does not follow the list?<br></h3>
 This I did not package in the library, because even if I encapsulated,
 it would only make the logic complexity of the code increased,
 so you need yourself to use the onOffsetChange callback method to implement it.
 It is not difficult to use Stack to encapsulate it. It can refer to the idea of
 [Example3](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart) or my project [flutter_gank](https://github.com/peng8350/flutter_gank).
 
-<h3>3.Why does child attribute extend from original widget to scrollView?<br></h3>
+* <h3>Why does child attribute extend from original widget to scrollView?<br></h3>
 Because of my negligence, I didn't take into account the problem that child needed to cache the item,
 so the 1.1.3 version had corrected the problem of not caching.
 
-<h3>4.What impact does this library have on performance?<br></h3>
+* <h3>What impact does this library have on performance?<br></h3>
 No, although I did not actually use data to test performance problems,
 I did not appear to pull up or pull down the sliding carton situation in
 the process of another project development.
 
-<h3>5.Is there any way to achieve the maximum distance to limit springback?<br></h3>
+* <h3>Is there any way to achieve the maximum distance to limit springback?<br></h3>
 The answer is negative. I know that it must be done by modifying the ScrollPhysics,
 but I am not quite sure about the Api in it, but I failed.
 If you have a way to solve this problem, please come to a PR
