@@ -182,28 +182,21 @@ class _SmartRefresherState extends State<SmartRefresher> {
   void _handleOffsetCallback(){
     final double overscrollPastStart = math.max(
         _scrollController.position.minScrollExtent -
-            _scrollController.position.pixels,
+            _scrollController.position.pixels+(widget.headerConfig is RefreshConfig&&(topModeLis.value == RefreshStatus.refreshing ||
+            topModeLis.value == RefreshStatus.completed ||
+            topModeLis.value == RefreshStatus.failed)?(widget.headerConfig as RefreshConfig).visibleRange:0.0),
         0.0);
     final double overscrollPastEnd = math.max(
         _scrollController.position.pixels -
-            _scrollController.position.maxScrollExtent,
+            _scrollController.position.maxScrollExtent+(widget.footerConfig is RefreshConfig&&(bottomModeLis.value == RefreshStatus.refreshing ||
+            bottomModeLis.value == RefreshStatus.completed ||
+            bottomModeLis.value == RefreshStatus.failed)?(widget.footerConfig as RefreshConfig).visibleRange:0.0),
         0.0);
     if (overscrollPastStart > overscrollPastEnd) {
       if (widget.headerConfig is RefreshConfig) {
-        if (topModeLis.value == RefreshStatus.refreshing ||
-            topModeLis.value == RefreshStatus.completed ||
-            topModeLis.value == RefreshStatus.failed) {
-          if (widget.onOffsetChange != null) {
-            widget.onOffsetChange(
-                true,
-                overscrollPastStart +
-                    (widget.headerConfig as RefreshConfig).visibleRange);
-          }
-        } else {
           if (widget.onOffsetChange != null) {
             widget.onOffsetChange(true, overscrollPastStart);
           }
-        }
       } else {
         if (widget.onOffsetChange != null) {
           widget.onOffsetChange(true, overscrollPastStart);
@@ -211,20 +204,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
       }
     } else if (overscrollPastEnd > 0) {
       if (widget.footerConfig is RefreshConfig) {
-        if (bottomModeLis.value == RefreshStatus.refreshing ||
-            bottomModeLis.value == RefreshStatus.completed ||
-            bottomModeLis.value == RefreshStatus.failed) {
-          if (widget.onOffsetChange != null) {
-            widget.onOffsetChange(
-                false,
-                overscrollPastEnd +
-                    (widget.footerConfig as RefreshConfig).visibleRange);
-          }
-        } else {
           if (widget.onOffsetChange != null) {
             widget.onOffsetChange(false, overscrollPastEnd);
           }
-        }
       } else {
         if (widget.onOffsetChange != null) {
           widget.onOffsetChange(false, overscrollPastEnd);
