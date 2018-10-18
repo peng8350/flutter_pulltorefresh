@@ -102,7 +102,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
         If this value is 0, no controls will
         cause Flutter to automatically retrieve widget.
      */
-    _sizeController.animateTo(minSpace).then((Null val) {
+    _sizeController.animateTo(minSpace).then((var _) {
       widget.mode = RefreshStatus.idle;
     });
   }
