@@ -3,7 +3,6 @@ import 'dart:convert' show json;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as HTTP;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class Example2 extends StatefulWidget {
   @override
@@ -42,6 +41,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
 //                refresher.sendStatus(RefreshStatus.completed);
       });
     else {
+      print("sd");
       new Future.delayed(const Duration(milliseconds: 2009)).then((val) {
         _fetch();
       });
@@ -91,14 +91,10 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       footerBuilder: _footerCreate,
       footerConfig: new RefreshConfig(),
       onOffsetChange: _onOffsetCallback,
-      child: new StaggeredGridView.countBuilder(
-        crossAxisCount: 4,
+      child: new GridView.builder(
+        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: data.length,
         itemBuilder: buildImage,
-        staggeredTileBuilder: (int index) =>
-            new StaggeredTile.count(2, index.isEven ? 2 : 1),
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
       ),
     );
   }
