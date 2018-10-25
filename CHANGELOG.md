@@ -70,3 +70,6 @@ Notice: This version of the code changes much, Api too
 * Fix problem of offsetChange
 * Fix CustomScrollView didn't work
 * Fix refreshIcon not reference in ClassialIndicator
+
+## 1.1.6
+* Fix Compile error after flutter update
