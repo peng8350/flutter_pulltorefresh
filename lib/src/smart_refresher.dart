@@ -25,7 +25,7 @@ class RefreshStatus {
   static const int failed = 4;
   static const int noMore = 5;
 }
-
+typedef OnDidScroll(ScrollController controller);
 /*
     This is the most important component that provides drop-down refresh and up loading.
  */
@@ -49,7 +49,7 @@ class SmartRefresher extends StatefulWidget {
   final OnOffsetChange onOffsetChange;
   //controll inner state
   final RefreshController controller;
-
+  final OnDidScroll onDidScroll;
   SmartRefresher({
     Key key,
     @required this.child,
@@ -63,6 +63,7 @@ class SmartRefresher extends StatefulWidget {
     this.enablePullUp: default_enablePullUp,
     this.onRefresh,
     this.onOffsetChange,
+    this.onDidScroll,
   })  : assert(child != null),
         controller = controller ?? new RefreshController(),this.headerBuilder= headerBuilder ?? ((BuildContext context, int mode){return new ClassicIndicator(mode:mode);}),
         this.footerBuilder= footerBuilder ?? ((BuildContext context, int mode){return new ClassicIndicator(mode:mode);}),
@@ -213,6 +214,10 @@ class _SmartRefresherState extends State<SmartRefresher> {
         }
       }
     }
+    if(widget.onDidScroll) {
+      onDidScroll(_scrollController);
+    }
+    
   }
 
   _didChangeMode(bool up, ValueNotifier<int> mode) {
