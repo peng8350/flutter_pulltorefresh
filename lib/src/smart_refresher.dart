@@ -214,7 +214,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
         }
       }
     }
-    if(widget.onDidScroll) {
+    if(widget.onDidScroll != null) {
       onDidScroll(_scrollController);
     }
     
