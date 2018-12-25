@@ -149,8 +149,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
       return;
     }
     if (widget._isComplete || widget._isRefreshing) return;
-    bool reachMax = _measure(notification) >= 1.0;
-    if (!reachMax) {
+    if (widget.mode!=RefreshStatus.canRefresh) {
       _sizeController.animateTo(0.0);
       return;
     } else {
