@@ -13,17 +13,6 @@ class _Example1State extends State<Example1> {
 //  LoadMode loading = LoadMode.idle;
   RefreshController _refreshController;
   List<Widget> data = [];
-  void _getDatas() {
-    for (int i = 0; i < 14; i++) {
-      data.add(new Card(
-        margin:
-            new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-        child: new Center(
-          child: new Text('Data $i'),
-        ),
-      ));
-    }
-  }
 
   void enterRefresh() {
     _refreshController.requestRefresh(true);
@@ -36,7 +25,7 @@ class _Example1State extends State<Example1> {
   @override
   void initState() {
     // TODO: implement initState
-    _getDatas();
+    // _getDatas();
     _refreshController = new RefreshController();
     super.initState();
   }
@@ -56,50 +45,55 @@ class _Example1State extends State<Example1> {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Scaffold(
+    body: Container(
         child: new SmartRefresher(
             enablePullDown: true,
-            enablePullUp: true,
+            enablePullUp: false,
             controller: _refreshController,
-            onRefresh: (up) {
-              if (up)
-                new Future.delayed(const Duration(milliseconds: 2009))
-                    .then((val) {
+            onRefresh: () {
+              new Future.delayed(const Duration(seconds: 2)).then((val) {
+                data=List<Widget>();
+                for (int i = 0; i < 14; i++) {
                   data.add(new Card(
                     margin: new EdgeInsets.only(
                         left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
                     child: new Center(
-                      child: new Text('Data '),
+                      child: new Text('Data '+DateTime.now().toString()),
                     ),
                   ));
+                }
 
-                  _refreshController.scrollTo(_refreshController.scrollController.offset+100.0);
-                  _refreshController.sendBack(true, RefreshStatus.idle);
-                  setState(() {});
+                // _refreshController.scrollTo(
+                //     _refreshController.scrollController.offset+50);
+                _refreshController.endSuccess();
+                setState(() {});
 //                refresher.sendStatus(RefreshStatus.completed);
-                });
-              else {
-                new Future.delayed(const Duration(milliseconds: 2009))
-                    .then((val) {
-                  data.add(new Card(
-                    margin: new EdgeInsets.only(
-                        left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                    child: new Center(
-                      child: new Text('Data '),
-                    ),
-                  ));
-                  setState(() {});
-                  _refreshController.sendBack(false, RefreshStatus.idle);
-                });
-              }
+              });
+            },
+            onLoad: (page) {
+              new Future.delayed(const Duration(seconds: 1)).then((val) {
+                data.add(new Card(
+                  margin: new EdgeInsets.only(
+                      left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                  child: new Center(
+                    child: new Text('Data '+DateTime.now().toString()),
+                  ),
+                ));
+                setState(() {});
+                _refreshController.endSuccess(hasNext: false);
+              });
             },
             onOffsetChange: _onOffsetCallback,
             child: new ListView.builder(
               reverse: true,
               itemExtent: 100.0,
               itemCount: data.length,
-              itemBuilder: (context, index) => new Item(),
-            )));
+              itemBuilder: (context, index) => 
+                 data[index]
+              ,
+            )))
+    );
   }
 }
 

@@ -205,6 +205,9 @@ class RefreshWrapperState extends State<RefreshWrapper>
         duration: const Duration(milliseconds: spaceAnimateMill))
       ..addListener(_handleOffsetCallBack);
     widget.modeListener.addListener(_handleModeChange);
+    if(widget.modeListener.value==RefreshStatus.refreshing){
+      
+    }
   }
 
   @override
@@ -261,8 +264,7 @@ class LoadWrapper extends Wrapper {
 }
 
 class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
-  Function _updateListener;
-
+  Function _updateListener; 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -274,6 +276,7 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
     // TODO: implement initState
     super.initState();
     _updateListener = () {
+      
       setState(() {});
     };
     widget.modeListener.addListener(_updateListener);

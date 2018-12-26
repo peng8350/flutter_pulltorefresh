@@ -2,7 +2,7 @@ name: example
 description: A new Flutter project.
 
 dependencies:
-
+  http: ^0.12.0
 
   flutter:
     sdk: flutter

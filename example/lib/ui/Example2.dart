@@ -34,18 +34,19 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
     });
   }
 
-  void _onRefresh(bool up) {
-    if (up)
+  void _onRefresh() {
+     
       new Future.delayed(const Duration(milliseconds: 2009)).then((val) {
         _controller.sendBack(true, RefreshStatus.completed);
 //                refresher.sendStatus(RefreshStatus.completed);
       });
-    else {
-      print("sd");
+     
+  }
+  void _onLoad(page) {
+print("sd");
       new Future.delayed(const Duration(milliseconds: 2009)).then((val) {
         _fetch();
       });
-    }
   }
 
   Widget buildImage(context, index) {
@@ -87,6 +88,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       enablePullUp: true,
       controller: _controller,
       onRefresh: _onRefresh,
+      onLoad: _onLoad,
       headerBuilder: _headerCreate,
       footerBuilder: _footerCreate,
       footerConfig: new RefreshConfig(),

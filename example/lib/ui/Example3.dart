@@ -18,31 +18,16 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   RefreshController _refreshController;
   AnimationController _headControll, _footControll;
   List<Widget> data = [];
-  void _getDatas() {
-    for (int i = 0; i < 14; i++) {
-      data.add(new Container(
-        color:new Color.fromARGB(255, 250, 250, 250),
-        child: new Card(
-          margin:
-          new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-          child: new Center(
-            child: new Text('Data $i'),
-          ),
-        ),
-      ));
-    }
-  }
 
   void enterRefresh() {
-    _refreshController.requestRefresh(true);
+    _refreshController.triggerUpScroll();
   }
 
   void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
     if (isUp) {
       topOffsetLis.value = offset;
-    }
-    else{
+    } else {
       bottomOffsetLis.value = offset;
     }
 //    if (isUp) {
@@ -54,7 +39,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   @override
   void initState() {
     // TODO: implement initState
-    _getDatas();
+    // _getDatas();
     _refreshController = new RefreshController();
     _headControll = new AnimationController(
       vsync: this,
@@ -72,10 +57,8 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     topOffsetLis.addListener(() {
       setState(() {});
     });
-    bottomOffsetLis.addListener((){
-      setState(() {
-
-      });
+    bottomOffsetLis.addListener(() {
+      setState(() {});
     });
   }
 
@@ -95,7 +78,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         new Align(
           alignment: Alignment.topCenter,
           child: new ClipPath(
-            clipper: new CirclePainter(offset: topOffsetLis.value,up:true),
+            clipper: new CirclePainter(offset: topOffsetLis.value, up: true),
             child: new Container(
               color: const Color(0xffff0000),
               width: double.infinity,
@@ -105,7 +88,8 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         ),
         new Align(
           child: new ClipPath(
-            clipper: new CirclePainter(offset: bottomOffsetLis.value,up:false),
+            clipper:
+                new CirclePainter(offset: bottomOffsetLis.value, up: false),
             child: new Container(
               color: const Color(0xffff0000),
               width: double.infinity,
@@ -120,30 +104,42 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           headerBuilder: _headerCreate,
           footerBuilder: _headerCreate,
           footerConfig: new RefreshConfig(),
-          onRefresh: (up) {
-            if (up)
-              new Future.delayed(const Duration(milliseconds: 2009))
-                  .then((val) {
-                _refreshController.sendBack(true, RefreshStatus.failed);
-//                refresher.sendStatus(RefreshStatus.completed);
-              });
-            else {
-              new Future.delayed(const Duration(milliseconds: 2009))
-                  .then((val) {
+          onRefresh: () {
+            new Future.delayed(const Duration(milliseconds: 2009)).then((val) {
+              data = List<Widget>();
+              for (int i = 0; i < 14; i++) {
                 data.add(new Container(
-                  color:new Color.fromARGB(255, 250, 250, 250),
-                  child: new Card(
-                    margin:
-                    new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                    child: new Center(
-                      child: new Text('Data '),
-                    ),
+                    color: new Color.fromARGB(255, 250, 250, 250),
+                    child: new Card(
+                      margin: new EdgeInsets.only(
+                          left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                      child: new Center(
+                        child: new Text(
+                          'Data ' + DateTime.now().toString(),
+                        ),
+                      ),
+                    )));
+              }
+              _refreshController.endSuccess();
+//                refresher.sendStatus(RefreshStatus.completed);
+            });
+          },
+          onLoad: (page) {
+            print("onLoad");
+            new Future.delayed(const Duration(milliseconds: 2009)).then((val) {
+              data.add(new Container(
+                color: new Color.fromARGB(255, 250, 250, 250),
+                child: new Card(
+                  margin: new EdgeInsets.only(
+                      left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                  child: new Center(
+                    child: new Text('Data '+ DateTime.now().toString()),
                   ),
-                ));
-                setState(() {});
-                _refreshController.sendBack(false, RefreshStatus.completed);
-              });
-            }
+                ),
+              ));
+              setState(() {});
+              _refreshController.endSuccess();
+            });
           },
           onOffsetChange: _onOffsetCallback,
           child: new ListView.builder(
@@ -163,15 +159,20 @@ class CirclePainter extends CustomClipper<Path> {
   final double offset;
   final bool up;
 
-  CirclePainter({this.offset,this.up});
+  CirclePainter({this.offset, this.up});
 
   @override
   Path getClip(Size size) {
     // TODO: implement getClip
     final path = new Path();
-    if(!up)
-    path.moveTo(0.0, size.height);
-    path.cubicTo(0.0, up?0.0:size.height, size.width / 2, up?offset*2.3:size.height-offset*2.3, size.width, up?0.0:size.height);
+    if (!up) path.moveTo(0.0, size.height);
+    path.cubicTo(
+        0.0,
+        up ? 0.0 : size.height,
+        size.width / 2,
+        up ? offset * 2.3 : size.height - offset * 2.3,
+        size.width,
+        up ? 0.0 : size.height);
     path.close();
     return path;
   }

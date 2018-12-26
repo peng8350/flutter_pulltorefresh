@@ -48,11 +48,14 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
             },
             footerConfig: new LoadConfig(triggerDistance: 30.0),
             controller: _refreshController,
-            onRefresh: (up) {
+            onRefresh: () {
               new Future.delayed(const Duration(milliseconds: 1000))
                   .then((val) {
                 _refreshController.sendBack(false, RefreshStatus.idle);
               });
+            },
+            onLoad: (page){
+
             },
             onOffsetChange: (bool up,double offset){
               print("$up:$offset");

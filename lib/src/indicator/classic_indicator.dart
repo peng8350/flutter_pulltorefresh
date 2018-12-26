@@ -99,6 +99,7 @@ class _ClassicIndicatorState extends State<ClassicIndicator> {
 
   @override
   Widget build(BuildContext context) {
+    print("mod:"+widget.mode.toString());
     // TODO: implement buildContent
     Widget textWidget = _buildText();
     Widget iconWidget = _buildIcon();

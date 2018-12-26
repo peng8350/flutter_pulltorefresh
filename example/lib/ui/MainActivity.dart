@@ -45,7 +45,13 @@ class _MainActivityState extends State<MainActivity> {
         title: new Text(widget.title),
         actions: <Widget>[(tabIndex==2)?new MaterialButton(onPressed: (){
           example3Key.currentState.enterRefresh();
-        },child: new Text('refresh3',style: new TextStyle(color:Colors.white),)):new Container()],
+        },child: new Text('refresh3',style: new TextStyle(color:Colors.white),)):((tabIndex==0)?MaterialButton(onPressed: (){
+           Navigator.of(context)
+        .push(new MaterialPageRoute(builder: (BuildContext context) {
+      return Example1();
+    }));
+        },child: new Text('open',style: new TextStyle(color:Colors.white),)):
+          (Container()))],
       ),
       body: new Stack(
 

@@ -45,27 +45,43 @@ class SmartRefresher extends StatefulWidget {
   final bool enableOverScroll;
   // upper and downer callback when you drag out of the distance
   final OnRefresh onRefresh;
+  final OnLoad onLoad;
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;
   //controll inner state
   final RefreshController controller;
-
-  SmartRefresher({
-    Key key,
-    @required this.child,
-    IndicatorBuilder headerBuilder,
-    IndicatorBuilder footerBuilder,
-    RefreshController controller,
-    this.headerConfig: const RefreshConfig(),
-    this.footerConfig: const LoadConfig(),
-    this.enableOverScroll: default_enableOverScroll,
-    this.enablePullDown: default_enablePullDown,
-    this.enablePullUp: default_enablePullUp,
-    this.onRefresh,
-    this.onOffsetChange,
-  })  : assert(child != null),
-        controller = controller ?? new RefreshController(),this.headerBuilder= headerBuilder ?? ((BuildContext context, int mode){return new ClassicIndicator(mode:mode);}),
-        this.footerBuilder= footerBuilder ?? ((BuildContext context, int mode){return new ClassicIndicator(mode:mode);}),
+  final bool autoRefresh;
+  final bool autoLoad;
+  final int pageIndex;
+  final int pageSize;
+  SmartRefresher(
+      {Key key,
+      @required this.child,
+      IndicatorBuilder headerBuilder,
+      IndicatorBuilder footerBuilder,
+      RefreshController controller,
+      this.headerConfig: const RefreshConfig(),
+      this.footerConfig: const LoadConfig(),
+      this.enableOverScroll: default_enableOverScroll,
+      this.enablePullDown: default_enablePullDown,
+      this.enablePullUp: default_enablePullUp,
+      this.onRefresh,
+      this.onLoad,
+      this.onOffsetChange,
+      this.autoRefresh = true,
+      this.autoLoad = true,
+      this.pageIndex = 0,
+      this.pageSize = 20})
+      : assert(child != null),
+        controller = controller ?? new RefreshController(),
+        this.headerBuilder = headerBuilder ??
+            ((BuildContext context, int mode) {
+              return new ClassicIndicator(mode: mode);
+            }),
+        this.footerBuilder = footerBuilder ??
+            ((BuildContext context, int mode) {
+              return new ClassicIndicator(mode: mode);
+            }),
         super(key: key);
 
   @override
@@ -88,6 +104,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   ValueNotifier<int> bottomModeLis = new ValueNotifier(0);
 
+  Page _page;
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
     // This is used to interupt useless callback when the pull up load rolls back.
@@ -177,26 +194,47 @@ class _SmartRefresherState extends State<SmartRefresher> {
     _scrollController.addListener(_handleOffsetCallback);
     widget.controller._headerMode = topModeLis;
     widget.controller._footerMode = bottomModeLis;
+
+    _page = Page();
+    _page.index = widget.pageIndex;
+    _page.size = widget.pageSize;
+
+    widget.controller._page = _page;
+    if (widget.autoRefresh) {
+      topModeLis.value=RefreshStatus.refreshing;
+      widget.onRefresh();
+    } else if (widget.autoLoad) {
+      bottomModeLis.value=RefreshStatus.refreshing;
+      widget.onLoad(_page);
+    }
   }
 
-  void _handleOffsetCallback(){
+  void _handleOffsetCallback() {
     final double overscrollPastStart = math.max(
         _scrollController.position.minScrollExtent -
-            _scrollController.position.pixels+(widget.headerConfig is RefreshConfig&&(topModeLis.value == RefreshStatus.refreshing ||
-            topModeLis.value == RefreshStatus.completed ||
-            topModeLis.value == RefreshStatus.failed)?(widget.headerConfig as RefreshConfig).visibleRange:0.0),
+            _scrollController.position.pixels +
+            (widget.headerConfig is RefreshConfig &&
+                    (topModeLis.value == RefreshStatus.refreshing ||
+                        topModeLis.value == RefreshStatus.completed ||
+                        topModeLis.value == RefreshStatus.failed)
+                ? (widget.headerConfig as RefreshConfig).visibleRange
+                : 0.0),
         0.0);
     final double overscrollPastEnd = math.max(
         _scrollController.position.pixels -
-            _scrollController.position.maxScrollExtent+(widget.footerConfig is RefreshConfig&&(bottomModeLis.value == RefreshStatus.refreshing ||
-            bottomModeLis.value == RefreshStatus.completed ||
-            bottomModeLis.value == RefreshStatus.failed)?(widget.footerConfig as RefreshConfig).visibleRange:0.0),
+            _scrollController.position.maxScrollExtent +
+            (widget.footerConfig is RefreshConfig &&
+                    (bottomModeLis.value == RefreshStatus.refreshing ||
+                        bottomModeLis.value == RefreshStatus.completed ||
+                        bottomModeLis.value == RefreshStatus.failed)
+                ? (widget.footerConfig as RefreshConfig).visibleRange
+                : 0.0),
         0.0);
     if (overscrollPastStart > overscrollPastEnd) {
       if (widget.headerConfig is RefreshConfig) {
-          if (widget.onOffsetChange != null) {
-            widget.onOffsetChange(true, overscrollPastStart);
-          }
+        if (widget.onOffsetChange != null) {
+          widget.onOffsetChange(true, overscrollPastStart);
+        }
       } else {
         if (widget.onOffsetChange != null) {
           widget.onOffsetChange(true, overscrollPastStart);
@@ -204,9 +242,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
       }
     } else if (overscrollPastEnd > 0) {
       if (widget.footerConfig is RefreshConfig) {
-          if (widget.onOffsetChange != null) {
-            widget.onOffsetChange(false, overscrollPastEnd);
-          }
+        if (widget.onOffsetChange != null) {
+          widget.onOffsetChange(false, overscrollPastEnd);
+        }
       } else {
         if (widget.onOffsetChange != null) {
           widget.onOffsetChange(false, overscrollPastEnd);
@@ -218,8 +256,12 @@ class _SmartRefresherState extends State<SmartRefresher> {
   _didChangeMode(bool up, ValueNotifier<int> mode) {
     switch (mode.value) {
       case RefreshStatus.refreshing:
-        if (widget.onRefresh != null) {
-          widget.onRefresh(up);
+        if (up && widget.onRefresh != null) {
+          _page.index = 1;
+          widget.onRefresh();
+        } else if (widget.onLoad != null) {
+          _page.index++;
+          widget.onLoad(_page);
         }
         if (up && widget.headerConfig is RefreshConfig) {
           RefreshConfig config = widget.headerConfig as RefreshConfig;
@@ -314,7 +356,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> slivers =new List.from(widget.child.buildSlivers(context),growable: true);
+    List<Widget> slivers =
+        new List.from(widget.child.buildSlivers(context), growable: true);
     slivers.add(new SliverToBoxAdapter(
       child: widget.footerBuilder != null && widget.enablePullUp
           ? _buildWrapperByConfig(widget.footerConfig, false)
@@ -340,9 +383,10 @@ class _SmartRefresherState extends State<SmartRefresher> {
               right: 0.0,
               child: new NotificationListener(
                 child: new CustomScrollView(
-                  physics: new RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
+                  physics: new RefreshScrollPhysics(
+                      enableOverScroll: widget.enableOverScroll),
                   controller: _scrollController,
-                  slivers:  slivers,
+                  slivers: slivers,
                 ),
                 onNotification: _dispatchScrollEvent,
               )),
@@ -361,10 +405,13 @@ abstract class Indicator extends StatefulWidget {
 class RefreshController {
   ValueNotifier<int> _headerMode;
   ValueNotifier<int> _footerMode;
+  Page _page;
+
   ScrollController scrollController;
 
   void requestRefresh(bool up) {
     if (up) {
+      scrollController.jumpTo(-60);
       if (_headerMode.value == RefreshStatus.idle)
         _headerMode.value = RefreshStatus.refreshing;
     } else {
@@ -380,9 +427,89 @@ class RefreshController {
 
   void sendBack(bool up, int mode) {
     if (up) {
+      // scrollController.jumpTo(
+      //               scrollController.offset);
       _headerMode.value = mode;
     } else {
       _footerMode.value = mode;
+    }
+  }
+
+  ///不填写参数则更新下拉状态
+  ///dataSize当前页数据量 控制是否可以继续下拉还是现实end
+  ///hasNext是否有下一页 控制是否可以继续下拉还是现实end
+  void endSuccess({
+    int dataSize,
+    bool hasNext,
+  }) {
+    if (dataSize == null && hasNext == null) {
+      _headerMode.value = RefreshStatus.completed;
+      _footerMode.value = RefreshStatus.idle;
+    } else if (!hasNext || dataSize < _page.size) {
+      _footerMode.value = RefreshStatus.noMore;
+    } else {
+      _footerMode.value = RefreshStatus.completed;
+    }
+  }
+
+  ///dataSize : 当前页获取的数据总数(注意是当前页)
+  ///totalPage : 列表的总页数
+  void endByPage({
+    int dataSize,
+    int totalPage,
+  }) {
+    if (dataSize == null && totalPage == null) {
+      _headerMode.value = RefreshStatus.idle;
+    } else if (totalPage == _page.index + 1 || dataSize < _page.size) {
+      _footerMode.value = RefreshStatus.noMore;
+    } else {
+      _footerMode.value = RefreshStatus.idle;
+    }
+  }
+
+  ///dataSize : 当前页获取的数据总数(注意是当前页)
+  ///totalSize : 列表的总数据量
+
+  void endBySize({
+    int dataSize,
+    int totalSize,
+  }) {
+    if (dataSize == null && totalSize == null) {
+      _headerMode.value = RefreshStatus.idle;
+    } else if (totalSize <= (_page.index + 1) * _page.size ||
+        dataSize < _page.size) {
+      _footerMode.value = RefreshStatus.noMore;
+    } else {
+      _footerMode.value = RefreshStatus.idle;
+    }
+  }
+
+  ///隐藏下拉刷新和上拉加载的状态, 在联网获取数据失败后调用;
+  void endErr() {
+    if (_page.index != 0) {
+      _page.index--;
+    }
+    _footerMode.value = RefreshStatus.failed;
+    _headerMode.value = RefreshStatus.failed;
+  }
+
+  ///主动触发下拉刷新
+  void triggerDownScroll() {
+    // scrollController.jumpTo(-60);
+    if (_headerMode.value == RefreshStatus.idle)
+    {
+      _page.index=0;
+      _headerMode.value = RefreshStatus.refreshing;
+    }
+  }
+
+  ///主动触发上拉加载
+  void triggerUpScroll() {
+    print("triggerUpScroll");
+    // scrollController.jumpTo(9999);
+    if (_footerMode.value == RefreshStatus.idle) {
+       _page.index++;
+      _footerMode.value = RefreshStatus.refreshing;
     }
   }
 

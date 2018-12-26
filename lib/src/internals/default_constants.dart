@@ -5,9 +5,12 @@ import 'package:flutter/widgets.dart';
     Email: peng8350@gmail.com
     createTime:2018-05-17 10:39
  */
-
-
-typedef void OnRefresh(bool up);
+class Page{
+  int index;
+  int size;
+}
+typedef void OnRefresh();
+typedef void OnLoad(Page up);
 typedef void OnOffsetChange(bool up, double offset);
 typedef Widget IndicatorBuilder(BuildContext context, int mode);
 
