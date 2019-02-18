@@ -49,6 +49,10 @@ class SmartRefresher extends StatefulWidget {
   final OnOffsetChange onOffsetChange;
   //controll inner state
   final RefreshController controller;
+  // auto
+  final bool enableAutoScroll;
+  //
+  final String autoScrollDirection;
 
   SmartRefresher({
     Key key,
@@ -62,14 +66,26 @@ class SmartRefresher extends StatefulWidget {
     this.enablePullDown: default_enablePullDown,
     this.enablePullUp: default_enablePullUp,
     this.onRefresh,
+    this.enableAutoScroll: false,
+    this.autoScrollDirection: AUTOSCROLL_BOTTOM,
     this.onOffsetChange,
   })  : assert(child != null),
-        controller = controller ?? new RefreshController(),this.headerBuilder= headerBuilder ?? ((BuildContext context, int mode){return new ClassicIndicator(mode:mode);}),
-        this.footerBuilder= footerBuilder ?? ((BuildContext context, int mode){return new ClassicIndicator(mode:mode);}),
+        controller = controller ?? new RefreshController(),
+        this.headerBuilder = headerBuilder ??
+            ((BuildContext context, int mode) {
+              return new ClassicIndicator(mode: mode);
+            }),
+        this.footerBuilder = footerBuilder ??
+            ((BuildContext context, int mode) {
+              return new ClassicIndicator(mode: mode);
+            }),
         super(key: key);
 
   @override
   _SmartRefresherState createState() => new _SmartRefresherState();
+
+  static const String AUTOSCROLL_TOP = "top";
+  static const String AUTOSCROLL_BOTTOM = "bottom";
 }
 
 class _SmartRefresherState extends State<SmartRefresher> {
@@ -179,24 +195,32 @@ class _SmartRefresherState extends State<SmartRefresher> {
     widget.controller._footerMode = bottomModeLis;
   }
 
-  void _handleOffsetCallback(){
+  void _handleOffsetCallback() {
     final double overscrollPastStart = math.max(
         _scrollController.position.minScrollExtent -
-            _scrollController.position.pixels+(widget.headerConfig is RefreshConfig&&(topModeLis.value == RefreshStatus.refreshing ||
-            topModeLis.value == RefreshStatus.completed ||
-            topModeLis.value == RefreshStatus.failed)?(widget.headerConfig as RefreshConfig).visibleRange:0.0),
+            _scrollController.position.pixels +
+            (widget.headerConfig is RefreshConfig &&
+                    (topModeLis.value == RefreshStatus.refreshing ||
+                        topModeLis.value == RefreshStatus.completed ||
+                        topModeLis.value == RefreshStatus.failed)
+                ? (widget.headerConfig as RefreshConfig).visibleRange
+                : 0.0),
         0.0);
     final double overscrollPastEnd = math.max(
         _scrollController.position.pixels -
-            _scrollController.position.maxScrollExtent+(widget.footerConfig is RefreshConfig&&(bottomModeLis.value == RefreshStatus.refreshing ||
-            bottomModeLis.value == RefreshStatus.completed ||
-            bottomModeLis.value == RefreshStatus.failed)?(widget.footerConfig as RefreshConfig).visibleRange:0.0),
+            _scrollController.position.maxScrollExtent +
+            (widget.footerConfig is RefreshConfig &&
+                    (bottomModeLis.value == RefreshStatus.refreshing ||
+                        bottomModeLis.value == RefreshStatus.completed ||
+                        bottomModeLis.value == RefreshStatus.failed)
+                ? (widget.footerConfig as RefreshConfig).visibleRange
+                : 0.0),
         0.0);
     if (overscrollPastStart > overscrollPastEnd) {
       if (widget.headerConfig is RefreshConfig) {
-          if (widget.onOffsetChange != null) {
-            widget.onOffsetChange(true, overscrollPastStart);
-          }
+        if (widget.onOffsetChange != null) {
+          widget.onOffsetChange(true, overscrollPastStart);
+        }
       } else {
         if (widget.onOffsetChange != null) {
           widget.onOffsetChange(true, overscrollPastStart);
@@ -204,9 +228,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
       }
     } else if (overscrollPastEnd > 0) {
       if (widget.footerConfig is RefreshConfig) {
-          if (widget.onOffsetChange != null) {
-            widget.onOffsetChange(false, overscrollPastEnd);
-          }
+        if (widget.onOffsetChange != null) {
+          widget.onOffsetChange(false, overscrollPastEnd);
+        }
       } else {
         if (widget.onOffsetChange != null) {
           widget.onOffsetChange(false, overscrollPastEnd);
@@ -251,6 +275,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
         _footerHeight = _footerKey.currentContext.size.height;
       }
     });
+    if (widget.enableAutoScroll) {
+      widget.controller.scroll(autoScrollDirection: widget.autoScrollDirection);
+    }
   }
 
   @override
@@ -314,7 +341,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> slivers =new List.from(widget.child.buildSlivers(context),growable: true);
+    List<Widget> slivers =
+        new List.from(widget.child.buildSlivers(context), growable: true);
     slivers.add(new SliverToBoxAdapter(
       child: widget.footerBuilder != null && widget.enablePullUp
           ? _buildWrapperByConfig(widget.footerConfig, false)
@@ -340,9 +368,10 @@ class _SmartRefresherState extends State<SmartRefresher> {
               right: 0.0,
               child: new NotificationListener(
                 child: new CustomScrollView(
-                  physics: new RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
+                  physics: new RefreshScrollPhysics(
+                      enableOverScroll: widget.enableOverScroll),
                   controller: _scrollController,
-                  slivers:  slivers,
+                  slivers: slivers,
                 ),
                 onNotification: _dispatchScrollEvent,
               )),
@@ -363,6 +392,19 @@ class RefreshController {
   ValueNotifier<int> _footerMode;
   ScrollController scrollController;
 
+  void scroll({String autoScrollDirection = SmartRefresher.AUTOSCROLL_BOTTOM}) {
+    double position = 0.0;
+    if (scrollController != null) {
+      if (autoScrollDirection == SmartRefresher.AUTOSCROLL_BOTTOM)
+        position = scrollController.position.maxScrollExtent;
+      else
+        position = scrollController.position.minScrollExtent;
+    }
+    if (scrollController != null &&
+        autoScrollDirection == SmartRefresher.AUTOSCROLL_BOTTOM)
+      animateTo(position);
+  }
+
   void requestRefresh(bool up) {
     if (up) {
       if (_headerMode.value == RefreshStatus.idle)
@@ -375,7 +417,13 @@ class RefreshController {
   }
 
   void scrollTo(double offset) {
-    scrollController.jumpTo(offset);
+    scrollController?.jumpTo(offset);
+  }
+
+  void animateTo(double offset,
+      {int duration = 300, Curve curve = Curves.linear}) {
+    scrollController?.animateTo(offset,
+        duration: Duration(milliseconds: duration), curve: curve);
   }
 
   void sendBack(bool up, int mode) {
@@ -386,9 +434,9 @@ class RefreshController {
     }
   }
 
-  int get headerMode => _headerMode.value;
+  int get headerMode => _headerMode?.value;
 
-  int get footerMode => _footerMode.value;
+  int get footerMode => _footerMode?.value;
 
   isRefresh(bool up) {
     if (up) {
