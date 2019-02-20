@@ -52,7 +52,7 @@ class SmartRefresher extends StatefulWidget {
   // auto
   final bool enableAutoScroll;
   //
-  final String autoScrollDirection;
+  final AutoScrollDirection autoScrollDirection;
 
   SmartRefresher({
     Key key,
@@ -67,7 +67,7 @@ class SmartRefresher extends StatefulWidget {
     this.enablePullUp: default_enablePullUp,
     this.onRefresh,
     this.enableAutoScroll: false,
-    this.autoScrollDirection: AUTOSCROLL_BOTTOM,
+    this.autoScrollDirection: AutoScrollDirection.Bottom,
     this.onOffsetChange,
   })  : assert(child != null),
         controller = controller ?? new RefreshController(),
@@ -84,8 +84,6 @@ class SmartRefresher extends StatefulWidget {
   @override
   _SmartRefresherState createState() => new _SmartRefresherState();
 
-  static const String AUTOSCROLL_TOP = "top";
-  static const String AUTOSCROLL_BOTTOM = "bottom";
 }
 
 class _SmartRefresherState extends State<SmartRefresher> {
@@ -392,16 +390,16 @@ class RefreshController {
   ValueNotifier<int> _footerMode;
   ScrollController scrollController;
 
-  void scroll({String autoScrollDirection = SmartRefresher.AUTOSCROLL_BOTTOM}) {
+  void scroll({AutoScrollDirection autoScrollDirection = AutoScrollDirection.Bottom}) {
     double position = 0.0;
     if (scrollController != null) {
-      if (autoScrollDirection == SmartRefresher.AUTOSCROLL_BOTTOM)
+      if (autoScrollDirection == AutoScrollDirection.Bottom)
         position = scrollController.position.maxScrollExtent;
       else
         position = scrollController.position.minScrollExtent;
     }
     if (scrollController != null &&
-        autoScrollDirection == SmartRefresher.AUTOSCROLL_BOTTOM)
+        autoScrollDirection == AutoScrollDirection.Bottom)
       animateTo(position);
   }
 
@@ -446,3 +444,5 @@ class RefreshController {
     }
   }
 }
+
+enum AutoScrollDirection{ Top, Bottom }
