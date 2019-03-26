@@ -1,7 +1,7 @@
 # flutter_pulltorefresh
 
 ## 介绍
-一个提供上拉加载和下拉刷新的组件,同时支持Android和Ios(暂停维护，等到12月尾考研结束后继续，期间有问题的请issue，到时统一处理)
+一个提供上拉加载和下拉刷新的组件,同时支持Android和Ios
 
 
 ## 特性

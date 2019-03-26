@@ -169,8 +169,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
   }
 
   void _init() {
-    _scrollController = new ScrollController();
-    widget.controller.scrollController = _scrollController;
+    _scrollController = widget.child.controller ?? new ScrollController();
+    widget.controller._scrollController = _scrollController;
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _onAfterBuild();
     });
@@ -308,7 +308,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     // TODO: implement didUpdateWidget
     widget.controller._headerMode = topModeLis;
     widget.controller._footerMode = bottomModeLis;
-    widget.controller.scrollController = _scrollController;
+    widget.controller._scrollController = _scrollController;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -361,7 +361,7 @@ abstract class Indicator extends StatefulWidget {
 class RefreshController {
   ValueNotifier<int> _headerMode;
   ValueNotifier<int> _footerMode;
-  ScrollController scrollController;
+  ScrollController _scrollController;
 
   void requestRefresh(bool up) {
     if (up) {
@@ -375,7 +375,7 @@ class RefreshController {
   }
 
   void scrollTo(double offset) {
-    scrollController.jumpTo(offset);
+    _scrollController.jumpTo(offset);
   }
 
   void sendBack(bool up, int mode) {

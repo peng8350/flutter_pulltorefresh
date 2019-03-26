@@ -10,6 +10,7 @@ dependencies:
   pull_to_refresh:
     path: ../
 
+  http: ^ 0.12.0
 
 dev_dependencies:
   flutter_test:

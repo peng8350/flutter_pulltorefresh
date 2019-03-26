@@ -12,6 +12,7 @@ class _Example1State extends State<Example1> {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
   RefreshController _refreshController;
+  ScrollController _scrollController;
   List<Widget> data = [];
   void _getDatas() {
     for (int i = 0; i < 14; i++) {
@@ -37,6 +38,7 @@ class _Example1State extends State<Example1> {
   void initState() {
     // TODO: implement initState
     _getDatas();
+    _scrollController = new ScrollController();
     _refreshController = new RefreshController();
     super.initState();
   }
@@ -73,7 +75,7 @@ class _Example1State extends State<Example1> {
                     ),
                   ));
 
-                  _refreshController.scrollTo(_refreshController.scrollController.offset+100.0);
+                  _refreshController.scrollTo(_scrollController.offset+100.0);
                   _refreshController.sendBack(true, RefreshStatus.idle);
                   setState(() {});
 //                refresher.sendStatus(RefreshStatus.completed);
@@ -95,6 +97,7 @@ class _Example1State extends State<Example1> {
             },
             onOffsetChange: _onOffsetCallback,
             child: new ListView.builder(
+              controller: _scrollController,
               reverse: true,
               itemExtent: 100.0,
               itemCount: data.length,
