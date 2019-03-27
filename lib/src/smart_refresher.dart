@@ -125,6 +125,10 @@ class _SmartRefresherState extends State<SmartRefresher> {
   }
 
   bool _dispatchScrollEvent(ScrollNotification notification) {
+    // ignore the nested scrollview's notification 
+    if (notification.depth != 0) {
+      return false;
+    }
     // when is scroll in the ScrollInside,nothing to do
     if ((!_isPullUp(notification) && !_isPullDown(notification))) return false;
     if (notification is ScrollStartNotification) {
