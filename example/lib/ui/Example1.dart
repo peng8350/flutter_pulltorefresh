@@ -1,14 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Example1 extends StatefulWidget {
+  Example1({Key key}) : super(key: key);
+
   @override
-  _Example1State createState() => new _Example1State();
+  Example1State createState() => new Example1State();
 }
 
-class _Example1State extends State<Example1> {
+class Example1State extends State<Example1> {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
   RefreshController _refreshController;
@@ -26,6 +29,11 @@ class _Example1State extends State<Example1> {
     }
   }
 
+  void scrollTop() {
+    _scrollController.animateTo(0.0,
+        duration: new Duration(microseconds: 1000), curve: ElasticInCurve());
+  }
+
   void enterRefresh() {
     _refreshController.requestRefresh(true);
   }
@@ -40,6 +48,10 @@ class _Example1State extends State<Example1> {
     _getDatas();
     _scrollController = new ScrollController();
     _refreshController = new RefreshController();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _refreshController.requestRefresh(true);
+    });
+
     super.initState();
   }
 
@@ -75,23 +87,27 @@ class _Example1State extends State<Example1> {
                     ),
                   ));
 
-                  _refreshController.scrollTo(_scrollController.offset+100.0);
-                  _refreshController.sendBack(true, RefreshStatus.idle);
-                  setState(() {});
+
+                  setState(() {
+                    _refreshController.sendBack(true, RefreshStatus.completed);
+                  });
 //                refresher.sendStatus(RefreshStatus.completed);
                 });
               else {
                 new Future.delayed(const Duration(milliseconds: 2009))
                     .then((val) {
-                  data.add(new Card(
-                    margin: new EdgeInsets.only(
-                        left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                    child: new Center(
-                      child: new Text('Data '),
-                    ),
-                  ));
-                  setState(() {});
-                  _refreshController.sendBack(false, RefreshStatus.idle);
+                  setState(() {
+                    data.add(new Card(
+                      margin: new EdgeInsets.only(
+                          left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                      child: new Center(
+                        child: new Text('Data '),
+                      ),
+                    ));
+                      _refreshController.sendBack(false, RefreshStatus.idle);
+
+                  });
+
                 });
               }
             },
@@ -126,7 +142,6 @@ class _ItemState extends State<Item> {
   @override
   void dispose() {
     // TODO: implement dispose
-    print("销毁");
     super.dispose();
   }
 }

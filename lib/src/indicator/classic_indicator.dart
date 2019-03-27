@@ -127,8 +127,7 @@ class _ClassicIndicatorState extends State<ClassicIndicator> {
             children: children,
           );
     return new Container(
-      alignment: Alignment.center,
-      height: widget.height,
+      height: widget.height+0.0,
       child: new Center(
         child: container,
       ),

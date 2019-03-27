@@ -61,7 +61,7 @@ class RefreshWrapper extends Wrapper {
 
   final Function onOffsetChange;
 
-  final double visibleRange;
+  final double height;
 
   RefreshWrapper({
     Key key,
@@ -70,7 +70,7 @@ class RefreshWrapper extends Wrapper {
     this.onOffsetChange,
     this.completeDuration: default_completeDuration,
     double triggerDistance,
-    this.visibleRange: default_VisibleRange,
+    this.height: default_height,
     bool up: true,
   })  : assert(up != null),
         super(
@@ -161,7 +161,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
   void _handleOffsetCallBack() {
     if (widget.onOffsetChange != null) {
       widget.onOffsetChange(
-          widget.up, _sizeController.value * widget.visibleRange);
+          widget.up, _sizeController.value * widget.height);
     }
   }
 
@@ -216,7 +216,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
         children: <Widget>[
           new SizeTransition(
             sizeFactor: _sizeController,
-            child: new Container(height: widget.visibleRange),
+            child: new Container(height: widget.height),
           ),
           widget.builder(context, widget.mode)
         ],
@@ -227,7 +227,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
         widget.builder(context, widget.mode),
         new SizeTransition(
           sizeFactor: _sizeController,
-          child: new Container(height: widget.visibleRange),
+          child: new Container(height: widget.height),
         )
       ],
     );

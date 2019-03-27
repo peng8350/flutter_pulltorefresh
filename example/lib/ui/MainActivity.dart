@@ -21,13 +21,13 @@ class MainActivity extends StatefulWidget {
   _MainActivityState createState() => new _MainActivityState();
 }
 
-class _MainActivityState extends State<MainActivity> {
+class _MainActivityState extends State<MainActivity> with SingleTickerProviderStateMixin{
   int tabIndex = 0;
 
   List<Widget> views;
-
+  TabController _tabController;
   GlobalKey<Example3State> example3Key= new GlobalKey();
-
+  GlobalKey<Example1State> example1Key= new GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +37,30 @@ class _MainActivityState extends State<MainActivity> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+//    return new Scaffold(
+//
+//      appBar: new AppBar(
+//        // Here we take the value from the MyHomePage object that was created by
+//        // the App.build method, and use it to set our appbar title.
+//        bottom: new TabBar(controller: _tabController,tabs: <Widget>[            new Tab(icon: new Icon(Icons.nature),) , new Tab(icon: new Icon(Icons.directions_bike),),
+//        new Tab(icon: new Icon(Icons.directions_boat),),
+//        new Tab(icon: new Icon(Icons.directions_bus),),],),
+//        title: new Text(widget.title),
+//        actions: <Widget>[(tabIndex==2||tabIndex==0)?new MaterialButton(onPressed: (){
+//          tabIndex==2? example3Key.currentState.enterRefresh():example1Key.currentState.scrollTop();
+//        },child: new Text(tabIndex==2?'refresh3':"滚回顶部",style: new TextStyle(color:Colors.white),)):new Container()],
+//      ),
+//      body: new TabBarView(children: views,controller:_tabController ,),
+//    );
     return new Scaffold(
 
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
-        actions: <Widget>[(tabIndex==2)?new MaterialButton(onPressed: (){
-          example3Key.currentState.enterRefresh();
-        },child: new Text('refresh3',style: new TextStyle(color:Colors.white),)):new Container()],
+        actions: <Widget>[(tabIndex==2||tabIndex==0)?new MaterialButton(onPressed: (){
+         tabIndex==2? example3Key.currentState.enterRefresh():example1Key.currentState.scrollTop();
+        },child: new Text(tabIndex==2?'refresh3':"滚回顶部",style: new TextStyle(color:Colors.white),)):new Container()],
       ),
       body: new Stack(
 
@@ -110,8 +125,8 @@ class _MainActivityState extends State<MainActivity> {
   @override
   void initState() {
     // TODO: implement initState
-
-    views = [new Example1(),new Example2(),new Example3(key:example3Key),new Example4()];
+    _tabController = new TabController(length: 4, vsync: this);
+    views = [new Example1(key:example1Key),new Example2(),new Example3(key:example3Key),new Example4()];
     super.initState();
   }
 

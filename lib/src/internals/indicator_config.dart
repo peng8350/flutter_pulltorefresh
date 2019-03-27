@@ -20,9 +20,10 @@ class RefreshConfig extends Config {
   // display time of success or failed
   final int completeDuration;
   // emptySpace height
-  final double visibleRange;
+  final double height;
+
   const RefreshConfig(
-      {this.visibleRange: default_VisibleRange,
+      {this.height: default_height,
       double triggerDistance: default_refresh_triggerDistance,
       this.completeDuration: default_completeDuration})
       : super(triggerDistance: triggerDistance);
