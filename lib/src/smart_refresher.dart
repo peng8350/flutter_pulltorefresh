@@ -86,9 +86,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   ValueNotifier<double> offsetLis = new ValueNotifier(0.0);
 
-  ValueNotifier<int> topModeLis = new ValueNotifier(0);
-
-  ValueNotifier<int> bottomModeLis = new ValueNotifier(0);
 
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
@@ -181,13 +178,11 @@ class _SmartRefresherState extends State<SmartRefresher> {
       _onAfterBuild();
     });
     _scrollController.addListener(_handleOffsetCallback);
-    widget.controller._headerMode = topModeLis;
-    widget.controller._footerMode = bottomModeLis;
-    topModeLis.addListener(() {
-      _didChangeMode(true, topModeLis);
+    widget.controller._headerMode.addListener(() {
+      _didChangeMode(true, widget.controller._headerMode);
     });
-    bottomModeLis.addListener(() {
-      _didChangeMode(false, bottomModeLis);
+    widget.controller._footerMode.addListener(() {
+      _didChangeMode(false, widget.controller._footerMode);
     });
   }
 
@@ -196,9 +191,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
         _scrollController.position.minScrollExtent -
             _scrollController.position.pixels +
             (widget.headerConfig is RefreshConfig &&
-                    (topModeLis.value == RefreshStatus.refreshing ||
-                        topModeLis.value == RefreshStatus.completed ||
-                        topModeLis.value == RefreshStatus.failed)
+                    (widget.controller._headerMode.value == RefreshStatus.refreshing ||
+                        widget.controller._headerMode.value == RefreshStatus.completed ||
+                        widget.controller._headerMode.value == RefreshStatus.failed)
                 ? (widget.headerConfig as RefreshConfig).height
                 : 0.0),
         0.0);
@@ -206,9 +201,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
         _scrollController.position.pixels -
             _scrollController.position.maxScrollExtent +
             (widget.footerConfig is RefreshConfig &&
-                    (bottomModeLis.value == RefreshStatus.refreshing ||
-                        bottomModeLis.value == RefreshStatus.completed ||
-                        bottomModeLis.value == RefreshStatus.failed)
+                    (widget.controller._footerMode.value == RefreshStatus.refreshing ||
+                        widget.controller._footerMode.value == RefreshStatus.completed ||
+                        widget.controller._footerMode.value == RefreshStatus.failed)
                 ? (widget.footerConfig as RefreshConfig).height
                 : 0.0),
         0.0);
@@ -278,7 +273,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     if (config is LoadConfig) {
       return new LoadWrapper(
         key: up ? _headerKey : _footerKey,
-        modeListener: up ? topModeLis : bottomModeLis,
+        modeListener: up ? widget.controller._headerMode : widget.controller._footerMode,
         up: up,
         autoLoad: config.autoLoad,
         triggerDistance: config.triggerDistance,
@@ -287,7 +282,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     } else if (config is RefreshConfig) {
       return new RefreshWrapper(
         key: up ? _headerKey : _footerKey,
-        modeLis: up ? topModeLis : bottomModeLis,
+        modeLis: up ? widget.controller._headerMode : widget.controller._footerMode,
         up: up,
         onOffsetChange: (bool up, double offset) {
           if (widget.onOffsetChange != null) {
@@ -312,8 +307,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
   @override
   void didUpdateWidget(SmartRefresher oldWidget) {
     // TODO: implement didUpdateWidget
-    widget.controller._headerMode = topModeLis;
-    widget.controller._footerMode = bottomModeLis;
     widget.controller._scrollController = _scrollController;
     super.didUpdateWidget(oldWidget);
   }
@@ -368,8 +361,8 @@ abstract class Indicator extends StatefulWidget {
 }
 
 class RefreshController {
-  ValueNotifier<int> _headerMode;
-  ValueNotifier<int> _footerMode;
+  ValueNotifier<int> _headerMode = new ValueNotifier(0);
+  ValueNotifier<int> _footerMode = new ValueNotifier(0);
   ScrollController _scrollController;
 
   void requestRefresh(bool up) {
@@ -392,9 +385,9 @@ class RefreshController {
     }
   }
 
-  int get headerMode => _headerMode.value;
+  int get headerStatus => _headerMode.value;
 
-  int get footerMode => _footerMode.value;
+  int get footerStatus => _footerMode.value;
 
   isRefresh(bool up) {
     if (up) {

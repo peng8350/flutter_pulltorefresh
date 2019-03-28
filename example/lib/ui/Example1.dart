@@ -51,7 +51,7 @@ class Example1State extends State<Example1> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _refreshController.requestRefresh(true);
     });
-
+    _refreshController.sendBack(true, RefreshStatus.failed);
     super.initState();
   }
 
@@ -112,7 +112,6 @@ class Example1State extends State<Example1> {
             },
             onOffsetChange: _onOffsetCallback,
             child: new ListView.builder(
-              controller: _scrollController,
               reverse: true,
               itemExtent: 100.0,
               itemCount: data.length,
