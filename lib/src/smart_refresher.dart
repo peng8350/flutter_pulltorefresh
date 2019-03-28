@@ -53,9 +53,9 @@ class SmartRefresher extends StatefulWidget {
   SmartRefresher({
     Key key,
     @required this.child,
+    @required this.controller,
     IndicatorBuilder headerBuilder,
     IndicatorBuilder footerBuilder,
-    RefreshController controller,
     this.headerConfig: const RefreshConfig(),
     this.footerConfig: const LoadConfig(),
     this.enableOverScroll: default_enableOverScroll,
@@ -63,8 +63,7 @@ class SmartRefresher extends StatefulWidget {
     this.enablePullUp: default_enablePullUp,
     this.onRefresh,
     this.onOffsetChange,
-  })  : assert(child != null),
-        controller = controller ?? new RefreshController(),
+  })  : assert(child != null),assert(controller != null),
         this.headerBuilder = headerBuilder ??
             ((BuildContext context, int mode) {
               return new ClassicIndicator(mode: mode);

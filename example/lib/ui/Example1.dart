@@ -72,9 +72,9 @@ class Example1State extends State<Example1> {
   Widget build(BuildContext context) {
     return new Container(
         child: new SmartRefresher(
+            controller: _refreshController,
             enablePullDown: true,
             enablePullUp: true,
-            controller: _refreshController,
             onRefresh: (up) {
               if (up)
                 new Future.delayed(const Duration(milliseconds: 2009))
@@ -91,7 +91,6 @@ class Example1State extends State<Example1> {
                   setState(() {
                     _refreshController.sendBack(true, RefreshStatus.completed);
                   });
-//                refresher.sendStatus(RefreshStatus.completed);
                 });
               else {
                 new Future.delayed(const Duration(milliseconds: 2009))
