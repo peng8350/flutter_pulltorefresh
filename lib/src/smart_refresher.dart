@@ -328,6 +328,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
           ? _buildWrapperByConfig(widget.footerConfig, false)
           : new Container(),
     ));
+
     slivers.insert(
         0,
         new SliverToBoxAdapter(

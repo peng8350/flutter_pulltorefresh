@@ -69,7 +69,7 @@ class RefreshWrapper extends Wrapper {
     ValueNotifier<int> modeLis,
     this.onOffsetChange,
     this.completeDuration: default_completeDuration,
-    double triggerDistance,
+    double triggerDistance : default_refresh_triggerDistance,
     this.height: default_height,
     bool up: true,
   })  : assert(up != null),
@@ -242,7 +242,7 @@ class LoadWrapper extends Wrapper {
       {Key key,
       @required bool up,
       @required ValueNotifier<int> modeListener,
-      double triggerDistance,
+      double triggerDistance:default_load_triggerDistance,
       this.autoLoad,
       IndicatorBuilder builder})
       : assert(up != null, modeListener != null),
@@ -301,10 +301,10 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
     if (widget._isRefreshing || widget._isComplete) return;
     if (widget.autoLoad) {
       if (widget.up &&
-          notification.metrics.extentBefore <= widget.triggerDistance)
+          notification.metrics.extentBefore <= widget.triggerDistance&&notification.scrollDelta<1.0)
         widget.mode = RefreshStatus.refreshing;
       if (!widget.up &&
-          notification.metrics.extentAfter <= widget.triggerDistance)
+          notification.metrics.extentAfter <= widget.triggerDistance&&notification.scrollDelta>1.0)
         widget.mode = RefreshStatus.refreshing;
     }
   }
@@ -322,6 +322,7 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
         widget.mode = RefreshStatus.refreshing;
     }
   }
+
 }
 
 abstract class GestureProcessor {

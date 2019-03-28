@@ -15,7 +15,7 @@ const int default_completeDuration = 800;
 
 const double default_refresh_triggerDistance = 100.0;
 
-const double default_load_triggerDistance = 5.0;
+const double default_load_triggerDistance = 15.0;
 
 const double default_height = 50.0;
 

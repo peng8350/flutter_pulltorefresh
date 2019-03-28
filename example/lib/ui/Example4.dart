@@ -46,7 +46,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
             footerBuilder: (context, mode) {
               return new ClassicIndicator(mode: mode);
             },
-            footerConfig: new LoadConfig(triggerDistance: 30.0),
+            footerConfig: new LoadConfig(),
             controller: _refreshController,
             onRefresh: (up) {
               new Future.delayed(const Duration(milliseconds: 1000))
