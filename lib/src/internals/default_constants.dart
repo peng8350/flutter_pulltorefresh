@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:pull_to_refresh/src/smart_refresher.dart';
 
 /*
     Author: Jpeng
@@ -9,7 +10,7 @@ import 'package:flutter/widgets.dart';
 
 typedef void OnRefresh(bool up);
 typedef void OnOffsetChange(bool up, double offset);
-typedef Widget IndicatorBuilder(BuildContext context, int mode);
+typedef Widget IndicatorBuilder(BuildContext context, RefreshStatus mode);
 
 const int default_completeDuration = 800;
 

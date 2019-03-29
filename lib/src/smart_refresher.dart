@@ -17,13 +17,8 @@ import 'dart:math' as math;
 
 enum WrapperType { Refresh, Loading }
 
-class RefreshStatus {
-  static const int idle = 0;
-  static const int canRefresh = 1;
-  static const int refreshing = 2;
-  static const int completed = 3;
-  static const int failed = 4;
-  static const int noMore = 5;
+enum RefreshStatus {
+   idle,canRefresh, refreshing,completed,failed ,noMore
 }
 
 /*
@@ -65,11 +60,11 @@ class SmartRefresher extends StatefulWidget {
     this.onOffsetChange,
   })  : assert(child != null),assert(controller != null),
         this.headerBuilder = headerBuilder ??
-            ((BuildContext context, int mode) {
+            ((BuildContext context, RefreshStatus mode) {
               return new ClassicIndicator(mode: mode);
             }),
         this.footerBuilder = footerBuilder ??
-            ((BuildContext context, int mode) {
+            ((BuildContext context, RefreshStatus mode) {
               return new ClassicIndicator(mode: mode);
             }),
         super(key: key);
@@ -231,7 +226,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     }
   }
 
-  _didChangeMode(bool up, ValueNotifier<int> mode) {
+  _didChangeMode(bool up, ValueNotifier<RefreshStatus> mode) {
     switch (mode.value) {
       case RefreshStatus.refreshing:
         if (widget.onRefresh != null) {
@@ -243,6 +238,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
               .jumpTo(_scrollController.offset + config.height);
         }
         break;
+      default :
+        break;
+
     }
   }
 
@@ -357,14 +355,14 @@ class _SmartRefresherState extends State<SmartRefresher> {
 }
 
 abstract class Indicator extends StatefulWidget {
-  final int mode;
+  final RefreshStatus mode;
 
   const Indicator({Key key, this.mode}) : super(key: key);
 }
 
 class RefreshController {
-  ValueNotifier<int> _headerMode = new ValueNotifier(0);
-  ValueNotifier<int> _footerMode = new ValueNotifier(0);
+  ValueNotifier<RefreshStatus> _headerMode = new ValueNotifier(RefreshStatus.idle);
+  ValueNotifier<RefreshStatus> _footerMode = new ValueNotifier(RefreshStatus.idle);
   ScrollController _scrollController;
   double _footerHeight;
 
@@ -382,7 +380,7 @@ class RefreshController {
     }
   }
 
-  void sendBack(bool up, int mode) {
+  void sendBack(bool up, RefreshStatus mode) {
     if (up) {
       _headerMode.value = mode;
     } else {
@@ -390,9 +388,9 @@ class RefreshController {
     }
   }
 
-  int get headerStatus => _headerMode.value;
+  RefreshStatus get headerStatus => _headerMode.value;
 
-  int get footerStatus => _footerMode.value;
+  RefreshStatus get footerStatus => _footerMode.value;
 
   isRefresh(bool up) {
     if (up) {

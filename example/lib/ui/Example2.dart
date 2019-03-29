@@ -67,7 +67,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
     _controller = new RefreshController();
   }
 
-  Widget _headerCreate(BuildContext context, int mode) {
+  Widget _headerCreate(BuildContext context, RefreshStatus mode) {
     final _loadingContainer = Container(
         height: 50.0,
         color: Colors.black12,
@@ -84,7 +84,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
     return _loadingContainer;
   }
 
-  Widget _footerCreate(BuildContext context, int mode) {
+  Widget _footerCreate(BuildContext context, RefreshStatus mode) {
     return new ClassicIndicator(
       mode: mode,
       refreshingText: 'loading...',

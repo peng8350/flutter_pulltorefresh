@@ -54,7 +54,7 @@ class Example1State extends State<Example1> {
     super.initState();
   }
 
-  Widget _headerCreate(BuildContext context, int mode) {
+  Widget _headerCreate(BuildContext context, RefreshStatus mode) {
     return new ClassicIndicator(
       mode: mode,
       refreshingText: "",

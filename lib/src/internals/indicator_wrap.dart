@@ -11,7 +11,7 @@ import 'default_constants.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 abstract class Wrapper extends StatefulWidget {
-  final ValueNotifier<int> modeListener;
+  final ValueNotifier<RefreshStatus> modeListener;
 
   final IndicatorBuilder builder;
 
@@ -26,9 +26,9 @@ abstract class Wrapper extends StatefulWidget {
       this.mode != RefreshStatus.refreshing &&
       this.mode != RefreshStatus.canRefresh;
 
-  int get mode => this.modeListener.value;
+  RefreshStatus get mode => this.modeListener.value;
 
-  set mode(int mode) => this.modeListener.value = mode;
+  set mode(RefreshStatus mode) => this.modeListener.value = mode;
 
   Wrapper(
       {Key key,
@@ -66,7 +66,7 @@ class RefreshWrapper extends Wrapper {
   RefreshWrapper({
     Key key,
     IndicatorBuilder builder,
-    ValueNotifier<int> modeLis,
+    ValueNotifier<RefreshStatus> modeLis,
     this.onOffsetChange,
     this.completeDuration: default_completeDuration,
     double triggerDistance : default_refresh_triggerDistance,
@@ -107,7 +107,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
     });
   }
 
-  int get mode => widget.modeListener.value;
+  RefreshStatus get mode => widget.modeListener.value;
 
   double _measure(ScrollNotification notification) {
     if (widget.up) {
@@ -184,6 +184,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
           widget.mode = RefreshStatus.idle;
         });
         break;
+      default:break;
     }
     setState(() {});
   }
@@ -241,7 +242,7 @@ class LoadWrapper extends Wrapper {
   LoadWrapper(
       {Key key,
       @required bool up,
-      @required ValueNotifier<int> modeListener,
+      @required ValueNotifier<RefreshStatus> modeListener,
       double triggerDistance:default_load_triggerDistance,
       this.autoLoad,
       IndicatorBuilder builder})

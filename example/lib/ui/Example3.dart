@@ -80,7 +80,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     });
   }
 
-  Widget _headerCreate(BuildContext context, int mode) {
+  Widget _headerCreate(BuildContext context, RefreshStatus mode) {
     return new ClassicIndicator(mode: mode);
   }
 

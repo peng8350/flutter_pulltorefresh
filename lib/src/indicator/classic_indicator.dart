@@ -34,7 +34,7 @@ class ClassicIndicator extends Indicator {
   final TextStyle textStyle;
 
   const ClassicIndicator({
-    @required int mode,
+    @required RefreshStatus mode,
     Key key,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
