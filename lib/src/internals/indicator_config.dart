@@ -36,6 +36,8 @@ class LoadConfig extends Config {
   final bool bottomWhenBuild;
 
   final bool enableOverScroll;
+
+
   const LoadConfig({
     this.autoLoad: default_AutoLoad,
     this.bottomWhenBuild:default_BottomWhenBuild,

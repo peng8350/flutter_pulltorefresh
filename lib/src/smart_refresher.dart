@@ -174,6 +174,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
   void _init() {
     _scrollController = widget.child.controller ?? new ScrollController();
     widget.controller._scrollController = _scrollController;
+    widget.controller._footerHeight = widget.footerConfig is RefreshConfig?(widget.footerConfig as RefreshConfig).height:0.0;
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _onAfterBuild();
     });
@@ -308,6 +309,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
   void didUpdateWidget(SmartRefresher oldWidget) {
     // TODO: implement didUpdateWidget
     widget.controller._scrollController = _scrollController;
+    widget.controller._footerHeight = oldWidget.footerConfig is RefreshConfig?(oldWidget.footerConfig as RefreshConfig).height:0.0;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -364,15 +366,18 @@ class RefreshController {
   ValueNotifier<int> _headerMode = new ValueNotifier(0);
   ValueNotifier<int> _footerMode = new ValueNotifier(0);
   ScrollController _scrollController;
+  double _footerHeight;
 
   void requestRefresh(bool up) {
+    assert(_scrollController !=null , 'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (up) {
       if (_headerMode.value == RefreshStatus.idle)
         _headerMode.value = RefreshStatus.refreshing;
-      _scrollController.jumpTo(0.0);
+      _scrollController.animateTo(0.0,duration: const Duration(milliseconds: 200),curve: Curves.linear);
     } else {
       if (_footerMode.value == RefreshStatus.idle) {
         _footerMode.value = RefreshStatus.refreshing;
+        _scrollController.animateTo(_scrollController.position.maxScrollExtent+_footerHeight,duration: const Duration(milliseconds: 200),curve: Curves.linear);
       }
     }
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Example3 extends StatefulWidget {
@@ -34,7 +35,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   }
 
   void enterRefresh() {
-    _refreshController.requestRefresh(true);
+    _refreshController.requestRefresh(false);
   }
 
   void _onOffsetCallback(bool isUp, double offset) {

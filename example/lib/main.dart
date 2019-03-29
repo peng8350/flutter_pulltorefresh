@@ -1,3 +1,5 @@
+import 'package:example/ui/SecondActivity.dart';
+
 import 'ui/MainActivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: new MainActivity(title: 'Pulltorefresh'),
+      routes: {
+        "sec": (BuildContext context) {
+          return new SecondActivity(title: "SecondAct",);
+        },
+      },
     );
   }
 }

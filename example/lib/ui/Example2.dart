@@ -3,6 +3,7 @@ import 'dart:convert' show json;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as HTTP;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Example2 extends StatefulWidget {
   @override
@@ -41,7 +42,6 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
 //                refresher.sendStatus(RefreshStatus.completed);
       });
     else {
-      print("sd");
       new Future.delayed(const Duration(milliseconds: 2009)).then((val) {
         _fetch();
       });
@@ -68,7 +68,20 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
   }
 
   Widget _headerCreate(BuildContext context, int mode) {
-    return new ClassicIndicator(mode: mode);
+    final _loadingContainer = Container(
+        height: 50.0,
+        color: Colors.black12,
+        child: Center(
+          child: Opacity(
+            opacity: 0.9,
+            child: SpinKitWave(
+              color: Colors.red,
+              size: 50.0,
+            ),
+          ),
+        )
+    );
+    return _loadingContainer;
   }
 
   Widget _footerCreate(BuildContext context, int mode) {
@@ -98,6 +111,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       ),
     );
   }
+
 }
 
 class Item extends StatefulWidget {
@@ -124,7 +138,6 @@ class _ItemState extends State<Item> {
   @override
   void dispose() {
     // TODO: implement dispose
-    print("销毁");
     super.dispose();
   }
 }

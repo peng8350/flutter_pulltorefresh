@@ -3,6 +3,7 @@ import 'Example2.dart';
 import 'Example3.dart';
 import 'Example4.dart';
 import 'package:flutter/material.dart';
+import 'SecondActivity.dart';
 
 class MainActivity extends StatefulWidget {
   MainActivity({Key key, this.title}) : super(key: key);
@@ -28,6 +29,10 @@ class _MainActivityState extends State<MainActivity> with SingleTickerProviderSt
   TabController _tabController;
   GlobalKey<Example3State> example3Key= new GlobalKey();
   GlobalKey<Example1State> example1Key= new GlobalKey();
+
+  void _changePage(){
+    Navigator.of(context).pushNamed("sec");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +63,9 @@ class _MainActivityState extends State<MainActivity> with SingleTickerProviderSt
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
-        actions: <Widget>[(tabIndex==2||tabIndex==0)?new MaterialButton(onPressed: (){
-         tabIndex==2? example3Key.currentState.enterRefresh():example1Key.currentState.scrollTop();
-        },child: new Text(tabIndex==2?'refresh3':"滚回顶部",style: new TextStyle(color:Colors.white),)):new Container()],
+        actions: <Widget>[new MaterialButton(onPressed: (){
+         tabIndex==2? example3Key.currentState.enterRefresh():tabIndex==0?example1Key.currentState.scrollTop():_changePage();
+        },child: new Text(tabIndex==2?'refresh3':tabIndex==0?"滚回顶部":"跳转页面",style: new TextStyle(color:Colors.white),))],
       ),
       body: new Stack(
 
