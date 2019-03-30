@@ -18,7 +18,7 @@ class Example1State extends State<Example1> {
   ScrollController _scrollController;
   List<Widget> data = [];
   void _getDatas() {
-    for (int i = 0; i < 14; i++) {
+    for (int i = 0; i < 4; i++) {
       data.add(new Card(
         margin:
             new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
@@ -69,32 +69,19 @@ class Example1State extends State<Example1> {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-        child: new SmartRefresher(
-            controller: _refreshController,
-            enablePullDown: true,
-            enablePullUp: true,
-            onRefresh: (up) {
-              if (up)
-                new Future.delayed(const Duration(milliseconds: 2009))
-                    .then((val) {
-                  data.add(new Card(
-                    margin: new EdgeInsets.only(
-                        left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                    child: new Center(
-                      child: new Text('Data '),
-                    ),
-                  ));
 
-
-                  setState(() {
-                    _refreshController.sendBack(true, RefreshStatus.completed);
-                  });
-                });
-              else {
-                new Future.delayed(const Duration(milliseconds: 2009))
-                    .then((val) {
-                  setState(() {
+    return new LayoutBuilder(builder: (BuildContext c,BoxConstraints bc){
+      double innerListHeight= data.length*100.0;
+      double listHeight = bc.biggest.height;
+      return new Container(
+          child: new SmartRefresher(
+              controller: _refreshController,
+              enablePullDown: true,
+              enablePullUp: innerListHeight>listHeight,
+              onRefresh: (up) {
+                if (up)
+                  new Future.delayed(const Duration(milliseconds: 2009))
+                      .then((val) {
                     data.add(new Card(
                       margin: new EdgeInsets.only(
                           left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
@@ -102,21 +89,39 @@ class Example1State extends State<Example1> {
                         child: new Text('Data '),
                       ),
                     ));
+
+
+                    setState(() {
+                      _refreshController.sendBack(true, RefreshStatus.completed);
+                    });
+                  });
+                else {
+                  new Future.delayed(const Duration(milliseconds: 2009))
+                      .then((val) {
+                    setState(() {
+                      data.add(new Card(
+                        margin: new EdgeInsets.only(
+                            left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                        child: new Center(
+                          child: new Text('Data '),
+                        ),
+                      ));
                       _refreshController.sendBack(false, RefreshStatus.idle);
 
-                  });
+                    });
 
-                });
-              }
-            },
-            onOffsetChange: _onOffsetCallback,
-            child: new ListView.builder(
-              reverse: true,
-              controller: _scrollController,
-              itemExtent: 100.0,
-              itemCount: data.length,
-              itemBuilder: (context, index) => new Item(),
-            )));
+                  });
+                }
+              },
+              onOffsetChange: _onOffsetCallback,
+              child: new ListView.builder(
+                reverse: true,
+                controller: _scrollController,
+                itemExtent: 100.0,
+                itemCount: data.length,
+                itemBuilder: (context, index) => new Item(),
+              )));
+    });
   }
 }
 
