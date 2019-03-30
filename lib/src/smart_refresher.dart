@@ -257,7 +257,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
   void dispose() {
     // TODO: implement dispose
     _scrollController.removeListener(_handleOffsetCallback);
-    _scrollController.dispose();
+    if (widget.child.controller==null&&widget.child.controller != _scrollController) {
+      _scrollController.dispose();
+    }
     super.dispose();
   }
 
@@ -306,8 +308,14 @@ class _SmartRefresherState extends State<SmartRefresher> {
   @override
   void didUpdateWidget(SmartRefresher oldWidget) {
     // TODO: implement didUpdateWidget
-    widget.controller._scrollController = _scrollController;
-    widget.controller._footerHeight = oldWidget.footerConfig is RefreshConfig?(oldWidget.footerConfig as RefreshConfig).height:0.0;
+    if(widget.child.controller!=_scrollController){
+      _scrollController.removeListener(_handleOffsetCallback);
+      _scrollController = widget.child.controller ?? ScrollController();
+      _scrollController.addListener(_handleOffsetCallback);
+      widget.controller._scrollController = _scrollController;
+    }
+
+    widget.controller._footerHeight = widget.footerConfig is RefreshConfig?(widget.footerConfig as RefreshConfig).height:0.0;
     super.didUpdateWidget(oldWidget);
   }
 
