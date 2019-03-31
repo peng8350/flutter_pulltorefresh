@@ -24,7 +24,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ```
 
    dependencies:
-     pull_to_refresh: ^1.1.6
+     pull_to_refresh: ^1.2.0
      
 ```
 
@@ -39,6 +39,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
    build() =>
    
     new SmartRefresher(
+    controller:_refreshController,
         enablePullDown: true,
         enablePullUp: true,
         onRefresh: _onRefresh,
@@ -58,12 +59,16 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 
 3.You should set the indicator according to the different refresh mode.build footer is the same with that.
 Of course, I have built an indicator convenient to use, called ClassicIndicator. If I do not meet the requirements, I can choose to define an indicator myself.
-
+Header Config and footer Config can also be set.
+Note: The RefreshConfig height here must be exactly the same as the corresponding indicator layout height. (Mainly internal to get indicator height, avoid secondary rendering)
 ```
 
 
   Widget _buildHeader(context,mode){
-   return new ClassicIndicator(mode: mode);
+      return new Container(
+              height:50.0,
+              child:new ClassicIndicator(mode: mode)
+        );
   }
   
  
@@ -75,7 +80,10 @@ Of course, I have built an indicator convenient to use, called ClassicIndicator.
   new SmartRefresher(
      ....
      footerBuilder: _buildFooter,
-     headerBuilder: _buildHeader
+     headerBuilder: _buildHeader,
+     // must be exactly the same as the component returned by buildHeader
+     headerConfig:const RefreshConfig(height:50.0),
+     footerConfig:const LoadConfig()
   )
 
 
@@ -90,6 +98,15 @@ But how can I tell the result to SmartRefresher? It's very simple. It provides a
     void _onRefresh(bool up){
 		if(up){
 		   //headerIndicator callback
+		   /*    Note: If headerConfig's autoLoad is turned on, you will have to wait until the next needle is redrawn to update the status, otherwise there will be multiple refreshes.
+                                     SchedulerBinding.instance.addPostFrameCallback(
+                                         (_){
+                                         _refreshController.sendBack(true, RefreshStatus.completed);
+
+                                         }
+                                     );
+           */
+
 		   new Future.delayed(const Duration(milliseconds: 2009))
                                .then((val) {
                                  _refreshController.sendBack(true, RefreshStatus.failed);
@@ -111,14 +128,14 @@ SmartRefresher:
 
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
-| child      | your content View   | ? extends ScrollView   |   null |  necessary
+| controller | controll inner some states  | RefreshController | null | necessary |
+| child      | your content View   | ? extends ScrollView   |   null |  necessary |
 | headerBuilder | the header indictor     | (BuildContext,int) => Widget  | null |if enablePullDown is necessary,else option |
 | footerBuilder | the footer indictor     | (BuildContext,int) => Widget  | null |if enablePullUp is necessary,else option |
 | enablePullDown | switch of the pull down      | boolean | true | optional |
 | enablePullUp |   switch of the pull up  | boolean | false |optional |
 | onRefresh | will callback when the one indicator is getting refreshing   | (bool) => Void | null | optional |
 | onOffsetChange | callback while you dragging and outOfrange  | (bool,double) => Void | null | optional |
-| controller | controll inner some states  | RefreshController | null | optional |
 | headerConfig |  This setting will affect which type of indicator you use and config contains a lot props,such as triigerDistance,completedurtion...   | Config | RefreshConfig | optional |
 | footerConfig |  This setting will affect which type of indicator you use and config contains a lot props,such as triigerDistance,completedurtion...    | Config | LoadConfig | optional |
 | enableOverScroll |  the switch of Overscroll,When you use  RefreshIndicator(Material), you may have to shut down.    | bool | true | optional |
@@ -127,9 +144,10 @@ RefreshConfig:
 
 | Attribute Name     |     Attribute Explain     |  Default Value  |
 |---------|--------------------------|:-----:|
+| height      | Height used to provide a cover indicator   |   50.0 |
 | triggerDistance      | Drag distance to trigger refresh   |   100.0 |
 | completeDuration | Stay in time when you return to success and failure     |  800 |
-| visibleRange | The scope of the indicator can be seen(refresh state)    |  50.0 |
+
 
 LoadConfig:
 
@@ -140,6 +158,13 @@ LoadConfig:
 | bottomWhenBuild | Is it at the bottom of listView when it is loaded(When your header is LoadConfig)    |  true |
 
 ## FAQ
+* <h3>When the amount of data is too small, how to hide the pull-up component?</h3>
+Flutter doesn't seem to provide Api so that we can get the total height of all items in ListView, so I don't have a way to hide automatically according to the height. This requires you to take the initiative to determine whether it is necessary to hide.
+Assuming you need to hide the pull-up control, you can set enablePullUp to false to hide it and not trigger callbacks for the pull-up. Example in[example4](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example1.dart)。
+
+* <h3>SliverAppBar,CustomScrollView Conflict Incompatibility?</h3>
+CustomScrollView is used inside my control, which has not been solved for the time being.
+
 * <h3>Does it support simple RefreshIndicator (material) + pull up loading and no elastic refresh combination?<br></h3>
 Yes, as long as you set the node properties enableOverScroll = false, enablePullDown = false, it's OK to wrap a single RefreshIndicator outside, and
 [Example4](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart) has given an example in demo.

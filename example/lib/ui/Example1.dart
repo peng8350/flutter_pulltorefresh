@@ -69,7 +69,6 @@ class Example1State extends State<Example1> {
 
   @override
   Widget build(BuildContext context) {
-    _scrollController = new ScrollController();
     return new LayoutBuilder(builder: (BuildContext c,BoxConstraints bc){
       double innerListHeight= data.length*100.0;
       double listHeight = bc.biggest.height;

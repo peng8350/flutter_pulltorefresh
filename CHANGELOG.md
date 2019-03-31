@@ -73,3 +73,13 @@ Notice: This version of the code changes much, Api too
 
 ## 1.1.6
 * Fix Compile error after flutter update
+
+
+## 1.2.0
+* Fixed the problem that ScrollController was not applied to internal controls
+* Optimize RefreshController
+* RefreshController changed to  required now
+* Add feature:reuqestRefresh can jumpTo Bottom or Top
+* Fix problem: Refresh can still be triggered when ScrollView is nested internally
+* Remove rendered twice to get indicator height,replaced by using height attribute in Config
+* change RefreshStatus from int to enum
