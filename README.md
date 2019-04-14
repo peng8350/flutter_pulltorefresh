@@ -121,6 +121,23 @@ But how can I tell the result to SmartRefresher? It's very simple. It provides a
   
 ```
 
+5.When the amount of data is too small, there is no automatic judgment to hide. You need to dynamically judge the height and actual size of listView. The height of listView can be determined by LayoutBuilder
+,[example1](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example1.dart) is an example.
+
+```
+
+       double innerListHeight= ...;
+       // listView height
+       double listHeight = ...;
+
+       new SmartRefresher(
+           enablePullUp: innerListHeight>listHeight
+          .....
+       )
+
+
+```
+
 
 ## Props Table
 
@@ -158,9 +175,8 @@ LoadConfig:
 | bottomWhenBuild | Is it at the bottom of listView when it is loaded(When your header is LoadConfig)    |  true |
 
 ## FAQ
-* <h3>When the amount of data is too small, how to hide the pull-up component?</h3>
-Flutter doesn't seem to provide Api so that we can get the total height of all items in ListView, so I don't have a way to hide automatically according to the height. This requires you to take the initiative to determine whether it is necessary to hide.
-Assuming you need to hide the pull-up control, you can set enablePullUp to false to hide it and not trigger callbacks for the pull-up. Example in[example4](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example1.dart)。
+* <h3>Is it possible to automatically determine that the amount of data is larger than one page and hide the pull-up component?</h3>
+There's no good way to do that right now. Flutter doesn't seem to provide Api so that we can get the total height of all items in ListView (before the interface is rendered). If anyone can solve this problem, please put it forward. Thank you very much.
 
 * <h3>SliverAppBar,CustomScrollView Conflict Incompatibility?</h3>
 CustomScrollView is used inside my control, which has not been solved for the time being.

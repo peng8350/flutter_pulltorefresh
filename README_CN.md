@@ -134,6 +134,23 @@ sendBack就可以告诉它返回什么状态。
   
 ```
 
+5.关于数据量太小的时候,内部没有提供自动判断去隐藏的功能,需要你动态判断listView高度和实际大小,listView高度可以借助LayoutBuilder
+,[example1](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example1.dart)是个例子.
+
+```
+
+       double innerListHeight= ...;
+       // listView height
+       double listHeight = ...;
+
+       new SmartRefresher(
+           enablePullUp: innerListHeight>listHeight
+          .....
+       )
+
+
+```
+
 
 
 ## 属性表
@@ -171,9 +188,8 @@ LoadConfig:
 | bottomWhenBuild | 是否加载时处于listView最底部(当你的header是LoadConfig)    |  true |
 
 ## FAQ
-* <h3>当数据量太小的时候,如何去隐藏上拉加载组件?</h3>
-flutter好像没有提供Api让我们可以获得ListView里的所有item加起来的高度,所以我内部并没有提供方法去根据高度自动隐藏的功能。这就需要你自己去主动判断是否有必要去隐藏。
-假设你需要隐藏上拉加载控件,你可以给enablePullUp设置为false即可隐藏掉它,也不会触发上拉加载的回调。例子在[example4](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example1.dart)。
+* <h3>能不能实现:自动判断数据量大于一页,隐藏掉上拉加载组件?</h3>
+目前来说没有什么好的办法,flutter好像没有提供Api让我们可以获得ListView里的所有item加起来的高度(界面渲染之前)。如果有人能解决这个问题,请提出,万分感谢!
 
 * <h3>关于SliverAppBar,和CustomScrollView一起使用冲突问题</h3>
 我控件内部采用的是CustomScrollView,这个问题暂时没有得到好的解决办法。
