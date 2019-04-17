@@ -18,7 +18,7 @@ const double default_refresh_triggerDistance = 100.0;
 
 const double default_load_triggerDistance = 15.0;
 
-const double default_height = 50.0;
+const double default_height = 60.0;
 
 const double default_headerExceed = 100.0;
 
