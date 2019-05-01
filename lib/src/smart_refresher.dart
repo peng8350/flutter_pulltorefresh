@@ -42,21 +42,24 @@ class SmartRefresher extends StatefulWidget {
   final OnOffsetChange onOffsetChange;
   //controll inner state
   final RefreshController controller;
+  // When SmartRefresher is wrapped in some ScrollView,if true:it will find the primaryScrollController in parent widget
+  final bool isNestWrapped;
 
-  SmartRefresher({
-    Key key,
-    @required this.child,
-    @required this.controller,
-    IndicatorBuilder headerBuilder,
-    IndicatorBuilder footerBuilder,
-    this.headerConfig: const RefreshConfig(),
-    this.footerConfig: const LoadConfig(),
-    this.enableOverScroll: default_enableOverScroll,
-    this.enablePullDown: default_enablePullDown,
-    this.enablePullUp: default_enablePullUp,
-    this.onRefresh,
-    this.onOffsetChange,
-  })  : assert(child != null),
+  SmartRefresher(
+      {Key key,
+      @required this.child,
+      @required this.controller,
+      IndicatorBuilder headerBuilder,
+      IndicatorBuilder footerBuilder,
+      this.headerConfig: const RefreshConfig(),
+      this.footerConfig: const LoadConfig(),
+      this.enableOverScroll: default_enableOverScroll,
+      this.enablePullDown: default_enablePullDown,
+      this.enablePullUp: default_enablePullUp,
+      this.onRefresh,
+      this.onOffsetChange,
+      this.isNestWrapped:false})
+      : assert(child != null),
         assert(controller != null),
         this.headerBuilder = headerBuilder ??
             ((BuildContext context, RefreshStatus mode) {
@@ -78,8 +81,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
   // key to get height header of footer
   final GlobalKey _headerKey = new GlobalKey(), _footerKey = new GlobalKey();
 
-  ValueNotifier<double> offsetLis = new ValueNotifier(0.0);
-
   //handle the scrollStartEvent
   bool _handleScrollStart(ScrollStartNotification notification) {
     // This is used to interupt useless callback when the pull up load rolls back.
@@ -95,8 +96,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   //handle the scrollMoveEvent
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
-    if (_measure(notification) != -1.0)
-      offsetLis.value = _measure(notification);
     GestureProcessor topWrap = _headerKey.currentState as GestureProcessor;
     GestureProcessor bottomWrap = _footerKey.currentState as GestureProcessor;
     if (widget.enablePullUp) bottomWrap.onDragMove(notification);
@@ -165,20 +164,24 @@ class _SmartRefresherState extends State<SmartRefresher> {
   }
 
   void _init() {
-    _scrollController = widget.child.controller ?? new ScrollController();
-    widget.controller._scrollController = _scrollController;
+    if (!widget.isNestWrapped) {
+      _scrollController = widget.child.controller ?? new ScrollController();
+      widget.controller._scrollController = _scrollController;
+    }
+
     widget.controller._footerHeight = widget.footerConfig is RefreshConfig
         ? (widget.footerConfig as RefreshConfig).height
         : 0.0;
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _onAfterBuild();
-    });
-    _scrollController.addListener(_handleOffsetCallback);
+
     widget.controller._headerMode.addListener(() {
       _didChangeMode(true, widget.controller._headerMode);
     });
     widget.controller._footerMode.addListener(() {
       _didChangeMode(false, widget.controller._footerMode);
+    });
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _onAfterBuild();
     });
   }
 
@@ -249,6 +252,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
   }
 
   void _onAfterBuild() {
+    _scrollController.addListener(_handleOffsetCallback);
+
     if (widget.headerConfig is LoadConfig) {
       if ((widget.headerConfig as LoadConfig).bottomWhenBuild) {
         _scrollController.jumpTo(-(_scrollController.position.pixels -
@@ -330,6 +335,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.isNestWrapped) {
+      _scrollController = PrimaryScrollController.of(context);
+    }
     List<Widget> slivers =
         new List.from(widget.child.buildSlivers(context), growable: true);
     slivers.add(new SliverToBoxAdapter(
