@@ -8,7 +8,7 @@ class Example1 extends StatefulWidget {
   Example1({Key key}) : super(key: key);
 
   @override
-  Example1State createState() => new Example1State();
+  Example1State createState() => Example1State();
 }
 
 class Example1State extends State<Example1> {
@@ -19,11 +19,10 @@ class Example1State extends State<Example1> {
   List<Widget> data = [];
   void _getDatas() {
     for (int i = 0; i < 4; i++) {
-      data.add(new Card(
-        margin:
-            new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-        child: new Center(
-          child: new Text('Data $i'),
+      data.add(Card(
+        margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+        child: Center(
+          child: Text('Data $i'),
         ),
       ));
     }
@@ -31,7 +30,7 @@ class Example1State extends State<Example1> {
 
   void scrollTop() {
     _scrollController.animateTo(0.0,
-        duration: new Duration(microseconds: 1000), curve: ElasticInCurve());
+        duration: Duration(microseconds: 1000), curve: ElasticInCurve());
   }
 
   void enterRefresh() {
@@ -46,8 +45,8 @@ class Example1State extends State<Example1> {
   void initState() {
     // TODO: implement initState
     _getDatas();
-    _scrollController = new ScrollController();
-    _refreshController = new RefreshController();
+    _scrollController = ScrollController();
+    _refreshController = RefreshController();
     SchedulerBinding.instance.addPostFrameCallback((_) {
 //      _refreshController.requestRefresh(true);
     });
@@ -55,10 +54,10 @@ class Example1State extends State<Example1> {
   }
 
   Widget _headerCreate(BuildContext context, RefreshStatus mode) {
-    return new ClassicIndicator(
+    return ClassicIndicator(
       mode: mode,
       refreshingText: "",
-      idleIcon: new Container(),
+      idleIcon: Container(),
       idleText: "Load more...",
     );
   }
@@ -69,10 +68,10 @@ class Example1State extends State<Example1> {
 
   @override
   Widget build(BuildContext context) {
-    return new LayoutBuilder(builder: (BuildContext c, BoxConstraints bc) {
+    return LayoutBuilder(builder: (BuildContext c, BoxConstraints bc) {
       double innerListHeight = data.length * 100.0;
       double listHeight = bc.biggest.height;
-      return new Container(
+      return Container(
           child: NestedScrollView(
               headerSliverBuilder: (c, s) => [
                     SliverPersistentHeader(
@@ -82,31 +81,31 @@ class Example1State extends State<Example1> {
                       color: Colors.red,
                     ))),
                     SliverAppBar(
-                      backgroundColor: Colors.brown,
-                      expandedHeight: 300.0,
-                      floating: false,
+                      backgroundColor: Colors.greenAccent,
+                      expandedHeight: 200.0,
                       pinned: true,
                       flexibleSpace: FlexibleSpaceBar(
-
                           centerTitle: true,
-                          background: Image.network("https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0c21b1ac3066ae4d354a3b2e0064c8be&auto=format&fit=crop&w=500&q=60",fit: BoxFit.cover,)
-                      ),
+                          background: Image.network(
+                            "https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0c21b1ac3066ae4d354a3b2e0064c8be&auto=format&fit=crop&w=500&q=60",
+                            fit: BoxFit.cover,
+                          )),
                     ),
                   ],
-              body: new SmartRefresher(
+              body: SmartRefresher(
                   controller: _refreshController,
                   enablePullDown: true,
                   isNestWrapped: true,
                   enablePullUp: innerListHeight > listHeight,
                   onRefresh: (up) {
                     if (up)
-                      new Future.delayed(const Duration(milliseconds: 2009))
+                      Future.delayed(const Duration(milliseconds: 2009))
                           .then((val) {
-                        data.add(new Card(
-                          margin: new EdgeInsets.only(
+                        data.add(Card(
+                          margin: EdgeInsets.only(
                               left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                          child: new Center(
-                            child: new Text('Data '),
+                          child: Center(
+                            child: Text('Data '),
                           ),
                         ));
 
@@ -116,14 +115,14 @@ class Example1State extends State<Example1> {
                         });
                       });
                     else {
-                      new Future.delayed(const Duration(milliseconds: 2009))
+                      Future.delayed(const Duration(milliseconds: 2009))
                           .then((val) {
                         setState(() {
-                          data.add(new Card(
-                            margin: new EdgeInsets.only(
+                          data.add(Card(
+                            margin: EdgeInsets.only(
                                 left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                            child: new Center(
-                              child: new Text('Data '),
+                            child: Center(
+                              child: Text('Data '),
                             ),
                           ));
                           _refreshController.sendBack(
@@ -133,86 +132,29 @@ class Example1State extends State<Example1> {
                     }
                   },
                   onOffsetChange: _onOffsetCallback,
-                  child: new ListView.builder(
+                  child: ListView.builder(
                     reverse: true,
                     controller: _scrollController,
                     itemExtent: 100.0,
                     itemCount: data.length,
-                    itemBuilder: (context, index) => new Item(),
+                    itemBuilder: (context, index) => Item(),
                   ))));
     });
-//    return new ListView(
-//      children: [
-//        Container(
-//          height: 100.0,
-//          color: Colors.green,
-//        ),
-//        new Container(
-//          child: PrimaryScrollController(controller: _scrollController, child: new SmartRefresher(
-//              controller: _refreshController,
-//              enablePullDown: true,
-//              isScrollWrapped: true,
-//              onRefresh: (up) {
-//                if (up)
-//                  new Future.delayed(const Duration(milliseconds: 2009))
-//                      .then((val) {
-//                    data.add(new Card(
-//                      margin: new EdgeInsets.only(
-//                          left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-//                      child: new Center(
-//                        child: new Text('Data '),
-//                      ),
-//                    ));
-//
-//                    setState(() {
-//                      _refreshController.sendBack(
-//                          true, RefreshStatus.completed);
-//                    });
-//                  });
-//                else {
-//                  new Future.delayed(const Duration(milliseconds: 2009))
-//                      .then((val) {
-//                    setState(() {
-//                      data.add(new Card(
-//                        margin: new EdgeInsets.only(
-//                            left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-//                        child: new Center(
-//                          child: new Text('Data '),
-//                        ),
-//                      ));
-//                      _refreshController.sendBack(false, RefreshStatus.idle);
-//                    });
-//                  });
-//                }
-//              },
-//              onOffsetChange: _onOffsetCallback,
-//              child: new ListView.builder(
-//                reverse: true,
-//                controller: _scrollController,
-//                itemExtent: 100.0,
-//                itemCount: data.length,
-//                itemBuilder: (context, index) => new Item(),
-//              ))),
-//          height: 500.0,
-//        )
-//      ],
-//    );
   }
 }
 
 class Item extends StatefulWidget {
   @override
-  _ItemState createState() => new _ItemState();
+  _ItemState createState() => _ItemState();
 }
 
 class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
-    return new Card(
-      margin:
-          new EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-      child: new Center(
-        child: new Text('Data'),
+    return Card(
+      margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+      child: Center(
+        child: Text('Data'),
       ),
     );
   }

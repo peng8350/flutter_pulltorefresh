@@ -14,15 +14,17 @@ import 'package:flutter/material.dart';
     Fixed the problem that child parts could not be dragged without data.
  */
 class RefreshScrollPhysics extends ScrollPhysics {
-
   final bool enableOverScroll;
 
   /// Creates scroll physics that bounce back from the edge.
-  const RefreshScrollPhysics({ScrollPhysics parent,this.enableOverScroll:true}) : super(parent: parent);
+  const RefreshScrollPhysics(
+      {ScrollPhysics parent, this.enableOverScroll: true})
+      : super(parent: parent);
 
   @override
   RefreshScrollPhysics applyTo(ScrollPhysics ancestor) {
-    return new RefreshScrollPhysics(parent: buildParent(ancestor),enableOverScroll: enableOverScroll);
+    return RefreshScrollPhysics(
+        parent: buildParent(ancestor), enableOverScroll: enableOverScroll);
   }
 
   /// The multiple applied to overscroll to make it appear that scrolling past
@@ -64,12 +66,12 @@ class RefreshScrollPhysics extends ScrollPhysics {
             (overscrollPast - offset.abs()) / position.viewportDimension)
         : frictionFactor(overscrollPast / position.viewportDimension);
     final double direction = offset.sign;
-    return  direction * _applyFriction(overscrollPast, offset.abs(), friction);
+    print(direction * _applyFriction(overscrollPast, offset.abs(), friction));
+    return direction * _applyFriction(overscrollPast, offset.abs(), friction);
   }
 
   static double _applyFriction(
       double extentOutside, double absDelta, double gamma) {
-
     assert(absDelta > 0);
     double total = 0.0;
     if (extentOutside > 0) {
@@ -83,13 +85,15 @@ class RefreshScrollPhysics extends ScrollPhysics {
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
-    if(!enableOverScroll) {
+    if (!enableOverScroll) {
       if (value < position.pixels &&
           position.pixels <= position.minScrollExtent) // underscroll
         return value - position.pixels;
       if (value < position.minScrollExtent &&
-          position.minScrollExtent < position.pixels) // hit top edge
+          position.minScrollExtent < position.pixels) {
+        // hit top edge
         return value - position.minScrollExtent;
+      }
       if (position.maxScrollExtent <= position.pixels &&
           position.pixels < value) // overscroll
         return value - position.pixels;
@@ -98,8 +102,7 @@ class RefreshScrollPhysics extends ScrollPhysics {
           position.maxScrollExtent < value) // hit bottom edge
         return value - position.maxScrollExtent;
     }
-      return 0.0;
-
+    return 0.0;
   }
 
   @override
@@ -107,7 +110,7 @@ class RefreshScrollPhysics extends ScrollPhysics {
       ScrollMetrics position, double velocity) {
     final Tolerance tolerance = this.tolerance;
     if (velocity.abs() >= tolerance.velocity || position.outOfRange) {
-      return new BouncingScrollSimulation(
+      return BouncingScrollSimulation(
         spring: spring,
         position: position.pixels,
         velocity: velocity *

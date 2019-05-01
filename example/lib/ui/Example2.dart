@@ -7,7 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Example2 extends StatefulWidget {
   @override
-  _Example2State createState() => new _Example2State();
+  _Example2State createState() => _Example2State();
 }
 
 class _Example2State extends State<Example2> with TickerProviderStateMixin {
@@ -37,19 +37,19 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
 
   void _onRefresh(bool up) {
     if (up)
-      new Future.delayed(const Duration(milliseconds: 2009)).then((val) {
+      Future.delayed(const Duration(milliseconds: 2009)).then((val) {
         _controller.sendBack(true, RefreshStatus.completed);
 //                refresher.sendStatus(RefreshStatus.completed);
       });
     else {
-      new Future.delayed(const Duration(milliseconds: 2009)).then((val) {
+      Future.delayed(const Duration(milliseconds: 2009)).then((val) {
         _fetch();
       });
     }
   }
 
   Widget buildImage(context, index) {
-    return new Item(
+    return Item(
       url: data[index],
     );
   }
@@ -64,7 +64,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _controller = new RefreshController();
+    _controller = RefreshController();
   }
 
   Widget _headerCreate(BuildContext context, RefreshStatus mode) {
@@ -79,13 +79,12 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
               size: 50.0,
             ),
           ),
-        )
-    );
+        ));
     return _loadingContainer;
   }
 
   Widget _footerCreate(BuildContext context, RefreshStatus mode) {
-    return new ClassicIndicator(
+    return ClassicIndicator(
       mode: mode,
       refreshingText: 'loading...',
       idleIcon: const Icon(Icons.arrow_upward),
@@ -95,23 +94,23 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return new SmartRefresher(
+    return SmartRefresher(
       enablePullDown: true,
       enablePullUp: true,
       controller: _controller,
       onRefresh: _onRefresh,
       headerBuilder: _headerCreate,
       footerBuilder: _footerCreate,
-      footerConfig: new RefreshConfig(),
+      footerConfig: RefreshConfig(),
       onOffsetChange: _onOffsetCallback,
-      child: new GridView.builder(
-        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      child: GridView.builder(
+        gridDelegate:
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: data.length,
         itemBuilder: buildImage,
       ),
     );
   }
-
 }
 
 class Item extends StatefulWidget {
@@ -120,15 +119,15 @@ class Item extends StatefulWidget {
   Item({this.url});
 
   @override
-  _ItemState createState() => new _ItemState();
+  _ItemState createState() => _ItemState();
 }
 
 class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
-    if (widget.url == null) return new Container();
-    return new RepaintBoundary(
-      child: new Image.network(
+    if (widget.url == null) return Container();
+    return RepaintBoundary(
+      child: Image.network(
         widget.url,
         fit: BoxFit.cover,
       ),

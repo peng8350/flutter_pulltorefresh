@@ -57,13 +57,13 @@ class ClassicIndicator extends Indicator {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new _ClassicIndicatorState();
+    return  _ClassicIndicatorState();
   }
 }
 
 class _ClassicIndicatorState extends State<ClassicIndicator> {
   Widget _buildText() {
-    return new Text(
+    return  Text(
         widget.mode == RefreshStatus.canRefresh
             ? widget.releaseText
             : widget.mode == RefreshStatus.completed
@@ -89,7 +89,7 @@ class _ClassicIndicatorState extends State<ClassicIndicator> {
                     ? widget.completeIcon
                     : widget.mode == RefreshStatus.failed
                         ? widget.failedIcon
-                        : new SizedBox(
+                        :  SizedBox(
                             width: 25.0,
                             height: 25.0,
                             child: widget.refreshingIcon,
@@ -104,31 +104,29 @@ class _ClassicIndicatorState extends State<ClassicIndicator> {
     Widget iconWidget = _buildIcon();
     List<Widget> children = <Widget>[
       iconWidget,
-      new Container(
-        width: widget.spacing,
-        height: widget.spacing,
+       Container(
       ),
       textWidget
     ];
     Widget container = (widget.iconPos == IconPosition.top ||
             widget.iconPos == IconPosition.bottom)
-        ? new Column(
+        ?  Column(
             mainAxisAlignment: MainAxisAlignment.center,
             verticalDirection: widget.iconPos == IconPosition.top
                 ? VerticalDirection.down
                 : VerticalDirection.up,
             children: children,
           )
-        : new Row(
+        :  Row(
             textDirection: widget.iconPos == IconPosition.right
                 ? TextDirection.rtl
                 : TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.center,
             children: children,
           );
-    return new Container(
+    return  Container(
       height: widget.height+0.0,
-      child: new Center(
+      child:  Center(
         child: container,
       ),
     );

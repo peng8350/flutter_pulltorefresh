@@ -7,7 +7,6 @@ import 'package:pull_to_refresh/src/smart_refresher.dart';
     createTime:2018-05-17 10:39
  */
 
-
 typedef void OnRefresh(bool up);
 typedef void OnOffsetChange(bool up, double offset);
 typedef Widget IndicatorBuilder(BuildContext context, RefreshStatus mode);
@@ -34,6 +33,6 @@ const bool default_BottomWhenBuild = true;
 
 const bool default_enableOverScroll = true;
 
-const int spaceAnimateMill=300;
+const int spaceAnimateMill = 300;
 
 const double minSpace = 0.000001;

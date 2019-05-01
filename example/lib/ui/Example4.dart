@@ -5,7 +5,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Example4 extends StatefulWidget {
   @override
-  _Example4State createState() => new _Example4State();
+  _Example4State createState() => _Example4State();
 }
 
 class _Example4State extends State<Example4> with TickerProviderStateMixin {
@@ -13,8 +13,8 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   RefreshController _refreshController;
   void _getDatas() {
     for (int i = 0; i < 18; i++) {
-      data.add(new Container(
-        child: new Text('Data $i'),
+      data.add(Container(
+        child: Text('Data $i'),
         height: 50.0,
       ));
     }
@@ -24,7 +24,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     _getDatas();
-    _refreshController = new RefreshController();
+    _refreshController = RefreshController();
     super.initState();
   }
 
@@ -38,32 +38,33 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
 //        return data[index];
 //      },
 //    )
-    return new RefreshIndicator(
-        child: new SmartRefresher(
+    return RefreshIndicator(
+        child: SmartRefresher(
             enablePullDown: false,
             enablePullUp: true,
             enableOverScroll: false,
             footerBuilder: (context, mode) {
-              return new ClassicIndicator(mode: mode);
+              return ClassicIndicator(mode: mode);
             },
-            footerConfig: new LoadConfig(),
+            footerConfig: LoadConfig(),
             controller: _refreshController,
             onRefresh: (up) {
-              new Future.delayed(const Duration(milliseconds: 1000))
-                  .then((val) {
+              Future.delayed(const Duration(milliseconds: 1000)).then((val) {
                 _refreshController.sendBack(false, RefreshStatus.idle);
               });
             },
-            onOffsetChange: (bool up,double offset){
+            onOffsetChange: (bool up, double offset) {
               print("$up:$offset");
             },
-            child: new CustomScrollView(
-              slivers: [new SliverList(delegate: new SliverChildListDelegate(data,addRepaintBoundaries: true))],
-            )
-
-            ),
+            child: CustomScrollView(
+              slivers: [
+                SliverList(
+                    delegate: SliverChildListDelegate(data,
+                        addRepaintBoundaries: true))
+              ],
+            )),
         onRefresh: () {
-          return new Future.delayed(const Duration(milliseconds: 300));
+          return Future.delayed(const Duration(milliseconds: 300));
         });
   }
 }

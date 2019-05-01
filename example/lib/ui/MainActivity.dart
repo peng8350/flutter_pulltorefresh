@@ -27,8 +27,8 @@ class _MainActivityState extends State<MainActivity> with SingleTickerProviderSt
 
   List<Widget> views;
   TabController _tabController;
-  GlobalKey<Example3State> example3Key= new GlobalKey();
-  GlobalKey<Example1State> example1Key= new GlobalKey();
+  GlobalKey<Example3State> example3Key=  GlobalKey();
+  GlobalKey<Example1State> example1Key=  GlobalKey();
 
   void _changePage(){
     Navigator.of(context).pushNamed("sec");
@@ -57,62 +57,62 @@ class _MainActivityState extends State<MainActivity> with SingleTickerProviderSt
 //      ),
 //      body: new TabBarView(children: views,controller:_tabController ,),
 //    );
-    return new Scaffold(
+    return  Scaffold(
 
-      appBar: new AppBar(
+      appBar:  AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: new Text(widget.title),
-        actions: <Widget>[new MaterialButton(onPressed: (){
+        title:  Text(widget.title),
+        actions: <Widget>[ MaterialButton(onPressed: (){
          tabIndex==2? example3Key.currentState.enterRefresh():tabIndex==0?example1Key.currentState.scrollTop():_changePage();
-        },child: new Text(tabIndex==2?'refresh3':tabIndex==0?"滚回顶部":"跳转页面",style: new TextStyle(color:Colors.white),))],
+        },child:  Text(tabIndex==2?'refresh3':tabIndex==0?"滚回顶部":"跳转页面",style:  TextStyle(color:Colors.white),))],
       ),
-      body: new Stack(
+      body:  Stack(
 
         children: <Widget>[
-          new Offstage(
+           Offstage(
             child: views[0],
             offstage: tabIndex!=0,
           ),
-          new Offstage(
+           Offstage(
             child: views[1],
             offstage: tabIndex!=1,
           ),
-          new Offstage(
+           Offstage(
             child: views[2],
             offstage: tabIndex!=2,
           ),
-          new Offstage(
+           Offstage(
             child: views[3],
             offstage: tabIndex!=3,
           )
         ],
       ),
-      bottomNavigationBar: new BottomNavigationBar(
+      bottomNavigationBar:  BottomNavigationBar(
         items: [
-          new BottomNavigationBarItem(
-              icon: new Icon(Icons.home,
+           BottomNavigationBarItem(
+              icon:  Icon(Icons.home,
                   color: tabIndex == 0 ? Colors.blue : Colors.grey),
-              title: new Text('Example1',
-                  style: new TextStyle(
+              title:  Text('Example1',
+                  style:  TextStyle(
                       color: tabIndex == 0 ? Colors.blue : Colors.grey))),
-          new BottomNavigationBarItem(
-              icon: new Icon(Icons.cloud,
+           BottomNavigationBarItem(
+              icon:  Icon(Icons.cloud,
                   color: tabIndex == 1 ? Colors.blue : Colors.grey),
-              title: new Text('Example2',
-                  style: new TextStyle(
+              title:  Text('Example2',
+                  style:  TextStyle(
                       color: tabIndex == 1 ? Colors.blue : Colors.grey))),
-          new BottomNavigationBarItem(
-              icon: new Icon(Icons.call,
+           BottomNavigationBarItem(
+              icon:  Icon(Icons.call,
                   color: tabIndex == 2 ? Colors.blue : Colors.grey),
-              title: new Text('Example3',
-                  style: new TextStyle(
+              title:  Text('Example3',
+                  style:  TextStyle(
                       color: tabIndex == 2 ? Colors.blue : Colors.grey))),
-          new BottomNavigationBarItem(
-              icon: new Icon(Icons.transform,
+           BottomNavigationBarItem(
+              icon:  Icon(Icons.transform,
                   color: tabIndex == 3 ? Colors.blue : Colors.grey),
-              title: new Text('Example4',
-                  style: new TextStyle(
+              title:  Text('Example4',
+                  style:  TextStyle(
                       color: tabIndex == 3 ? Colors.blue : Colors.grey))),
         ],
         onTap: (index) {
@@ -130,8 +130,8 @@ class _MainActivityState extends State<MainActivity> with SingleTickerProviderSt
   @override
   void initState() {
     // TODO: implement initState
-    _tabController = new TabController(length: 4, vsync: this);
-    views = [new Example1(key:example1Key),new Example2(),new Example3(key:example3Key),new Example4()];
+    _tabController =  TabController(length: 4, vsync: this);
+    views = [ Example1(key:example1Key), Example2(), Example3(key:example3Key), Example4()];
     super.initState();
   }
 

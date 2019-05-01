@@ -27,26 +27,22 @@ class _SecondActivityState extends State<SecondActivity> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new Scaffold(
-      appBar: new AppBar(
+    return Scaffold(
+      appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: new Text(widget.title),
-        leading: new GestureDetector(
-          child: new Container(
-            child: new Row(
-              children: <Widget>[
-                new Icon(Icons.keyboard_arrow_left),
-                new Text("返回")
-              ],
+        title: Text(widget.title),
+        leading: GestureDetector(
+            child: Container(
+              child: Row(
+                children: <Widget>[Icon(Icons.keyboard_arrow_left), Text("返回")],
+              ),
             ),
-          ),
-          onTap:(){
-            Navigator.of(context).pop();
-          }
-        ),
+            onTap: () {
+              Navigator.of(context).pop();
+            }),
       ),
-      body: new Text("测试跳转返回"),
+      body: Text("测试跳转返回"),
     );
   }
 }

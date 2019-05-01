@@ -69,7 +69,7 @@ class RefreshWrapper extends Wrapper {
     ValueNotifier<RefreshStatus> modeLis,
     this.onOffsetChange,
     this.completeDuration: default_completeDuration,
-    double triggerDistance : default_refresh_triggerDistance,
+    double triggerDistance: default_refresh_triggerDistance,
     this.height: default_height,
     bool up: true,
   })  : assert(up != null),
@@ -84,7 +84,7 @@ class RefreshWrapper extends Wrapper {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new RefreshWrapperState();
+    return RefreshWrapperState();
   }
 }
 
@@ -160,8 +160,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
 
   void _handleOffsetCallBack() {
     if (widget.onOffsetChange != null) {
-      widget.onOffsetChange(
-          widget.up, _sizeController.value * widget.height);
+      widget.onOffsetChange(widget.up, _sizeController.value * widget.height);
     }
   }
 
@@ -171,20 +170,19 @@ class RefreshWrapperState extends State<RefreshWrapper>
         _sizeController.value = 1.0;
         break;
       case RefreshStatus.completed:
-        new Future.delayed(new Duration(milliseconds: widget.completeDuration),
-            () {
+        Future.delayed(Duration(milliseconds: widget.completeDuration), () {
           _dismiss();
         });
         break;
       case RefreshStatus.failed:
-        new Future.delayed(new Duration(milliseconds: widget.completeDuration),
-            () {
+        Future.delayed(Duration(milliseconds: widget.completeDuration), () {
           _dismiss();
         }).then((val) {
           widget.mode = RefreshStatus.idle;
         });
         break;
-      default:break;
+      default:
+        break;
     }
     setState(() {});
   }
@@ -201,7 +199,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
   void initState() {
     // TODO: implement initState
     super.initState();
-    this._sizeController = new AnimationController(
+    this._sizeController = AnimationController(
         vsync: this,
         lowerBound: minSpace,
         duration: const Duration(milliseconds: spaceAnimateMill))
@@ -213,22 +211,22 @@ class RefreshWrapperState extends State<RefreshWrapper>
   Widget build(BuildContext context) {
     // TODO: implement build
     if (widget.up) {
-      return new Column(
+      return Column(
         children: <Widget>[
-          new SizeTransition(
+          SizeTransition(
             sizeFactor: _sizeController,
-            child: new Container(height: widget.height),
+            child: Container(height: widget.height),
           ),
           widget.builder(context, widget.mode)
         ],
       );
     }
-    return new Column(
+    return Column(
       children: <Widget>[
         widget.builder(context, widget.mode),
-        new SizeTransition(
+        SizeTransition(
           sizeFactor: _sizeController,
-          child: new Container(height: widget.height),
+          child: Container(height: widget.height),
         )
       ],
     );
@@ -243,7 +241,7 @@ class LoadWrapper extends Wrapper {
       {Key key,
       @required bool up,
       @required ValueNotifier<RefreshStatus> modeListener,
-      double triggerDistance:default_load_triggerDistance,
+      double triggerDistance: default_load_triggerDistance,
       this.autoLoad,
       IndicatorBuilder builder})
       : assert(up != null, modeListener != null),
@@ -258,7 +256,7 @@ class LoadWrapper extends Wrapper {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new LoadWrapperState();
+    return LoadWrapperState();
   }
 }
 
@@ -302,10 +300,12 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
     if (widget._isRefreshing || widget._isComplete) return;
     if (widget.autoLoad) {
       if (widget.up &&
-          notification.metrics.extentBefore <= widget.triggerDistance&&notification.scrollDelta<1.0)
+          notification.metrics.extentBefore <= widget.triggerDistance &&
+          notification.scrollDelta < 1.0)
         widget.mode = RefreshStatus.refreshing;
       if (!widget.up &&
-          notification.metrics.extentAfter <= widget.triggerDistance&&notification.scrollDelta>1.0)
+          notification.metrics.extentAfter <= widget.triggerDistance &&
+          notification.scrollDelta > 1.0)
         widget.mode = RefreshStatus.refreshing;
     }
   }
@@ -323,7 +323,6 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
         widget.mode = RefreshStatus.refreshing;
     }
   }
-
 }
 
 abstract class GestureProcessor {

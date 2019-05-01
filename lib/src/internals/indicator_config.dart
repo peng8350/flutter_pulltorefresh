@@ -37,11 +37,10 @@ class LoadConfig extends Config {
 
   final bool enableOverScroll;
 
-
   const LoadConfig({
     this.autoLoad: default_AutoLoad,
-    this.bottomWhenBuild:default_BottomWhenBuild,
-    this.enableOverScroll :default_enableOverScroll,
+    this.bottomWhenBuild: default_BottomWhenBuild,
+    this.enableOverScroll: default_enableOverScroll,
     double triggerDistance: default_load_triggerDistance,
   }) : super(triggerDistance: triggerDistance);
 }
