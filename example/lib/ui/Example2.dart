@@ -96,7 +96,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return SmartRefresher(
       enablePullDown: true,
-      enablePullUp: true,
+      enablePullUp: false,
       controller: _controller,
       onRefresh: _onRefresh,
       headerBuilder: _headerCreate,

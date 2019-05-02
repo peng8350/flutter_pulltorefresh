@@ -54,6 +54,7 @@ abstract class Wrapper extends StatefulWidget {
     }
     return false;
   }
+
 }
 
 //idle,refreshing,completed,failed,canRefresh
@@ -92,21 +93,8 @@ class RefreshWrapper extends Wrapper {
 class RefreshWrapperState extends State<RefreshWrapper>
     with TickerProviderStateMixin
     implements GestureProcessor {
-  AnimationController _sizeController;
 
-  /*
-      up indicate drag from top (pull down)
-   */
-  void _dismiss() {
-    /*
-        why the value is 0.00001?
-        If this value is 0, no controls will
-        cause Flutter to automatically retrieve widget.
-     */
-    _sizeController.animateTo(minSpace).then((var _) {
-      widget.mode = RefreshStatus.idle;
-    });
-  }
+  bool hasLayout = false;
 
   RefreshStatus get mode => widget.modeListener.value;
 
@@ -138,7 +126,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
     double offset = _measure(notification);
     if (offset >= 1.0) {
       widget.mode = RefreshStatus.canRefresh;
-    } else {
+    } else{
       widget.mode = RefreshStatus.idle;
     }
   }
@@ -151,48 +139,42 @@ class RefreshWrapperState extends State<RefreshWrapper>
     }
     if (widget._isComplete || widget._isRefreshing) return;
     bool reachMax = _measure(notification) >= 1.0;
-    if (!reachMax) {
-      _sizeController.animateTo(0.0);
-      return;
-    } else {
+    if(reachMax) {
       widget.mode = RefreshStatus.refreshing;
     }
   }
 
-  void _handleOffsetCallBack() {
-    if (widget.onOffsetChange != null) {
-      widget.onOffsetChange(widget.up, _sizeController.value * widget.height);
-    }
-  }
 
   void _handleModeChange() {
+
     switch (mode) {
       case RefreshStatus.refreshing:
-        _sizeController.value = 1.0;
+        hasLayout = true;
+        setState(() {});
         break;
       case RefreshStatus.completed:
         Future.delayed(Duration(milliseconds: widget.completeDuration), () {
-          _dismiss();
+          hasLayout = false;
+
+          setState(() {});
         });
         break;
       case RefreshStatus.failed:
         Future.delayed(Duration(milliseconds: widget.completeDuration), () {
-          _dismiss();
-        }).then((val) {
-          widget.mode = RefreshStatus.idle;
+          hasLayout = false;
+          setState(() {});
         });
         break;
       default:
         break;
     }
-    setState(() {});
+
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     widget.modeListener.removeListener(_handleModeChange);
-    _sizeController.removeListener(_handleOffsetCallBack);
     super.dispose();
   }
 
@@ -200,11 +182,6 @@ class RefreshWrapperState extends State<RefreshWrapper>
   void initState() {
     // TODO: implement initState
     super.initState();
-    this._sizeController = AnimationController(
-        vsync: this,
-        lowerBound: minSpace,
-        duration: const Duration(milliseconds: spaceAnimateMill))
-      ..addListener(_handleOffsetCallBack);
     widget.modeListener.addListener(_handleModeChange);
   }
 
@@ -212,25 +189,34 @@ class RefreshWrapperState extends State<RefreshWrapper>
   Widget build(BuildContext context) {
     // TODO: implement build
     if (widget.up) {
-      return Column(
-        children: <Widget>[
-          SizeTransition(
-            sizeFactor: _sizeController,
-            child: Container(height: widget.height),
-          ),
-          widget.builder(context, widget.mode)
-        ],
+      return SliverRefresh(
+        hasLayoutExtent: hasLayout,
+        refreshIndicatorLayoutExtent: widget.height,
+        refreshStyle: RefreshStyle.Follow,
+        up: widget.up,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+              return widget.builder(
+                context,widget.mode
+              );
+          },
+        ),
       );
     }
-    return Column(
-      children: <Widget>[
-        widget.builder(context, widget.mode),
-        SizeTransition(
-          sizeFactor: _sizeController,
-          child: Container(height: widget.height),
-        )
-      ],
-    );
+//    return Column(
+//      children: <Widget>[
+//        SliverRefresh(
+//          child: widget.builder(context, widget.mode,),
+//          refreshStyle: RefreshStyle.Follow,
+//          up: false,
+//        ),
+//        SliverToBoxAdapter(child: SizeTransition(
+//          sizeFactor: _sizeController,
+//          child: Container(height: widget.height),
+//        ),)
+//
+//      ],
+//    );
   }
 }
 
@@ -267,7 +253,7 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return widget.builder(context, widget.mode);
+    return SliverToBoxAdapter(child: widget.builder(context, widget.mode),);
   }
 
   @override

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter/cupertino.dart';
 
 class Example4 extends StatefulWidget {
   @override
@@ -38,33 +39,13 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
 //        return data[index];
 //      },
 //    )
-    return RefreshIndicator(
-        child: SmartRefresher(
-            enablePullDown: false,
-            enablePullUp: true,
-            enableOverScroll: false,
-            footerBuilder: (context, mode) {
-              return ClassicIndicator(mode: mode);
-            },
-            footerConfig: LoadConfig(),
-            controller: _refreshController,
-            onRefresh: (up) {
-              Future.delayed(const Duration(milliseconds: 1000)).then((val) {
-                _refreshController.sendBack(false, RefreshStatus.idle);
-              });
-            },
-            onOffsetChange: (bool up, double offset) {
-              print("$up:$offset");
-            },
-            child: CustomScrollView(
-              slivers: [
-                SliverList(
-                    delegate: SliverChildListDelegate(data,
-                        addRepaintBoundaries: true))
-              ],
-            )),
-        onRefresh: () {
-          return Future.delayed(const Duration(milliseconds: 300));
-        });
+    return CustomScrollView(
+      slivers: [
+        CupertinoSliverRefreshControl(builder: (a,b,c,d,e) => Icon(CupertinoIcons.add_circled_solid)),
+        SliverList(
+            delegate: SliverChildListDelegate(data,
+                addRepaintBoundaries: true))
+      ],
+    );
   }
 }

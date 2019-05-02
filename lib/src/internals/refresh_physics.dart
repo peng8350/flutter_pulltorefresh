@@ -66,7 +66,6 @@ class RefreshScrollPhysics extends ScrollPhysics {
             (overscrollPast - offset.abs()) / position.viewportDimension)
         : frictionFactor(overscrollPast / position.viewportDimension);
     final double direction = offset.sign;
-    print(direction * _applyFriction(overscrollPast, offset.abs(), friction));
     return direction * _applyFriction(overscrollPast, offset.abs(), friction);
   }
 

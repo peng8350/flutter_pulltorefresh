@@ -15,6 +15,8 @@ import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
 import 'indicator/classic_indicator.dart';
 import 'dart:math' as math;
 
+import 'internals/refreshsliver.dart';
+
 enum WrapperType { Refresh, Loading }
 
 enum RefreshStatus { idle, canRefresh, refreshing, completed, failed, noMore }
@@ -233,10 +235,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
         if (widget.onRefresh != null) {
           widget.onRefresh(up);
         }
-        if (up && widget.headerConfig is RefreshConfig) {
-          RefreshConfig config = widget.headerConfig as RefreshConfig;
-          _scrollController.jumpTo(_scrollController.offset + config.height);
-        }
         break;
       default:
         break;
@@ -246,8 +244,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
   void _onAfterBuild() {
     if (widget.headerConfig is LoadConfig) {
       if ((widget.headerConfig as LoadConfig).bottomWhenBuild) {
-        _scrollController.jumpTo(-(_scrollController.position.pixels -
-            _scrollController.position.maxScrollExtent));
+//        _scrollController.jumpTo(-(_scrollController.position.pixels -
+//            _scrollController.position.maxScrollExtent));
       }
     }
   }
@@ -289,13 +287,14 @@ class _SmartRefresherState extends State<SmartRefresher> {
         up: up,
         onOffsetChange: (bool up, double offset) {
           if (widget.onOffsetChange != null) {
-            widget.onOffsetChange(
-                up,
-                up
-                    ? -_scrollController.offset + offset
-                    : _scrollController.position.pixels -
-                        _scrollController.position.maxScrollExtent +
-                        offset);
+            /* give scollController to handle */
+//            widget.onOffsetChange(
+//                up,
+//                up
+//                    ? -_scrollController.offset + offset
+//                    : _scrollController.position.pixels -
+//                        _scrollController.position.maxScrollExtent +
+//                        offset);
           }
         },
         completeDuration: config.completeDuration,
@@ -331,43 +330,22 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> slivers =
-        List.from(widget.child.buildSlivers(context), growable: true);
-    slivers.add(SliverToBoxAdapter(
-      child: widget.footerBuilder != null && widget.enablePullUp
-          ? _buildWrapperByConfig(widget.footerConfig, false)
-          : Container(),
-    ));
-    slivers.insert(
-        0,
-        SliverToBoxAdapter(
-            child: widget.headerBuilder != null && widget.enablePullDown
-                ? _buildWrapperByConfig(widget.headerConfig, true)
-                : Container()));
+
+//    slivers.add(widget.footerBuilder != null && widget.enablePullUp
+//        ? _buildWrapperByConfig(widget.footerConfig, false)
+//        : Container());
+
 
     return LayoutBuilder(builder: (context, cons) {
-      return Stack(
-        children: <Widget>[
-          Positioned(
-              top: !widget.enablePullDown || widget.headerConfig is LoadConfig
-                  ? 0.0
-                  : -(widget.headerConfig as RefreshConfig).height,
-              bottom: !widget.enablePullUp || widget.footerConfig is LoadConfig
-                  ? 0.0
-                  : -(widget.footerConfig as RefreshConfig).height,
-              left: 0.0,
-              right: 0.0,
-              child: NotificationListener(
-                child: CustomScrollView(
-                  physics: RefreshScrollPhysics(
-                      enableOverScroll: widget.enableOverScroll),
-                  controller: _scrollController,
-                  cacheExtent: widget.child.cacheExtent,
-                  slivers: slivers,
-                ),
-                onNotification: _dispatchScrollEvent,
-              )),
-        ],
+      return NotificationListener(
+        child: CustomScrollView(
+          physics:
+              RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
+          controller: _scrollController,
+          cacheExtent: widget.child.cacheExtent,
+          slivers: [ _buildWrapperByConfig(widget.headerConfig, true),widget.child.buildSlivers(context).elementAt(0)],
+        ),
+        onNotification: _dispatchScrollEvent,
       );
     });
   }

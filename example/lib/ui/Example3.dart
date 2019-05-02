@@ -113,7 +113,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           alignment: Alignment.bottomCenter,
         ),
         SmartRefresher(
-          enablePullUp: true,
           controller: _refreshController,
           headerBuilder: _headerCreate,
           footerBuilder: _headerCreate,

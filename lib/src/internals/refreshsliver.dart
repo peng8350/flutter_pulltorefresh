@@ -8,12 +8,18 @@ import 'package:flutter/material.dart';
 import 'dart:math' as Math;
 import 'package:flutter/rendering.dart';
 
+enum RefreshStyle{
+  Follow,UnFollow,Back,Front
+}
+
 class SliverRefresh extends SingleChildRenderObjectWidget {
   const SliverRefresh({
     Key key,
     this.refreshIndicatorLayoutExtent = 0.0,
     this.hasLayoutExtent = false,
     Widget child,
+    this.refreshStyle,
+    this.up
   }) : assert(refreshIndicatorLayoutExtent != null),
         assert(refreshIndicatorLayoutExtent >= 0.0),
         assert(hasLayoutExtent != null),
@@ -28,11 +34,17 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   // on whether to also occupy any layoutExtent space or not.
   final bool hasLayoutExtent;
 
+  final RefreshStyle refreshStyle;
+
+  final bool up;
+
   @override
   _RefreshRenderSliver createRenderObject(BuildContext context) {
     return _RefreshRenderSliver(
       refreshIndicatorExtent: refreshIndicatorLayoutExtent,
       hasLayoutExtent: hasLayoutExtent,
+      up:up,
+      refreshStyle: refreshStyle,
     );
   }
 
@@ -47,10 +59,13 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
 
 class _RefreshRenderSliver extends RenderSliver
     with RenderObjectWithChildMixin<RenderBox> {
+
   _RefreshRenderSliver({
     @required double refreshIndicatorExtent,
     @required bool hasLayoutExtent,
     RenderBox child,
+    this.up,
+    this.refreshStyle
   }) : assert(refreshIndicatorExtent != null),
         assert(refreshIndicatorExtent >= 0.0),
         assert(hasLayoutExtent != null),
@@ -59,6 +74,9 @@ class _RefreshRenderSliver extends RenderSliver
     this.child = child;
   }
 
+  final bool up;
+
+  final RefreshStyle refreshStyle;
   // The amount of layout space the indicator should occupy in the sliver in a
   // resting state when in the refreshing mode.
   double get refreshIndicatorLayoutExtent => _refreshIndicatorExtent;
@@ -122,18 +140,13 @@ class _RefreshRenderSliver extends RenderSliver
     // which may or may not include a sliver layout extent space that it will
     // keep after the user lets go during the refresh process.
     child.layout(
-      constraints.asBoxConstraints(
-        maxExtent: layoutExtent
-            // Plus only the overscrolled portion immediately preceding this
-            // sliver.
-            + overscrolledExtent,
-      ),
+      constraints.asBoxConstraints(maxExtent: layoutExtent+overscrolledExtent),
       parentUsesSize: true,
     );
     if (active) {
       geometry = SliverGeometry(
         scrollExtent: layoutExtent,
-        paintOrigin: -overscrolledExtent - constraints.scrollOffset,
+        paintOrigin: -overscrolledExtent - constraints.scrollOffset ,
         paintExtent: Math.max(
           // Check child size (which can come from overscroll) because
           // layoutExtent may be zero. Check layoutExtent also since even
@@ -142,6 +155,7 @@ class _RefreshRenderSliver extends RenderSliver
           Math.max(child.size.height, layoutExtent) - constraints.scrollOffset,
           0.0,
         ),
+
         maxPaintExtent: Math.max(
           Math.max(child.size.height, layoutExtent) - constraints.scrollOffset,
           0.0,
@@ -158,6 +172,7 @@ class _RefreshRenderSliver extends RenderSliver
   void paint(PaintingContext paintContext, Offset offset) {
     if (constraints.overlap < 0.0 ||
         constraints.scrollOffset + child.size.height > 0) {
+
       paintContext.paintChild(child, offset);
     }
   }
@@ -165,7 +180,8 @@ class _RefreshRenderSliver extends RenderSliver
   // Nothing special done here because this sliver always paints its child
   // exactly between paintOrigin and paintExtent.
   @override
-  void applyPaintTransform(RenderObject child, Matrix4 transform) { }
+  void applyPaintTransform(RenderObject child, Matrix4 transform) {
+  }
 }
 
 

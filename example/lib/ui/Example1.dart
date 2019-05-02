@@ -19,7 +19,8 @@ class Example1State extends State<Example1> {
   List<Widget> data = [];
   void _getDatas() {
     for (int i = 0; i < 4; i++) {
-      data.add(Card(
+      data.add(Container(
+        color:Colors.greenAccent,
         margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
         child: Center(
           child: Text('Data $i'),
@@ -38,7 +39,6 @@ class Example1State extends State<Example1> {
   }
 
   void _onOffsetCallback(bool isUp, double offset) {
-    // if you want change some widgets state ,you should rewrite the callback
   }
 
   @override
@@ -92,32 +92,16 @@ class Example1State extends State<Example1> {
                           )),
                     ),
                   ],
-              body: SmartRefresher(
-                  controller: _refreshController,
-                  enablePullDown: true,
-                  isNestWrapped: true,
-                  enablePullUp: innerListHeight > listHeight,
-                  onRefresh: (up) {
-                    if (up)
-                      Future.delayed(const Duration(milliseconds: 2009))
-                          .then((val) {
-                        data.add(Card(
-                          margin: EdgeInsets.only(
-                              left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                          child: Center(
-                            child: Text('Data '),
-                          ),
-                        ));
-
-                        setState(() {
-                          _refreshController.sendBack(
-                              true, RefreshStatus.completed);
-                        });
-                      });
-                    else {
-                      Future.delayed(const Duration(milliseconds: 2009))
-                          .then((val) {
-                        setState(() {
+              body: Container(
+                child: SmartRefresher(
+                    controller: _refreshController,
+                    enablePullDown: true,
+                    isNestWrapped: true,
+                    enablePullUp: innerListHeight > listHeight,
+                    onRefresh: (up) {
+                      if (up)
+                        Future.delayed(const Duration(milliseconds: 2009))
+                            .then((val) {
                           data.add(Card(
                             margin: EdgeInsets.only(
                                 left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
@@ -125,20 +109,37 @@ class Example1State extends State<Example1> {
                               child: Text('Data '),
                             ),
                           ));
-                          _refreshController.sendBack(
-                              false, RefreshStatus.idle);
+
+                          setState(() {
+                            _refreshController.sendBack(
+                                true, RefreshStatus.completed);
+                          });
                         });
-                      });
-                    }
-                  },
-                  onOffsetChange: _onOffsetCallback,
-                  child: ListView.builder(
-                    reverse: true,
-                    controller: _scrollController,
-                    itemExtent: 100.0,
-                    itemCount: data.length,
-                    itemBuilder: (context, index) => Item(),
-                  ))));
+                      else {
+                        Future.delayed(const Duration(milliseconds: 2009))
+                            .then((val) {
+                          setState(() {
+                            data.add(Card(
+                              margin: EdgeInsets.only(
+                                  left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                              child: Center(
+                                child: Text('Data '),
+                              ),
+                            ));
+                            _refreshController.sendBack(
+                                false, RefreshStatus.idle);
+                          });
+                        });
+                      }
+                    },
+                    onOffsetChange: _onOffsetCallback,
+                    child: ListView.builder(
+                      reverse: true,
+                      itemExtent: 100.0,
+                      itemCount: data.length,
+                      itemBuilder: (context, index) => Item(),
+                    )),
+              )));
     });
   }
 }
@@ -152,6 +153,7 @@ class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color:Colors.red,
       margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
       child: Center(
         child: Text('Data'),
