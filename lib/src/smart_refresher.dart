@@ -21,6 +21,8 @@ enum WrapperType { Refresh, Loading }
 
 enum RefreshStatus { idle, canRefresh, refreshing, completed, failed, noMore }
 
+enum RefreshStyle { Follow, UnFollow, Back, Front }
+
 /*
     This is the most important component that provides drop-down refresh and up loading.
  */
@@ -285,6 +287,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
         modeLis:
             up ? widget.controller._headerMode : widget.controller._footerMode,
         up: up,
+        refreshStyle: config.refreshStyle,
         onOffsetChange: (bool up, double offset) {
           if (widget.onOffsetChange != null) {
             /* give scollController to handle */
@@ -330,12 +333,13 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   @override
   Widget build(BuildContext context) {
-
+    List<Widget> slivers =
+        List.from(widget.child.buildSlivers(context), growable: true);
 //    slivers.add(widget.footerBuilder != null && widget.enablePullUp
 //        ? _buildWrapperByConfig(widget.footerConfig, false)
 //        : Container());
 
-
+    slivers.insert(0, _buildWrapperByConfig(widget.headerConfig, true));
     return LayoutBuilder(builder: (context, cons) {
       return NotificationListener(
         child: CustomScrollView(
@@ -343,7 +347,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
               RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
           controller: _scrollController,
           cacheExtent: widget.child.cacheExtent,
-          slivers: [ _buildWrapperByConfig(widget.headerConfig, true),widget.child.buildSlivers(context).elementAt(0)],
+          slivers: slivers,
         ),
         onNotification: _dispatchScrollEvent,
       );

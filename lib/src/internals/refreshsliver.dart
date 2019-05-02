@@ -7,20 +7,17 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as Math;
 import 'package:flutter/rendering.dart';
-
-enum RefreshStyle{
-  Follow,UnFollow,Back,Front
-}
+import '../smart_refresher.dart';
 
 class SliverRefresh extends SingleChildRenderObjectWidget {
-  const SliverRefresh({
-    Key key,
-    this.refreshIndicatorLayoutExtent = 0.0,
-    this.hasLayoutExtent = false,
-    Widget child,
-    this.refreshStyle,
-    this.up
-  }) : assert(refreshIndicatorLayoutExtent != null),
+  const SliverRefresh(
+      {Key key,
+      this.refreshIndicatorLayoutExtent = 0.0,
+      this.hasLayoutExtent = false,
+      Widget child,
+      this.refreshStyle,
+      this.up})
+      : assert(refreshIndicatorLayoutExtent != null),
         assert(refreshIndicatorLayoutExtent >= 0.0),
         assert(hasLayoutExtent != null),
         super(key: key, child: child);
@@ -43,30 +40,29 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
     return _RefreshRenderSliver(
       refreshIndicatorExtent: refreshIndicatorLayoutExtent,
       hasLayoutExtent: hasLayoutExtent,
-      up:up,
+      up: up,
       refreshStyle: refreshStyle,
     );
   }
 
   @override
-  void updateRenderObject(BuildContext context, covariant _RefreshRenderSliver renderObject) {
+  void updateRenderObject(
+      BuildContext context, covariant _RefreshRenderSliver renderObject) {
     renderObject
       ..refreshIndicatorLayoutExtent = refreshIndicatorLayoutExtent
       ..hasLayoutExtent = hasLayoutExtent;
   }
 }
 
-
 class _RefreshRenderSliver extends RenderSliver
     with RenderObjectWithChildMixin<RenderBox> {
-
-  _RefreshRenderSliver({
-    @required double refreshIndicatorExtent,
-    @required bool hasLayoutExtent,
-    RenderBox child,
-    this.up,
-    this.refreshStyle
-  }) : assert(refreshIndicatorExtent != null),
+  _RefreshRenderSliver(
+      {@required double refreshIndicatorExtent,
+      @required bool hasLayoutExtent,
+      RenderBox child,
+      this.up,
+      this.refreshStyle})
+      : assert(refreshIndicatorExtent != null),
         assert(refreshIndicatorExtent >= 0.0),
         assert(hasLayoutExtent != null),
         _refreshIndicatorExtent = refreshIndicatorExtent,
@@ -84,8 +80,7 @@ class _RefreshRenderSliver extends RenderSliver
   set refreshIndicatorLayoutExtent(double value) {
     assert(value != null);
     assert(value >= 0.0);
-    if (value == _refreshIndicatorExtent)
-      return;
+    if (value == _refreshIndicatorExtent) return;
     _refreshIndicatorExtent = value;
     markNeedsLayout();
   }
@@ -97,8 +92,7 @@ class _RefreshRenderSliver extends RenderSliver
   bool _hasLayoutExtent;
   set hasLayoutExtent(bool value) {
     assert(value != null);
-    if (value == _hasLayoutExtent)
-      return;
+    if (value == _hasLayoutExtent) return;
     _hasLayoutExtent = value;
     markNeedsLayout();
   }
@@ -135,33 +129,101 @@ class _RefreshRenderSliver extends RenderSliver
 
     final bool active = constraints.overlap < 0.0 || layoutExtent > 0.0;
     final double overscrolledExtent =
-    constraints.overlap < 0.0 ? constraints.overlap.abs() : 0.0;
+        constraints.overlap < 0.0 ? constraints.overlap.abs() : 0.0;
+
     // Layout the child giving it the space of the currently dragged overscroll
     // which may or may not include a sliver layout extent space that it will
     // keep after the user lets go during the refresh process.
-    child.layout(
-      constraints.asBoxConstraints(maxExtent: layoutExtent+overscrolledExtent),
-      parentUsesSize: true,
-    );
-    if (active) {
-      geometry = SliverGeometry(
-        scrollExtent: layoutExtent,
-        paintOrigin: -overscrolledExtent - constraints.scrollOffset ,
-        paintExtent: Math.max(
-          // Check child size (which can come from overscroll) because
-          // layoutExtent may be zero. Check layoutExtent also since even
-          // with a layoutExtent, the indicator builder may decide to not
-          // build anything.
-          Math.max(child.size.height, layoutExtent) - constraints.scrollOffset,
-          0.0,
-        ),
-
-        maxPaintExtent: Math.max(
-          Math.max(child.size.height, layoutExtent) - constraints.scrollOffset,
-          0.0,
-        ),
-        layoutExtent: Math.max(layoutExtent - constraints.scrollOffset, 0.0),
+    if (refreshStyle == RefreshStyle.Back) {
+      child.layout(
+        constraints.asBoxConstraints(maxExtent: overscrolledExtent+layoutExtent),
+        parentUsesSize: true,
       );
+//      print(child.layer.depth);
+    }
+//      child.layout(
+//        parentUsesSize: true,
+//      );
+    if (active) {
+      switch (refreshStyle) {
+        case RefreshStyle.Follow:
+          geometry = SliverGeometry(
+            scrollExtent: layoutExtent,
+            paintOrigin: -refreshIndicatorLayoutExtent -
+                constraints.scrollOffset +
+                layoutExtent,
+            paintExtent: Math.max(
+              Math.max(child.size.height, layoutExtent) -
+                  constraints.scrollOffset,
+              0.0,
+            ),
+            maxPaintExtent: Math.max(
+              Math.max(child.size.height, layoutExtent) -
+                  constraints.scrollOffset,
+              0.0,
+            ),
+            layoutExtent:
+                Math.max(layoutExtent - constraints.scrollOffset, 0.0),
+          );
+
+          break;
+        case RefreshStyle.Back:
+          geometry = SliverGeometry(
+            scrollExtent: layoutExtent,
+            paintOrigin: -overscrolledExtent - constraints.scrollOffset,
+            paintExtent: Math.max(
+              Math.max(child.size.height, layoutExtent) - constraints.scrollOffset,
+              0.0,
+            ),
+            maxPaintExtent: Math.max(
+              Math.max(child.size.height, layoutExtent) - constraints.scrollOffset,
+              0.0,
+            ),
+            layoutExtent: Math.max(layoutExtent - constraints.scrollOffset, 0.0),
+          );
+          break;
+        case RefreshStyle.UnFollow:
+          geometry = SliverGeometry(
+            scrollExtent: layoutExtent,
+            paintOrigin: Math.min(
+                -overscrolledExtent - constraints.scrollOffset,
+                -refreshIndicatorLayoutExtent -
+                    constraints.scrollOffset +
+                    layoutExtent),
+            paintExtent: Math.max(
+              Math.max(child.size.height, layoutExtent) -
+                  constraints.scrollOffset,
+              0.0,
+            ),
+            maxPaintExtent: Math.max(
+              Math.max(child.size.height, layoutExtent) -
+                  constraints.scrollOffset,
+              0.0,
+            ),
+            layoutExtent:
+                Math.max(layoutExtent - constraints.scrollOffset, 0.0),
+          );
+
+          break;
+        case RefreshStyle.Front:
+          geometry = SliverGeometry(
+            scrollExtent: layoutExtent,
+            paintOrigin: -overscrolledExtent ,
+            paintExtent: Math.max(
+              Math.max(child.size.height, layoutExtent) -
+                  constraints.scrollOffset,
+              0.0,
+            ),
+            maxPaintExtent: Math.max(
+              Math.max(child.size.height, layoutExtent) -
+                  constraints.scrollOffset,
+              0.0,
+            ),
+            layoutExtent:
+            0.0,
+          );
+          break;
+      }
     } else {
       // If we never started overscrolling, return no geometry.
       geometry = SliverGeometry.zero;
@@ -172,7 +234,6 @@ class _RefreshRenderSliver extends RenderSliver
   void paint(PaintingContext paintContext, Offset offset) {
     if (constraints.overlap < 0.0 ||
         constraints.scrollOffset + child.size.height > 0) {
-
       paintContext.paintChild(child, offset);
     }
   }
@@ -180,8 +241,5 @@ class _RefreshRenderSliver extends RenderSliver
   // Nothing special done here because this sliver always paints its child
   // exactly between paintOrigin and paintExtent.
   @override
-  void applyPaintTransform(RenderObject child, Matrix4 transform) {
-  }
+  void applyPaintTransform(RenderObject child, Matrix4 transform) {}
 }
-
-

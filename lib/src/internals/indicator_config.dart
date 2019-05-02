@@ -5,6 +5,7 @@
  */
 
 import 'default_constants.dart';
+import '../smart_refresher.dart';
 
 /*
  * This will use to configure the Wrapper action
@@ -22,8 +23,11 @@ class RefreshConfig extends Config {
   // emptySpace height
   final double height;
 
+  final RefreshStyle refreshStyle;
+
   const RefreshConfig(
       {this.height: default_height,
+        this.refreshStyle:default_refreshStyle,
       double triggerDistance: default_refresh_triggerDistance,
       this.completeDuration: default_completeDuration})
       : super(triggerDistance: triggerDistance);

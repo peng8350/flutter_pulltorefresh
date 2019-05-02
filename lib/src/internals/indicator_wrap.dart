@@ -20,6 +20,7 @@ abstract class Wrapper extends StatefulWidget {
 
   final double triggerDistance;
 
+
   bool get _isRefreshing => this.mode == RefreshStatus.refreshing;
 
   bool get _isComplete =>
@@ -65,11 +66,14 @@ class RefreshWrapper extends Wrapper {
 
   final double height;
 
+  final RefreshStyle refreshStyle;
+
   RefreshWrapper({
     Key key,
     IndicatorBuilder builder,
     ValueNotifier<RefreshStatus> modeLis,
     this.onOffsetChange,
+    this.refreshStyle,
     this.completeDuration: default_completeDuration,
     double triggerDistance: default_refresh_triggerDistance,
     this.height: default_height,
@@ -146,16 +150,14 @@ class RefreshWrapperState extends State<RefreshWrapper>
 
 
   void _handleModeChange() {
-
+    setState(() {});
     switch (mode) {
       case RefreshStatus.refreshing:
         hasLayout = true;
-        setState(() {});
         break;
       case RefreshStatus.completed:
         Future.delayed(Duration(milliseconds: widget.completeDuration), () {
           hasLayout = false;
-
           setState(() {});
         });
         break;
@@ -163,6 +165,8 @@ class RefreshWrapperState extends State<RefreshWrapper>
         Future.delayed(Duration(milliseconds: widget.completeDuration), () {
           hasLayout = false;
           setState(() {});
+          widget.mode = RefreshStatus.idle;
+
         });
         break;
       default:
@@ -192,9 +196,10 @@ class RefreshWrapperState extends State<RefreshWrapper>
       return SliverRefresh(
         hasLayoutExtent: hasLayout,
         refreshIndicatorLayoutExtent: widget.height,
-        refreshStyle: RefreshStyle.Follow,
+        refreshStyle: widget.refreshStyle,
         up: widget.up,
         child: LayoutBuilder(
+
           builder: (BuildContext context, BoxConstraints constraints) {
               return widget.builder(
                 context,widget.mode
