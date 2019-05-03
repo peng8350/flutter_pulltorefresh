@@ -78,10 +78,7 @@ class _MainActivityState extends State<MainActivity>
         ),
       ),
       decoration: BoxDecoration(
-          image: DecorationImage(
-              image: NetworkImage(
-                  "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=21793525,1067150446&fm=26&gp=0.jpg"),
-              fit: BoxFit.none)),
+          color: Colors.purple),
       leftScaffold: MenuScaffold(
         header: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: 80.0, maxWidth: 80.0),

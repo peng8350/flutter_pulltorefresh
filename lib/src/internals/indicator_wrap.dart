@@ -12,9 +12,9 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'refreshsliver.dart';
 
 abstract class Wrapper extends StatefulWidget {
-  final ValueNotifier<RefreshStatus> modeListener;
+  final  modeListener;
 
-  final IndicatorBuilder builder;
+  final  builder;
 
   final double triggerDistance;
 
@@ -25,9 +25,9 @@ abstract class Wrapper extends StatefulWidget {
       this.mode != RefreshStatus.refreshing &&
       this.mode != RefreshStatus.canRefresh;
 
-  RefreshStatus get mode => this.modeListener.value;
+  get mode => this.modeListener.value;
 
-  set mode(RefreshStatus mode) => this.modeListener.value = mode;
+  set mode(mode) => this.modeListener.value = mode;
 
   Wrapper(
       {Key key,
@@ -47,7 +47,7 @@ class RefreshWrapper extends Wrapper {
 
   RefreshWrapper({
     Key key,
-    IndicatorBuilder builder,
+    HeaderBuilder builder,
     ValueNotifier<RefreshStatus> modeLis,
     this.refreshStyle,
     this.completeDuration: default_completeDuration,
@@ -150,10 +150,10 @@ class LoadWrapper extends Wrapper {
 
   LoadWrapper(
       {Key key,
-      @required ValueNotifier<RefreshStatus> modeListener,
+      @required ValueNotifier<LoadStatus> modeListener,
       double triggerDistance: default_load_triggerDistance,
       this.autoLoad,
-      IndicatorBuilder builder})
+      FooterBuilder builder})
       : assert(modeListener != null),
         super(
           key: key,
@@ -186,7 +186,7 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
   @override
   void onDragMove(ScrollUpdateNotification notification) {
     if (notification.metrics.extentAfter <= widget.triggerDistance &&
-        notification.scrollDelta > 1.0) widget.mode = RefreshStatus.refreshing;
+        notification.scrollDelta > 1.0) widget.mode = LoadStatus.loading;
   }
 
   @override
@@ -194,7 +194,7 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
     if (widget._isRefreshing || widget._isComplete) return;
     if (widget.autoLoad) {
       if (notification.metrics.extentAfter <= widget.triggerDistance)
-        widget.mode = RefreshStatus.refreshing;
+        widget.mode = LoadStatus.loading;
     }
   }
 }

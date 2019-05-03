@@ -7,9 +7,9 @@ import 'package:pull_to_refresh/src/smart_refresher.dart';
     createTime:2018-05-17 10:39
  */
 
-typedef void OnRefresh(bool up);
 typedef void OnOffsetChange(bool up, double offset);
-typedef Widget IndicatorBuilder(BuildContext context, RefreshStatus mode);
+typedef Widget HeaderBuilder(BuildContext context, RefreshStatus mode);
+typedef Widget FooterBuilder(BuildContext context, LoadStatus mode);
 
 const int default_completeDuration = 800;
 

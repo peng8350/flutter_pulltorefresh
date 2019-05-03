@@ -18,7 +18,9 @@ import 'internals/refreshsliver.dart';
 
 enum WrapperType { Refresh, Loading }
 
-enum RefreshStatus { idle, canRefresh, refreshing, completed, failed, noMore }
+enum RefreshStatus { idle, canRefresh, refreshing, completed, failed }
+
+enum LoadStatus { idle, loading, noMore }
 
 enum RefreshStyle { Follow, UnFollow, Behind, Front }
 
@@ -29,8 +31,8 @@ class SmartRefresher extends StatefulWidget {
   //indicate your listView
   final ScrollView child;
 
-  final IndicatorBuilder headerBuilder;
-  final IndicatorBuilder footerBuilder;
+  final HeaderBuilder headerBuilder;
+  final FooterBuilder footerBuilder;
   // configure your header and footer
   final RefreshConfig headerConfig;
   final LoadConfig footerConfig;
@@ -41,7 +43,7 @@ class SmartRefresher extends StatefulWidget {
   // if open OverScroll if you use RefreshIndicator and LoadFooter
   final bool enableOverScroll;
   // upper and downer callback when you drag out of the distance
-  final OnRefresh onRefresh;
+  final Function onRefresh, onLoading;
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;
   //controll inner state
@@ -53,30 +55,35 @@ class SmartRefresher extends StatefulWidget {
       {Key key,
       @required this.child,
       @required this.controller,
-      IndicatorBuilder headerBuilder,
-      IndicatorBuilder footerBuilder,
+      HeaderBuilder headerBuilder,
+      FooterBuilder footerBuilder,
       this.headerConfig: const RefreshConfig(),
       this.footerConfig: const LoadConfig(),
       this.enableOverScroll: default_enableOverScroll,
       this.enablePullDown: default_enablePullDown,
       this.enablePullUp: default_enablePullUp,
       this.onRefresh,
+      this.onLoading,
       this.onOffsetChange,
       this.isNestWrapped: false})
       : assert(child != null),
         assert(controller != null),
         this.headerBuilder = headerBuilder ??
             ((BuildContext context, RefreshStatus mode) {
-              return ClassicIndicator(mode: mode);
+              return ClassicHeader(mode: mode);
             }),
         this.footerBuilder = footerBuilder ??
-            ((BuildContext context, RefreshStatus mode) {
-              return ClassicIndicator(mode: mode);
+            ((BuildContext context, LoadStatus mode) {
+              return ClassicFooter(mode: mode);
             }),
         super(key: key);
 
   @override
   _SmartRefresherState createState() => _SmartRefresherState();
+
+  static SmartRefresher of(BuildContext context) {
+    return context.ancestorWidgetOfExactType(SmartRefresher) as SmartRefresher;
+  }
 }
 
 class _SmartRefresherState extends State<SmartRefresher> {
@@ -85,13 +92,12 @@ class _SmartRefresherState extends State<SmartRefresher> {
   // key to get height header of footer
   final GlobalKey _headerKey = GlobalKey(), _footerKey = GlobalKey();
 
-
   Widget _buildWrapperByConfig(Config config, bool up) {
     if (config is LoadConfig) {
       return LoadWrapper(
         key: up ? _headerKey : _footerKey,
         modeListener:
-        up ? widget.controller._headerMode : widget.controller._footerMode,
+            up ? widget.controller.headerMode : widget.controller.footerMode,
         autoLoad: config.autoLoad,
         triggerDistance: config.triggerDistance,
         builder: up ? widget.headerBuilder : widget.footerBuilder,
@@ -100,7 +106,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
       return RefreshWrapper(
         key: up ? _headerKey : _footerKey,
         modeLis:
-        up ? widget.controller._headerMode : widget.controller._footerMode,
+            up ? widget.controller.headerMode : widget.controller.footerMode,
         refreshStyle: config.refreshStyle,
         completeDuration: config.completeDuration,
         triggerDistance: config.triggerDistance,
@@ -162,31 +168,32 @@ class _SmartRefresherState extends State<SmartRefresher> {
   }
 
   void _init() {
-
-    widget.controller._headerMode.addListener(() {
-      _didChangeMode(true, widget.controller._headerMode);
+    widget.controller.headerMode.addListener(() {
+      _didChangeMode(true, widget.controller.headerMode);
     });
-    widget.controller._footerMode.addListener(() {
-      _didChangeMode(false, widget.controller._footerMode);
+    widget.controller.footerMode.addListener(() {
+      _didChangeMode(false, widget.controller.footerMode);
     });
-
   }
-
 
   void _handleOffsetCallback() {
     final double overscrollPastStart = math.max(
         _scrollController.position.minScrollExtent -
-            _scrollController.position.pixels
-            ,
+            _scrollController.position.pixels,
         0.0);
     final double overscrollPastEnd = math.max(
         _scrollController.position.pixels -
-            _scrollController.position.maxScrollExtent
-            ,
+            _scrollController.position.maxScrollExtent,
         0.0);
     if (overscrollPastStart > overscrollPastEnd) {
       if (widget.onOffsetChange != null) {
-        widget.onOffsetChange(true, overscrollPastStart+ ((RefreshStatus.refreshing==widget.controller._headerMode.value)?widget.headerConfig.height:0.0));
+        widget.onOffsetChange(
+            true,
+            overscrollPastStart +
+                ((RefreshStatus.refreshing ==
+                        widget.controller.headerMode.value)
+                    ? widget.headerConfig.height
+                    : 0.0));
       }
     } else if (overscrollPastEnd > 0) {
       if (widget.onOffsetChange != null) {
@@ -195,9 +202,12 @@ class _SmartRefresherState extends State<SmartRefresher> {
     }
   }
 
-  _didChangeMode(bool up, ValueNotifier<RefreshStatus> mode) {
-    if (mode.value==RefreshStatus.refreshing&&widget.onRefresh != null) {
-      widget.onRefresh(up);
+  _didChangeMode(up,  mode) {
+    if (up&&mode.value == RefreshStatus.refreshing && widget.onRefresh != null) {
+      widget.onRefresh();
+    }
+    if(!up&&mode.value == LoadStatus.loading&&widget.onLoading!=null){
+      widget.onLoading();
     }
   }
 
@@ -205,12 +215,12 @@ class _SmartRefresherState extends State<SmartRefresher> {
   void dispose() {
     // TODO: implement dispose
     _scrollController.removeListener(_handleOffsetCallback);
-    if (!widget.isNestWrapped&&widget.child.controller==null) {
+    if (!widget.isNestWrapped && widget.child.controller == null) {
       _scrollController.dispose();
     }
 
-    widget.controller._headerMode.dispose();
-    widget.controller._footerMode.dispose();
+    widget.controller.headerMode.dispose();
+    widget.controller.footerMode.dispose();
     super.dispose();
   }
 
@@ -229,7 +239,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     } else {
       _scrollController = widget.child.controller ?? ScrollController();
     }
-    widget.controller._scrollController = _scrollController;
+    widget.controller.scrollController = _scrollController;
     _scrollController.addListener(_handleOffsetCallback);
     super.didChangeDependencies();
   }
@@ -248,7 +258,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     }
 
     _scrollController.addListener(_handleOffsetCallback);
-    widget.controller._scrollController = _scrollController;
+    widget.controller.scrollController = _scrollController;
 
     super.didUpdateWidget(oldWidget);
   }
@@ -264,7 +274,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     return NotificationListener(
       child: CustomScrollView(
         physics:
-        RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
+            RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
         controller: _scrollController,
         cacheExtent: widget.child.cacheExtent,
         slivers: slivers,
@@ -276,52 +286,58 @@ class _SmartRefresherState extends State<SmartRefresher> {
 }
 
 abstract class Indicator extends StatefulWidget {
-  final RefreshStatus mode;
+  final  mode;
 
   const Indicator({Key key, this.mode}) : super(key: key);
 }
 
 class RefreshController {
-  ValueNotifier<RefreshStatus> _headerMode = ValueNotifier(RefreshStatus.idle);
-  ValueNotifier<RefreshStatus> _footerMode = ValueNotifier(RefreshStatus.idle);
-  ScrollController _scrollController;
+  ValueNotifier<RefreshStatus> headerMode = ValueNotifier(RefreshStatus.idle);
+  ValueNotifier<LoadStatus> footerMode = ValueNotifier(LoadStatus.idle);
+  ScrollController scrollController;
 
   void requestRefresh(bool up) {
-    assert(_scrollController != null,
+    assert(scrollController != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (up) {
-      if (_headerMode.value == RefreshStatus.idle)
-        _headerMode.value = RefreshStatus.refreshing;
-      _scrollController.animateTo(0.0,
+      if (headerMode.value == RefreshStatus.idle)
+        headerMode.value = RefreshStatus.refreshing;
+      scrollController.animateTo(0.0,
           duration: const Duration(milliseconds: 200), curve: Curves.linear);
     } else {
-      if (_footerMode.value == RefreshStatus.idle) {
-        _footerMode.value = RefreshStatus.refreshing;
-        _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.linear);
+      if (footerMode.value == LoadStatus.idle) {
+        footerMode.value = LoadStatus.loading;
+        scrollController.animateTo(scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 200), curve: Curves.linear);
       }
     }
   }
 
-  void sendBack(bool up, RefreshStatus mode) {
-    if (up) {
-      _headerMode.value = mode;
-    } else {
-      _footerMode.value = mode;
-    }
+  void refreshCompleted(){
+    headerMode.value = RefreshStatus.completed;
   }
 
-  RefreshStatus get headerStatus => _headerMode.value;
+  void refreshFailed(){
+    headerMode.value = RefreshStatus.failed;
+  }
 
-  RefreshStatus get footerStatus => _footerMode.value;
+  void loadComplete(){
+    footerMode.value = LoadStatus.idle;
+  }
+
+  void loadNoData(){
+    footerMode.value = LoadStatus.noMore;
+  }
+
+  RefreshStatus get headerStatus => headerMode.value;
+
+  LoadStatus get footerStatus => footerMode.value;
 
   isRefresh(bool up) {
     if (up) {
-      return _headerMode.value == RefreshStatus.refreshing;
+      return headerMode.value == RefreshStatus.refreshing;
     } else {
-      return _footerMode.value == RefreshStatus.refreshing;
+      return footerMode.value == LoadStatus.loading;
     }
   }
 }

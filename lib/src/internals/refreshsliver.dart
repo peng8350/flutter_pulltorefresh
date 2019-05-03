@@ -181,9 +181,6 @@ class _RefreshRenderSliver extends RenderSliver
         case RefreshStyle.Front:
           geometry = SliverGeometry(
             scrollExtent: 0.0,
-            /* I don't know why in reverse mode,it own a distance 40 from bottom,may be this is related with SafeArea in IOS,
-              check a lot
-             */
             paintOrigin: -overscrolledExtent,
             paintExtent: hasLayoutExtent
                 ? Math.min(layoutExtent, constraints.remainingPaintExtent)
