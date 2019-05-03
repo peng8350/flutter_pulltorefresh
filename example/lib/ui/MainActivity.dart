@@ -1,128 +1,40 @@
-import 'Example1.dart';
-import 'Example2.dart';
-import 'Example3.dart';
-import 'Example4.dart';
+/*
+ * Author: Jpeng
+ * Email: peng8350@gmail.com
+ * Time: 2019/5/3 下午6:13
+ */
 import 'package:flutter/material.dart';
-import 'SecondActivity.dart';
+import 'package:residemenu/residemenu.dart';
+import 'test/TestPage.dart';
 
 class MainActivity extends StatefulWidget {
-  MainActivity({Key key, this.title}) : super(key: key);
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
+  MainActivity({this.title});
+
   @override
-  _MainActivityState createState() => new _MainActivityState();
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _MainActivityState();
+  }
 }
 
-class _MainActivityState extends State<MainActivity> with SingleTickerProviderStateMixin{
-  int tabIndex = 0;
-
+class _MainActivityState extends State<MainActivity>
+    with SingleTickerProviderStateMixin {
   List<Widget> views;
-  TabController _tabController;
-  GlobalKey<Example3State> example3Key=  GlobalKey();
-  GlobalKey<Example1State> example1Key=  GlobalKey();
+  MenuController _menuController;
+  int _tabIndex = 1;
 
-  void _changePage(){
-    Navigator.of(context).pushNamed("sec");
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-//    return new Scaffold(
-//
-//      appBar: new AppBar(
-//        // Here we take the value from the MyHomePage object that was created by
-//        // the App.build method, and use it to set our appbar title.
-//        bottom: new TabBar(controller: _tabController,tabs: <Widget>[            new Tab(icon: new Icon(Icons.nature),) , new Tab(icon: new Icon(Icons.directions_bike),),
-//        new Tab(icon: new Icon(Icons.directions_boat),),
-//        new Tab(icon: new Icon(Icons.directions_bus),),],),
-//        title: new Text(widget.title),
-//        actions: <Widget>[(tabIndex==2||tabIndex==0)?new MaterialButton(onPressed: (){
-//          tabIndex==2? example3Key.currentState.enterRefresh():example1Key.currentState.scrollTop();
-//        },child: new Text(tabIndex==2?'refresh3':"滚回顶部",style: new TextStyle(color:Colors.white),)):new Container()],
-//      ),
-//      body: new TabBarView(children: views,controller:_tabController ,),
-//    );
-    return  Scaffold(
-
-      appBar:  AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title:  Text(widget.title),
-        actions: <Widget>[ MaterialButton(onPressed: (){
-         tabIndex==2? example3Key.currentState.enterRefresh():tabIndex==0?example1Key.currentState.scrollTop():_changePage();
-        },child:  Text(tabIndex==2?'refresh3':tabIndex==0?"滚回顶部":"跳转页面",style:  TextStyle(color:Colors.white),))],
-      ),
-      body:  Stack(
-
-        children: <Widget>[
-           Offstage(
-            child: views[0],
-            offstage: tabIndex!=0,
-          ),
-           Offstage(
-            child: views[1],
-            offstage: tabIndex!=1,
-          ),
-           Offstage(
-            child: views[2],
-            offstage: tabIndex!=2,
-          ),
-           Offstage(
-            child: views[3],
-            offstage: tabIndex!=3,
-          )
-        ],
-      ),
-      bottomNavigationBar:  BottomNavigationBar(
-        items: [
-           BottomNavigationBarItem(
-              icon:  Icon(Icons.home,
-                  color: tabIndex == 0 ? Colors.blue : Colors.grey),
-              title:  Text('Example1',
-                  style:  TextStyle(
-                      color: tabIndex == 0 ? Colors.blue : Colors.grey))),
-           BottomNavigationBarItem(
-              icon:  Icon(Icons.cloud,
-                  color: tabIndex == 1 ? Colors.blue : Colors.grey),
-              title:  Text('Example2',
-                  style:  TextStyle(
-                      color: tabIndex == 1 ? Colors.blue : Colors.grey))),
-           BottomNavigationBarItem(
-              icon:  Icon(Icons.call,
-                  color: tabIndex == 2 ? Colors.blue : Colors.grey),
-              title:  Text('Example3',
-                  style:  TextStyle(
-                      color: tabIndex == 2 ? Colors.blue : Colors.grey))),
-           BottomNavigationBarItem(
-              icon:  Icon(Icons.transform,
-                  color: tabIndex == 3 ? Colors.blue : Colors.grey),
-              title:  Text('Example4',
-                  style:  TextStyle(
-                      color: tabIndex == 3 ? Colors.blue : Colors.grey))),
-        ],
-        onTap: (index) {
-          setState(() {
-            tabIndex = index;
-          });
-        },
-        currentIndex: tabIndex,
-        fixedColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
+  Widget buildItem(String msg, Widget icon, Function voidCallBack) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        child: ResideMenuItem(
+          title: msg,
+          icon: icon,
+          right: const Icon(Icons.arrow_forward, color: Colors.grey),
+        ),
+        onTap: voidCallBack,
       ),
     );
   }
@@ -130,9 +42,81 @@ class _MainActivityState extends State<MainActivity> with SingleTickerProviderSt
   @override
   void initState() {
     // TODO: implement initState
-    _tabController =  TabController(length: 4, vsync: this);
-    views = [ Example1(key:example1Key), Example2(), Example3(key:example3Key), Example4()];
+
     super.initState();
+    _menuController = MenuController(vsync: this);
+    views = [Container(), TestPage(title: "测试界面"), Container()];
   }
 
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return ResideMenu.scafford(
+      controller: _menuController,
+      enableScale: false,
+      child: Scaffold(
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(widget.title),
+        ),
+        body: Stack(
+          children: <Widget>[
+            Offstage(
+              child: views[0],
+              offstage: _tabIndex != 0,
+            ),
+            Offstage(
+              child: views[1],
+              offstage: _tabIndex != 1,
+            ),
+            Offstage(
+              child: views[2],
+              offstage: _tabIndex != 2,
+            ),
+          ],
+        ),
+      ),
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: NetworkImage(
+                  "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=21793525,1067150446&fm=26&gp=0.jpg"),
+              fit: BoxFit.none)),
+      leftScaffold: MenuScaffold(
+        header: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: 80.0, maxWidth: 80.0),
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(
+                'https://avatars1.githubusercontent.com/u/19425362?s=400&u=1a30f9fdf71cc9a51e20729b2fa1410c710d0f2f&v=4'),
+            radius: 40.0,
+          ),
+        ),
+        children: <Widget>[
+          buildItem("各种指示器", Icon(Icons.apps, size: 18, color: Colors.grey),
+              () {
+            setState(() {
+              _tabIndex = 0;
+            });
+            _menuController.closeMenu();
+          }),
+          buildItem("测试界面",
+              Icon(Icons.airplanemode_active, size: 18, color: Colors.grey),
+              () {
+            setState(() {
+              _tabIndex = 1;
+            });
+            _menuController.closeMenu();
+          }),
+          buildItem(
+              "待定", Icon(Icons.format_underlined, size: 18, color: Colors.grey),
+              () {
+            setState(() {
+              _tabIndex = 2;
+            });
+            _menuController.closeMenu();
+          }),
+        ],
+      ),
+    );
+  }
 }
