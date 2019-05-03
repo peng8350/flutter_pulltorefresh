@@ -335,9 +335,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
   Widget build(BuildContext context) {
     List<Widget> slivers =
         List.from(widget.child.buildSlivers(context), growable: true);
-//    slivers.add(widget.footerBuilder != null && widget.enablePullUp
-//        ? _buildWrapperByConfig(widget.footerConfig, false)
-//        : Container());
+//    slivers.add(_buildWrapperByConfig(widget.headerConfig, true));
 
     slivers.insert(0, _buildWrapperByConfig(widget.headerConfig, true));
     return LayoutBuilder(builder: (context, cons) {

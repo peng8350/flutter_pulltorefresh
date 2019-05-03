@@ -15,6 +15,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   void _getDatas() {
     for (int i = 0; i < 18; i++) {
       data.add(Container(
+        color: Colors.redAccent,
         child: Text('Data $i'),
         height: 50.0,
       ));
@@ -39,13 +40,13 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
 //        return data[index];
 //      },
 //    )
-    return CustomScrollView(
+    return Container(color: Colors.white,child: CustomScrollView(
       slivers: [
-        CupertinoSliverRefreshControl(builder: (a,b,c,d,e) => Icon(CupertinoIcons.add_circled_solid)),
         SliverList(
             delegate: SliverChildListDelegate(data,
-                addRepaintBoundaries: true))
+                addRepaintBoundaries: true)),
+        SliverToBoxAdapter(child: Text("Wewew"),)
       ],
-    );
+    ),);
   }
 }

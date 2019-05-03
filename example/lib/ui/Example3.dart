@@ -78,7 +78,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   }
 
   Widget _headerCreate(BuildContext context, RefreshStatus mode) {
-    return Align(alignment: Alignment.topCenter,child: Image.asset("images/animate.gif",height: 60.0,),);
+    return Image.asset("images/animate.gif",fit: BoxFit.fitWidth,alignment: Alignment.bottomCenter,);
   }
 
 //  Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
@@ -115,13 +115,12 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         SmartRefresher(
           controller: _refreshController,
           headerBuilder: _headerCreate,
-          headerConfig: const RefreshConfig(refreshStyle: RefreshStyle.Back),
+          headerConfig: const RefreshConfig(refreshStyle: RefreshStyle.Front),
           footerConfig: RefreshConfig(),
           onRefresh: (up) {
             if (up)
               Future.delayed(const Duration(milliseconds: 2009)).then((val) {
                 _refreshController.sendBack(true, RefreshStatus.failed);
-//                refresher.sendStatus(RefreshStatus.completed);
               });
             else {
               Future.delayed(const Duration(milliseconds: 2009)).then((val) {
