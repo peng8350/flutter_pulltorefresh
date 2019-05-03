@@ -57,24 +57,24 @@ class ClassicIndicator extends Indicator {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return  _ClassicIndicatorState();
+    return _ClassicIndicatorState();
   }
 }
 
 class _ClassicIndicatorState extends State<ClassicIndicator> {
   Widget _buildText() {
-    return  Text(
+    return Text(
         widget.mode == RefreshStatus.canRefresh
             ? widget.releaseText
             : widget.mode == RefreshStatus.completed
-            ? widget.completeText
-            : widget.mode == RefreshStatus.failed
-            ? widget.failedText
-            : widget.mode == RefreshStatus.refreshing
-            ? widget.refreshingText
-            : widget.mode == RefreshStatus.noMore
-            ? widget.noDataText
-            : widget.idleText,
+                ? widget.completeText
+                : widget.mode == RefreshStatus.failed
+                    ? widget.failedText
+                    : widget.mode == RefreshStatus.refreshing
+                        ? widget.refreshingText
+                        : widget.mode == RefreshStatus.noMore
+                            ? widget.noDataText
+                            : widget.idleText,
         style: widget.textStyle);
   }
 
@@ -82,18 +82,18 @@ class _ClassicIndicatorState extends State<ClassicIndicator> {
     Widget icon = widget.mode == RefreshStatus.canRefresh
         ? widget.releaseIcon
         : widget.mode == RefreshStatus.noMore
-        ? widget.noMoreIcon
-        : widget.mode == RefreshStatus.idle
-        ? widget.idleIcon
-        : widget.mode == RefreshStatus.completed
-        ? widget.completeIcon
-        : widget.mode == RefreshStatus.failed
-        ? widget.failedIcon
-        :  SizedBox(
-      width: 25.0,
-      height: 25.0,
-      child: widget.refreshingIcon,
-    );
+            ? widget.noMoreIcon
+            : widget.mode == RefreshStatus.idle
+                ? widget.idleIcon
+                : widget.mode == RefreshStatus.completed
+                    ? widget.completeIcon
+                    : widget.mode == RefreshStatus.failed
+                        ? widget.failedIcon
+                        : SizedBox(
+                            width: 25.0,
+                            height: 25.0,
+                            child: widget.refreshingIcon,
+                          );
     return icon;
   }
 
@@ -102,34 +102,28 @@ class _ClassicIndicatorState extends State<ClassicIndicator> {
     // TODO: implement buildContent
     Widget textWidget = _buildText();
     Widget iconWidget = _buildIcon();
-    List<Widget> children = <Widget>[
-      iconWidget,
-      Container(
-      ),
-      textWidget
-    ];
+    List<Widget> children = <Widget>[iconWidget, Container(), textWidget];
     Widget container = (widget.iconPos == IconPosition.top ||
-        widget.iconPos == IconPosition.bottom)
-        ?  Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      verticalDirection: widget.iconPos == IconPosition.top
-          ? VerticalDirection.down
-          : VerticalDirection.up,
-      children: children,
-    )
-        :  Row(
-      textDirection: widget.iconPos == IconPosition.right
-          ? TextDirection.rtl
-          : TextDirection.ltr,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: children,
-    );
-    return  Container(
-      height: widget.height+0.0,
-      child:  Center(
+            widget.iconPos == IconPosition.bottom)
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            verticalDirection: widget.iconPos == IconPosition.top
+                ? VerticalDirection.down
+                : VerticalDirection.up,
+            children: children,
+          )
+        : Row(
+            textDirection: widget.iconPos == IconPosition.right
+                ? TextDirection.rtl
+                : TextDirection.ltr,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children,
+          );
+    return Container(
+      height: widget.height,
+      child: Center(
         child: container,
       ),
     );
   }
-
 }

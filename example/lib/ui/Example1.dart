@@ -83,7 +83,7 @@ class Example1State extends State<Example1> {
                     ))),
                     SliverAppBar(
                       backgroundColor: Colors.greenAccent,
-                      expandedHeight: 300.0,
+                      expandedHeight: 200.0,
                       pinned: true,
                       flexibleSpace: FlexibleSpaceBar(
                           centerTitle: true,
@@ -98,7 +98,7 @@ class Example1State extends State<Example1> {
                     controller: _refreshController,
                     enablePullDown: true,
                     isNestWrapped: true,
-                    headerConfig: const RefreshConfig(refreshStyle: RefreshStyle.Front),
+                    headerConfig: const RefreshConfig(refreshStyle: RefreshStyle.Behind),
                     enablePullUp: innerListHeight > listHeight,
 
                     onRefresh: (up) {

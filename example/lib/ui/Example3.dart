@@ -17,10 +17,9 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   ValueNotifier<double> topOffsetLis = ValueNotifier(0.0);
   ValueNotifier<double> bottomOffsetLis = ValueNotifier(0.0);
   RefreshController _refreshController;
-  AnimationController _headControll, _footControll;
   List<Widget> data = [];
   void _getDatas() {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 14; i++) {
       data.add(Container(
         color: Color.fromARGB(255, 250, 250, 250),
         child: Card(
@@ -46,12 +45,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       topOffsetLis.value = offset;
 
     }
-//    print(isUp);
-//    print(offset);
-//    if (isUp) {
-//      _headControll.value = offset / 2 + 1.0;
-//    } else
-//      _footControll.value = offset / 2 + 1.0;
   }
 
   @override
@@ -59,18 +52,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     // TODO: implement initState
     _getDatas();
     _refreshController = RefreshController();
-    _headControll = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-      lowerBound: 1.0,
-      upperBound: 1.5,
-    );
-    _footControll = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-      lowerBound: 1.0,
-      upperBound: 1.5,
-    );
     super.initState();
     topOffsetLis.addListener(() {
       setState(() {});
@@ -81,7 +62,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   }
 
   Widget _headerCreate(BuildContext context, RefreshStatus mode) {
-    return Image.asset("images/animate.gif",fit: BoxFit.fitWidth,);
+    return Image.asset("images/animate.gif",fit: BoxFit.fitWidth,alignment: Alignment.topCenter,);
   }
 
 //  Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
@@ -93,33 +74,11 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     return Container(
         child: Stack(
       children: <Widget>[
-        Align(
-          alignment: Alignment.topCenter,
-          child: ClipPath(
-            clipper: CirclePainter(offset: topOffsetLis.value, up: true),
-            child: Container(
-              color: const Color(0xffff0000),
-              width: double.infinity,
-              height: double.infinity,
-            ),
-          ),
-        ),
-        Align(
-          child: ClipPath(
-            clipper: CirclePainter(offset: bottomOffsetLis.value, up: false),
-            child: Container(
-              color: const Color(0xffff0000),
-              width: double.infinity,
-              height: double.infinity,
-            ),
-          ),
-          alignment: Alignment.bottomCenter,
-        ),
         SmartRefresher(
           controller: _refreshController,
           enablePullUp: true,
           headerBuilder: _headerCreate,
-          headerConfig: const RefreshConfig(refreshStyle: RefreshStyle.Front,height: 100.0),
+          headerConfig: const RefreshConfig(refreshStyle: RefreshStyle.Behind,height: 100.0),
           onRefresh: (up) {
             if (up)
               Future.delayed(const Duration(milliseconds: 2009)).then((val) {
@@ -144,7 +103,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           },
           onOffsetChange: _onOffsetCallback,
           child: ListView.builder(
-            reverse: true,
             itemExtent: 100.0,
             itemCount: data.length,
             itemBuilder: (context, index) {

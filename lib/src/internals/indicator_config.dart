@@ -27,7 +27,7 @@ class RefreshConfig extends Config {
 
   const RefreshConfig(
       {this.height: default_height,
-        this.refreshStyle:default_refreshStyle,
+      this.refreshStyle: default_refreshStyle,
       double triggerDistance: default_refresh_triggerDistance,
       this.completeDuration: default_completeDuration})
       : super(triggerDistance: triggerDistance);
@@ -37,11 +37,8 @@ class LoadConfig extends Config {
   // if autoLoad when touch outside
   final bool autoLoad;
 
-  final bool enableOverScroll;
-
   const LoadConfig({
     this.autoLoad: default_AutoLoad,
-    this.enableOverScroll: default_enableOverScroll,
     double triggerDistance: default_load_triggerDistance,
   }) : super(triggerDistance: triggerDistance);
 }

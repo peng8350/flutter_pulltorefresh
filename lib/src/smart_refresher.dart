@@ -85,17 +85,30 @@ class _SmartRefresherState extends State<SmartRefresher> {
   // key to get height header of footer
   final GlobalKey _headerKey = GlobalKey(), _footerKey = GlobalKey();
 
-  //handle the scrollStartEvent
-  bool _handleScrollStart(ScrollStartNotification notification) {
-    // This is used to interupt useless callback when the pull up load rolls back.
-    if ((notification.metrics.outOfRange)) {
-      return false;
+
+  Widget _buildWrapperByConfig(Config config, bool up) {
+    if (config is LoadConfig) {
+      return LoadWrapper(
+        key: up ? _headerKey : _footerKey,
+        modeListener:
+        up ? widget.controller._headerMode : widget.controller._footerMode,
+        autoLoad: config.autoLoad,
+        triggerDistance: config.triggerDistance,
+        builder: up ? widget.headerBuilder : widget.footerBuilder,
+      );
+    } else if (config is RefreshConfig) {
+      return RefreshWrapper(
+        key: up ? _headerKey : _footerKey,
+        modeLis:
+        up ? widget.controller._headerMode : widget.controller._footerMode,
+        refreshStyle: config.refreshStyle,
+        completeDuration: config.completeDuration,
+        triggerDistance: config.triggerDistance,
+        height: config.height,
+        builder: up ? widget.headerBuilder : widget.footerBuilder,
+      );
     }
-    GestureProcessor topWrap = _headerKey.currentState as GestureProcessor;
-    GestureProcessor bottomWrap = _footerKey.currentState as GestureProcessor;
-    if (widget.enablePullUp) bottomWrap.onDragStart(notification);
-    if (widget.enablePullDown) topWrap.onDragStart(notification);
-    return false;
+    return SliverToBoxAdapter();
   }
 
   //handle the scrollMoveEvent
@@ -123,9 +136,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
     }
     // when is scroll in the ScrollInside,nothing to do
     if ((!_isPullUp(notification) && !_isPullDown(notification))) return false;
-    if (notification is ScrollStartNotification) {
-      return _handleScrollStart(notification);
-    }
     if (notification is ScrollUpdateNotification) {
       //if dragDetails is null,This represents the user's finger out of the screen
       if (notification.dragDetails == null) {
@@ -162,18 +172,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   }
 
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    if (widget.isNestWrapped) {
-      _scrollController = PrimaryScrollController.of(context);
-    } else {
-      _scrollController = widget.child.controller ?? ScrollController();
-    }
-    widget.controller._scrollController = _scrollController;
-    _scrollController.addListener(_handleOffsetCallback);
-    super.didChangeDependencies();
-  }
 
   void _handleOffsetCallback() {
     final double overscrollPastStart = math.max(
@@ -210,6 +208,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
     if (!widget.isNestWrapped&&widget.child.controller==null) {
       _scrollController.dispose();
     }
+
+    widget.controller._headerMode.dispose();
+    widget.controller._footerMode.dispose();
     super.dispose();
   }
 
@@ -220,29 +221,17 @@ class _SmartRefresherState extends State<SmartRefresher> {
     _init();
   }
 
-  Widget _buildWrapperByConfig(Config config, bool up) {
-    if (config is LoadConfig) {
-      return LoadWrapper(
-        key: up ? _headerKey : _footerKey,
-        modeListener:
-            up ? widget.controller._headerMode : widget.controller._footerMode,
-        autoLoad: config.autoLoad,
-        triggerDistance: config.triggerDistance,
-        builder: up ? widget.headerBuilder : widget.footerBuilder,
-      );
-    } else if (config is RefreshConfig) {
-      return RefreshWrapper(
-        key: up ? _headerKey : _footerKey,
-        modeLis:
-            up ? widget.controller._headerMode : widget.controller._footerMode,
-        refreshStyle: config.refreshStyle,
-        completeDuration: config.completeDuration,
-        triggerDistance: config.triggerDistance,
-        height: config.height,
-        builder: up ? widget.headerBuilder : widget.footerBuilder,
-      );
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (widget.isNestWrapped) {
+      _scrollController = PrimaryScrollController.of(context);
+    } else {
+      _scrollController = widget.child.controller ?? ScrollController();
     }
-    return Container();
+    widget.controller._scrollController = _scrollController;
+    _scrollController.addListener(_handleOffsetCallback);
+    super.didChangeDependencies();
   }
 
   @override

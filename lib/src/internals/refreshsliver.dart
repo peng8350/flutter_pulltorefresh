@@ -11,14 +11,13 @@ import '../smart_refresher.dart';
 import 'package:flutter/cupertino.dart';
 
 class SliverRefresh extends SingleChildRenderObjectWidget {
-  const SliverRefresh(
-      {Key key,
-        this.refreshIndicatorLayoutExtent = 0.0,
-        this.hasLayoutExtent = false,
-        Widget child,
-        this.refreshStyle,
-        })
-      : assert(refreshIndicatorLayoutExtent != null),
+  const SliverRefresh({
+    Key key,
+    this.refreshIndicatorLayoutExtent = 0.0,
+    this.hasLayoutExtent = false,
+    Widget child,
+    this.refreshStyle,
+  })  : assert(refreshIndicatorLayoutExtent != null),
         assert(refreshIndicatorLayoutExtent >= 0.0),
         assert(hasLayoutExtent != null),
         super(key: key, child: child);
@@ -34,7 +33,6 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
 
   final RefreshStyle refreshStyle;
 
-
   @override
   _RefreshRenderSliver createRenderObject(BuildContext context) {
     return _RefreshRenderSliver(
@@ -49,9 +47,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
       BuildContext context, covariant _RefreshRenderSliver renderObject) {
     renderObject
       ..refreshIndicatorLayoutExtent = refreshIndicatorLayoutExtent
-      ..hasLayoutExtent = hasLayoutExtent
-    ;
-
+      ..hasLayoutExtent = hasLayoutExtent;
   }
 }
 
@@ -59,9 +55,9 @@ class _RefreshRenderSliver extends RenderSliver
     with RenderObjectWithChildMixin<RenderBox> {
   _RefreshRenderSliver(
       {@required double refreshIndicatorExtent,
-        @required bool hasLayoutExtent,
-        RenderBox child,
-        this.refreshStyle})
+      @required bool hasLayoutExtent,
+      RenderBox child,
+      this.refreshStyle})
       : assert(refreshIndicatorExtent != null),
         assert(refreshIndicatorExtent >= 0.0),
         assert(hasLayoutExtent != null),
@@ -69,7 +65,6 @@ class _RefreshRenderSliver extends RenderSliver
         _hasLayoutExtent = hasLayoutExtent {
     this.child = child;
   }
-
 
   final RefreshStyle refreshStyle;
   // The amount of layout space the indicator should occupy in the sliver in a
@@ -102,8 +97,6 @@ class _RefreshRenderSliver extends RenderSliver
   // visually.
   double layoutExtentOffsetCompensation = 0.0;
 
-
-
   @override
   void performLayout() {
     // Only pulling to refresh from the top is currently supported.
@@ -115,8 +108,8 @@ class _RefreshRenderSliver extends RenderSliver
     // If the new layoutExtent instructive changed, the SliverGeometry's
     // layoutExtent will take that value (on the next performLayout run). Shift
     // the scroll offset first so it doesn't make the scroll position suddenly jump.
-    if (layoutExtent != layoutExtentOffsetCompensation&&refreshStyle!=RefreshStyle.Front) {
-
+    if (layoutExtent != layoutExtentOffsetCompensation &&
+        refreshStyle != RefreshStyle.Front) {
       geometry = SliverGeometry(
         scrollOffsetCorrection: layoutExtent - layoutExtentOffsetCompensation,
       );
@@ -125,7 +118,7 @@ class _RefreshRenderSliver extends RenderSliver
     }
     final bool active = constraints.overlap < 0.0 || layoutExtent > 0.0;
     final double overscrolledExtent =
-    constraints.overlap < 0.0 ? constraints.overlap.abs() : 0.0;
+        constraints.overlap < 0.0 ? constraints.overlap.abs() : 0.0;
 
     if (refreshStyle == RefreshStyle.Behind) {
       child.layout(
@@ -139,11 +132,13 @@ class _RefreshRenderSliver extends RenderSliver
         parentUsesSize: true,
       );
     if (active) {
-      final double needPaintExtent = Math.min(Math.max(
-        Math.max(child.size.height, layoutExtent) -
-            constraints.scrollOffset,
-        0.0,
-      ),constraints.remainingPaintExtent);
+      final double needPaintExtent = Math.min(
+          Math.max(
+            Math.max(child.size.height, layoutExtent) -
+                constraints.scrollOffset,
+            0.0,
+          ),
+          constraints.remainingPaintExtent);
       switch (refreshStyle) {
         case RefreshStyle.Follow:
           geometry = SliverGeometry(
@@ -153,8 +148,8 @@ class _RefreshRenderSliver extends RenderSliver
                 layoutExtent,
             paintExtent: needPaintExtent,
             maxPaintExtent: needPaintExtent,
-            layoutExtent:
-            Math.min(needPaintExtent,layoutExtent- constraints.scrollOffset),
+            layoutExtent: Math.min(needPaintExtent,
+                Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
           );
 
           break;
@@ -164,8 +159,8 @@ class _RefreshRenderSliver extends RenderSliver
             paintOrigin: -overscrolledExtent - constraints.scrollOffset,
             paintExtent: needPaintExtent,
             maxPaintExtent: needPaintExtent,
-            layoutExtent:
-            Math.min(needPaintExtent,layoutExtent- constraints.scrollOffset),
+            layoutExtent: Math.min(needPaintExtent,
+                Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
           );
           break;
         case RefreshStyle.UnFollow:
@@ -178,20 +173,24 @@ class _RefreshRenderSliver extends RenderSliver
                     layoutExtent),
             paintExtent: needPaintExtent,
             maxPaintExtent: needPaintExtent,
-            layoutExtent:
-            Math.min(needPaintExtent,layoutExtent- constraints.scrollOffset),
+            layoutExtent: Math.min(needPaintExtent,
+                Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
           );
 
           break;
         case RefreshStyle.Front:
           geometry = SliverGeometry(
-            scrollExtent:0.0,
+            scrollExtent: 0.0,
             /* I don't know why in reverse mode,it own a distance 40 from bottom,may be this is related with SafeArea in IOS,
               check a lot
              */
             paintOrigin: -overscrolledExtent,
-            paintExtent: hasLayoutExtent?Math.min(layoutExtent,constraints.remainingPaintExtent):needPaintExtent,
-            maxPaintExtent: hasLayoutExtent?Math.min(layoutExtent,constraints.remainingPaintExtent):needPaintExtent,
+            paintExtent: hasLayoutExtent
+                ? Math.min(layoutExtent, constraints.remainingPaintExtent)
+                : needPaintExtent,
+            maxPaintExtent: hasLayoutExtent
+                ? Math.min(layoutExtent, constraints.remainingPaintExtent)
+                : needPaintExtent,
             layoutExtent: 0.0,
           );
           break;
@@ -200,9 +199,6 @@ class _RefreshRenderSliver extends RenderSliver
       geometry = SliverGeometry.zero;
     }
   }
-
-
-
 
   @override
   void paint(PaintingContext paintContext, Offset offset) {
