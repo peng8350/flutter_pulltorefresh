@@ -16,10 +16,8 @@ abstract class Wrapper extends StatefulWidget {
 
   final IndicatorBuilder builder;
 
-  final bool up;
 
   final double triggerDistance;
-
 
   bool get _isRefreshing => this.mode == RefreshStatus.refreshing;
 
@@ -34,27 +32,11 @@ abstract class Wrapper extends StatefulWidget {
 
   Wrapper(
       {Key key,
-      @required this.up,
       @required this.modeListener,
       this.builder,
       this.triggerDistance})
-      : assert(up != null, modeListener != null),
+      : assert(modeListener != null),
         super(key: key);
-
-  bool _isScrollToOutSide(ScrollNotification notification) {
-    if (up) {
-      if (notification.metrics.minScrollExtent - notification.metrics.pixels >
-          0) {
-        return true;
-      }
-    } else {
-      if (notification.metrics.pixels - notification.metrics.maxScrollExtent >
-          0) {
-        return true;
-      }
-    }
-    return false;
-  }
 
 }
 
@@ -62,7 +44,7 @@ abstract class Wrapper extends StatefulWidget {
 class RefreshWrapper extends Wrapper {
   final int completeDuration;
 
-  final Function onOffsetChange;
+  final bool reverse;
 
   final double height;
 
@@ -71,16 +53,14 @@ class RefreshWrapper extends Wrapper {
   RefreshWrapper({
     Key key,
     IndicatorBuilder builder,
+    this.reverse,
     ValueNotifier<RefreshStatus> modeLis,
-    this.onOffsetChange,
     this.refreshStyle,
     this.completeDuration: default_completeDuration,
     double triggerDistance: default_refresh_triggerDistance,
     this.height: default_height,
-    bool up: true,
-  })  : assert(up != null),
+  })  : assert(reverse != null),
         super(
-          up: up,
           key: key,
           modeListener: modeLis,
           builder: builder,
@@ -97,21 +77,14 @@ class RefreshWrapper extends Wrapper {
 class RefreshWrapperState extends State<RefreshWrapper>
     with TickerProviderStateMixin
     implements GestureProcessor {
-
   bool hasLayout = false;
 
   RefreshStatus get mode => widget.modeListener.value;
 
   double _measure(ScrollNotification notification) {
-    if (widget.up) {
       return (notification.metrics.minScrollExtent -
               notification.metrics.pixels) /
           widget.triggerDistance;
-    } else {
-      return (notification.metrics.pixels -
-              notification.metrics.maxScrollExtent) /
-          widget.triggerDistance;
-    }
   }
 
   @override
@@ -122,15 +95,13 @@ class RefreshWrapperState extends State<RefreshWrapper>
   @override
   void onDragMove(ScrollUpdateNotification notification) {
     // TODO: implement onDragMove
-    if (!widget._isScrollToOutSide(notification)) {
-      return;
-    }
     if (widget._isComplete || widget._isRefreshing) return;
 
     double offset = _measure(notification);
+    print(offset);
     if (offset >= 1.0) {
       widget.mode = RefreshStatus.canRefresh;
-    } else{
+    } else {
       widget.mode = RefreshStatus.idle;
     }
   }
@@ -138,16 +109,13 @@ class RefreshWrapperState extends State<RefreshWrapper>
   @override
   void onDragEnd(ScrollNotification notification) {
     // TODO: implement onDragEnd
-    if (!widget._isScrollToOutSide(notification)) {
-      return;
-    }
     if (widget._isComplete || widget._isRefreshing) return;
+
     bool reachMax = _measure(notification) >= 1.0;
-    if(reachMax) {
+    if (reachMax) {
       widget.mode = RefreshStatus.refreshing;
     }
   }
-
 
   void _handleModeChange() {
     setState(() {});
@@ -158,21 +126,21 @@ class RefreshWrapperState extends State<RefreshWrapper>
       case RefreshStatus.completed:
         Future.delayed(Duration(milliseconds: widget.completeDuration), () {
           hasLayout = false;
+          widget.mode = RefreshStatus.idle;
           setState(() {});
         });
         break;
       case RefreshStatus.failed:
         Future.delayed(Duration(milliseconds: widget.completeDuration), () {
           hasLayout = false;
-          setState(() {});
-          widget.mode = RefreshStatus.idle;
 
+          widget.mode = RefreshStatus.idle;
+          setState(() {});
         });
         break;
       default:
         break;
     }
-
   }
 
   @override
@@ -192,36 +160,17 @@ class RefreshWrapperState extends State<RefreshWrapper>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    if (widget.up) {
-      return SliverRefresh(
-        hasLayoutExtent: hasLayout,
-        refreshIndicatorLayoutExtent: widget.height,
-        refreshStyle: widget.refreshStyle,
-        up: widget.up,
-        child: LayoutBuilder(
-
-          builder: (BuildContext context, BoxConstraints constraints) {
-              return widget.builder(
-                context,widget.mode
-              );
-          },
-        ),
-      );
-    }
-//    return Column(
-//      children: <Widget>[
-//        SliverRefresh(
-//          child: widget.builder(context, widget.mode,),
-//          refreshStyle: RefreshStyle.Follow,
-//          up: false,
-//        ),
-//        SliverToBoxAdapter(child: SizeTransition(
-//          sizeFactor: _sizeController,
-//          child: Container(height: widget.height),
-//        ),)
-//
-//      ],
-//    );
+    return SliverRefresh(
+      hasLayoutExtent: hasLayout,
+      refreshIndicatorLayoutExtent: widget.height,
+      refreshStyle: widget.refreshStyle,
+      reverse: widget.reverse,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return widget.builder(context, widget.mode);
+        },
+      ),
+    );
   }
 }
 
@@ -231,15 +180,13 @@ class LoadWrapper extends Wrapper {
 
   LoadWrapper(
       {Key key,
-      @required bool up,
       @required ValueNotifier<RefreshStatus> modeListener,
       double triggerDistance: default_load_triggerDistance,
       this.autoLoad,
       IndicatorBuilder builder})
-      : assert(up != null, modeListener != null),
+      : assert( modeListener != null),
         super(
           key: key,
-          up: up,
           builder: builder,
           modeListener: modeListener,
           triggerDistance: triggerDistance,
@@ -258,7 +205,8 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return SliverToBoxAdapter(child: widget.builder(context, widget.mode),);
+    return SliverToBoxAdapter(
+        child: SafeArea(child: widget.builder(context, widget.mode)));
   }
 
   @override
@@ -289,17 +237,8 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
 //    if (!widget._isScrollToOutSide(notification)) {
 //      return;
 //    }
-    if (widget._isRefreshing || widget._isComplete) return;
-    if (widget.autoLoad) {
-      if (widget.up &&
-          notification.metrics.extentBefore <= widget.triggerDistance &&
-          notification.scrollDelta < 1.0)
-        widget.mode = RefreshStatus.refreshing;
-      if (!widget.up &&
-          notification.metrics.extentAfter <= widget.triggerDistance &&
-          notification.scrollDelta > 1.0)
-        widget.mode = RefreshStatus.refreshing;
-    }
+    if (notification.metrics.extentAfter <= widget.triggerDistance &&
+        notification.scrollDelta > 1.0) widget.mode = RefreshStatus.refreshing;
   }
 
   @override
@@ -307,11 +246,7 @@ class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
     // TODO: implement onDragEnd
     if (widget._isRefreshing || widget._isComplete) return;
     if (widget.autoLoad) {
-      if (widget.up &&
-          notification.metrics.extentBefore <= widget.triggerDistance)
-        widget.mode = RefreshStatus.refreshing;
-      if (!widget.up &&
-          notification.metrics.extentAfter <= widget.triggerDistance)
+      if (notification.metrics.extentAfter <= widget.triggerDistance)
         widget.mode = RefreshStatus.refreshing;
     }
   }
@@ -324,5 +259,3 @@ abstract class GestureProcessor {
 
   void onDragEnd(ScrollNotification notification);
 }
-
-

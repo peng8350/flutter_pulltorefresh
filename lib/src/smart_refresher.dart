@@ -33,7 +33,8 @@ class SmartRefresher extends StatefulWidget {
   final IndicatorBuilder headerBuilder;
   final IndicatorBuilder footerBuilder;
   // configure your header and footer
-  final Config headerConfig, footerConfig;
+  final RefreshConfig headerConfig;
+  final LoadConfig footerConfig;
   // This bool will affect whether or not to have the function of drop-up load.
   final bool enablePullUp;
   //This bool will affect whether or not to have the function of drop-down refresh.
@@ -276,7 +277,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
         key: up ? _headerKey : _footerKey,
         modeListener:
             up ? widget.controller._headerMode : widget.controller._footerMode,
-        up: up,
         autoLoad: config.autoLoad,
         triggerDistance: config.triggerDistance,
         builder: up ? widget.headerBuilder : widget.footerBuilder,
@@ -286,20 +286,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
         key: up ? _headerKey : _footerKey,
         modeLis:
             up ? widget.controller._headerMode : widget.controller._footerMode,
-        up: up,
+        reverse: widget.child.reverse,
         refreshStyle: config.refreshStyle,
-        onOffsetChange: (bool up, double offset) {
-          if (widget.onOffsetChange != null) {
-            /* give scollController to handle */
-//            widget.onOffsetChange(
-//                up,
-//                up
-//                    ? -_scrollController.offset + offset
-//                    : _scrollController.position.pixels -
-//                        _scrollController.position.maxScrollExtent +
-//                        offset);
-          }
-        },
         completeDuration: config.completeDuration,
         triggerDistance: config.triggerDistance,
         height: config.height,
@@ -335,7 +323,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
   Widget build(BuildContext context) {
     List<Widget> slivers =
         List.from(widget.child.buildSlivers(context), growable: true);
-//    slivers.add(_buildWrapperByConfig(widget.headerConfig, true));
+    slivers.add(_buildWrapperByConfig(widget.footerConfig, false));
 
     slivers.insert(0, _buildWrapperByConfig(widget.headerConfig, true));
     return LayoutBuilder(builder: (context, cons) {
@@ -346,6 +334,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
           controller: _scrollController,
           cacheExtent: widget.child.cacheExtent,
           slivers: slivers,
+          reverse: widget.child.reverse,
         ),
         onNotification: _dispatchScrollEvent,
       );
@@ -371,15 +360,15 @@ class RefreshController {
     if (up) {
       if (_headerMode.value == RefreshStatus.idle)
         _headerMode.value = RefreshStatus.refreshing;
-      _scrollController.animateTo(0.0,
-          duration: const Duration(milliseconds: 200), curve: Curves.linear);
+//      _scrollController.animateTo(0.0,
+//          duration: const Duration(milliseconds: 200), curve: Curves.linear);
     } else {
       if (_footerMode.value == RefreshStatus.idle) {
         _footerMode.value = RefreshStatus.refreshing;
-        _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent + _footerHeight,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.linear);
+//        _scrollController.animateTo(
+//            _scrollController.position.maxScrollExtent + _footerHeight,
+//            duration: const Duration(milliseconds: 200),
+//            curve: Curves.linear);
       }
     }
   }

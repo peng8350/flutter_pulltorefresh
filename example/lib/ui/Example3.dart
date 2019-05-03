@@ -20,7 +20,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   AnimationController _headControll, _footControll;
   List<Widget> data = [];
   void _getDatas() {
-    for (int i = 0; i < 14; i++) {
+    for (int i = 0; i < 4; i++) {
       data.add(Container(
         color: Color.fromARGB(255, 250, 250, 250),
         child: Card(
@@ -78,7 +78,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   }
 
   Widget _headerCreate(BuildContext context, RefreshStatus mode) {
-    return Image.asset("images/animate.gif",fit: BoxFit.fitWidth,alignment: Alignment.bottomCenter,);
+    return Image.asset("images/animate.gif",fit: BoxFit.fitWidth,);
   }
 
 //  Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
@@ -114,9 +114,9 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         ),
         SmartRefresher(
           controller: _refreshController,
+          enablePullUp: true,
           headerBuilder: _headerCreate,
-          headerConfig: const RefreshConfig(refreshStyle: RefreshStyle.Front),
-          footerConfig: RefreshConfig(),
+          headerConfig: const RefreshConfig(refreshStyle: RefreshStyle.Front,height: 100.0),
           onRefresh: (up) {
             if (up)
               Future.delayed(const Duration(milliseconds: 2009)).then((val) {
@@ -135,12 +135,13 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
                   ),
                 ));
                 setState(() {});
-                _refreshController.sendBack(false, RefreshStatus.completed);
+                _refreshController.sendBack(false, RefreshStatus.idle);
               });
             }
           },
           onOffsetChange: _onOffsetCallback,
           child: ListView.builder(
+            reverse: true,
             itemExtent: 100.0,
             itemCount: data.length,
             itemBuilder: (context, index) {

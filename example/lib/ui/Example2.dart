@@ -96,12 +96,11 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return SmartRefresher(
       enablePullDown: true,
-      enablePullUp: false,
+      enablePullUp: true,
       controller: _controller,
       onRefresh: _onRefresh,
       headerBuilder: _headerCreate,
       footerBuilder: _footerCreate,
-      footerConfig: RefreshConfig(),
       onOffsetChange: _onOffsetCallback,
       child: GridView.builder(
         gridDelegate:

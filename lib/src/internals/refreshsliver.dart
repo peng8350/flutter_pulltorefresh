@@ -17,7 +17,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
       this.hasLayoutExtent = false,
       Widget child,
       this.refreshStyle,
-      this.up})
+      this.reverse})
       : assert(refreshIndicatorLayoutExtent != null),
         assert(refreshIndicatorLayoutExtent >= 0.0),
         assert(hasLayoutExtent != null),
@@ -34,14 +34,14 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
 
   final RefreshStyle refreshStyle;
 
-  final bool up;
+  final bool reverse;
 
   @override
   _RefreshRenderSliver createRenderObject(BuildContext context) {
     return _RefreshRenderSliver(
       refreshIndicatorExtent: refreshIndicatorLayoutExtent,
       hasLayoutExtent: hasLayoutExtent,
-      up: up,
+      reverse: reverse,
       refreshStyle: refreshStyle,
     );
   }
@@ -63,7 +63,7 @@ class _RefreshRenderSliver extends RenderSliver
       {@required double refreshIndicatorExtent,
       @required bool hasLayoutExtent,
       RenderBox child,
-      this.up,
+      this.reverse,
       this.refreshStyle})
       : assert(refreshIndicatorExtent != null),
         assert(refreshIndicatorExtent >= 0.0),
@@ -73,7 +73,7 @@ class _RefreshRenderSliver extends RenderSliver
     this.child = child;
   }
 
-  final bool up;
+  final bool reverse;
 
   final RefreshStyle refreshStyle;
   // The amount of layout space the indicator should occupy in the sliver in a
@@ -119,7 +119,7 @@ class _RefreshRenderSliver extends RenderSliver
     // If the new layoutExtent instructive changed, the SliverGeometry's
     // layoutExtent will take that value (on the next performLayout run). Shift
     // the scroll offset first so it doesn't make the scroll position suddenly jump.
-    if (layoutExtent != layoutExtentOffsetCompensation) {
+    if (layoutExtent != layoutExtentOffsetCompensation&&refreshStyle!=RefreshStyle.Front) {
 
       geometry = SliverGeometry(
         scrollOffsetCorrection: layoutExtent - layoutExtentOffsetCompensation,
@@ -208,8 +208,11 @@ class _RefreshRenderSliver extends RenderSliver
           break;
         case RefreshStyle.Front:
           geometry = SliverGeometry(
-            scrollExtent: 0.0,
-            paintOrigin: -overscrolledExtent,
+            scrollExtent:0.0,
+            /* I don't know why in reverse mode,it own a distance 40 from bottom,may be this is related with SafeArea in IOS,
+              check a lot
+             */
+            paintOrigin: reverse?-overscrolledExtent-40.0:-overscrolledExtent,
             paintExtent: hasLayoutExtent?100.0:Math.max(
               Math.max(child.size.height, layoutExtent) -
                   constraints.scrollOffset,

@@ -77,12 +77,12 @@ class Example1State extends State<Example1> {
                     SliverPersistentHeader(
                         delegate: _SliverDelegate(
                             child: Container(
-                      height: 100.0,
+                      height: 300.0,
                       color: Colors.red,
                     ))),
                     SliverAppBar(
                       backgroundColor: Colors.greenAccent,
-                      expandedHeight: 200.0,
+                      expandedHeight: 100.0,
                       pinned: true,
                       flexibleSpace: FlexibleSpaceBar(
                           centerTitle: true,
@@ -96,7 +96,9 @@ class Example1State extends State<Example1> {
                 child: SmartRefresher(
                     controller: _refreshController,
                     enablePullDown: true,
+
                     isNestWrapped: true,
+                    headerConfig: const RefreshConfig(refreshStyle: RefreshStyle.Front),
                     enablePullUp: innerListHeight > listHeight,
                     onRefresh: (up) {
                       if (up)
@@ -134,7 +136,6 @@ class Example1State extends State<Example1> {
                     },
                     onOffsetChange: _onOffsetCallback,
                     child: ListView.builder(
-                      reverse: true,
                       itemExtent: 100.0,
                       itemCount: data.length,
                       itemBuilder: (context, index) => Item(),

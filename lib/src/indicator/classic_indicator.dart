@@ -67,14 +67,14 @@ class _ClassicIndicatorState extends State<ClassicIndicator> {
         widget.mode == RefreshStatus.canRefresh
             ? widget.releaseText
             : widget.mode == RefreshStatus.completed
-                ? widget.completeText
-                : widget.mode == RefreshStatus.failed
-                    ? widget.failedText
-                    : widget.mode == RefreshStatus.refreshing
-                        ? widget.refreshingText
-                        : widget.mode == RefreshStatus.noMore
-                            ? widget.noDataText
-                            : widget.idleText,
+            ? widget.completeText
+            : widget.mode == RefreshStatus.failed
+            ? widget.failedText
+            : widget.mode == RefreshStatus.refreshing
+            ? widget.refreshingText
+            : widget.mode == RefreshStatus.noMore
+            ? widget.noDataText
+            : widget.idleText,
         style: widget.textStyle);
   }
 
@@ -82,18 +82,18 @@ class _ClassicIndicatorState extends State<ClassicIndicator> {
     Widget icon = widget.mode == RefreshStatus.canRefresh
         ? widget.releaseIcon
         : widget.mode == RefreshStatus.noMore
-            ? widget.noMoreIcon
-            : widget.mode == RefreshStatus.idle
-                ? widget.idleIcon
-                : widget.mode == RefreshStatus.completed
-                    ? widget.completeIcon
-                    : widget.mode == RefreshStatus.failed
-                        ? widget.failedIcon
-                        :  SizedBox(
-                            width: 25.0,
-                            height: 25.0,
-                            child: widget.refreshingIcon,
-                          );
+        ? widget.noMoreIcon
+        : widget.mode == RefreshStatus.idle
+        ? widget.idleIcon
+        : widget.mode == RefreshStatus.completed
+        ? widget.completeIcon
+        : widget.mode == RefreshStatus.failed
+        ? widget.failedIcon
+        :  SizedBox(
+      width: 25.0,
+      height: 25.0,
+      child: widget.refreshingIcon,
+    );
     return icon;
   }
 
@@ -104,26 +104,26 @@ class _ClassicIndicatorState extends State<ClassicIndicator> {
     Widget iconWidget = _buildIcon();
     List<Widget> children = <Widget>[
       iconWidget,
-       Container(
+      Container(
       ),
       textWidget
     ];
     Widget container = (widget.iconPos == IconPosition.top ||
-            widget.iconPos == IconPosition.bottom)
+        widget.iconPos == IconPosition.bottom)
         ?  Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            verticalDirection: widget.iconPos == IconPosition.top
-                ? VerticalDirection.down
-                : VerticalDirection.up,
-            children: children,
-          )
+      mainAxisAlignment: MainAxisAlignment.center,
+      verticalDirection: widget.iconPos == IconPosition.top
+          ? VerticalDirection.down
+          : VerticalDirection.up,
+      children: children,
+    )
         :  Row(
-            textDirection: widget.iconPos == IconPosition.right
-                ? TextDirection.rtl
-                : TextDirection.ltr,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: children,
-          );
+      textDirection: widget.iconPos == IconPosition.right
+          ? TextDirection.rtl
+          : TextDirection.ltr,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: children,
+    );
     return  Container(
       height: widget.height+0.0,
       child:  Center(
