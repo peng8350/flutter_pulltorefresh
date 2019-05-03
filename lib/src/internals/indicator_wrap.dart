@@ -44,8 +44,6 @@ abstract class Wrapper extends StatefulWidget {
 class RefreshWrapper extends Wrapper {
   final int completeDuration;
 
-  final bool reverse;
-
   final double height;
 
   final RefreshStyle refreshStyle;
@@ -53,13 +51,12 @@ class RefreshWrapper extends Wrapper {
   RefreshWrapper({
     Key key,
     IndicatorBuilder builder,
-    this.reverse,
     ValueNotifier<RefreshStatus> modeLis,
     this.refreshStyle,
     this.completeDuration: default_completeDuration,
     double triggerDistance: default_refresh_triggerDistance,
     this.height: default_height,
-  })  : assert(reverse != null),
+  })  :
         super(
           key: key,
           modeListener: modeLis,
@@ -98,7 +95,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
     if (widget._isComplete || widget._isRefreshing) return;
 
     double offset = _measure(notification);
-    print(offset);
+
     if (offset >= 1.0) {
       widget.mode = RefreshStatus.canRefresh;
     } else {
@@ -164,7 +161,6 @@ class RefreshWrapperState extends State<RefreshWrapper>
       hasLayoutExtent: hasLayout,
       refreshIndicatorLayoutExtent: widget.height,
       refreshStyle: widget.refreshStyle,
-      reverse: widget.reverse,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           return widget.builder(context, widget.mode);

@@ -41,10 +41,13 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
     if (isUp) {
-      topOffsetLis.value = offset;
-    } else {
       bottomOffsetLis.value = offset;
+    } else {
+      topOffsetLis.value = offset;
+
     }
+//    print(isUp);
+//    print(offset);
 //    if (isUp) {
 //      _headControll.value = offset / 2 + 1.0;
 //    } else

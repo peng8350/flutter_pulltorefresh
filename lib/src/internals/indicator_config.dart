@@ -36,14 +36,11 @@ class RefreshConfig extends Config {
 class LoadConfig extends Config {
   // if autoLoad when touch outside
   final bool autoLoad;
-  // Whether the interface is at the bottom when the interface is loaded
-  final bool bottomWhenBuild;
 
   final bool enableOverScroll;
 
   const LoadConfig({
     this.autoLoad: default_AutoLoad,
-    this.bottomWhenBuild: default_BottomWhenBuild,
     this.enableOverScroll: default_enableOverScroll,
     double triggerDistance: default_load_triggerDistance,
   }) : super(triggerDistance: triggerDistance);

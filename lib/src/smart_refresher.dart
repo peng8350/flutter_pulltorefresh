@@ -5,7 +5,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'internals/default_constants.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
@@ -21,7 +20,7 @@ enum WrapperType { Refresh, Loading }
 
 enum RefreshStatus { idle, canRefresh, refreshing, completed, failed, noMore }
 
-enum RefreshStyle { Follow, UnFollow, Back, Front }
+enum RefreshStyle { Follow, UnFollow, Behind, Front }
 
 /*
     This is the most important component that provides drop-down refresh and up loading.
@@ -153,9 +152,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
   }
 
   void _init() {
-    widget.controller._footerHeight = widget.footerConfig is RefreshConfig
-        ? (widget.footerConfig as RefreshConfig).height
-        : 0.0;
 
     widget.controller._headerMode.addListener(() {
       _didChangeMode(true, widget.controller._headerMode);
@@ -164,9 +160,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
       _didChangeMode(false, widget.controller._footerMode);
     });
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _onAfterBuild();
-    });
   }
 
   @override
@@ -185,71 +178,28 @@ class _SmartRefresherState extends State<SmartRefresher> {
   void _handleOffsetCallback() {
     final double overscrollPastStart = math.max(
         _scrollController.position.minScrollExtent -
-            _scrollController.position.pixels +
-            (widget.headerConfig is RefreshConfig &&
-                    (widget.controller._headerMode.value ==
-                            RefreshStatus.refreshing ||
-                        widget.controller._headerMode.value ==
-                            RefreshStatus.completed ||
-                        widget.controller._headerMode.value ==
-                            RefreshStatus.failed)
-                ? (widget.headerConfig as RefreshConfig).height
-                : 0.0),
+            _scrollController.position.pixels
+            ,
         0.0);
     final double overscrollPastEnd = math.max(
         _scrollController.position.pixels -
-            _scrollController.position.maxScrollExtent +
-            (widget.footerConfig is RefreshConfig &&
-                    (widget.controller._footerMode.value ==
-                            RefreshStatus.refreshing ||
-                        widget.controller._footerMode.value ==
-                            RefreshStatus.completed ||
-                        widget.controller._footerMode.value ==
-                            RefreshStatus.failed)
-                ? (widget.footerConfig as RefreshConfig).height
-                : 0.0),
+            _scrollController.position.maxScrollExtent
+            ,
         0.0);
     if (overscrollPastStart > overscrollPastEnd) {
-      if (widget.headerConfig is RefreshConfig) {
-        if (widget.onOffsetChange != null) {
-          widget.onOffsetChange(true, overscrollPastStart);
-        }
-      } else {
-        if (widget.onOffsetChange != null) {
-          widget.onOffsetChange(true, overscrollPastStart);
-        }
+      if (widget.onOffsetChange != null) {
+        widget.onOffsetChange(true, overscrollPastStart);
       }
     } else if (overscrollPastEnd > 0) {
-      if (widget.footerConfig is RefreshConfig) {
-        if (widget.onOffsetChange != null) {
-          widget.onOffsetChange(false, overscrollPastEnd);
-        }
-      } else {
-        if (widget.onOffsetChange != null) {
-          widget.onOffsetChange(false, overscrollPastEnd);
-        }
+      if (widget.onOffsetChange != null) {
+        widget.onOffsetChange(false, overscrollPastEnd);
       }
     }
   }
 
   _didChangeMode(bool up, ValueNotifier<RefreshStatus> mode) {
-    switch (mode.value) {
-      case RefreshStatus.refreshing:
-        if (widget.onRefresh != null) {
-          widget.onRefresh(up);
-        }
-        break;
-      default:
-        break;
-    }
-  }
-
-  void _onAfterBuild() {
-    if (widget.headerConfig is LoadConfig) {
-      if ((widget.headerConfig as LoadConfig).bottomWhenBuild) {
-//        _scrollController.jumpTo(-(_scrollController.position.pixels -
-//            _scrollController.position.maxScrollExtent));
-      }
+    if (mode.value==RefreshStatus.refreshing&&widget.onRefresh != null) {
+      widget.onRefresh(up);
     }
   }
 
@@ -257,8 +207,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
   void dispose() {
     // TODO: implement dispose
     _scrollController.removeListener(_handleOffsetCallback);
-    if (widget.child.controller == null &&
-        widget.child.controller != _scrollController) {
+    if (!widget.isNestWrapped&&widget.child.controller==null) {
       _scrollController.dispose();
     }
     super.dispose();
@@ -286,7 +235,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
         key: up ? _headerKey : _footerKey,
         modeLis:
             up ? widget.controller._headerMode : widget.controller._footerMode,
-        reverse: widget.child.reverse,
         refreshStyle: config.refreshStyle,
         completeDuration: config.completeDuration,
         triggerDistance: config.triggerDistance,
@@ -313,9 +261,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
     _scrollController.addListener(_handleOffsetCallback);
     widget.controller._scrollController = _scrollController;
 
-    widget.controller._footerHeight = widget.footerConfig is RefreshConfig
-        ? (widget.footerConfig as RefreshConfig).height
-        : 0.0;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -323,22 +268,21 @@ class _SmartRefresherState extends State<SmartRefresher> {
   Widget build(BuildContext context) {
     List<Widget> slivers =
         List.from(widget.child.buildSlivers(context), growable: true);
-    slivers.add(_buildWrapperByConfig(widget.footerConfig, false));
 
     slivers.insert(0, _buildWrapperByConfig(widget.headerConfig, true));
-    return LayoutBuilder(builder: (context, cons) {
-      return NotificationListener(
-        child: CustomScrollView(
-          physics:
-              RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
-          controller: _scrollController,
-          cacheExtent: widget.child.cacheExtent,
-          slivers: slivers,
-          reverse: widget.child.reverse,
-        ),
-        onNotification: _dispatchScrollEvent,
-      );
-    });
+    slivers.add(_buildWrapperByConfig(widget.footerConfig, false));
+
+    return NotificationListener(
+      child: CustomScrollView(
+        physics:
+        RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
+        controller: _scrollController,
+        cacheExtent: widget.child.cacheExtent,
+        slivers: slivers,
+        reverse: widget.child.reverse,
+      ),
+      onNotification: _dispatchScrollEvent,
+    );
   }
 }
 
@@ -352,7 +296,6 @@ class RefreshController {
   ValueNotifier<RefreshStatus> _headerMode = ValueNotifier(RefreshStatus.idle);
   ValueNotifier<RefreshStatus> _footerMode = ValueNotifier(RefreshStatus.idle);
   ScrollController _scrollController;
-  double _footerHeight;
 
   void requestRefresh(bool up) {
     assert(_scrollController != null,
@@ -360,15 +303,15 @@ class RefreshController {
     if (up) {
       if (_headerMode.value == RefreshStatus.idle)
         _headerMode.value = RefreshStatus.refreshing;
-//      _scrollController.animateTo(0.0,
-//          duration: const Duration(milliseconds: 200), curve: Curves.linear);
+      _scrollController.animateTo(0.0,
+          duration: const Duration(milliseconds: 200), curve: Curves.linear);
     } else {
       if (_footerMode.value == RefreshStatus.idle) {
         _footerMode.value = RefreshStatus.refreshing;
-//        _scrollController.animateTo(
-//            _scrollController.position.maxScrollExtent + _footerHeight,
-//            duration: const Duration(milliseconds: 200),
-//            curve: Curves.linear);
+        _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.linear);
       }
     }
   }

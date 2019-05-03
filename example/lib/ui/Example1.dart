@@ -31,7 +31,7 @@ class Example1State extends State<Example1> {
 
   void scrollTop() {
     _scrollController.animateTo(0.0,
-        duration: Duration(microseconds: 1000), curve: ElasticInCurve());
+        duration: const Duration(milliseconds: 200), curve: Curves.linear);
   }
 
   void enterRefresh() {
@@ -73,6 +73,7 @@ class Example1State extends State<Example1> {
       double listHeight = bc.biggest.height;
       return Container(
           child: NestedScrollView(
+            controller: _scrollController,
               headerSliverBuilder: (c, s) => [
                     SliverPersistentHeader(
                         delegate: _SliverDelegate(
@@ -82,7 +83,7 @@ class Example1State extends State<Example1> {
                     ))),
                     SliverAppBar(
                       backgroundColor: Colors.greenAccent,
-                      expandedHeight: 100.0,
+                      expandedHeight: 300.0,
                       pinned: true,
                       flexibleSpace: FlexibleSpaceBar(
                           centerTitle: true,
@@ -96,10 +97,10 @@ class Example1State extends State<Example1> {
                 child: SmartRefresher(
                     controller: _refreshController,
                     enablePullDown: true,
-
                     isNestWrapped: true,
                     headerConfig: const RefreshConfig(refreshStyle: RefreshStyle.Front),
                     enablePullUp: innerListHeight > listHeight,
+
                     onRefresh: (up) {
                       if (up)
                         Future.delayed(const Duration(milliseconds: 2009))
