@@ -186,7 +186,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
         0.0);
     if (overscrollPastStart > overscrollPastEnd) {
       if (widget.onOffsetChange != null) {
-        widget.onOffsetChange(true, overscrollPastStart);
+        widget.onOffsetChange(true, overscrollPastStart+ ((RefreshStatus.refreshing==widget.controller._headerMode.value)?widget.headerConfig.height:0.0));
       }
     } else if (overscrollPastEnd > 0) {
       if (widget.onOffsetChange != null) {
