@@ -53,14 +53,6 @@ class Example1State extends State<Example1> {
     super.initState();
   }
 
-  Widget _headerCreate(BuildContext context, RefreshStatus mode) {
-    return ClassicHeader(
-      mode: mode,
-      refreshingText: "",
-      idleIcon: Container(),
-      idleText: "Load more...",
-    );
-  }
 
 //  Widget _footerCreate(BuildContext context,int mode){
 //    return new ClassicIndicator(mode: mode);
@@ -98,7 +90,11 @@ class Example1State extends State<Example1> {
                     controller: _refreshController,
                     enablePullDown: true,
                     isNestWrapped: true,
-                    headerConfig: const RefreshConfig(refreshStyle: RefreshStyle.Behind),
+                    header: ClassicHeader(
+                      refreshingText: "wewwewe",
+                      idleIcon: Container(),
+                      idleText: "Load more...",
+                    ),
                     enablePullUp: innerListHeight > listHeight,
 
                     onRefresh: () {

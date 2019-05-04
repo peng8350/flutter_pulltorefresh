@@ -4,18 +4,17 @@
     createTime:2018-05-14 17:39
  */
 
-import 'package:flutter/material.dart' hide RefreshIndicator;
+import 'package:flutter/material.dart' hide RefreshIndicator,RefreshIndicatorState;
 import 'package:flutter/widgets.dart';
+import '../internals/default_constants.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 enum IconPosition { left, right, top, bottom }
 
-class ClassicHeader extends Indicator {
+class ClassicHeader extends RefreshIndicator {
   final String releaseText, idleText, refreshingText, completeText, failedText;
 
   final Widget releaseIcon, idleIcon, refreshingIcon, completeIcon, failedIcon;
-
-  final double height;
 
   final double spacing;
 
@@ -23,14 +22,15 @@ class ClassicHeader extends Indicator {
 
   final TextStyle textStyle;
 
-  const ClassicHeader({
-    @required RefreshStatus mode,
+  ClassicHeader({
     Key key,
+    RefreshStyle refreshStyle:default_refreshStyle,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
+    double triggerDistance: default_refresh_triggerDistance,
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
     this.completeText: 'Refresh complete',
-    this.height: 60.0,
+    double height:default_height,
     this.failedText: 'Refresh failed',
     this.idleText: 'Pull down to refresh',
     this.iconPos: IconPosition.left,
@@ -40,38 +40,42 @@ class ClassicHeader extends Indicator {
     this.completeIcon: const Icon(Icons.done, color: Colors.grey),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
     this.releaseIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
-  }) : super(key: key, mode: mode);
+  }) : super(
+            key: key ?? GlobalKey(),
+            refreshStyle: refreshStyle,
+            height: height,
+            triggerDistance: triggerDistance);
 
   @override
-  State<StatefulWidget> createState() {
+  State createState() {
     // TODO: implement createState
     return _ClassicHeaderState();
   }
 }
 
 class _ClassicHeaderState extends State<ClassicHeader> {
-  Widget _buildText() {
+  Widget _buildText(mode) {
     return Text(
-        widget.mode == RefreshStatus.canRefresh
+        mode == RefreshStatus.canRefresh
             ? widget.releaseText
-            : widget.mode == RefreshStatus.completed
+            : mode == RefreshStatus.completed
                 ? widget.completeText
-                : widget.mode == RefreshStatus.failed
+                : mode == RefreshStatus.failed
                     ? widget.failedText
-                    : widget.mode == RefreshStatus.refreshing
+                    : mode == RefreshStatus.refreshing
                         ? widget.refreshingText
                         : widget.idleText,
         style: widget.textStyle);
   }
 
-  Widget _buildIcon() {
-    Widget icon = widget.mode == RefreshStatus.canRefresh
+  Widget _buildIcon(mode) {
+    Widget icon = mode == RefreshStatus.canRefresh
         ? widget.releaseIcon
-        : widget.mode == RefreshStatus.idle
+        : mode == RefreshStatus.idle
             ? widget.idleIcon
-            : widget.mode == RefreshStatus.completed
+            : mode == RefreshStatus.completed
                 ? widget.completeIcon
-                : widget.mode == RefreshStatus.failed
+                : mode == RefreshStatus.failed
                     ? widget.failedIcon
                     : SizedBox(
                         width: 25.0,
@@ -82,23 +86,12 @@ class _ClassicHeaderState extends State<ClassicHeader> {
   }
 
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(ClassicHeader oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   Widget build(BuildContext context) {
     // TODO: implement buildContent
-
-    Widget textWidget = _buildText();
-    Widget iconWidget = _buildIcon();
+    final RefreshStatus mode =
+        SmartRefresher.of(context).controller.headerStatus;
+    Widget textWidget = _buildText(mode);
+    Widget iconWidget = _buildIcon(mode);
     List<Widget> children = <Widget>[
       iconWidget,
       Container(
@@ -131,7 +124,11 @@ class _ClassicHeaderState extends State<ClassicHeader> {
   }
 }
 
-class ClassicFooter extends Indicator {
+class ClassicFooter extends LoadIndicator {
+  final bool autoLoad;
+
+  final double triggerDistance;
+
   final String idleText, loadingText, noDataText;
 
   final Widget idleIcon, loadingIcon, noMoreIcon;
@@ -145,8 +142,9 @@ class ClassicFooter extends Indicator {
   final TextStyle textStyle;
 
   const ClassicFooter({
-    @required LoadStatus mode,
     Key key,
+    this.autoLoad:default_AutoLoad,
+    this.triggerDistance:default_refresh_triggerDistance,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
@@ -157,53 +155,38 @@ class ClassicFooter extends Indicator {
     this.spacing: 15.0,
     this.loadingIcon: const CircularProgressIndicator(strokeWidth: 2.0),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
-  }) : super(key: key, mode: mode);
+  }) : super(key: key, triggerDistance: triggerDistance);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
+
     return _ClassicFooterState();
   }
 }
 
 class _ClassicFooterState extends State<ClassicFooter> {
-  Widget _buildText() {
+  Widget _buildText(LoadStatus mode) {
     return Text(
-        widget.mode == LoadStatus.loading
+        mode == LoadStatus.loading
             ? widget.loadingText
-            : LoadStatus.noMore == widget.mode
-                ? widget.noDataText
-                : widget.idleText,
+            : LoadStatus.noMore == mode ? widget.noDataText : widget.idleText,
         style: widget.textStyle);
   }
 
-  Widget _buildIcon() {
-    Widget icon = widget.mode == LoadStatus.loading
+  Widget _buildIcon(LoadStatus mode) {
+    Widget icon = mode == LoadStatus.loading
         ? widget.loadingIcon
-        : widget.mode == LoadStatus.noMore
-            ? widget.noMoreIcon
-            : widget.idleIcon;
+        : mode == LoadStatus.noMore ? widget.noMoreIcon : widget.idleIcon;
     return icon;
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(ClassicFooter oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement buildContent
-
-    Widget textWidget = _buildText();
-    Widget iconWidget = _buildIcon();
+    final LoadStatus mode = SmartRefresher.of(context).controller.footerStatus;
+    Widget textWidget = _buildText(mode);
+    Widget iconWidget = _buildIcon(mode);
     List<Widget> children = <Widget>[
       iconWidget,
       Container(

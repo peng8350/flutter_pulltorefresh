@@ -67,31 +67,6 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
     _controller = RefreshController();
   }
 
-  Widget _headerCreate(BuildContext context, RefreshStatus mode) {
-    final _loadingContainer = Container(
-        height: 50.0,
-        color: Colors.black12,
-        child: Center(
-          child: Opacity(
-            opacity: 0.9,
-            child: SpinKitWave(
-              color: Colors.red,
-              size: 50.0,
-            ),
-          ),
-        ));
-    return _loadingContainer;
-  }
-
-  Widget _footerCreate(BuildContext context, LoadStatus mode) {
-    return ClassicFooter(
-      mode: mode,
-      loadingText: 'loading...',
-      idleIcon: const Icon(Icons.arrow_upward),
-      idleText: 'Loadmore...',
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return SmartRefresher(
@@ -100,8 +75,6 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       controller: _controller,
       onRefresh: _onRefresh,
       onLoading: _onLoading,
-      headerBuilder: _headerCreate,
-      footerBuilder: _footerCreate,
       onOffsetChange: _onOffsetCallback,
       child: GridView.builder(
         gridDelegate:

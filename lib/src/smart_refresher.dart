@@ -8,13 +8,10 @@ import 'package:flutter/material.dart';
 import 'internals/default_constants.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pull_to_refresh/src/internals/indicator_config.dart';
 import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
 import 'indicator/classic_indicator.dart';
 import 'dart:math' as math;
-
-import 'internals/refreshsliver.dart';
 
 enum WrapperType { Refresh, Loading }
 
@@ -31,11 +28,8 @@ class SmartRefresher extends StatefulWidget {
   //indicate your listView
   final ScrollView child;
 
-  final HeaderBuilder headerBuilder;
-  final FooterBuilder footerBuilder;
-  // configure your header and footer
-  final RefreshConfig headerConfig;
-  final LoadConfig footerConfig;
+  final RefreshIndicator header;
+  final LoadIndicator footer;
   // This bool will affect whether or not to have the function of drop-up load.
   final bool enablePullUp;
   //This bool will affect whether or not to have the function of drop-down refresh.
@@ -55,10 +49,8 @@ class SmartRefresher extends StatefulWidget {
       {Key key,
       @required this.child,
       @required this.controller,
-      HeaderBuilder headerBuilder,
-      FooterBuilder footerBuilder,
-      this.headerConfig: const RefreshConfig(),
-      this.footerConfig: const LoadConfig(),
+      RefreshIndicator header,
+      LoadIndicator footer,
       this.enableOverScroll: default_enableOverScroll,
       this.enablePullDown: default_enablePullDown,
       this.enablePullUp: default_enablePullUp,
@@ -68,14 +60,10 @@ class SmartRefresher extends StatefulWidget {
       this.isNestWrapped: false})
       : assert(child != null),
         assert(controller != null),
-        this.headerBuilder = headerBuilder ??
-            ((BuildContext context, RefreshStatus mode) {
-              return ClassicHeader(mode: mode);
-            }),
-        this.footerBuilder = footerBuilder ??
-            ((BuildContext context, LoadStatus mode) {
-              return ClassicFooter(mode: mode);
-            }),
+        this.header =
+            header ?? ClassicHeader(),
+        this.footer =
+            footer ?? ClassicFooter(),
         super(key: key);
 
   @override
@@ -92,29 +80,26 @@ class _SmartRefresherState extends State<SmartRefresher> {
   // key to get height header of footer
   final GlobalKey _headerKey = GlobalKey(), _footerKey = GlobalKey();
 
-  Widget _buildWrapperByConfig(Config config, bool up) {
-    if (config is LoadConfig) {
+  Widget _buildWrapperByConfig(bool up) {
+    if (!up) {
       return LoadWrapper(
         key: up ? _headerKey : _footerKey,
         modeListener:
             up ? widget.controller.headerMode : widget.controller.footerMode,
-        autoLoad: config.autoLoad,
-        triggerDistance: config.triggerDistance,
-        builder: up ? widget.headerBuilder : widget.footerBuilder,
+        autoLoad: widget.footer.autoLoad,
+        triggerDistance: widget.footer.triggerDistance,
+        child: widget.footer,
       );
-    } else if (config is RefreshConfig) {
+    } else {
       return RefreshWrapper(
-        key: up ? _headerKey : _footerKey,
-        modeLis:
-            up ? widget.controller.headerMode : widget.controller.footerMode,
-        refreshStyle: config.refreshStyle,
-        completeDuration: config.completeDuration,
-        triggerDistance: config.triggerDistance,
-        height: config.height,
-        builder: up ? widget.headerBuilder : widget.footerBuilder,
+        key: _headerKey,
+        modeLis: widget.controller.headerMode,
+        refreshStyle: widget.header.refreshStyle,
+        triggerDistance: widget.header.triggerDistance,
+        height: widget.header.height,
+        child:  widget.header,
       );
     }
-    return SliverToBoxAdapter();
   }
 
   //handle the scrollMoveEvent
@@ -192,7 +177,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
             overscrollPastStart +
                 ((RefreshStatus.refreshing ==
                         widget.controller.headerMode.value)
-                    ? widget.headerConfig.height
+                    ? widget.header.height
                     : 0.0));
       }
     } else if (overscrollPastEnd > 0) {
@@ -202,11 +187,13 @@ class _SmartRefresherState extends State<SmartRefresher> {
     }
   }
 
-  _didChangeMode(up,  mode) {
-    if (up&&mode.value == RefreshStatus.refreshing && widget.onRefresh != null) {
+  _didChangeMode(up, mode) {
+    if (up &&
+        mode.value == RefreshStatus.refreshing &&
+        widget.onRefresh != null) {
       widget.onRefresh();
     }
-    if(!up&&mode.value == LoadStatus.loading&&widget.onLoading!=null){
+    if (!up && mode.value == LoadStatus.loading && widget.onLoading != null) {
       widget.onLoading();
     }
   }
@@ -268,8 +255,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
     List<Widget> slivers =
         List.from(widget.child.buildSlivers(context), growable: true);
 
-    slivers.insert(0, _buildWrapperByConfig(widget.headerConfig, true));
-    slivers.add(_buildWrapperByConfig(widget.footerConfig, false));
+    slivers.insert(0, _buildWrapperByConfig( true));
+    slivers.add(_buildWrapperByConfig(false));
 
     return NotificationListener(
       child: CustomScrollView(
@@ -285,11 +272,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
   }
 }
 
-abstract class Indicator extends StatefulWidget {
-  final  mode;
 
-  const Indicator({Key key, this.mode}) : super(key: key);
-}
 
 class RefreshController {
   ValueNotifier<RefreshStatus> headerMode = ValueNotifier(RefreshStatus.idle);
@@ -313,19 +296,19 @@ class RefreshController {
     }
   }
 
-  void refreshCompleted(){
+  void refreshCompleted() {
     headerMode.value = RefreshStatus.completed;
   }
 
-  void refreshFailed(){
+  void refreshFailed() {
     headerMode.value = RefreshStatus.failed;
   }
 
-  void loadComplete(){
+  void loadComplete() {
     footerMode.value = LoadStatus.idle;
   }
 
-  void loadNoData(){
+  void loadNoData() {
     footerMode.value = LoadStatus.noMore;
   }
 

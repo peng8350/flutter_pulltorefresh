@@ -11,71 +11,66 @@ import 'default_constants.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'refreshsliver.dart';
 
-abstract class Wrapper extends StatefulWidget {
-  final  modeListener;
-
-  final  builder;
-
+abstract class Indicator extends StatefulWidget {
   final double triggerDistance;
 
-  bool get _isRefreshing => this.mode == RefreshStatus.refreshing;
-
-  bool get _isComplete =>
-      this.mode != RefreshStatus.idle &&
-      this.mode != RefreshStatus.refreshing &&
-      this.mode != RefreshStatus.canRefresh;
-
-  get mode => this.modeListener.value;
-
-  set mode(mode) => this.modeListener.value = mode;
-
-  Wrapper(
-      {Key key,
-      @required this.modeListener,
-      this.builder,
-      this.triggerDistance})
-      : assert(modeListener != null),
-        super(key: key);
+  const Indicator({Key key, this.triggerDistance}) : super(key: key);
 }
 
-class RefreshWrapper extends Wrapper {
-  final int completeDuration;
+abstract class RefreshIndicator extends Indicator {
+  final RefreshStyle refreshStyle;
 
   final double height;
 
-  final RefreshStyle refreshStyle;
-
-  RefreshWrapper({
-    Key key,
-    HeaderBuilder builder,
-    ValueNotifier<RefreshStatus> modeLis,
-    this.refreshStyle,
-    this.completeDuration: default_completeDuration,
-    double triggerDistance: default_refresh_triggerDistance,
-    this.height: default_height,
-  }) : super(
-          key: key,
-          modeListener: modeLis,
-          builder: builder,
-          triggerDistance: triggerDistance,
-        );
-
-  @override
-  State<StatefulWidget> createState() {
-    return RefreshWrapperState();
-  }
+  const RefreshIndicator(
+      {Key key,
+        double triggerDistance,
+        this.refreshStyle,
+        this.height})
+      : super(key: key,triggerDistance:triggerDistance);
 }
 
-class RefreshWrapperState extends State<RefreshWrapper>
-    with TickerProviderStateMixin
-    implements GestureProcessor {
-  bool _hasLayout = false;
+abstract class LoadIndicator extends Indicator {
+  final bool autoLoad;
 
-  RefreshStatus get mode => widget.modeListener.value;
+  const LoadIndicator(
+      {Key key, double triggerDistance, this.autoLoad})
+      : super(key: key,triggerDistance:triggerDistance);
+}
+
+abstract class RefreshIndicatorState<T extends RefreshIndicator> extends State<T>{
+
+
+
+  get mode => SmartRefresher.of(context).controller.headerStatus;
+
+  get offset => SmartRefresher.of(context).controller.scrollController.offset;
+
+  set mode(mode) => SmartRefresher.of(context).controller.scrollController.offset;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    SmartRefresher.of(context).controller.scrollController.addListener(onOffsetChange);
+    SmartRefresher.of(context).controller.headerMode.addListener((){
+
+    });
+  }
+
+  void onOffsetChange(){
+    setState(() {
+
+    });
+  }
+
+  void didModeChange(RefreshStatus mode){
+
+  }
 
   double _measure(ScrollNotification notification) {
     return (notification.metrics.minScrollExtent -
-            notification.metrics.pixels) /
+        notification.metrics.pixels) /
         widget.triggerDistance;
   }
 
@@ -84,7 +79,6 @@ class RefreshWrapperState extends State<RefreshWrapper>
     if (widget._isComplete || widget._isRefreshing) return;
 
     double offset = _measure(notification);
-
     if (offset >= 1.0) {
       widget.mode = RefreshStatus.canRefresh;
     } else {
@@ -95,7 +89,6 @@ class RefreshWrapperState extends State<RefreshWrapper>
   @override
   void onDragEnd(ScrollNotification notification) {
     if (widget._isComplete || widget._isRefreshing) return;
-
     bool reachMax = _measure(notification) >= 1.0;
     if (reachMax) {
       widget.mode = RefreshStatus.refreshing;
@@ -128,6 +121,76 @@ class RefreshWrapperState extends State<RefreshWrapper>
     }
   }
 
+
+
+}
+
+
+abstract class Wrapper extends StatefulWidget {
+  final  modeListener;
+
+  final  Widget child;
+
+  final double triggerDistance;
+
+  bool get _isRefreshing => this.mode == RefreshStatus.refreshing;
+
+  bool get _isComplete =>
+      this.mode != RefreshStatus.idle &&
+      this.mode != RefreshStatus.refreshing &&
+      this.mode != RefreshStatus.canRefresh;
+
+  get mode => this.modeListener.value;
+
+  set mode(mode) => this.modeListener.value = mode;
+
+  Wrapper(
+      {Key key,
+      @required this.modeListener,
+      this.child,
+      this.triggerDistance})
+      : assert(modeListener != null),
+        super(key: key);
+}
+
+class RefreshWrapper extends Wrapper {
+  final int completeDuration;
+
+  final double height;
+
+  final RefreshStyle refreshStyle;
+
+  RefreshWrapper({
+    Key key,
+    HeaderBuilder builder,
+    Widget child,
+    ValueNotifier<RefreshStatus> modeLis,
+    this.refreshStyle,
+    this.completeDuration: default_completeDuration,
+    double triggerDistance: default_refresh_triggerDistance,
+    this.height: default_height,
+  }) : super(
+          key: key,
+          modeListener: modeLis,
+          child:child,
+          triggerDistance: triggerDistance,
+        );
+
+  @override
+  State<StatefulWidget> createState() {
+    return RefreshWrapperState();
+  }
+
+}
+
+class RefreshWrapperState extends State<RefreshWrapper>
+    with TickerProviderStateMixin
+    implements GestureProcessor {
+  bool _hasLayout = false;
+
+  RefreshStatus get mode => widget.modeListener.value;
+
+
   @override
   void initState() {
     super.initState();
@@ -140,7 +203,7 @@ class RefreshWrapperState extends State<RefreshWrapper>
       hasLayoutExtent: _hasLayout,
       refreshIndicatorLayoutExtent: widget.height,
       refreshStyle: widget.refreshStyle,
-      child: widget.builder(context, widget.mode),
+      child: widget.child,
     );
   }
 }
@@ -153,11 +216,11 @@ class LoadWrapper extends Wrapper {
       @required ValueNotifier<LoadStatus> modeListener,
       double triggerDistance: default_load_triggerDistance,
       this.autoLoad,
-      FooterBuilder builder})
+      Widget child})
       : assert(modeListener != null),
         super(
           key: key,
-          builder: builder,
+          child:child,
           modeListener: modeListener,
           triggerDistance: triggerDistance,
         );
@@ -172,7 +235,7 @@ class LoadWrapper extends Wrapper {
 class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(child: widget.builder(context, widget.mode));
+    return SliverToBoxAdapter(child: widget.child);
   }
 
   @override
