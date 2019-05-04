@@ -33,6 +33,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     }
   }
 
+
   void enterRefresh() {
     _refreshController.requestRefresh(false);
   }
@@ -80,7 +81,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           controller: _refreshController,
           enablePullUp: true,
           header: ClassicHeader(
-            refreshStyle: RefreshStyle.UnFollow,
+            refreshStyle: RefreshStyle.Front,
           ),
           onRefresh: () {
               Future.delayed(const Duration(milliseconds: 2009)).then((val) {

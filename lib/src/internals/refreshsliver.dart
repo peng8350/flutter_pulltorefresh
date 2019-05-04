@@ -108,8 +108,7 @@ class _RefreshRenderSliver extends RenderSliver
     // If the new layoutExtent instructive changed, the SliverGeometry's
     // layoutExtent will take that value (on the next performLayout run). Shift
     // the scroll offset first so it doesn't make the scroll position suddenly jump.
-    if (layoutExtent != layoutExtentOffsetCompensation &&
-        refreshStyle != RefreshStyle.Front) {
+    if (layoutExtent != layoutExtentOffsetCompensation ) {
       geometry = SliverGeometry(
         scrollOffsetCorrection: layoutExtent - layoutExtentOffsetCompensation,
       );
@@ -187,7 +186,7 @@ class _RefreshRenderSliver extends RenderSliver
             maxPaintExtent: hasLayoutExtent
                 ? Math.min(layoutExtent, constraints.remainingPaintExtent)
                 : needPaintExtent,
-            layoutExtent: 0.0,
+            layoutExtent: hasLayoutExtent?layoutExtent:0.0,
           );
           break;
       }

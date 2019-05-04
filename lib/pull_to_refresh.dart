@@ -8,4 +8,5 @@ library pulltorefresh;
 
 export 'src/smart_refresher.dart';
 export 'src/indicator/classic_indicator.dart';
+export 'src/indicator/custom_indicator.dart';
 export 'src/internals/refresh_physics.dart';

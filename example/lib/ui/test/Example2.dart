@@ -59,6 +59,19 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
     if (isUp) {
     } else {}
   }
+  
+  Widget _headerCreate(BuildContext context,RefreshStatus mode){
+    if(mode==RefreshStatus.refreshing) {
+      return SpinKitCircle(color: Colors.greenAccent);
+    }
+    else{
+      return SpinKitDualRing(color: Colors.greenAccent);
+    }
+  }
+  
+  Widget _footerCreate(BuildContext context,LoadStatus mode){
+    return Image.asset("images/animate.gif",fit: BoxFit.fitWidth,alignment: Alignment.bottomCenter,);
+  }
 
   @override
   void initState() {
@@ -72,6 +85,8 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
     return SmartRefresher(
       enablePullDown: true,
       enablePullUp: true,
+      header: CustomHeader(builder: _headerCreate),
+      footer: CustomFooter(builder: _footerCreate),
       controller: _controller,
       onRefresh: _onRefresh,
       onLoading: _onLoading,
