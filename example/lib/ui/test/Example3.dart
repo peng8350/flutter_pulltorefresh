@@ -69,6 +69,8 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //    return new ClassicLoadIndicator(mode: mode);
 //  }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -77,6 +79,9 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         SmartRefresher(
           controller: _refreshController,
           enablePullUp: true,
+          header: ClassicHeader(
+            refreshStyle: RefreshStyle.UnFollow,
+          ),
           onRefresh: () {
               Future.delayed(const Duration(milliseconds: 2009)).then((val) {
                 _refreshController.refreshFailed();

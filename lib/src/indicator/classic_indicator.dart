@@ -4,9 +4,11 @@
     createTime:2018-05-14 17:39
  */
 
-import 'package:flutter/material.dart' hide RefreshIndicator,RefreshIndicatorState;
+import 'package:flutter/material.dart'
+    hide RefreshIndicator, RefreshIndicatorState;
 import 'package:flutter/widgets.dart';
 import '../internals/default_constants.dart';
+import '../internals/indicator_wrap.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 enum IconPosition { left, right, top, bottom }
@@ -24,13 +26,13 @@ class ClassicHeader extends RefreshIndicator {
 
   ClassicHeader({
     Key key,
-    RefreshStyle refreshStyle:default_refreshStyle,
+    RefreshStyle refreshStyle: default_refreshStyle,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     double triggerDistance: default_refresh_triggerDistance,
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
     this.completeText: 'Refresh complete',
-    double height:default_height,
+    double height: default_height,
     this.failedText: 'Refresh failed',
     this.idleText: 'Pull down to refresh',
     this.iconPos: IconPosition.left,
@@ -41,7 +43,7 @@ class ClassicHeader extends RefreshIndicator {
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
     this.releaseIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
   }) : super(
-            key: key ?? GlobalKey(),
+            key: key ,
             refreshStyle: refreshStyle,
             height: height,
             triggerDistance: triggerDistance);
@@ -53,7 +55,8 @@ class ClassicHeader extends RefreshIndicator {
   }
 }
 
-class _ClassicHeaderState extends State<ClassicHeader> {
+class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
+
   Widget _buildText(mode) {
     return Text(
         mode == RefreshStatus.canRefresh
@@ -86,10 +89,14 @@ class _ClassicHeaderState extends State<ClassicHeader> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget buildContent(BuildContext context,RefreshStatus mode) {
     // TODO: implement buildContent
-    final RefreshStatus mode =
-        SmartRefresher.of(context).controller.headerStatus;
     Widget textWidget = _buildText(mode);
     Widget iconWidget = _buildIcon(mode);
     List<Widget> children = <Widget>[
@@ -141,10 +148,10 @@ class ClassicFooter extends LoadIndicator {
 
   final TextStyle textStyle;
 
-  const ClassicFooter({
+  ClassicFooter({
     Key key,
-    this.autoLoad:default_AutoLoad,
-    this.triggerDistance:default_refresh_triggerDistance,
+    this.autoLoad: default_AutoLoad,
+    this.triggerDistance: default_refresh_triggerDistance,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
@@ -165,7 +172,7 @@ class ClassicFooter extends LoadIndicator {
   }
 }
 
-class _ClassicFooterState extends State<ClassicFooter> {
+class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
   Widget _buildText(LoadStatus mode) {
     return Text(
         mode == LoadStatus.loading
@@ -182,9 +189,8 @@ class _ClassicFooterState extends State<ClassicFooter> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement buildContent
-    final LoadStatus mode = SmartRefresher.of(context).controller.footerStatus;
+  Widget buildContent(BuildContext context,LoadStatus mode) {
+    // TODO: implement buildChild
     Widget textWidget = _buildText(mode);
     Widget iconWidget = _buildIcon(mode);
     List<Widget> children = <Widget>[

@@ -8,13 +8,16 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'default_constants.dart';
+import 'dart:math' as math;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'refreshsliver.dart';
 
 abstract class Indicator extends StatefulWidget {
   final double triggerDistance;
 
-  const Indicator({Key key, this.triggerDistance}) : super(key: key);
+
+
+  Indicator({Key key, this.triggerDistance}) : super(key: key);
 }
 
 abstract class RefreshIndicator extends Indicator {
@@ -22,98 +25,95 @@ abstract class RefreshIndicator extends Indicator {
 
   final double height;
 
-  const RefreshIndicator(
-      {Key key,
-        double triggerDistance,
-        this.refreshStyle,
-        this.height})
-      : super(key: key,triggerDistance:triggerDistance);
+  RefreshIndicator(
+      {@required this.height,
+      Key key,
+      double triggerDistance,
+      this.refreshStyle})
+      : super(key: key, triggerDistance: triggerDistance);
 }
 
 abstract class LoadIndicator extends Indicator {
   final bool autoLoad;
 
-  const LoadIndicator(
-      {Key key, double triggerDistance, this.autoLoad})
-      : super(key: key,triggerDistance:triggerDistance);
+  LoadIndicator({Key key, double triggerDistance: 15.0, this.autoLoad: true})
+      : super(key: key, triggerDistance: triggerDistance);
 }
 
-abstract class RefreshIndicatorState<T extends RefreshIndicator> extends State<T>{
+abstract class RefreshIndicatorState<T extends RefreshIndicator>
+    extends State<T> {
+  SmartRefresherState get refresher => SmartRefresher.of(context);
 
+  get mode => refresher.widget.controller.headerStatus;
 
+  get offset => scrollController.offset;
 
-  get mode => SmartRefresher.of(context).controller.headerStatus;
+  get scrollController => refresher.scrollController;
 
-  get offset => SmartRefresher.of(context).controller.scrollController.offset;
+  ValueNotifier get draggingNotifier => refresher.draggingNotifier;
 
-  set mode(mode) => SmartRefresher.of(context).controller.scrollController.offset;
+  bool get isDragging => draggingNotifier.value == true;
+
+  set mode(mode) => refresher.widget.controller.headerMode.value = mode;
+
+  bool get _isComplete =>
+      mode == RefreshStatus.completed || mode == RefreshStatus.failed;
+
+  bool get _isRefreshing => mode == RefreshStatus.refreshing;
+  // if true,the indicator has a height which happen in refreshing mode
+  bool hasLayout = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    SmartRefresher.of(context).controller.scrollController.addListener(onOffsetChange);
-    SmartRefresher.of(context).controller.headerMode.addListener((){
-
+    draggingNotifier.addListener(() {
+      // by this,it mean the user release gesture on screen
+      if (!isDragging) {
+        if (mode == RefreshStatus.canRefresh) {
+          mode = RefreshStatus.refreshing;
+        }
+      }
     });
+    scrollController.addListener(_handleOffsetChange);
+    refresher.widget.controller.headerMode.addListener(_handleModeChange);
   }
 
-  void onOffsetChange(){
-    setState(() {
-
-    });
-  }
-
-  void didModeChange(RefreshStatus mode){
-
-  }
-
-  double _measure(ScrollNotification notification) {
-    return (notification.metrics.minScrollExtent -
-        notification.metrics.pixels) /
-        widget.triggerDistance;
-  }
-
-  @override
-  void onDragMove(ScrollUpdateNotification notification) {
-    if (widget._isComplete || widget._isRefreshing) return;
-
-    double offset = _measure(notification);
-    if (offset >= 1.0) {
-      widget.mode = RefreshStatus.canRefresh;
-    } else {
-      widget.mode = RefreshStatus.idle;
+  void _handleOffsetChange() {
+    if (mounted) setState(() {});
+    final overscrollPast = calculateScrollOffset(scrollController);
+    if (overscrollPast <= 0.0) {
+      return;
     }
+    onDragMove(overscrollPast);
+
+    onOffsetChange(overscrollPast);
   }
 
-  @override
-  void onDragEnd(ScrollNotification notification) {
-    if (widget._isComplete || widget._isRefreshing) return;
-    bool reachMax = _measure(notification) >= 1.0;
-    if (reachMax) {
-      widget.mode = RefreshStatus.refreshing;
-    }
+  double calculateScrollOffset(ScrollController controller) {
+    return (hasLayout?widget.height:0.0)-scrollController.offset;
   }
 
   void _handleModeChange() {
-    setState(() {});
+    if (mounted) setState(() {});
     switch (mode) {
       case RefreshStatus.refreshing:
-        _hasLayout = true;
+        hasLayout = true;
+        if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
         break;
       case RefreshStatus.completed:
-        Future.delayed(Duration(milliseconds: widget.completeDuration), () {
-          _hasLayout = false;
-          widget.mode = RefreshStatus.idle;
-          setState(() {});
+        endRefresh().whenComplete(() {
+          hasLayout = false;
+          if (mounted) setState(() {});
         });
         break;
       case RefreshStatus.failed:
-        Future.delayed(Duration(milliseconds: widget.completeDuration), () {
-          _hasLayout = false;
-
-          widget.mode = RefreshStatus.idle;
-          setState(() {});
+        Future.delayed(Duration(milliseconds: 800), () {
+          endRefresh().whenComplete(() {
+            hasLayout = false;
+            print(mounted);
+            if (mounted) setState(() {});
+          });
         });
         break;
       default:
@@ -122,148 +122,100 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator> extends State<T
   }
 
 
-
-}
-
-
-abstract class Wrapper extends StatefulWidget {
-  final  modeListener;
-
-  final  Widget child;
-
-  final double triggerDistance;
-
-  bool get _isRefreshing => this.mode == RefreshStatus.refreshing;
-
-  bool get _isComplete =>
-      this.mode != RefreshStatus.idle &&
-      this.mode != RefreshStatus.refreshing &&
-      this.mode != RefreshStatus.canRefresh;
-
-  get mode => this.modeListener.value;
-
-  set mode(mode) => this.modeListener.value = mode;
-
-  Wrapper(
-      {Key key,
-      @required this.modeListener,
-      this.child,
-      this.triggerDistance})
-      : assert(modeListener != null),
-        super(key: key);
-}
-
-class RefreshWrapper extends Wrapper {
-  final int completeDuration;
-
-  final double height;
-
-  final RefreshStyle refreshStyle;
-
-  RefreshWrapper({
-    Key key,
-    HeaderBuilder builder,
-    Widget child,
-    ValueNotifier<RefreshStatus> modeLis,
-    this.refreshStyle,
-    this.completeDuration: default_completeDuration,
-    double triggerDistance: default_refresh_triggerDistance,
-    this.height: default_height,
-  }) : super(
-          key: key,
-          modeListener: modeLis,
-          child:child,
-          triggerDistance: triggerDistance,
-        );
-
   @override
-  State<StatefulWidget> createState() {
-    return RefreshWrapperState();
-  }
-
-}
-
-class RefreshWrapperState extends State<RefreshWrapper>
-    with TickerProviderStateMixin
-    implements GestureProcessor {
-  bool _hasLayout = false;
-
-  RefreshStatus get mode => widget.modeListener.value;
-
-
-  @override
-  void initState() {
-    super.initState();
-    widget.modeListener.addListener(_handleModeChange);
+  void onDragMove(double offset) {
+    if(offset<=1.0){
+      mode = RefreshStatus.idle;
+    }
+    if (_isComplete || _isRefreshing) return;
+    if (offset >= widget.triggerDistance) {
+      mode = RefreshStatus.canRefresh;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return SliverRefresh(
-      hasLayoutExtent: _hasLayout,
-      refreshIndicatorLayoutExtent: widget.height,
-      refreshStyle: widget.refreshStyle,
-      child: widget.child,
-    );
+        child: buildContent(context, mode),
+        hasLayoutExtent: hasLayout,
+        refreshIndicatorLayoutExtent: widget.height,
+        refreshStyle: widget.refreshStyle);
   }
+
+  Future<void> readyToRefresh() {
+    return Future.delayed(Duration(milliseconds: 800));
+  }
+
+  Future<void> endRefresh() {
+    return Future.delayed(Duration(milliseconds: 800));
+  }
+
+  void onOffsetChange(double offset) {
+  }
+
+  Widget buildContent(BuildContext context, RefreshStatus mode);
 }
 
-class LoadWrapper extends Wrapper {
-  final bool autoLoad;
+abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
+  SmartRefresherState get refresher => SmartRefresher.of(context);
 
-  LoadWrapper(
-      {Key key,
-      @required ValueNotifier<LoadStatus> modeListener,
-      double triggerDistance: default_load_triggerDistance,
-      this.autoLoad,
-      Widget child})
-      : assert(modeListener != null),
-        super(
-          key: key,
-          child:child,
-          modeListener: modeListener,
-          triggerDistance: triggerDistance,
-        );
+  LoadStatus get mode => refresher.widget.controller.footerStatus;
 
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return LoadWrapperState();
-  }
-}
+  double get offset => refresher.widget.controller.scrollController.offset;
 
-class LoadWrapperState extends State<LoadWrapper> implements GestureProcessor {
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(child: widget.child);
-  }
+  ScrollController get scrollController =>
+      refresher.widget.controller.scrollController;
+
+  set mode(mode) => refresher.widget.controller.footerMode.value = mode;
+
+  bool get _isRefreshing =>
+      refresher.widget.controller.footerMode.value == LoadStatus.loading;
 
   @override
   void initState() {
     super.initState();
-    widget.modeListener.addListener(() {
-      setState(() {});
-    });
+    refresher.widget.controller.footerMode.addListener(handleModeChange);
+    scrollController.addListener(_handleOffsetChange);
   }
 
-  @override
-  void onDragMove(ScrollUpdateNotification notification) {
-    if (notification.metrics.extentAfter <= widget.triggerDistance &&
-        notification.scrollDelta > 1.0) widget.mode = LoadStatus.loading;
+  double calculateScrollOffset(ScrollController controller) {
+    final double overscrollPastStart = math.max(
+        controller.position.minScrollExtent - controller.position.pixels, 0.0);
+    final double overscrollPastEnd = math.max(
+        controller.position.pixels - controller.position.maxScrollExtent, 0.0);
+    return math.max(overscrollPastStart, overscrollPastEnd);
   }
 
-  @override
-  void onDragEnd(ScrollNotification notification) {
-    if (widget._isRefreshing || widget._isComplete) return;
-    if (widget.autoLoad) {
-      if (notification.metrics.extentAfter <= widget.triggerDistance)
-        widget.mode = LoadStatus.loading;
+  void _handleOffsetChange() {
+    final double overscrollPast =
+        calculateScrollOffset(scrollController);
+    onOffsetChange(overscrollPast);
+
+    onDragMove();
+  }
+
+  void handleModeChange(){
+    if (mounted) setState(() {});
+    if(mode==LoadStatus.loading){
+      if(refresher.widget.onLoading!=null){
+        refresher.widget.onLoading();
+      }
     }
   }
-}
 
-abstract class GestureProcessor {
-  void onDragMove(ScrollUpdateNotification notification);
+  @override
+  void onDragMove() {
+    if (scrollController.position.extentAfter <= widget.triggerDistance)
+      mode = LoadStatus.loading;
+  }
 
-  void onDragEnd(ScrollNotification notification);
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return SliverToBoxAdapter(child: buildContent(context, mode));
+  }
+
+  Widget buildContent(BuildContext context, LoadStatus mode);
+
+  void onOffsetChange(double offset) {}
 }
