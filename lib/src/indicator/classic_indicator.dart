@@ -94,6 +94,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
     super.initState();
   }
 
+
   @override
   Widget buildContent(BuildContext context,RefreshStatus mode) {
     // TODO: implement buildContent
@@ -151,16 +152,16 @@ class ClassicFooter extends LoadIndicator {
   ClassicFooter({
     Key key,
     this.autoLoad: default_AutoLoad,
-    this.triggerDistance: default_refresh_triggerDistance,
+    this.triggerDistance: default_load_triggerDistance,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
     this.height: 60.0,
     this.noMoreIcon: const Icon(Icons.clear, color: Colors.grey),
-    this.idleText: 'Pull down to refresh',
+    this.idleText: 'Load More..',
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
-    this.loadingIcon: const CircularProgressIndicator(strokeWidth: 2.0),
+    this.loadingIcon: const SizedBox(width: 25.0,height: 25.0,child: const CircularProgressIndicator(strokeWidth: 2.0,),),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
   }) : super(key: key, triggerDistance: triggerDistance);
 
@@ -223,4 +224,6 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
       ),
     );
   }
+
+
 }

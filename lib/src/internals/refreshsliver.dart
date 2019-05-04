@@ -14,12 +14,12 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   const SliverRefresh({
     Key key,
     this.refreshIndicatorLayoutExtent = 0.0,
-    this.hasLayoutExtent = false,
+    this.floating = false,
     Widget child,
     this.refreshStyle,
   })  : assert(refreshIndicatorLayoutExtent != null),
         assert(refreshIndicatorLayoutExtent >= 0.0),
-        assert(hasLayoutExtent != null),
+        assert(floating != null),
         super(key: key, child: child);
 
   // The amount of space the indicator should occupy in the sliver in a
@@ -29,7 +29,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   // _RenderCupertinoSliverRefresh will paint the child in the available
   // space either way but this instructs the _RenderCupertinoSliverRefresh
   // on whether to also occupy any layoutExtent space or not.
-  final bool hasLayoutExtent;
+  final bool floating;
 
   final RefreshStyle refreshStyle;
 
@@ -37,7 +37,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   _RefreshRenderSliver createRenderObject(BuildContext context) {
     return _RefreshRenderSliver(
       refreshIndicatorExtent: refreshIndicatorLayoutExtent,
-      hasLayoutExtent: hasLayoutExtent,
+      hasLayoutExtent: floating,
       refreshStyle: refreshStyle,
     );
   }
@@ -47,7 +47,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
       BuildContext context, covariant _RefreshRenderSliver renderObject) {
     renderObject
       ..refreshIndicatorLayoutExtent = refreshIndicatorLayoutExtent
-      ..hasLayoutExtent = hasLayoutExtent;
+      ..hasLayoutExtent = floating;
   }
 }
 
@@ -116,10 +116,9 @@ class _RefreshRenderSliver extends RenderSliver
       layoutExtentOffsetCompensation = layoutExtent;
       return;
     }
-    final bool active = constraints.overlap < 0.0 || layoutExtent > 0.0;
+    final bool active = constraints.overlap <= 0.0 || layoutExtent >= 0.0;
     final double overscrolledExtent =
-        constraints.overlap < 0.0 ? constraints.overlap.abs() : 0.0;
-
+       constraints.overlap.abs() ;
     if (refreshStyle == RefreshStyle.Behind) {
       child.layout(
         constraints.asBoxConstraints(

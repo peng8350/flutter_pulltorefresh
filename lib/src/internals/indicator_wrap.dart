@@ -15,8 +15,6 @@ import 'refreshsliver.dart';
 abstract class Indicator extends StatefulWidget {
   final double triggerDistance;
 
-
-
   Indicator({Key key, this.triggerDistance}) : super(key: key);
 }
 
@@ -46,13 +44,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   get mode => refresher.widget.controller.headerStatus;
 
-  get offset => scrollController.offset;
-
   get scrollController => refresher.scrollController;
 
-  ValueNotifier get draggingNotifier => refresher.draggingNotifier;
-
-  bool get isDragging => draggingNotifier.value == true;
+  bool get isDragging => refresher.isDragging;
 
   set mode(mode) => refresher.widget.controller.headerMode.value = mode;
 
@@ -61,59 +55,66 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   bool get _isRefreshing => mode == RefreshStatus.refreshing;
   // if true,the indicator has a height which happen in refreshing mode
-  bool hasLayout = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    draggingNotifier.addListener(() {
-      // by this,it mean the user release gesture on screen
-      if (!isDragging) {
-        if (mode == RefreshStatus.canRefresh) {
-          mode = RefreshStatus.refreshing;
-        }
-      }
-    });
-    scrollController.addListener(_handleOffsetChange);
-    refresher.widget.controller.headerMode.addListener(_handleModeChange);
-  }
+  bool floating = false;
 
   void _handleOffsetChange() {
-    if (mounted) setState(() {});
     final overscrollPast = calculateScrollOffset(scrollController);
-    if (overscrollPast <= 0.0) {
+    if (overscrollPast < 0.0) {
       return;
     }
-    onDragMove(overscrollPast);
+    _onDragMove(overscrollPast);
 
     onOffsetChange(overscrollPast);
   }
 
   double calculateScrollOffset(ScrollController controller) {
-    return (hasLayout?widget.height:0.0)-scrollController.offset;
+    return (floating ? widget.height : 0.0) - scrollController.offset;
   }
 
-  void _handleModeChange() {
+  // handle the  state change between canRefresh and idle canRefresh  before refreshing
+  void _onDragMove(double offset) {
+    if (_isComplete || _isRefreshing) return;
+    if (floating) return;
+    if (!isDragging && RefreshStatus.canRefresh == mode) {
+      mode = RefreshStatus.refreshing;
+    }
+    if (isDragging) {
+      if (offset >= widget.triggerDistance) {
+        mode = RefreshStatus.canRefresh;
+      } else {
+        mode = RefreshStatus.idle;
+      }
+    }
+  }
+
+  //
+  void handleModeChange() {
     if (mounted) setState(() {});
     switch (mode) {
       case RefreshStatus.refreshing:
-        hasLayout = true;
-        if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
-        break;
-      case RefreshStatus.completed:
-        endRefresh().whenComplete(() {
-          hasLayout = false;
-          if (mounted) setState(() {});
+        readyToRefresh().then((_) {
+          floating = true;
+          if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
         });
         break;
+      case RefreshStatus.completed:
+        endRefresh().then((_) {
+          floating = false;
+          if (mounted) setState(() {});
+
+          return Future.delayed(Duration(milliseconds: 150));
+        }).whenComplete(() {
+          mode = RefreshStatus.idle;
+        });
+
+        break;
       case RefreshStatus.failed:
-        Future.delayed(Duration(milliseconds: 800), () {
-          endRefresh().whenComplete(() {
-            hasLayout = false;
-            print(mounted);
-            if (mounted) setState(() {});
-          });
+        endRefresh().then((_) {
+          floating = false;
+          if (mounted) setState(() {});
+          return Future.delayed(Duration(milliseconds: 150));
+        }).whenComplete(() {
+          mode = RefreshStatus.idle;
         });
         break;
       default:
@@ -121,39 +122,39 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     }
   }
 
-
-  @override
-  void onDragMove(double offset) {
-    if(offset<=1.0){
-      mode = RefreshStatus.idle;
-    }
-    if (_isComplete || _isRefreshing) return;
-    if (offset >= widget.triggerDistance) {
-      mode = RefreshStatus.canRefresh;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverRefresh(
-        child: buildContent(context, mode),
-        hasLayoutExtent: hasLayout,
-        refreshIndicatorLayoutExtent: widget.height,
-        refreshStyle: widget.refreshStyle);
-  }
-
+  // the method can provide a callback to implements some animation
   Future<void> readyToRefresh() {
-    return Future.delayed(Duration(milliseconds: 800));
+    return Future.value();
   }
 
+  // it mean the state will enter success or fail
   Future<void> endRefresh() {
     return Future.delayed(Duration(milliseconds: 800));
   }
 
   void onOffsetChange(double offset) {
+    if (mounted) setState(() {});
   }
 
+  // indicator render layout
   Widget buildContent(BuildContext context, RefreshStatus mode);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverRefresh(
+        child: buildContent(context, mode),
+        floating: floating,
+        refreshIndicatorLayoutExtent: widget.height,
+        refreshStyle: widget.refreshStyle);
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    scrollController.addListener(_handleOffsetChange);
+    refresher.widget.controller.headerMode.addListener(handleModeChange);
+    super.didChangeDependencies();
+  }
 }
 
 abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
@@ -187,17 +188,16 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   }
 
   void _handleOffsetChange() {
-    final double overscrollPast =
-        calculateScrollOffset(scrollController);
+    final double overscrollPast = calculateScrollOffset(scrollController);
     onOffsetChange(overscrollPast);
 
     onDragMove();
   }
 
-  void handleModeChange(){
+  void handleModeChange() {
     if (mounted) setState(() {});
-    if(mode==LoadStatus.loading){
-      if(refresher.widget.onLoading!=null){
+    if (mode == LoadStatus.loading) {
+      if (refresher.widget.onLoading != null) {
         refresher.widget.onLoading();
       }
     }

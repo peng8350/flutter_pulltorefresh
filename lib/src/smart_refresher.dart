@@ -77,23 +77,22 @@ class SmartRefresherState extends State<SmartRefresher> {
   // listen the listen offset or on...
   ScrollController scrollController;
   // check if user is dragging
-  ValueNotifier<bool> draggingNotifier = ValueNotifier(false);
+  bool isDragging = false;
 
   //handle the scrollStartvent
   bool _handleScrollStart(ScrollNotification notification) {
-    draggingNotifier.value = true;
+    isDragging = true;
     return false;
   }
 
   //handle the scrollEndEvent
   bool _handleScrollEnd(ScrollNotification notification) {
-    draggingNotifier.value = false;
+    isDragging = false;
     return false;
   }
 
   bool _dispatchScrollEvent(ScrollNotification notification) {
     // ignore the nested scrollview's notification
-
     if (notification.depth != 0) {
       return false;
     }
@@ -104,7 +103,6 @@ class SmartRefresherState extends State<SmartRefresher> {
         notification.dragDetails == null) {
       _handleScrollEnd(notification);
     }
-
     return false;
   }
 
