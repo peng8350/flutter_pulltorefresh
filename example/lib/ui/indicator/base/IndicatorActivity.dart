@@ -24,8 +24,8 @@ class IndicatorActivity extends StatefulWidget {
       {this.title,
       this.header,
       this.footer,
-      this.isNest:false,
-      this.enableOverScroll:true});
+      this.isNest: false,
+      this.enableOverScroll: true});
 
   @override
   State<StatefulWidget> createState() {
@@ -65,7 +65,11 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
         final double totalHeight = items.length * 100.0;
         final double lIstHeight = b.biggest.height;
         return SmartRefresher(
-            child: ListView.builder(itemBuilder: (c, i) => Item(),itemExtent: 100.0,itemCount: items.length,),
+            child: ListView.builder(
+              itemBuilder: (c, i) => Item(),
+              itemExtent: 100.0,
+              itemCount: items.length,
+            ),
             onRefresh: _onRefresh,
             onLoading: _onLoading,
             header: widget.header,
@@ -79,27 +83,22 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
     );
   }
 
-
   _onRefresh() {
-    Future.delayed(Duration(milliseconds: 1000)).then((_){
+    Future.delayed(Duration(milliseconds: 1000)).then((_) {
       Scaffold.of(context).showSnackBar(SnackBar(content: Text("刷新成功")));
       _refreshController.refreshCompleted();
     });
-
-
   }
 
   _onLoading() {
-    Future.delayed(Duration(milliseconds: 1000)).then((_){
-      setState(() {
 
-      });
-      items.add(Item());;
-      SchedulerBinding.instance.addPostFrameCallback((_){
-        _refreshController.loadComplete();
-      });
+    Future.delayed(Duration(milliseconds: 1000)).then((_) {
+      setState(() {});
+      items.add(Item());
+      ;
+      _refreshController.loadComplete();
+
     });
-
   }
 }
 

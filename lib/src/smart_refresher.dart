@@ -14,6 +14,7 @@ import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
 import 'indicator/classic_indicator.dart';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/scheduler.dart';
 
 enum RefreshStatus { idle, canRefresh, refreshing, completed, failed }
 
@@ -227,11 +228,16 @@ class RefreshController {
   }
 
   void loadComplete() {
-    footerMode.value = LoadStatus.idle;
+    // change state after ui update,else it will have a bug:twice loading
+    SchedulerBinding.instance.addPostFrameCallback((_){
+      footerMode.value = LoadStatus.idle;
+    });
   }
 
   void loadNoData() {
-    footerMode.value = LoadStatus.noMore;
+    SchedulerBinding.instance.addPostFrameCallback((_){
+      footerMode.value = LoadStatus.noMore;
+    });
   }
 
   RefreshStatus get headerStatus => headerMode.value;
