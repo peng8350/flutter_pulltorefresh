@@ -24,10 +24,10 @@ abstract class RefreshIndicator extends Indicator {
   final double height;
 
   RefreshIndicator(
-      {@required this.height,
+      {this.height: 60.0,
       Key key,
-      double triggerDistance,
-      this.refreshStyle})
+      double triggerDistance: 100.0,
+      this.refreshStyle:RefreshStyle.UnFollow})
       : super(key: key, triggerDistance: triggerDistance);
 }
 
@@ -71,12 +71,18 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     return (floating ? widget.height : 0.0) - scrollController.offset;
   }
 
+  void update() {
+    if (mounted) setState(() {});
+  }
+
   // handle the  state change between canRefresh and idle canRefresh  before refreshing
   void _onDragMove(double offset) {
     if (_isComplete || _isRefreshing) return;
     if (floating) return;
     if (!isDragging && RefreshStatus.canRefresh == mode) {
-      mode = RefreshStatus.refreshing;
+      readyToRefresh().then((_) {
+        mode = RefreshStatus.refreshing;
+      });
     }
     if (isDragging) {
       if (offset >= widget.triggerDistance) {
@@ -89,7 +95,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   //
   void handleModeChange() {
-    if (mounted) setState(() {});
+    update();
     switch (mode) {
       case RefreshStatus.refreshing:
         readyToRefresh().then((_) {
@@ -100,7 +106,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       case RefreshStatus.completed:
         endRefresh().then((_) {
           floating = false;
-          if (mounted) setState(() {});
+          update();
 
           return Future.delayed(Duration(milliseconds: 150));
         }).whenComplete(() {
@@ -111,7 +117,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       case RefreshStatus.failed:
         endRefresh().then((_) {
           floating = false;
-          if (mounted) setState(() {});
+          update();
           return Future.delayed(Duration(milliseconds: 150));
         }).whenComplete(() {
           mode = RefreshStatus.idle;
@@ -132,9 +138,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     return Future.delayed(Duration(milliseconds: 800));
   }
 
-  void onOffsetChange(double offset) {
-    if (mounted) setState(() {});
-  }
+  void onOffsetChange(double offset) { update();}
 
   // indicator render layout
   Widget buildContent(BuildContext context, RefreshStatus mode);
@@ -194,8 +198,14 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
     onDragMove();
   }
 
+  void update() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   void handleModeChange() {
-    if (mounted) setState(() {});
+    update();
     if (mode == LoadStatus.loading) {
       if (refresher.widget.onLoading != null) {
         refresher.widget.onLoading();

@@ -80,9 +80,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         SmartRefresher(
           controller: _refreshController,
           enablePullUp: true,
-          header: ClassicHeader(
-            refreshStyle: RefreshStyle.Front,
-          ),
+          header: QqHeader(),
           onRefresh: () {
               Future.delayed(const Duration(milliseconds: 2009)).then((val) {
                 _refreshController.refreshFailed();

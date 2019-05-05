@@ -57,6 +57,8 @@ class ClassicHeader extends RefreshIndicator {
 
 class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
 
+
+
   Widget _buildText(mode) {
     return Text(
         mode == RefreshStatus.canRefresh
