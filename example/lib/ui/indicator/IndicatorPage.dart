@@ -33,8 +33,9 @@ class _IndicatorPageState extends State<IndicatorPage> {
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.5),
       itemCount: items.length,
+
       itemBuilder: (BuildContext context, int index) => items[index],
     );
   }
@@ -54,17 +55,17 @@ class _IndicatorPageState extends State<IndicatorPage> {
         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
             IndicatorActivity(title:"经典指示器(跟随)" ,header: ClassicHeader(refreshStyle: RefreshStyle.Follow),)
         ));
-      },imgRes: "images/empty.png"),
+      },imgRes: "images/classical_follow.gif"),
       IndicatorItem(title: "经典指示器(不跟随)",onClick: (){
         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
             IndicatorActivity(title:"经典指示器(不跟随)" ,header: ClassicHeader(refreshStyle: RefreshStyle.UnFollow),)
         ));
-      },imgRes: "images/empty.png"),
+      },imgRes: "images/classical_unfollow.gif"),
       IndicatorItem(title: "QQ头部指示器",onClick: (){
         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
             IndicatorActivity(reverse: true,title:"QQ头部指示器" ,header: WaterDropHeader(reverse: true,))
         ));
-      },imgRes: "images/empty.png")
+      },imgRes: "images/warterdrop.gif")
     ];
     super.didChangeDependencies();
   }
@@ -90,13 +91,13 @@ class _IndicatorItemState extends State<IndicatorItem> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return GestureDetector(
+    return InkWell(
       onTap: widget.onClick,
       child: Card(
         child: Column(
           children: <Widget>[
             Center(
-              child: Image.asset(widget.imgRes),
+              child: Image.asset(widget.imgRes,fit: BoxFit.cover,width: 180.0,),
             ),
             Center(
               child: Text(widget.title),

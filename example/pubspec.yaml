@@ -33,6 +33,9 @@ flutter:
   assets:
     - images/animate.gif
     - images/empty.png
+    - images/classical_follow.gif
+    - images/classical_unfollow.gif
+    - images/warterdrop.gif
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
