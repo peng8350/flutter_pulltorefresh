@@ -60,11 +60,6 @@ class _IndicatorPageState extends State<IndicatorPage> {
             IndicatorActivity(title:"经典指示器(不跟随)" ,header: ClassicHeader(refreshStyle: RefreshStyle.UnFollow),)
         ));
       },imgRes: "images/empty.png"),
-      IndicatorItem(title: "经典指示器(前面)",onClick: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
-            IndicatorActivity(title:"经典指示器(前面)" ,header: ClassicHeader(refreshStyle: RefreshStyle.Front),)
-        ));
-      },imgRes: "images/empty.png"),
       IndicatorItem(title: "QQ头部指示器",onClick: (){
         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
             IndicatorActivity(title:"QQ头部指示器" ,header: QqHeader())

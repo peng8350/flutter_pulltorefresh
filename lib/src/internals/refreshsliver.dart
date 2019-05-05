@@ -176,19 +176,6 @@ class _RefreshRenderSliver extends RenderSliver
           );
 
           break;
-        case RefreshStyle.Front:
-          geometry = SliverGeometry(
-            scrollExtent: 0.0,
-            paintOrigin: -overscrolledExtent,
-            paintExtent: hasLayoutExtent
-                ? Math.min(layoutExtent, constraints.remainingPaintExtent)
-                : needPaintExtent,
-            maxPaintExtent: hasLayoutExtent
-                ? Math.min(layoutExtent, constraints.remainingPaintExtent)
-                : needPaintExtent,
-            layoutExtent: hasLayoutExtent?layoutExtent:0.0,
-          );
-          break;
       }
     } else {
       geometry = SliverGeometry.zero;

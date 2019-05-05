@@ -40,7 +40,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
 
   void _init() {
     for (int i = 0; i < 15; i++) {
-      items.add(Item());
+      items.add(Item(title: "Data$i",));
     }
   }
 
@@ -66,7 +66,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
         final double lIstHeight = b.biggest.height;
         return SmartRefresher(
             child: ListView.builder(
-              itemBuilder: (c, i) => Item(),
+              itemBuilder: (c, i) => items[i],
               itemExtent: 100.0,
               itemCount: items.length,
             ),
@@ -85,7 +85,6 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
 
   _onRefresh() {
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text("刷新成功")));
       _refreshController.refreshCompleted();
     });
   }
@@ -93,8 +92,9 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
   _onLoading() {
 
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
+      int index = items.length;
       setState(() {});
-      items.add(Item());
+      items.add(Item(title: "Data$index",));
       ;
       _refreshController.loadComplete();
 
@@ -103,6 +103,10 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
 }
 
 class Item extends StatefulWidget {
+
+  final String title;
+
+  Item({this.title});
   @override
   _ItemState createState() => _ItemState();
 }
@@ -114,7 +118,7 @@ class _ItemState extends State<Item> {
       color: Colors.red,
       margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
       child: Center(
-        child: Text('Data'),
+        child: Text(widget.title),
       ),
     );
   }

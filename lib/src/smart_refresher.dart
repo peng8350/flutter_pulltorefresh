@@ -20,7 +20,7 @@ enum RefreshStatus { idle, canRefresh, refreshing, completed, failed }
 
 enum LoadStatus { idle, loading, noMore }
 
-enum RefreshStyle { Follow, UnFollow, Behind, Front }
+enum RefreshStyle { Follow, UnFollow, Behind }
 
 /*
     This is the most important component that provides drop-down refresh and up loading.
