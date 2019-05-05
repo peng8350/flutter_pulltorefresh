@@ -20,22 +20,26 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   List<Widget> data = [];
   void _getDatas() {
     for (int i = 0; i < 14; i++) {
-      data.add(Container(
-        color: Color.fromARGB(255, 250, 250, 250),
-        child: Card(
-          margin:
-              EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-          child: Center(
-            child: Text('Data $i'),
+      data.add(GestureDetector(
+        child: Container(
+          color: Color.fromARGB(255, 250, 250, 250),
+          child: Card(
+            margin:
+            EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+            child: Center(
+              child: Text('Data $i'),
+            ),
           ),
         ),
+        onTap: (){
+          _refreshController.requestRefresh();
+        },
       ));
     }
   }
 
-
   void enterRefresh() {
-    _refreshController.requestRefresh(false);
+    _refreshController.requestLoading();
   }
 
   void _onOffsetCallback(bool isUp, double offset) {
@@ -44,7 +48,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       bottomOffsetLis.value = offset;
     } else {
       topOffsetLis.value = offset;
-
     }
   }
 
@@ -63,14 +66,16 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   }
 
   Widget _headerCreate(BuildContext context, RefreshStatus mode) {
-    return Image.asset("images/animate.gif",fit: BoxFit.fitWidth,alignment: Alignment.topCenter,);
+    return Image.asset(
+      "images/animate.gif",
+      fit: BoxFit.fitWidth,
+      alignment: Alignment.topCenter,
+    );
   }
 
 //  Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
 //    return new ClassicLoadIndicator(mode: mode);
 //  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -80,13 +85,13 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         SmartRefresher(
           controller: _refreshController,
           enablePullUp: true,
-          header: QqHeader(),
+          header: WaterDropHeader(),
           onRefresh: () {
-              Future.delayed(const Duration(milliseconds: 2009)).then((val) {
-                _refreshController.refreshFailed();
-              });
+            Future.delayed(const Duration(milliseconds: 2009)).then((val) {
+              _refreshController.refreshFailed();
+            });
           },
-          onLoading: (){
+          onLoading: () {
             Future.delayed(const Duration(milliseconds: 2009)).then((val) {
               data.add(Container(
                 color: Color.fromARGB(255, 250, 250, 250),

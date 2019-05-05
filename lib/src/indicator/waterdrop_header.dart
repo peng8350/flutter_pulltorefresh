@@ -12,7 +12,7 @@ import '../internals/indicator_wrap.dart';
 import 'package:flutter/cupertino.dart';
 import '../smart_refresher.dart';
 
-class QqHeader extends RefreshIndicator {
+class WaterDropHeader extends RefreshIndicator {
   final Widget refresh;
 
   final Widget complete;
@@ -23,12 +23,15 @@ class QqHeader extends RefreshIndicator {
 
   final bool reverse;
 
-  QqHeader({
+  final Color waterDropColor;
+
+  WaterDropHeader({
     Key key,
     this.refresh,
     this.reverse: false,
     this.complete,
     this.failed,
+    this.waterDropColor:Colors.grey,
     this.idleIcon,
     double triggerDistance: 110.0,
   }) : super(
@@ -39,11 +42,11 @@ class QqHeader extends RefreshIndicator {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _QqHeaderState();
+    return _WaterDropHeaderState();
   }
 }
 
-class _QqHeaderState extends RefreshIndicatorState<QqHeader>
+class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
     with TickerProviderStateMixin {
   AnimationController _animationController;
 
@@ -61,9 +64,7 @@ class _QqHeaderState extends RefreshIndicatorState<QqHeader>
   @override
   Future<void> readyToRefresh() {
     // TODO: implement readyToRefresh
-//    update();
-    floating = true;
-    update();
+
     return _animationController.animateTo(0.0);
   }
 
@@ -121,7 +122,6 @@ class _QqHeaderState extends RefreshIndicatorState<QqHeader>
     } else if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
       return Container(
         height: 80.0,
-        color: Theme.of(context).appBarTheme.color,
         child: CustomPaint(
           child: Container(
             alignment: Alignment.topCenter,
@@ -135,7 +135,7 @@ class _QqHeaderState extends RefreshIndicatorState<QqHeader>
                   ),
           ),
           painter: _QqPainter(
-              color: Colors.grey,
+              color: widget.waterDropColor,
               value: _animationController.value,
               reverse: widget.reverse),
         ),
@@ -147,6 +147,13 @@ class _QqHeaderState extends RefreshIndicatorState<QqHeader>
         child: child,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _animationController.dispose();
+    super.dispose();
   }
 }
 

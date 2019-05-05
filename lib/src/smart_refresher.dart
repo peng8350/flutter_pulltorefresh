@@ -202,20 +202,24 @@ class RefreshController {
   ValueNotifier<LoadStatus> footerMode = ValueNotifier(LoadStatus.idle);
   ScrollController scrollController;
 
-  void requestRefresh(bool up) {
+  void requestRefresh() {
     assert(scrollController != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    if (up) {
       if (headerMode.value == RefreshStatus.idle)
         headerMode.value = RefreshStatus.refreshing;
       scrollController.animateTo(0.0,
           duration: const Duration(milliseconds: 200), curve: Curves.linear);
-    } else {
-      if (footerMode.value == LoadStatus.idle) {
-        footerMode.value = LoadStatus.loading;
-        scrollController.animateTo(scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 200), curve: Curves.linear);
-      }
+  }
+
+  void requestLoading(){
+    assert(scrollController != null,
+    'Try not to call requestLoading() before build,please call after the ui was rendered');
+    if (footerMode.value == LoadStatus.idle) {
+
+
+      footerMode.value = LoadStatus.loading;
+      scrollController.animateTo(scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 200), curve: Curves.linear);
     }
   }
 

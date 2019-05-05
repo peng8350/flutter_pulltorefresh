@@ -35,7 +35,7 @@ class Example1State extends State<Example1> {
   }
 
   void enterRefresh() {
-    _refreshController.requestRefresh(true);
+    _refreshController.requestRefresh();
   }
 
   void _onOffsetCallback(bool isUp, double offset) {
@@ -109,7 +109,7 @@ class Example1State extends State<Example1> {
                           ));
 
                           setState(() {
-                            _refreshController.refreshCompleted();
+                            _refreshController.requestRefresh();
                           });
                         });
                     },

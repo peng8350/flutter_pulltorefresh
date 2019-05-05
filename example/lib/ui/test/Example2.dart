@@ -84,8 +84,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
     return SmartRefresher(
       enablePullDown: true,
       enablePullUp: true,
-      header: QqHeader(),
-      footer: CustomFooter(builder: _footerCreate),
+      header: WaterDropHeader(),
       controller: _controller,
       onRefresh: _onRefresh,
       onLoading: _onLoading,

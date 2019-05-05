@@ -98,8 +98,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     update();
     switch (mode) {
       case RefreshStatus.refreshing:
+        floating = true;
+        update();
         readyToRefresh().then((_) {
-          floating = true;
           if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
         });
         break;
