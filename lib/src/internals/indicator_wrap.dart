@@ -24,10 +24,10 @@ abstract class RefreshIndicator extends Indicator {
   final double height;
 
   RefreshIndicator(
-      {this.height: 60.0,
+      {this.height: default_height,
       Key key,
       double triggerDistance: 100.0,
-      this.refreshStyle:RefreshStyle.UnFollow})
+      this.refreshStyle: RefreshStyle.Follow})
       : super(key: key, triggerDistance: triggerDistance);
 }
 
@@ -42,13 +42,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     extends State<T> {
   SmartRefresherState get refresher => SmartRefresher.of(context);
 
-  get mode => refresher.widget.controller.headerStatus;
+  get mode => refresher?.widget?.controller?.headerStatus;
 
-  get scrollController => refresher.scrollController;
+  get scrollController => refresher?.scrollController;
 
   bool get isDragging => refresher.isDragging;
 
-  set mode(mode) => refresher.widget.controller.headerMode.value = mode;
+  set mode(mode) => refresher?.widget?.controller?.headerMode?.value = mode;
 
   bool get _isComplete =>
       mode == RefreshStatus.completed || mode == RefreshStatus.failed;
@@ -62,7 +62,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if (overscrollPast < 0.0) {
       return;
     }
-    _onDragMove(overscrollPast);
+    handleDragMove(overscrollPast);
 
     onOffsetChange(overscrollPast);
   }
@@ -76,10 +76,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   }
 
   // handle the  state change between canRefresh and idle canRefresh  before refreshing
-  void _onDragMove(double offset) {
+  void handleDragMove(double offset) {
     if (_isComplete || _isRefreshing) return;
+
     if (floating) return;
     if (!isDragging && RefreshStatus.canRefresh == mode) {
+      floating =true;
+      update();
       readyToRefresh().then((_) {
         mode = RefreshStatus.refreshing;
       });
@@ -139,7 +142,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     return Future.delayed(Duration(milliseconds: 800));
   }
 
-  void onOffsetChange(double offset) { update();}
+  void onOffsetChange(double offset) {
+    update();
+  }
 
   // indicator render layout
   Widget buildContent(BuildContext context, RefreshStatus mode);
@@ -159,6 +164,12 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     scrollController.addListener(_handleOffsetChange);
     refresher.widget.controller.headerMode.addListener(handleModeChange);
     super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(T oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
   }
 }
 
@@ -195,8 +206,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   void _handleOffsetChange() {
     final double overscrollPast = calculateScrollOffset(scrollController);
     onOffsetChange(overscrollPast);
-
-    onDragMove();
+    handleDragMove();
   }
 
   void update() {
@@ -214,8 +224,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
     }
   }
 
-  @override
-  void onDragMove() {
+  void handleDragMove() {
     if (scrollController.position.extentAfter <= widget.triggerDistance)
       mode = LoadStatus.loading;
   }

@@ -64,7 +64,6 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   @override
   Future<void> readyToRefresh() {
     // TODO: implement readyToRefresh
-
     return _animationController.animateTo(0.0);
   }
 

@@ -40,11 +40,14 @@ class CustomHeader extends RefreshIndicator {
 }
 
 class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
+
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
     return widget.builder(context, mode);
   }
+  
+
 }
 
 class CustomFooter extends LoadIndicator {
@@ -66,12 +69,17 @@ class CustomFooter extends LoadIndicator {
     // TODO: implement createState
     return _CustomFooterState();
   }
+
+
+
 }
 
 class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
+
   @override
   Widget buildContent(BuildContext context, LoadStatus mode) {
     // TODO: implement buildContent
     return widget.builder(context, mode);
   }
+
 }

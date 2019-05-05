@@ -19,10 +19,12 @@ class IndicatorActivity extends StatefulWidget {
   final bool isNest;
 
   final bool enableOverScroll;
+  final bool reverse;
 
   IndicatorActivity(
       {this.title,
       this.header,
+        this.reverse:false,
       this.footer,
       this.isNest: false,
       this.enableOverScroll: true});
@@ -44,12 +46,27 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
     }
   }
 
+
+
+  ScrollController _scrollController;
+
   @override
   void initState() {
     // TODO: implement initState
+    _scrollController = new ScrollController();
     _refreshController = RefreshController();
+    Future.delayed(Duration(milliseconds: 3000)).then((_){
+//      _scrollController.jumpTo(0.0);
+    });
     _init();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _refreshController.dispose();
+    super.dispose();
   }
 
   @override
@@ -68,12 +85,15 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
             child: ListView.builder(
               itemBuilder: (c, i) => items[i],
               itemExtent: 100.0,
+              controller: _scrollController,
+              reverse: widget.reverse,
               itemCount: items.length,
             ),
             onRefresh: _onRefresh,
             onLoading: _onLoading,
             header: widget.header,
             footer: widget.footer,
+
             enablePullDown: true,
             enableOverScroll: widget.enableOverScroll,
             isNestWrapped: widget.isNest,
@@ -90,7 +110,6 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
   }
 
   _onLoading() {
-
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
       int index = items.length;
       setState(() {});
@@ -115,7 +134,6 @@ class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.red,
       margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
       child: Center(
         child: Text(widget.title),

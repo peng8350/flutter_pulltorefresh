@@ -25,13 +25,13 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           color: Color.fromARGB(255, 250, 250, 250),
           child: Card(
             margin:
-            EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
             child: Center(
               child: Text('Data $i'),
             ),
           ),
         ),
-        onTap: (){
+        onTap: () {
           _refreshController.requestRefresh();
         },
       ));
@@ -73,9 +73,14 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     );
   }
 
-//  Widget _footerCreate(BuildContext context,int mode,ValueNotifier<double> offset){
-//    return new ClassicLoadIndicator(mode: mode);
-//  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  ScrollController _controller = ScrollController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +90,11 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         SmartRefresher(
           controller: _refreshController,
           enablePullUp: true,
-          header: WaterDropHeader(),
+          header: CustomHeader(
+            height: 100.0,
+            builder: (b, m) => Image.asset("images/animate.gif", fit: BoxFit.fitWidth,alignment: Alignment.topCenter),
+            refreshStyle: RefreshStyle.Behind,
+          ),
           onRefresh: () {
             Future.delayed(const Duration(milliseconds: 2009)).then((val) {
               _refreshController.refreshFailed();
@@ -107,7 +116,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
               _refreshController.loadComplete();
             });
           },
-          onOffsetChange: _onOffsetCallback,
           child: ListView.builder(
             itemExtent: 100.0,
             itemCount: data.length,

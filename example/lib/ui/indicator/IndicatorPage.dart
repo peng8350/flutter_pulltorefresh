@@ -62,7 +62,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
       },imgRes: "images/empty.png"),
       IndicatorItem(title: "QQ头部指示器",onClick: (){
         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
-            IndicatorActivity(title:"QQ头部指示器" ,header: WaterDropHeader())
+            IndicatorActivity(reverse: true,title:"QQ头部指示器" ,header: WaterDropHeader(reverse: true,))
         ));
       },imgRes: "images/empty.png")
     ];

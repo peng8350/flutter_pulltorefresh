@@ -91,7 +91,6 @@ class Example1State extends State<Example1> {
                     enablePullDown: true,
                     isNestWrapped: true,
                     header: ClassicHeader(
-                      refreshingText: "wewwewe",
                       idleIcon: Container(),
                       idleText: "Load more...",
                     ),
@@ -109,7 +108,7 @@ class Example1State extends State<Example1> {
                           ));
 
                           setState(() {
-                            _refreshController.requestRefresh();
+                            _refreshController.refreshCompleted();
                           });
                         });
                     },

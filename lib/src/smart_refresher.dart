@@ -70,7 +70,7 @@ class SmartRefresher extends StatefulWidget {
 
   static SmartRefresherState of(BuildContext context) {
     return context
-        .ancestorStateOfType(const TypeMatcher<SmartRefresherState>());
+        ?.ancestorStateOfType(const TypeMatcher<SmartRefresherState>());
   }
 }
 
@@ -140,22 +140,30 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (!widget.isNestWrapped && widget.child.controller == null) {
       scrollController.dispose();
     }
-
-    widget.controller.headerMode.dispose();
-    widget.controller.footerMode.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    if(!widget.isNestWrapped){
+      scrollController = widget.child.controller ?? ScrollController();
+      widget.controller.scrollController = scrollController;
+      scrollController.addListener(_handleOffsetCallback);
+    }
+    super.initState();
   }
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
+    // there is no method to get PrimaryScrollController in initState
     if (widget.isNestWrapped) {
       scrollController = PrimaryScrollController.of(context);
-    } else {
-      scrollController = widget.child.controller ?? ScrollController();
+      widget.controller.scrollController = scrollController;
+      scrollController.addListener(_handleOffsetCallback);
     }
-    widget.controller.scrollController = scrollController;
-    scrollController.addListener(_handleOffsetCallback);
+
     super.didChangeDependencies();
   }
 
@@ -167,13 +175,12 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (!widget.isNestWrapped && widget.child.controller != null) {
       scrollController = widget.child.controller;
     }
+
     if (widget.isNestWrapped) {
       scrollController = PrimaryScrollController.of(context);
     }
-
     scrollController.addListener(_handleOffsetCallback);
     widget.controller.scrollController = scrollController;
-
     super.didUpdateWidget(oldWidget);
   }
 
@@ -205,54 +212,56 @@ class RefreshController {
   void requestRefresh() {
     assert(scrollController != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-      if (headerMode.value == RefreshStatus.idle)
-        headerMode.value = RefreshStatus.refreshing;
-      scrollController.animateTo(0.0,
-          duration: const Duration(milliseconds: 200), curve: Curves.linear);
+    if (headerStatus == RefreshStatus.idle)
+      headerMode?.value = RefreshStatus.refreshing;
+    scrollController.animateTo(0.0,
+        duration: const Duration(milliseconds: 200), curve: Curves.linear);
   }
 
-  void requestLoading(){
+  void requestLoading() {
     assert(scrollController != null,
-    'Try not to call requestLoading() before build,please call after the ui was rendered');
-    if (footerMode.value == LoadStatus.idle) {
-
-
-      footerMode.value = LoadStatus.loading;
+        'Try not to call requestLoading() before build,please call after the ui was rendered');
+    if (footerStatus == LoadStatus.idle) {
+      footerMode?.value= LoadStatus.loading;
       scrollController.animateTo(scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 200), curve: Curves.linear);
     }
   }
 
   void refreshCompleted() {
-    headerMode.value = RefreshStatus.completed;
+    headerMode?.value = RefreshStatus.completed;
   }
 
   void refreshFailed() {
-    headerMode.value = RefreshStatus.failed;
+    headerMode?.value = RefreshStatus.failed;
   }
 
   void loadComplete() {
     // change state after ui update,else it will have a bug:twice loading
-    SchedulerBinding.instance.addPostFrameCallback((_){
-      footerMode.value = LoadStatus.idle;
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      footerMode?.value = LoadStatus.idle;
     });
   }
 
   void loadNoData() {
-    SchedulerBinding.instance.addPostFrameCallback((_){
-      footerMode.value = LoadStatus.noMore;
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      footerMode?.value = LoadStatus.noMore;
     });
   }
 
-  RefreshStatus get headerStatus => headerMode.value;
-
-  LoadStatus get footerStatus => footerMode.value;
-
-  isRefresh(bool up) {
-    if (up) {
-      return headerMode.value == RefreshStatus.refreshing;
-    } else {
-      return footerMode.value == LoadStatus.loading;
-    }
+  void dispose(){
+    headerMode.dispose();
+    footerMode.dispose();
+    headerMode = null;
+    footerMode = null;
   }
+
+  RefreshStatus get headerStatus => headerMode?.value;
+
+  LoadStatus get footerStatus => footerMode?.value;
+
+  bool get isRefresh => headerMode?.value == RefreshStatus.refreshing;
+
+  bool get isLoading => footerMode?.value == LoadStatus.loading;
+
 }
