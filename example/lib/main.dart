@@ -4,18 +4,18 @@ import 'package:example/ui/SecondActivity.dart';
 import 'package:example/ui/test/TestPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'ui/indicator/base/IndicatorActivity.dart';
 
-void main() => runApp( MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-
+    return MaterialApp(
       title: 'Pulltorefresh Demo',
-      debugShowCheckedModeBanner:   false,
-      theme:  ThemeData(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
         // This is the theme of your application.
         //s
         // Try running your application with "flutter run". You'll see the
@@ -26,13 +26,18 @@ class MyApp extends StatelessWidget {
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home:  MainActivity(title: 'Pulltorefresh'),
+      home: MainActivity(title: 'Pulltorefresh'),
       routes: {
         "sec": (BuildContext context) {
-          return  SecondActivity(title: "SecondAct",);
+          return SecondActivity(
+            title: "SecondAct",
+          );
         },
+        "indicator": (BuildContext context) {
+          return IndicatorActivity(
+          );
+        }
       },
     );
   }
 }
-

@@ -170,7 +170,7 @@ class _QqPainter extends CustomPainter {
     final double offset = reverse ? -value : value;
 
     painter.color = color;
-//    canvas.drawCircle(Offset(middleW, originH), 15.0, painter);
+    canvas.drawCircle(Offset(middleW, originH), circleSize, painter);
     Path path = Path();
     path.moveTo(middleW - circleSize, originH);
 
@@ -211,7 +211,6 @@ class _QqPainter extends CustomPainter {
           radius: Radius.circular(circleSize));
 
       //draw lowwer circle
-
       path.moveTo(
           middleW - circleSize + value * scaleRatio * 2, originH + offset);
       path.arcToPoint(

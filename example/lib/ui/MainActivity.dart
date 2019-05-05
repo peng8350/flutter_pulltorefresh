@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:residemenu/residemenu.dart';
 import 'test/TestPage.dart';
+import 'indicator/IndicatorPage.dart';
 
 class MainActivity extends StatefulWidget {
   final String title;
@@ -45,7 +46,7 @@ class _MainActivityState extends State<MainActivity>
 
     super.initState();
     _menuController = MenuController(vsync: this);
-    views = [Container(), TestPage(title: "测试界面"), Container()];
+    views = [IndicatorPage(title:"指示器界面"), TestPage(title: "测试界面"), Container()];
   }
 
   @override
@@ -58,7 +59,7 @@ class _MainActivityState extends State<MainActivity>
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: Text(widget.title),
+          title: Text(_tabIndex==0?"指示器界面":_tabIndex==1?"测试界面":"待定"),
         ),
         body: Stack(
           children: <Widget>[
