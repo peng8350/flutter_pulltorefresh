@@ -25,9 +25,9 @@ abstract class RefreshIndicator extends Indicator {
 
   const RefreshIndicator(
       {this.height: default_height,
-      Key key,
-      double triggerDistance: 100.0,
-      this.refreshStyle: RefreshStyle.Follow})
+        Key key,
+        double triggerDistance: 100.0,
+        this.refreshStyle: RefreshStyle.Follow})
       : super(key: key, triggerDistance: triggerDistance);
 }
 
@@ -38,9 +38,9 @@ abstract class LoadIndicator extends Indicator {
 
   const LoadIndicator(
       {Key key,
-      double triggerDistance: 15.0,
-      this.autoLoad: true,
-      this.onClick})
+        double triggerDistance: 15.0,
+        this.autoLoad: true,
+        this.onClick})
       : super(key: key, triggerDistance: triggerDistance);
 }
 
@@ -68,6 +68,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
     if (overscrollPast < 0.0) {
       return;
+    }
+    if(refresher.widget.onOffsetChange!=null){
+      refresher.widget.onOffsetChange(true,overscrollPast);
     }
     handleDragMove(overscrollPast);
 
@@ -204,18 +207,19 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   }
 
   double calculateScrollOffset(ScrollController controller) {
-    final double overscrollPastStart = math.max(
-        controller.position.minScrollExtent - controller.position.pixels, 0.0);
+
     final double overscrollPastEnd = math.max(
         controller.position.pixels - controller.position.maxScrollExtent, 0.0);
-    return math.max(overscrollPastStart, overscrollPastEnd);
+    return overscrollPastEnd;
   }
 
   void _handleOffsetChange() {
     final double overscrollPast = calculateScrollOffset(scrollController);
+    if(refresher.widget.onOffsetChange!=null&&scrollController.position.extentAfter==0.0){
+      refresher.widget.onOffsetChange(false,overscrollPast);
+    }
     handleDragMove();
     onOffsetChange(overscrollPast);
-
   }
 
   void update() {
@@ -234,8 +238,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   }
 
   void handleDragMove() {
-    if (scrollController.position.extentAfter <= widget.triggerDistance&&widget.autoLoad)
-      mode = LoadStatus.loading;
+    if (scrollController.position.extentAfter <= widget.triggerDistance &&
+        widget.autoLoad &&
+        mode == LoadStatus.idle) mode = LoadStatus.loading;
   }
 
   @override
@@ -243,18 +248,16 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
     // TODO: implement build
     return SliverToBoxAdapter(
         child: GestureDetector(
-      onTap: () {
-        if (widget.onClick != null) {
-          widget.onClick();
-        }
-      },
-      child: buildContent(context, mode),
-    ));
+          onTap: () {
+            if (widget.onClick != null) {
+              widget.onClick();
+            }
+          },
+          child: buildContent(context, mode),
+        ));
   }
 
   Widget buildContent(BuildContext context, LoadStatus mode);
 
-  void onOffsetChange(double offset) {
-
-  }
+  void onOffsetChange(double offset) {}
 }
