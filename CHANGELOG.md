@@ -105,4 +105,8 @@ Notice: This version of the code changes much, Api too
 * Add WaterDropIndicator,CustomIndicator
 * Make Custom Indicator easily
 
+## 1.3.1
+* Add onClick CallBack for LoadIndicator
+* Fix enablepullUp or down invalid
+* Fix error Loading after 1.3.0 updated
 

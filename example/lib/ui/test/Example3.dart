@@ -93,7 +93,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           controller: _refreshController,
           header: WaterDropHeader(),
           footer: ClassicFooter(
-            autoLoad: false,
             onClick: () {
               if (_refreshController.footerStatus == LoadStatus.idle)
                 _refreshController.requestLoading();
@@ -107,18 +106,8 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           onOffsetChange: _onOffsetCallback,
           onLoading: () {
             Future.delayed(const Duration(milliseconds: 2009)).then((val) {
-              data.add(Container(
-                color: Color.fromARGB(255, 250, 250, 250),
-                child: Card(
-                  margin: EdgeInsets.only(
-                      left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                  child: Center(
-                    child: Text('Data '),
-                  ),
-                ),
-              ));
               setState(() {});
-              _refreshController.loadComplete();
+              _refreshController.loadNoData();
             });
           },
           child: ListView.builder(
