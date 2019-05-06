@@ -112,7 +112,7 @@ When the amount of data is too small, there is no automatic judgment to hide. Yo
 
    SmartRefresher(
       ...
-      header: buildHeader
+      header: CustomHeader(builder:buildHeader)
 
       ...
    )

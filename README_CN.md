@@ -105,7 +105,7 @@ void dispose(){
 
    SmartRefresher(
       ...
-      header: buildHeader
+      header: CustomHeader(builder:buildHeader)
 
       ...
    )
