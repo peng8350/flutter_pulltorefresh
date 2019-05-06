@@ -1,7 +1,5 @@
 import 'package:example/ui/MainActivity.dart';
 import 'package:example/ui/SecondActivity.dart';
-
-import 'package:example/ui/test/TestPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'ui/indicator/base/IndicatorActivity.dart';

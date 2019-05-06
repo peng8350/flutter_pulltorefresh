@@ -3,139 +3,83 @@
 ## 介绍
 一个提供上拉加载和下拉刷新的组件,同时支持Android和Ios
 
-
 ## 特性
 * 同时支持Android,IOS
 * 提供上拉加载和下拉刷新
 * 几乎适合所有的部件,例如GridView,ListView,Container...
 * 高度扩展性和很低的限制性
 * 灵活的回弹能力
+* 支持反转列表
+* 提供多种刷新指示器风格:跟随,不跟随,背部
 
+## 指示器截图
 
-## 截图
-![](arts/screen1.gif)
-![](arts/screen2.gif)<br>
+|Style|跟随经典指示器|不跟随经典指示器|
+|:---:|:---:|:---:|
+|art|![](example/images/classical_follow.gif)|![](example/images/classical_unfollow.gif))|
 
+|Style|背部指示器|水滴指示器(手机QQ)|
+|:---:|:---:|:---:|
+|art|![](arts/screen1.gif)|![](example/images/warterdrop.gif))|
 
 ## 我该怎么用?
-1.第一步,在你的pubspec.yml声明
+
 
 ```
 
    dependencies:
-     pull_to_refresh: ^1.2.0
-     
-```
-
-2.然后,导入,SmartRefresher是一个组件包装在你的外部,child就是你的内容控件,并且需要构建RefreshController
+     pull_to_refresh: ^1.3.0
 
 ```
 
 
-   import "package:pull_to_refresh/pull_to_refresh.dart";
-     ....
-
-     void initState(){
-
-        _refreshController = new RefreshController();
-        ......
-     }
-
-     build() =>
-
-      new SmartRefresher(
-          controller:_refreshController,
-          enablePullDown: true,
-          enablePullUp: true,
-          onRefresh: _onRefresh,
-          onOffsetChange: _onOffsetCallback,
-          child: new ListView.builder(
-
-                               itemExtent: 40.0,
-                               itemCount: data.length,
-                               itemBuilder: (context,index){
-                                 return data[index];
-                               },
-
-          )
-      )
 
 ```
 
-3.你应该要根据不同的刷新模式状态下,显示不同的布局.当然,
- 我这里已经构造了一个指示器方便使用,叫做ClassicIndicator,
- 如果不符合要求,也可以选择自己定义一个指示器。同时也可以设置headerConfig,footerConfig。
- 注意:这里的RefreshConfig高度一定要和对应的指示器布局高度完全一致。(主要是内部要获取指示器高度,避免二次渲染)
+RefreshController _refreshController;
 
-```
+initState(){
 
+    super.initState();
+    _refreshController = RefreshController();
+}
 
-    Widget _buildHeader(context,mode){
-     return new Container(
-           height:50.0,
-           child:new ClassicIndicator(mode: mode)
-     );
-    }
+void _onRefresh(){
 
+   /*.  after the data return,
+        use _refreshController.refreshComplete() or refreshFailed() to end refreshing
+   */
+}
 
-    Widget _buildFooter(context,mode){
-      // the same with header
-      ....
-    }
+void _onLoading(){
+   /*
+        use _refreshController.loadComplete() or loadNoData() to end loading
+   */
+}
 
-    new SmartRefresher(
-       ....
-       footerBuilder: _buildFooter,
-       headerBuilder: _buildHeader,
-       //假如是RefreshConfig,height一定要和buildHeader返回的部件高度完全一致
-       headerConfig:const RefreshConfig(height:50.0),
-       footerConfig:const LoadConfig()
+build(){
+...
+SmartRefresher(
+      enablePullDown: true,
+      enablePullUp: true,
+      header: WaterDropHeader(),
+      controller: _refreshController,
+      onRefresh: _onRefresh,
+      onLoading: _onLoading,
+      child: "yourContentScrollView",
     )
+....
+}
 
-
+// don't forget to dispose refreshController
+void dispose(){
+    _refreshController.dispose();
+    super.dispose();
+}
 
 ```
 
-4.
-无论是顶部还是底部指示器,onRefresh都会被回调当这个指示器状态进入刷新状态。
-但我要怎么把结果告诉SmartRefresher,这不难。内部提供一个Controller,通过contrleer.
-sendBack就可以告诉它返回什么状态。
-
-```
-
-  void _onRefresh(bool up){
-  		if(up){
-  		   //headerIndicator callback
-
-  		   new Future.delayed(const Duration(milliseconds: 2009))
-                                            .then((val) {
-                   /*    注意:假如headerConfig的autoLoad开启了,就不得不等到下一针被重绘时才更新状态,不然会出现多次刷新的情况
-                          SchedulerBinding.instance.addPostFrameCallback(
-                              (_){
-                              _refreshController.sendBack(true, RefreshStatus.completed);
-
-                              }
-                          );
-                  */
-                 _refreshController.sendBack(true, RefreshStatus.completed);
-           });
-
-
-  		   new Future.delayed(const Duration(milliseconds: 2009))
-                                 .then((val) {
-                                   _refreshController.sendBack(true, RefreshStatus.completed);
-                             });
-
-  		}
-  		else{
-  			//footerIndicator Callback
-  		}
-      }
-  
-```
-
-5.关于数据量太小的时候,内部没有提供自动判断去隐藏的功能,需要你动态判断listView高度和实际大小,listView高度可以借助LayoutBuilder
-,[example1](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example1.dart)是个例子.
+关于数据量太小的时候,内部没有提供自动判断去隐藏的功能,需要你动态判断listView高度和实际大小,listView高度可以借助LayoutBuilder,[example1](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example1.dart)是个例子.
 
 ```
 
@@ -151,6 +95,24 @@ sendBack就可以告诉它返回什么状态。
 
 ```
 
+## 自定义指示器
+1.第一种方式,假设你要实现的指示器功能不是太过于复杂,可以使用CustomHeader或者CustomFooter
+
+```
+   Widget buildHeader(BuildContext context,RefreshStatus mode){
+      .....
+   }
+
+   SmartRefresher(
+      ...
+      header: buildHeader
+
+      ...
+   )
+
+```
+
+2.第二种方式,通过集成RefreshInditor或者LoadIndicator来实现,详细参考 [经典指示器](lib/src/indicator/classic_indicator.dart)
 
 
 ## 属性表
@@ -160,63 +122,31 @@ SmartRefresher:
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | child      | 你的内容部件   | ? extends ScrollView   |   null |  必要
 | controller | 控制内部状态  | RefreshController | null | 必要 |
-| headerBuilder | 头部指示器构造  | (BuildContext,RefreshMode) => Widget  | null | 如果你打开了下拉是必要,否则可选 |
-| footerBuilder | 尾部指示器构造     | (BuildContext,RefreshMode) => Widget  | null | 如果你打开了上拉是必要,否则可选 |
+| header | 头部指示器构造  | ? extends RefreshIndicator  | ClassicHeader | 可选|
+| footer | 尾部指示器构造     | ? extends LoadIndicator | ClassicFooter | 可选 |
 | enablePullDown | 是否允许下拉     | boolean | true | 可选 |
 | enablePullUp |   是否允许上拉 | boolean | false | 可选 |
-| onRefresh | 进入刷新时的回调   | (bool) => Void | null | 可选 |
-| onOffsetChange | 它将在超出边缘范围拖动时回调  | (double) => Void | null | 可选 |
-| headerConfig |  这个设置会影响你使用哪种指示器,config还有几个属性可以设置   | Config | RefreshConfig | optional |
-| footerConfig |  这个设置会影响你使用哪种指示器,config还有几个属性可以设置     | Config | LoadConfig | optional |
+| onRefresh | 进入下拉刷新时的回调   | () => Void | null | 可选 |
+| onLoading | 进入上拉加载时的回调   | () => Void | null | 可选 |
+| onOffsetChange | 它将在超出边缘范围拖动时回调  | (bool,double) => Void | null | 可选 |
 | enableOverScroll |  越界回弹的开关,如果你要配合RefreshIndicator(material包)使用,有可能要关闭    | bool | true | optional |
-
-RefreshConfig:
-
-| Attribute Name     |     Attribute Explain     |  Default Value  |
-|---------|--------------------------|:-----:|
-| height      | 用于提供一个遮盖指示器的高度   |   50.0 |
-| triggerDistance      | 触发刷新的距离   |   100.0 |
-| completeDuration | 返回成功和失败时的停留时间     |  800 |
-
-
-LoadConfig:
-
-| Attribute Name     |     Attribute Explain     |  Default Value  |
-|---------|--------------------------|:-----:|
-| triggerDistance      | 加载的触发距离   |   5.0 |
-| autoLoad | 是否打开自动进入加载   |  true |
-| bottomWhenBuild | 是否加载时处于listView最底部(当你的header是LoadConfig)    |  true |
+| isNestWrapped | 如果SmartRefesher被NestedScrollView包裹着,需要设置为true  | bool | false | optional |
 
 ## FAQ
 * <h3>能不能实现:自动判断数据量大于一页,隐藏掉上拉加载组件?</h3>
 目前来说没有什么好的办法,flutter好像没有提供Api让我们可以获得ListView里的所有item加起来的高度(界面渲染之前)。如果有人能解决这个问题,请提出,万分感谢!
-
-* <h3>关于SliverAppBar,和CustomScrollView一起使用冲突问题</h3>
-我控件内部采用的是CustomScrollView,这个问题暂时没有得到好的解决办法。
-
-* <h3>是否支持反转?</h3>
-这个问题相对来说有点麻烦,暂时不支持。
 
 * <h3>是否支持单纯RefreshIndicator(material)+上拉加载并且没有弹性的刷新组合?</h3>
 可以,只要设置节点属性enableOverScroll = false, enablePullDown = false,在外面包裹一个是否支持
 单纯RefreshIndicator就可以了,demo里
 [example4](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example4.dart)已经给出了例子
 
-* <h3>是否支持不跟随列表的指示器?</h3>
-这个我没有在库里面封装，因为就算我封装了,只会让代码逻辑复杂度增加,所以需要你自己利用onOffsetChange
-这个回调方法来实现,不难,利用Stack这个东西来封装,具体可以参考[Example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart)   或者我的项目
-[flutter_gank](https://github.com/peng8350/flutter_gank) 也有实现的思路
-
-*<h3>为什么child属性从原来widget扩大到scrollView?</h3>
+* <h3>为什么child属性从原来widget扩大到scrollView?</h3>
 因为本人疏忽的原因,没有考虑到child需要缓存里面的item的问题,所以1.1.3版本已经修正不能缓存的问题
-
-* <h3>这个库会不会对性能造成什么影响?<br></h3>
-应该不会,虽然我没有实际用数据来测试性能问题,但是我在另一个项目开发过程中,并没有出现上拉或下拉滑动卡顿情况。
 
 * <h3>有办法实现限制越界回弹的最大距离吗?/h3>
 答案是否定的,我知道肯定是要通过修改ScrollPhysics里面的来实现,但我对里面的Api不太明白,尝试过但失败了。如果
 你有办法解决这个问题的话,请来个PR
-
 
 
 ## 开源协议

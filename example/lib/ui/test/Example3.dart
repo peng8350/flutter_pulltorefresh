@@ -90,16 +90,13 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         SmartRefresher(
           controller: _refreshController,
           enablePullUp: true,
-          header: CustomHeader(
-            height: 100.0,
-            builder: (b, m) => Image.asset("images/animate.gif", fit: BoxFit.fitWidth,alignment: Alignment.topCenter),
-            refreshStyle: RefreshStyle.Behind,
-          ),
+          header: WaterDropHeader(),
           onRefresh: () {
             Future.delayed(const Duration(milliseconds: 2009)).then((val) {
               _refreshController.refreshFailed();
             });
           },
+          onOffsetChange: _onOffsetCallback,
           onLoading: () {
             Future.delayed(const Duration(milliseconds: 2009)).then((val) {
               data.add(Container(

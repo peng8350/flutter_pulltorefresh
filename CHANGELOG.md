@@ -83,3 +83,26 @@ Notice: This version of the code changes much, Api too
 * Fix problem: Refresh can still be triggered when ScrollView is nested internally
 * Remove rendered twice to get indicator height,replaced by using height attribute in Config
 * change RefreshStatus from int to enum
+
+## 1.3.0
+### Total
+* Support reverse ScrollView
+* Remove RefreshConfig,LoadConfig,Move to indicator setting
+* Add isNestWrapped to Compatible NestedScrollView
+* replace headerBuilder,footerBuilder attribute to header,footer
+* Separate header and footer operations:onRefresh and onLoading Callback,RefreshStatus is separated into RefreshStatus.LoadStatus
+* Fix Bug: twice loading (the footer state change before the ui update)
+*
+
+### RefreshController
+* Remove sendBack method,replaced by LoadComplete,RefreshComplete ,RefreshFailed,LoadNoData
+* Separate refresh and load operations
+* Add dispose method for Safety in some situation
+
+### Indicator
+* Use another way to achieve drop-down refresh
+* Add drop-down refresh indicator style(Follow,UnFollow,Behind)
+* Add WaterDropIndicator,CustomIndicator
+* Make Custom Indicator easily
+
+

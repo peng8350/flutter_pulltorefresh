@@ -146,7 +146,7 @@ class SmartRefresherState extends State<SmartRefresher> {
   @override
   void initState() {
     // TODO: implement initState
-    if(!widget.isNestWrapped){
+    if (!widget.isNestWrapped) {
       scrollController = widget.child.controller ?? ScrollController();
       widget.controller.scrollController = scrollController;
       scrollController.addListener(_handleOffsetCallback);
@@ -222,7 +222,7 @@ class RefreshController {
     assert(scrollController != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (footerStatus == LoadStatus.idle) {
-      footerMode?.value= LoadStatus.loading;
+      footerMode?.value = LoadStatus.loading;
       scrollController.animateTo(scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 200), curve: Curves.linear);
     }
@@ -249,7 +249,7 @@ class RefreshController {
     });
   }
 
-  void dispose(){
+  void dispose() {
     headerMode.dispose();
     footerMode.dispose();
     headerMode = null;
@@ -263,5 +263,4 @@ class RefreshController {
   bool get isRefresh => headerMode?.value == RefreshStatus.refreshing;
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
-
 }

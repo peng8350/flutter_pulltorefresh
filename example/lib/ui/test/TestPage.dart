@@ -1,7 +1,7 @@
-import 'package:example/ui/test/Example1.dart';
-import 'package:example/ui/test/Example2.dart';
-import 'package:example/ui/test/Example3.dart';
-import 'package:example/ui/test/Example4.dart';
+import 'Example1.dart';
+import 'Example2.dart';
+import 'Example3.dart';
+import 'Example4.dart';
 import 'package:flutter/material.dart';
 
 class TestPage extends StatefulWidget {
