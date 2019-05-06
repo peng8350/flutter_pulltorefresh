@@ -6,7 +6,7 @@
 ## 特性
 * 同时支持Android,IOS
 * 提供上拉加载和下拉刷新
-* 几乎适合所有的部件,例如GridView,ListView,Container...
+* 几乎适合所有的部件,例如GridView,ListView,NestedScrollView,SingleChildScrollView...
 * 高度扩展性和很低的限制性
 * 灵活的回弹能力
 * 支持反转列表
@@ -14,13 +14,13 @@
 
 ## 指示器截图
 
-|Style|跟随经典指示器|不跟随经典指示器|
+|Style| 跟随经典指示器|不跟随经典指示器|
 |:---:|:---:|:---:|
-|art|![](example/images/classical_follow.gif)|![](example/images/classical_unfollow.gif))|
+|art| ![](example/images/classical_follow.gif) | ![](example/images/classical_unfollow.gif) |
 
 |Style|背部指示器|水滴指示器(手机QQ)|
 |:---:|:---:|:---:|
-|art|![](arts/screen1.gif)|![](example/images/warterdrop.gif))|
+|art| ![](arts/screen1.gif) | ![](example/images/warterdrop.gif) |
 
 ## 我该怎么用?
 
@@ -132,21 +132,26 @@ SmartRefresher:
 | enableOverScroll |  越界回弹的开关,如果你要配合RefreshIndicator(material包)使用,有可能要关闭    | bool | true | optional |
 | isNestWrapped | 如果SmartRefesher被NestedScrollView包裹着,需要设置为true  | bool | false | optional |
 
-## FAQ
+## 常见问题
+* <h3>IOS状态栏双击为什么ListView不自动滚动到顶部?</h3>
+这个问题经测试不是我封装的失误,当ListView里的controller被替换后,这个问题就会出现,原因大概是Scaffold里的处理操作,请issue flutter。
+
+* <h3>如何兼容NestedScrollView?</h3>
+1.3.0提供了一个新属性isNestWrapped来兼容这东西,注意,这个属性打开后,scollController取决于NestScrollView,内部通过PrimaryScrollController.of(context)
+来获取scrollController,所以scrollController要放在NestedScrollView里。
+
+* <h3>为什么使用CuperNavigationBar后(不只这一个情况),顶部或者尾部指示器有空白的地方?</h3>
+很大可能是因为SafeArea,。解决方法一般是在SmartRefresher外围套用SafeArea
+
 * <h3>能不能实现:自动判断数据量大于一页,隐藏掉上拉加载组件?</h3>
-目前来说没有什么好的办法,flutter好像没有提供Api让我们可以获得ListView里的所有item加起来的高度(界面渲染之前)。如果有人能解决这个问题,请提出,万分感谢!
+目前来说没有什么好的办法,flutter好像没有提供Api让我们可以获得ListView里的所有item加起来的高度(界面渲染之前)。
 
 * <h3>是否支持单纯RefreshIndicator(material)+上拉加载并且没有弹性的刷新组合?</h3>
 可以,只要设置节点属性enableOverScroll = false, enablePullDown = false,在外面包裹一个是否支持
 单纯RefreshIndicator就可以了,demo里
 [example4](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example4.dart)已经给出了例子
 
-* <h3>为什么child属性从原来widget扩大到scrollView?</h3>
-因为本人疏忽的原因,没有考虑到child需要缓存里面的item的问题,所以1.1.3版本已经修正不能缓存的问题
 
-* <h3>有办法实现限制越界回弹的最大距离吗?/h3>
-答案是否定的,我知道肯定是要通过修改ScrollPhysics里面的来实现,但我对里面的Api不太明白,尝试过但失败了。如果
-你有办法解决这个问题的话,请来个PR
 
 
 ## 开源协议

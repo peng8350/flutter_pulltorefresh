@@ -80,6 +80,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if (_isComplete || _isRefreshing) return;
 
     if (floating) return;
+
     if (!isDragging && RefreshStatus.canRefresh == mode) {
       floating =true;
       update();

@@ -7,7 +7,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ## Features
 * Android and iOS both spported
 * pull up and pull down
-* It's almost fit for all witgets,like GridView,ListView,Container...
+* It's almost fit for all witgets,like GridView,ListView,SingleChildScrollView...
 * High extensibility,High degree of freedom
 * powerful Bouncing
 * support reverse ScrollView
@@ -16,13 +16,13 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 
 ## 指示器截图
 
-|Style|Classic Follow| Classic UnFollow |
-|:---:|:---:|:---:|
-|art|![](example/images/classical_follow.gif)|![](example/images/classical_unfollow.gif))|
+|Classic Follow| Classic UnFollow |
+|:---:|:---:|
+|![](example/images/classical_follow.gif)|![](example/images/classical_unfollow.gif)|
 
-|Style| Behind | WaterDrop(QQ)|
-|:---:|:---:|:---:|
-|art|![](arts/screen1.gif)|![](example/images/warterdrop.gif))|
+| Behind | WaterDrop(QQ)|
+|:---:|:---:|
+|![](arts/screen1.gif)|![](example/images/warterdrop.gif)|
 
 
 
@@ -101,6 +101,26 @@ When the amount of data is too small, there is no automatic judgment to hide. Yo
 ```
 
 
+
+## Custom
+1.In the first way, assuming that the indicator function you want to implement is not too complex, you can use CustomHeader or CustomFooter
+
+```
+   Widget buildHeader(BuildContext context,RefreshStatus mode){
+      .....
+   }
+
+   SmartRefresher(
+      ...
+      header: buildHeader
+
+      ...
+   )
+
+```
+
+2.The second way is by integrating RefreshInditor or Load Indicator, for detailed reference [ClassicIndicator](lib/src/indicator/classic_indicator.dart)
+
 ## Props Table
 
 SmartRefresher:
@@ -109,18 +129,29 @@ SmartRefresher:
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | controller | controll inner some states  | RefreshController | null | necessary |
 | child      | your content View   | ? extends ScrollView   |   null |  necessary |
-| header | the header indictor     | RefreshIndicator | ClassicHeader |if optional |
-| footer | the footer indictor     | LoadIndicator  | optional |
+| header | the header indictor     | RefreshIndicator | ClassicHeader | optional |
+| footer | the footer indictor     | LoadIndicator  | ClassicFooter | optional |
 | enablePullDown | switch of the pull down      | boolean | true | optional |
 | enablePullUp |   switch of the pull up  | boolean | false |optional |
-| onRefresh | will callback when the header indicator is getting refreshing   | (bool) => Void | null | optional |
-| onLoad | will callback when the footer indicator is getting loading   | (bool) => Void | null | optional |
+| onRefresh | will callback when the header indicator is getting refreshing   | () => Void | null | optional |
+| onLoad | will callback when the footer indicator is getting loading   | () => Void | null | optional |
 | onOffsetChange | callback while you dragging and outOfrange  | (bool,double) => Void | null | optional |
 | enableOverScroll |  the switch of Overscroll,When you use  RefreshIndicator(Material), you may have to shut down.    | bool | true | optional |
 | isNestWrapped | it will set true when SmartRefresher is wrapped by NestedScrollView  | bool | false | optional |
 
 
-## FAQ
+## Frequent problems
+* <h3>IOS Status Bar Double-click Why ListView does not automatically scroll to the top?</h3>
+This problem is not my encapsulation error after testing. When the controller in ListView is replaced, this problem will occur, probably
+because of the processing operation in Scaffold.,please issue flutter。
+
+* <h3>How to use it with NestedScrollView?</h3>
+1.3.0 provides a new attribute isNestWrapped for compatibility. Note that when this attribute is opened, scollController depends on NestScrollView,
+internally via PrimaryScrollController. of (context) To get scrollController, scrollController is placed in NestedScrollView。
+
+* <h3>Why is there a empty space in the top or tail indicator after using CuperNavigationBar (not just in this case)?</h3>
+the reason may be SafeArea,the solution: wrap SmartRefresher in SafeArea
+
 * <h3>Is it possible to automatically determine that the amount of data is larger than one page and hide the pull-up component?</h3>
 There's no good way to do that right now. Flutter doesn't seem to provide Api so that we can get the total height of all items in ListView (before the interface is rendered). If anyone can solve this problem, please put it forward. Thank you very much.
 
@@ -130,15 +161,6 @@ Yes, as long as you set the node properties enableOverScroll = false, enablePull
 [Example4](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart) has given an example in demo.
 
 
-* <h3>Why does child attribute extend from original widget to scrollView?<br></h3>
-Because of my negligence, I didn't take into account the problem that child needed to cache the item,
-so the 1.1.3 version had corrected the problem of not caching.
-
-
-* <h3>Is there any way to achieve the maximum distance to limit springback?<br></h3>
-The answer is negative. I know that it must be done by modifying the ScrollPhysics,
-but I am not quite sure about the Api in it, but I failed.
-If you have a way to solve this problem, please come to a PR
 
 
 
