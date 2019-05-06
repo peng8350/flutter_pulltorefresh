@@ -131,9 +131,6 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
 }
 
 class ClassicFooter extends LoadIndicator {
-  final bool autoLoad;
-
-  final double triggerDistance;
 
   final String idleText, loadingText, noDataText;
 
@@ -149,8 +146,9 @@ class ClassicFooter extends LoadIndicator {
 
   ClassicFooter({
     Key key,
-    this.autoLoad: default_AutoLoad,
-    this.triggerDistance: default_load_triggerDistance,
+    Function onClick,
+    bool autoLoad: default_AutoLoad,
+    double triggerDistance: default_load_triggerDistance,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
@@ -167,7 +165,11 @@ class ClassicFooter extends LoadIndicator {
       ),
     ),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
-  }) : super(key: key, triggerDistance: triggerDistance);
+  }) : super(
+            key: key,
+            triggerDistance: triggerDistance,
+            onClick: onClick,
+            autoLoad: autoLoad);
 
   @override
   State<StatefulWidget> createState() {
@@ -222,6 +224,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
             children: children,
           );
     return Container(
+      color:Colors.transparent,
       height: widget.height,
       child: Center(
         child: container,

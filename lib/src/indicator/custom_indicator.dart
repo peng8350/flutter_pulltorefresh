@@ -40,14 +40,11 @@ class CustomHeader extends RefreshIndicator {
 }
 
 class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
-
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
     return widget.builder(context, mode);
   }
-  
-
 }
 
 class CustomFooter extends LoadIndicator {
@@ -61,25 +58,25 @@ class CustomFooter extends LoadIndicator {
     Key key,
     @required this.builder,
     this.autoLoad: true,
+    Function onClick,
     this.triggerDistance: default_load_triggerDistance,
-  }) : super(key: key, autoLoad: autoLoad, triggerDistance: triggerDistance);
+  }) : super(
+            key: key,
+            autoLoad: autoLoad,
+            triggerDistance: triggerDistance,
+            onClick: onClick);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return _CustomFooterState();
   }
-
-
-
 }
 
 class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
-
   @override
   Widget buildContent(BuildContext context, LoadStatus mode) {
     // TODO: implement buildContent
     return widget.builder(context, mode);
   }
-
 }

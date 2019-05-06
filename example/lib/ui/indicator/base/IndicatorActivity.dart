@@ -41,7 +41,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
   RefreshController _refreshController;
 
   void _init() {
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 5; i++) {
       items.add(Item(title: "Data$i",));
     }
   }
@@ -105,6 +105,10 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
 
   _onRefresh() {
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
+      items.add(Item(title: "Data"));
+      setState(() {
+
+      });
       _refreshController.refreshCompleted();
     });
   }
