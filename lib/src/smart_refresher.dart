@@ -188,8 +188,12 @@ class SmartRefresherState extends State<SmartRefresher> {
   Widget build(BuildContext context) {
     List<Widget> slivers =
         List.from(widget.child.buildSlivers(context), growable: true);
-    slivers.insert(0, widget.header);
-    slivers.add(widget.footer);
+    if (widget.enablePullDown) {
+      slivers.insert(0, widget.header);
+    }
+    if (widget.enablePullUp) {
+      slivers.add(widget.footer);
+    }
     return NotificationListener(
       child: CustomScrollView(
         physics:

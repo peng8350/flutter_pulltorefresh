@@ -58,6 +58,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   bool floating = false;
 
   void _handleOffsetChange() {
+
     final overscrollPast = calculateScrollOffset(scrollController);
     if (overscrollPast < 0.0) {
       return;

@@ -19,7 +19,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   RefreshController _refreshController;
   List<Widget> data = [];
   void _getDatas() {
-    for (int i = 0; i < 14; i++) {
+    for (int i = 0; i < 4; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
@@ -89,7 +89,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       children: <Widget>[
         SmartRefresher(
           controller: _refreshController,
-          enablePullUp: true,
           header: WaterDropHeader(),
           onRefresh: () {
             Future.delayed(const Duration(milliseconds: 2009)).then((val) {

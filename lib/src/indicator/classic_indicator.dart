@@ -37,13 +37,17 @@ class ClassicHeader extends RefreshIndicator {
     this.idleText: 'Pull down to refresh',
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
-    this.refreshingIcon: const CircularProgressIndicator(strokeWidth: 2.0),
+    this.refreshingIcon: const SizedBox(
+      width: 25.0,
+      height: 25.0,
+      child: const CircularProgressIndicator(strokeWidth: 2.0),
+    ),
     this.failedIcon: const Icon(Icons.clear, color: Colors.grey),
     this.completeIcon: const Icon(Icons.done, color: Colors.grey),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
     this.releaseIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
   }) : super(
-            key: key ,
+            key: key,
             refreshStyle: refreshStyle,
             height: height,
             triggerDistance: triggerDistance);
@@ -56,9 +60,6 @@ class ClassicHeader extends RefreshIndicator {
 }
 
 class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
-
-
-
   Widget _buildText(mode) {
     return Text(
         mode == RefreshStatus.canRefresh
@@ -82,11 +83,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                 ? widget.completeIcon
                 : mode == RefreshStatus.failed
                     ? widget.failedIcon
-                    : SizedBox(
-                        width: 25.0,
-                        height: 25.0,
-                        child: widget.refreshingIcon,
-                      );
+                    : widget.refreshingIcon;
     return icon;
   }
 
@@ -96,9 +93,8 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
     super.initState();
   }
 
-
   @override
-  Widget buildContent(BuildContext context,RefreshStatus mode) {
+  Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
     Widget textWidget = _buildText(mode);
     Widget iconWidget = _buildIcon(mode);
@@ -163,7 +159,13 @@ class ClassicFooter extends LoadIndicator {
     this.idleText: 'Load More..',
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
-    this.loadingIcon: const SizedBox(width: 25.0,height: 25.0,child: const CircularProgressIndicator(strokeWidth: 2.0,),),
+    this.loadingIcon: const SizedBox(
+      width: 25.0,
+      height: 25.0,
+      child: const CircularProgressIndicator(
+        strokeWidth: 2.0,
+      ),
+    ),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
   }) : super(key: key, triggerDistance: triggerDistance);
 
@@ -192,7 +194,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
   }
 
   @override
-  Widget buildContent(BuildContext context,LoadStatus mode) {
+  Widget buildContent(BuildContext context, LoadStatus mode) {
     // TODO: implement buildChild
     Widget textWidget = _buildText(mode);
     Widget iconWidget = _buildIcon(mode);
@@ -226,6 +228,4 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
       ),
     );
   }
-
-
 }

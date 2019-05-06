@@ -42,10 +42,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
 //    )
     return Container(color: Colors.white,child: CustomScrollView(
       slivers: [
-        SliverList(
-            delegate: SliverChildListDelegate(data,
-                addRepaintBoundaries: true)),
-        SliverToBoxAdapter(child: Text("Wewew"),)
+        SliverToBoxAdapter(child: Row(children: <Widget>[Text("Wewew"),Text("Wewew"),Text("Wewew")],),)
       ],
     ),);
   }
