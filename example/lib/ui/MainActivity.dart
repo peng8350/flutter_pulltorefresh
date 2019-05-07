@@ -47,7 +47,7 @@ class _MainActivityState extends State<MainActivity>
     // TODO: implement initState
 
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _menuController = MenuController(vsync: this);
     views = [
       IndicatorPage(title: "指示器界面"),
@@ -77,6 +77,7 @@ class _MainActivityState extends State<MainActivity>
                 child: Text("NestedScrollView兼容"),
               ),
               Tab(child: Text("SliverAppbar+Sliverheader")),
+              Tab(child: Text("嵌套滚动视图")),
             ],
             controller: _tabController,
           ):null,
