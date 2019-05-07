@@ -21,17 +21,14 @@ class WaterDropHeader extends RefreshIndicator {
 
   final Widget idleIcon;
 
-  final bool reverse;
-
   final Color waterDropColor;
 
   WaterDropHeader({
     Key key,
     this.refresh,
-    this.reverse: false,
     this.complete,
     this.failed,
-    this.waterDropColor:Colors.grey,
+    this.waterDropColor: Colors.grey,
     this.idleIcon,
     double triggerDistance: 110.0,
   }) : super(
@@ -83,41 +80,47 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
     // TODO: implement buildContent
     Widget child;
     if (mode == RefreshStatus.refreshing) {
-      if (widget.refresh != null) child = widget.refresh;
-      child = CupertinoActivityIndicator();
+      if (widget.refresh != null)
+        child = widget.refresh;
+      else
+        child = CupertinoActivityIndicator();
     } else if (mode == RefreshStatus.completed) {
-      if (widget.complete != null) child = widget.complete;
-      child = Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Icon(
-            Icons.done,
-            color: Colors.grey,
-          ),
-          Container(
-            width: 15.0,
-          ),
-          Text(
-            "刷新完成",
-            style: TextStyle(color: Colors.grey),
-          )
-        ],
-      );
+      if (widget.complete != null)
+        child = widget.complete;
+      else
+        child = Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Icon(
+              Icons.done,
+              color: Colors.grey,
+            ),
+            Container(
+              width: 15.0,
+            ),
+            Text(
+              "刷新完成",
+              style: TextStyle(color: Colors.grey),
+            )
+          ],
+        );
     } else if (mode == RefreshStatus.failed) {
-      if (widget.failed != null) child = widget.failed;
-      child = Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Icon(
-            Icons.close,
-            color: Colors.grey,
-          ),
-          Container(
-            width: 15.0,
-          ),
-          Text("刷新失败", style: TextStyle(color: Colors.grey))
-        ],
-      );
+      if (widget.failed != null)
+        child = widget.failed;
+      else
+        child = Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Icon(
+              Icons.close,
+              color: Colors.grey,
+            ),
+            Container(
+              width: 15.0,
+            ),
+            Text("刷新失败", style: TextStyle(color: Colors.grey))
+          ],
+        );
     } else if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
       return Container(
         height: 80.0,
@@ -136,7 +139,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
           painter: _QqPainter(
               color: widget.waterDropColor,
               value: _animationController.value,
-              reverse: widget.reverse),
+              reverse: refresher.widget.child.reverse),
         ),
       );
     }
@@ -210,7 +213,7 @@ class _QqPainter extends CustomPainter {
       path.arcToPoint(
           Offset(
               middleW - circleSize + value * scaleRatio * 2, originH + offset),
-          radius: Radius.circular( value * scaleRatio));
+          radius: Radius.circular(value * scaleRatio));
     } else {
       path.moveTo(middleW + circleSize, originH);
       path.arcToPoint(Offset(middleW - circleSize, originH),
@@ -222,7 +225,7 @@ class _QqPainter extends CustomPainter {
       path.arcToPoint(
           Offset(
               middleW + circleSize - value * scaleRatio * 2, originH + offset),
-          radius: Radius.circular(value*scaleRatio));
+          radius: Radius.circular(value * scaleRatio));
     }
 
     path.close();

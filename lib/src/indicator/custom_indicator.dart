@@ -12,20 +12,14 @@ import '../smart_refresher.dart';
 import '../internals/default_constants.dart';
 
 class CustomHeader extends RefreshIndicator {
-  final double height;
-
-  final double triggerDistance;
-
-  final RefreshStyle refreshStyle;
-
   final HeaderBuilder builder;
 
   CustomHeader({
     Key key,
     @required this.builder,
-    this.height: default_height,
-    this.refreshStyle: RefreshStyle.Follow,
-    this.triggerDistance: default_refresh_triggerDistance,
+    double height: default_height,
+    RefreshStyle refreshStyle: RefreshStyle.Follow,
+    double triggerDistance: default_refresh_triggerDistance,
   }) : super(
             key: key,
             triggerDistance: triggerDistance,
@@ -48,18 +42,14 @@ class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
 }
 
 class CustomFooter extends LoadIndicator {
-  final double triggerDistance;
-
-  final bool autoLoad;
-
   final FooterBuilder builder;
 
   CustomFooter({
     Key key,
     @required this.builder,
-    this.autoLoad: true,
+    bool autoLoad: true,
     Function onClick,
-    this.triggerDistance: default_load_triggerDistance,
+    double triggerDistance: default_load_triggerDistance,
   }) : super(
             key: key,
             autoLoad: autoLoad,

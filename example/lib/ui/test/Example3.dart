@@ -67,20 +67,20 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     // TODO: implement initState
 
     // for test #68
-    Future.delayed(Duration(milliseconds: 3000),(){
-      _enablePullDown = false;
-      _enablePullUp = false;
-      setState(() {
-
-      });
-    });
-    Future.delayed(Duration(milliseconds: 6000),(){
-      _enablePullDown = true;
-      _enablePullUp = true;
-      setState(() {
-
-      });
-    });
+//    Future.delayed(Duration(milliseconds: 3000),(){
+//      _enablePullDown = false;
+//      _enablePullUp = false;
+//      setState(() {
+//
+//      });
+//    });
+//    Future.delayed(Duration(milliseconds: 6000),(){
+//      _enablePullDown = true;
+//      _enablePullUp = true;
+//      setState(() {
+//
+//      });
+//    });
     _getDatas();
     _refreshController = RefreshController();
     super.initState();
@@ -117,7 +117,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           enablePullUp: _enablePullUp,
           enablePullDown: _enablePullDown,
           controller: _refreshController,
-          header: WaterDropHeader(),
+          header: WaterDropHeader(waterDropColor: Colors.greenAccent),
           footer: ClassicFooter(
             onClick: () {
               if (_refreshController.footerStatus == LoadStatus.idle)
@@ -137,6 +137,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
             });
           },
           child: ListView.builder(
+            reverse: true,
             itemExtent: 100.0,
             itemCount: data.length,
             itemBuilder: (context, index) {
