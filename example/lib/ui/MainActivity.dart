@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:residemenu/residemenu.dart';
 import 'test/TestPage.dart';
 import 'indicator/IndicatorPage.dart';
+import 'sample/SamplePage.dart';
 
 class MainActivity extends StatefulWidget {
   final String title;
@@ -21,10 +22,11 @@ class MainActivity extends StatefulWidget {
 }
 
 class _MainActivityState extends State<MainActivity>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   List<Widget> views;
   MenuController _menuController;
   int _tabIndex = 1;
+  TabController _tabController;
 
   Widget buildItem(String msg, Widget icon, Function voidCallBack) {
     return Material(
@@ -45,8 +47,14 @@ class _MainActivityState extends State<MainActivity>
     // TODO: implement initState
 
     super.initState();
+    _tabController = TabController(length: 3, vsync: this);
     _menuController = MenuController(vsync: this);
-    views = [IndicatorPage(title:"指示器界面"), TestPage(title: "测试界面"), Container()];
+    views = [
+      IndicatorPage(title: "指示器界面"),
+      TestPage(title: "测试界面"),
+      SamplePage(tabController: _tabController),
+      Container()
+    ];
   }
 
   @override
@@ -59,7 +67,19 @@ class _MainActivityState extends State<MainActivity>
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: Text(_tabIndex==0?"指示器界面":_tabIndex==1?"测试界面":"待定"),
+          title: Text(_tabIndex == 0
+              ? "指示器界面"
+              : _tabIndex == 1 ? "测试界面" : _tabIndex == 2 ? "样例界面" : "待定"),
+          bottom: _tabIndex==2?TabBar(
+            tabs: [
+              Tab(child: Text("数据量不满一页")),
+              Tab(
+                child: Text("NestedScrollView兼容"),
+              ),
+              Tab(child: Text("SliverAppbar+Sliverheader")),
+            ],
+            controller: _tabController,
+          ):null,
         ),
         body: Stack(
           children: <Widget>[
@@ -75,11 +95,14 @@ class _MainActivityState extends State<MainActivity>
               child: views[2],
               offstage: _tabIndex != 2,
             ),
+            Offstage(
+              child: views[3],
+              offstage: _tabIndex != 3,
+            )
           ],
         ),
       ),
-      decoration: BoxDecoration(
-          color: Colors.purple),
+      decoration: BoxDecoration(color: Colors.purple),
       leftScaffold: MenuScaffold(
         header: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: 80.0, maxWidth: 80.0),
@@ -97,7 +120,7 @@ class _MainActivityState extends State<MainActivity>
             });
             _menuController.closeMenu();
           }),
-          buildItem("测试界面",
+          buildItem("测试",
               Icon(Icons.airplanemode_active, size: 18, color: Colors.grey),
               () {
             setState(() {
@@ -105,11 +128,18 @@ class _MainActivityState extends State<MainActivity>
             });
             _menuController.closeMenu();
           }),
+          buildItem("样例", Icon(Icons.scanner, size: 18, color: Colors.grey),
+              () {
+            setState(() {
+              _tabIndex = 2;
+            });
+            _menuController.closeMenu();
+          }),
           buildItem(
               "待定", Icon(Icons.format_underlined, size: 18, color: Colors.grey),
               () {
             setState(() {
-              _tabIndex = 2;
+              _tabIndex = 3;
             });
             _menuController.closeMenu();
           }),
