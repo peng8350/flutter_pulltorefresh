@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'default_constants.dart';
 import 'dart:math' as math;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'refreshsliver.dart';
+import 'slivers.dart';
 
 abstract class Indicator extends StatefulWidget {
   final double triggerDistance;
@@ -309,7 +309,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return SliverToBoxAdapter(
+    return SliverLoading(
         child: GestureDetector(
           onTap: () {
             if (widget.onClick != null) {

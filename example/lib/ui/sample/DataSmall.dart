@@ -47,21 +47,17 @@ class _DataSmallState extends State<DataSmall> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (BuildContext context, b) {
-      final double totalHeight = items.length * 100.0;
-      final double lIstHeight = b.biggest.height;
-      return SmartRefresher(
-          child: ListView.builder(
-            itemBuilder: (c, i) => items[i],
-            itemExtent: 100.0,
-            itemCount: items.length,
-          ),
-          onRefresh: _onRefresh,
-          onLoading: _onLoading,
-          enablePullDown: true,
-          enablePullUp: totalHeight > lIstHeight,
-          controller: _refreshController);
-    });
+    return SmartRefresher(
+        child: ListView.builder(
+          itemBuilder: (c, i) => items[i],
+          itemExtent: 100.0,
+          itemCount: items.length,
+        ),
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        enablePullDown: true,
+        enablePullUp:true,
+        controller: _refreshController);
   }
 
   @override

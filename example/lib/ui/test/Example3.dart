@@ -28,7 +28,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
 
   void _getDatas() {
-    for (int i = 0; i < 14; i++) {
+    for (int i = 0; i < 5; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
