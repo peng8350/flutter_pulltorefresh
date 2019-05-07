@@ -50,11 +50,11 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   get mode => refresher?.widget?.controller?.headerStatus;
 
-  get scrollController => refresher?.scrollController;
+
 
   bool get isDragging => refresher.isDragging;
 
-  set mode(mode) => refresher?.widget?.controller?.headerMode?.value = mode;
+  set mode(mode) => _headerMode.value = mode;
 
   bool get _isComplete =>
       mode == RefreshStatus.completed || mode == RefreshStatus.failed;
@@ -63,8 +63,15 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   // if true,the indicator has a height which happen in refreshing mode
   bool floating = false;
 
+  ScrollController _scrollController;
+
+  ValueNotifier<RefreshStatus> _headerMode;
+
   void _handleOffsetChange() {
-    final overscrollPast = calculateScrollOffset(scrollController);
+    if(!mounted){
+      return;
+    }
+    final overscrollPast = calculateScrollOffset(_scrollController);
 
     if (overscrollPast < 0.0) {
       return;
@@ -78,7 +85,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   }
 
   double calculateScrollOffset(ScrollController controller) {
-    return (floating ? widget.height : 0.0) - scrollController.offset;
+    return (floating ? widget.height : 0.0) - _scrollController.offset;
   }
 
   void update() {
@@ -107,8 +114,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     }
   }
 
-  //
   void handleModeChange() {
+    if(!mounted){
+      return;
+    }
     update();
     switch (mode) {
       case RefreshStatus.refreshing:
@@ -160,6 +169,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   // indicator render layout
   Widget buildContent(BuildContext context, RefreshStatus mode);
 
+
   @override
   Widget build(BuildContext context) {
     return SliverRefresh(
@@ -170,16 +180,35 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   }
 
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    scrollController.addListener(_handleOffsetChange);
-    refresher.widget.controller.headerMode.addListener(handleModeChange);
-    super.didChangeDependencies();
+  void dispose() {
+    // TODO: implement dispose
+    _scrollController.removeListener(_handleOffsetChange);
+    _headerMode.removeListener(handleModeChange);
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _scrollController = refresher.scrollController;
+    _headerMode = refresher.widget.controller.headerMode;
+
+    _scrollController.addListener(_handleOffsetChange);
+    _headerMode.addListener(handleModeChange);
+    super.initState();
   }
 
   @override
   void didUpdateWidget(T oldWidget) {
     // TODO: implement didUpdateWidget
+    _scrollController.removeListener(_handleOffsetChange);
+    _headerMode.removeListener(handleModeChange);
+    _scrollController = refresher.scrollController;
+    _headerMode = refresher.widget.controller.headerMode;
+    if(refresher.widget.enablePullDown) {
+      _scrollController.addListener(_handleOffsetChange);
+      _headerMode.addListener(handleModeChange);
+    }
     super.didUpdateWidget(oldWidget);
   }
 }
@@ -191,20 +220,14 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
 
   double get offset => refresher.widget.controller.scrollController.offset;
 
-  ScrollController get scrollController =>
-      refresher.widget.controller.scrollController;
-
-  set mode(mode) => refresher.widget.controller.footerMode.value = mode;
+  set mode(mode) => _footerMode.value = mode;
 
   bool get _isRefreshing =>
       refresher.widget.controller.footerMode.value == LoadStatus.loading;
 
-  @override
-  void initState() {
-    super.initState();
-    refresher.widget.controller.footerMode.addListener(handleModeChange);
-    scrollController.addListener(_handleOffsetChange);
-  }
+  ScrollController  _scrollController;
+
+  ValueNotifier<LoadStatus> _footerMode;
 
   double calculateScrollOffset(ScrollController controller) {
 
@@ -214,8 +237,12 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   }
 
   void _handleOffsetChange() {
-    final double overscrollPast = calculateScrollOffset(scrollController);
-    if(refresher.widget.onOffsetChange!=null&&scrollController.position.extentAfter==0.0){
+    if(!mounted){
+      return ;
+    }
+
+    final double overscrollPast = calculateScrollOffset(_scrollController);
+    if(refresher.widget.onOffsetChange!=null&&_scrollController.position.extentAfter==0.0){
       refresher.widget.onOffsetChange(false,overscrollPast);
     }
     handleDragMove();
@@ -229,6 +256,10 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   }
 
   void handleModeChange() {
+    if(!mounted){
+      return;
+    }
+
     update();
     if (mode == LoadStatus.loading) {
       if (refresher.widget.onLoading != null) {
@@ -238,9 +269,41 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   }
 
   void handleDragMove() {
-    if (scrollController.position.extentAfter <= widget.triggerDistance &&
+    if (_scrollController.position.extentAfter <= widget.triggerDistance &&
         widget.autoLoad &&
         mode == LoadStatus.idle) mode = LoadStatus.loading;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = refresher.widget.controller.scrollController;
+    _footerMode = refresher.widget.controller.footerMode;
+
+    _footerMode.addListener(handleModeChange);
+    _scrollController.addListener(_handleOffsetChange);
+  }
+
+  @override
+  void didUpdateWidget(T oldWidget) {
+    // TODO: implement didUpdateWidget
+    _scrollController = refresher.widget.controller.scrollController;
+    _footerMode = refresher.widget.controller.footerMode;
+    _footerMode.removeListener(handleModeChange);
+    _scrollController.removeListener(_handleOffsetChange);
+    if(refresher.widget.enablePullUp){
+      _footerMode.addListener(handleModeChange);
+      _scrollController.addListener(_handleOffsetChange);
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _scrollController.removeListener(_handleOffsetChange);
+    _footerMode.removeListener(handleModeChange);
+    super.dispose();
   }
 
   @override

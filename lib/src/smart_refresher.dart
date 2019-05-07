@@ -107,36 +107,9 @@ class SmartRefresherState extends State<SmartRefresher> {
     return false;
   }
 
-  void _handleOffsetCallback() {
-    final double overscrollPastStart = math.max(
-        scrollController.position.minScrollExtent -
-            scrollController.position.pixels,
-        0.0);
-    final double overscrollPastEnd = math.max(
-        scrollController.position.pixels -
-            scrollController.position.maxScrollExtent,
-        0.0);
-    if (overscrollPastStart > overscrollPastEnd) {
-      if (widget.onOffsetChange != null) {
-        widget.onOffsetChange(
-            true,
-            overscrollPastStart +
-                ((RefreshStatus.refreshing ==
-                        widget.controller.headerMode.value)
-                    ? widget.header.height
-                    : 0.0));
-      }
-    } else if (overscrollPastEnd > 0) {
-      if (widget.onOffsetChange != null) {
-        widget.onOffsetChange(false, overscrollPastEnd);
-      }
-    }
-  }
-
   @override
   void dispose() {
     // TODO: implement dispose
-    scrollController.removeListener(_handleOffsetCallback);
     if (!widget.isNestWrapped && widget.child.controller == null) {
       scrollController.dispose();
     }
@@ -149,7 +122,6 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (!widget.isNestWrapped) {
       scrollController = widget.child.controller ?? ScrollController();
       widget.controller.scrollController = scrollController;
-      scrollController.addListener(_handleOffsetCallback);
     }
     super.initState();
   }
@@ -161,7 +133,6 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (widget.isNestWrapped) {
       scrollController = PrimaryScrollController.of(context);
       widget.controller.scrollController = scrollController;
-      scrollController.addListener(_handleOffsetCallback);
     }
 
     super.didChangeDependencies();
@@ -170,7 +141,6 @@ class SmartRefresherState extends State<SmartRefresher> {
   @override
   void didUpdateWidget(SmartRefresher oldWidget) {
     // TODO: implement didUpdateWidget
-    scrollController.removeListener(_handleOffsetCallback);
 
     if (!widget.isNestWrapped && widget.child.controller != null) {
       scrollController = widget.child.controller;
@@ -179,7 +149,6 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (widget.isNestWrapped) {
       scrollController = PrimaryScrollController.of(context);
     }
-    scrollController.addListener(_handleOffsetCallback);
     widget.controller.scrollController = scrollController;
     super.didUpdateWidget(oldWidget);
   }

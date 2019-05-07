@@ -17,7 +17,16 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   ValueNotifier<double> topOffsetLis = ValueNotifier(0.0);
   ValueNotifier<double> bottomOffsetLis = ValueNotifier(0.0);
   RefreshController _refreshController;
+
+
   List<Widget> data = [];
+
+
+  //test #68
+  bool _enablePullUp=true,_enablePullDown=true;
+
+
+
   void _getDatas() {
     for (int i = 0; i < 14; i++) {
       data.add(GestureDetector(
@@ -56,6 +65,22 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   @override
   void initState() {
     // TODO: implement initState
+
+    // for test #68
+    Future.delayed(Duration(milliseconds: 3000),(){
+      _enablePullDown = false;
+      _enablePullUp = false;
+      setState(() {
+
+      });
+    });
+    Future.delayed(Duration(milliseconds: 6000),(){
+      _enablePullDown = true;
+      _enablePullUp = true;
+      setState(() {
+
+      });
+    });
     _getDatas();
     _refreshController = RefreshController();
     super.initState();
@@ -89,7 +114,8 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         child: Stack(
       children: <Widget>[
         SmartRefresher(
-          enablePullUp: true,
+          enablePullUp: _enablePullUp,
+          enablePullDown: _enablePullDown,
           controller: _refreshController,
           header: WaterDropHeader(),
           footer: ClassicFooter(
