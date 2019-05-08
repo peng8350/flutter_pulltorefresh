@@ -70,9 +70,9 @@ class _MainActivityState extends State<MainActivity>
           title: Text(_tabIndex == 0
               ? "指示器界面"
               : _tabIndex == 1 ? "测试界面" : _tabIndex == 2 ? "样例界面" : "待定"),
-          bottom: _tabIndex==2?TabBar(
+          bottom: _tabIndex==2?TabBar(isScrollable: true,
             tabs: [
-              Tab(child: Text("数据量不满一页")),
+              Tab(child: Text("超大数据量性能测试")),
               Tab(
                 child: Text("NestedScrollView兼容"),
               ),

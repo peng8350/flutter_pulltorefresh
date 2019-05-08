@@ -22,7 +22,7 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin{
-  int tabIndex = 0;
+  int tabIndex = 1;
 
   List<Widget> views;
   TabController _tabController;

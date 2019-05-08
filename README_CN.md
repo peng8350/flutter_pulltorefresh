@@ -143,9 +143,6 @@ SmartRefresher:
 * <h3>为什么使用CuperNavigationBar后(不只这一个情况),顶部或者尾部指示器有空白的地方?</h3>
 很大可能是因为SafeArea,。解决方法一般是在SmartRefresher外围套用SafeArea
 
-* <h3>能不能实现:自动判断数据量大于一页,隐藏掉上拉加载组件?</h3>
-目前来说没有什么好的办法,flutter好像没有提供Api让我们可以获得ListView里的所有item加起来的高度(界面渲染之前)。
-
 * <h3>是否支持单纯RefreshIndicator(material)+上拉加载并且没有弹性的刷新组合?</h3>
 可以,只要设置节点属性enableOverScroll = false, enablePullDown = false,在外面包裹一个是否支持
 单纯RefreshIndicator就可以了,demo里

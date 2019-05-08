@@ -60,6 +60,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
 //      _scrollController.jumpTo(0.0);
     });
     _init();
+
     super.initState();
   }
 
@@ -105,6 +106,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
   }
 
   _onRefresh() {
+    print("onRefresh");
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
       items.add(Item(title: "Data"));
       if(mounted)
@@ -116,6 +118,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
   }
 
   _onLoading() {
+    print("onLoading");
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
       int index = items.length;
       if(mounted)

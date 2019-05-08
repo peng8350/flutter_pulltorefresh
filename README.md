@@ -5,7 +5,7 @@ a widget provided to the flutter scroll component drop-down refresh and pull up 
 If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter_pulltorefresh/blob/master/README_CN.md))
 
 ## Features
-* Android and iOS both spported
+* Android and iOS both supported
 * pull up and pull down
 * It's almost fit for all Scroll witgets,like GridView,ListView...
 * High extensibility,High degree of freedom
@@ -32,7 +32,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.1
+     pull_to_refresh: ^1.3.2
 
 ```
 
@@ -83,22 +83,6 @@ void dispose(){
 
 ```
 
-When the amount of data is too small, there is no automatic judgment to hide. You need to dynamically judge the height and actual size of listView. The height of listView can be determined by LayoutBuilder
-,[example1](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example1.dart) is an example.
-
-```
-
-       double innerListHeight= ...;
-       // listView height
-       double listHeight = ...;
-
-       new SmartRefresher(
-           enablePullUp: innerListHeight>listHeight
-          .....
-       )
-
-
-```
 
 
 
@@ -151,9 +135,6 @@ internally via PrimaryScrollController. of (context) To get scrollController, sc
 
 * <h3>Why is there a empty space in the top or tail indicator after using CuperNavigationBar (not just in this case)?</h3>
 the reason may be SafeArea,the solution: wrap SmartRefresher in SafeArea
-
-* <h3>Is it possible to automatically determine that the amount of data is larger than one page and hide the pull-up component?</h3>
-There's no good way to do that right now. Flutter doesn't seem to provide Api so that we can get the total height of all items in ListView (before the interface is rendered). If anyone can solve this problem, please put it forward. Thank you very much.
 
 
 * <h3>Does it support simple RefreshIndicator (material) + pull up loading and no elastic refresh combination?<br></h3>

@@ -19,7 +19,7 @@ class _DataSmallState extends State<DataSmall> {
   RefreshController _refreshController;
 
   void _init() {
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5000; i++) {
       items.add(Item(title: "Data$i",));
     }
   }

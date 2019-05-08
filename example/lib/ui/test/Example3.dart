@@ -151,6 +151,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           enablePullUp: _enablePullUp,
           enablePullDown: _enablePullDown,
           controller: _refreshController,
+
           header: WaterDropHeader(waterDropColor: Colors.greenAccent),
           footer: ClassicFooter(
             onClick: () {
@@ -166,7 +167,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           onLoading: () {
             Future.delayed(const Duration(milliseconds: 2009)).then((val) {
               setState(() {});
-              _refreshController.loadNoData();
+              _refreshController.loadComplete();
             });
           },
           child: ListView.builder(
