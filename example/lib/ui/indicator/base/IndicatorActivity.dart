@@ -107,6 +107,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
   _onRefresh() {
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
       items.add(Item(title: "Data"));
+      if(mounted)
       setState(() {
 
       });
@@ -117,6 +118,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
   _onLoading() {
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
       int index = items.length;
+      if(mounted)
       setState(() {});
       items.add(Item(title: "Data$index",));
       ;

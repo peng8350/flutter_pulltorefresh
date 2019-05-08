@@ -24,7 +24,7 @@ class ClassicHeader extends RefreshIndicator {
 
   final TextStyle textStyle;
 
-  ClassicHeader({
+  const ClassicHeader({
     Key key,
     RefreshStyle refreshStyle: default_refreshStyle,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
@@ -144,7 +144,7 @@ class ClassicFooter extends LoadIndicator {
 
   final TextStyle textStyle;
 
-  ClassicFooter({
+  const ClassicFooter({
     Key key,
     Function onClick,
     bool autoLoad: default_AutoLoad,

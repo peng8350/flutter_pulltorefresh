@@ -79,6 +79,8 @@ class SmartRefresherState extends State<SmartRefresher> {
   ScrollController scrollController;
   // check if user is dragging
   bool isDragging = false;
+  // check the header own height
+  ValueNotifier<bool> hasHeaderLayout = ValueNotifier(false);
 
   //handle the scrollStartvent
   bool _handleScrollStart(ScrollNotification notification) {
@@ -113,6 +115,8 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (!widget.isNestWrapped && widget.child.controller == null) {
       scrollController.dispose();
     }
+    hasHeaderLayout.dispose();
+    hasHeaderLayout = null;
     super.dispose();
   }
 

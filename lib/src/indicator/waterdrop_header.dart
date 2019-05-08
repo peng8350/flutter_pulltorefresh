@@ -23,7 +23,7 @@ class WaterDropHeader extends RefreshIndicator {
 
   final Color waterDropColor;
 
-  WaterDropHeader({
+  const WaterDropHeader({
     Key key,
     this.refresh,
     this.complete,
@@ -150,6 +150,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
       ),
     );
   }
+
 
   @override
   void dispose() {

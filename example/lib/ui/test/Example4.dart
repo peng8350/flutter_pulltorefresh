@@ -43,7 +43,9 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
     return Container(
       color: Colors.white,
       child: SmartRefresher(
+       enablePullUp: true ,
           child: CustomScrollView(
+            reverse: true,
             slivers: [
               SliverToBoxAdapter(
                 child: Container(),

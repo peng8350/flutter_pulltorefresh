@@ -23,12 +23,12 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
 
   //test #68
-  bool _enablePullUp=true,_enablePullDown=true;
+  bool _enablePullUp=true,_enablePullDown=false;
 
 
 
   void _getDatas() {
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
@@ -66,7 +66,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
 
-    // for test #68
+    // for test #68 true-> false ->true
 //    Future.delayed(Duration(milliseconds: 3000),(){
 //      _enablePullDown = false;
 //      _enablePullUp = false;
@@ -81,6 +81,37 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //
 //      });
 //    });
+
+//    // for test #68 false-> true ->false
+//    Future.delayed(Duration(milliseconds: 3000),(){
+//      _enablePullDown = false;
+//      _enablePullUp = true;
+//      setState(() {
+//
+//      });
+//    });
+//    Future.delayed(Duration(milliseconds: 6000),(){
+//      _enablePullDown = true;
+//      _enablePullUp = false;
+//      setState(() {
+//
+//      });
+//    });
+
+    Future.delayed(Duration(milliseconds: 3000),(){
+      _enablePullDown = true;
+      _enablePullUp = false;
+      setState(() {
+
+      });
+    });
+    Future.delayed(Duration(milliseconds: 6000),(){
+      _enablePullDown = false;
+      _enablePullUp = true;
+      setState(() {
+
+      });
+    });
     _getDatas();
     _refreshController = RefreshController();
     super.initState();
@@ -129,7 +160,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
               _refreshController.refreshFailed();
             });
           },
-          onOffsetChange: _onOffsetCallback,
           onLoading: () {
             Future.delayed(const Duration(milliseconds: 2009)).then((val) {
               setState(() {});

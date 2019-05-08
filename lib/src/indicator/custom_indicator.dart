@@ -14,7 +14,7 @@ import '../internals/default_constants.dart';
 class CustomHeader extends RefreshIndicator {
   final HeaderBuilder builder;
 
-  CustomHeader({
+  const CustomHeader({
     Key key,
     @required this.builder,
     double height: default_height,
@@ -44,7 +44,7 @@ class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
 class CustomFooter extends LoadIndicator {
   final FooterBuilder builder;
 
-  CustomFooter({
+  const CustomFooter({
     Key key,
     @required this.builder,
     bool autoLoad: true,

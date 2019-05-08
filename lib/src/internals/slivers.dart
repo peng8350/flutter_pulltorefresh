@@ -191,14 +191,21 @@ class _RenderSliverRefresh extends RenderSliver
 }
 
 class SliverLoading extends SingleChildRenderObjectWidget {
-  const SliverLoading({
+  final ValueNotifier enableLayout;
+
+  SliverLoading({
     Key key,
+    this.enableLayout,
     Widget child,
   }) : super(key: key, child: child);
 
   @override
   _RenderSliverLoading createRenderObject(BuildContext context) {
-    return _RenderSliverLoading();
+    final refresher = SmartRefresher.of(context);
+    return _RenderSliverLoading(
+        enableLayout: enableLayout,
+        headerHeight: refresher.widget.header.height,
+        hasHeaderLayout:refresher.hasHeaderLayout);
   }
 
   @override
@@ -206,19 +213,21 @@ class SliverLoading extends SingleChildRenderObjectWidget {
       BuildContext context, covariant _RenderSliverLoading renderObject) {}
 }
 
-class _RenderSliverLoading extends RenderSliver
-    with RenderObjectWithChildMixin<RenderBox> {
-  _RenderSliverLoading({
-    RenderBox child,
-  }) {
+class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
+  _RenderSliverLoading({RenderBox child, this.enableLayout, this.headerHeight,this.hasHeaderLayout})
+      : assert(enableLayout != null) {
     this.child = child;
   }
 
+  final double headerHeight;
+  final ValueNotifier<bool> hasHeaderLayout;
   // This keeps track of the previously applied scroll offsets to the scrollable
   // so that when [refreshIndicatorLayoutExtent] or [hasLayoutExtent] changes,
   // the appropriate delta can be applied to keep everything in the same place
   // visually.
-  double layoutExtentOffsetCompensation = 0.0;
+  final double layoutExtentOffsetCompensation = 0.0;
+
+  final ValueNotifier<bool> enableLayout;
 
   @override
   void performLayout() {
@@ -228,8 +237,9 @@ class _RenderSliverLoading extends RenderSliver
       geometry = SliverGeometry.zero;
       return;
     }
-    bool active =
-        constraints.precedingScrollExtent > constraints.viewportMainAxisExtent;
+    bool active = constraints.precedingScrollExtent - (hasHeaderLayout.value?headerHeight:0.0) >
+        constraints.viewportMainAxisExtent;
+    enableLayout.value = active;
     child.layout(constraints.asBoxConstraints(), parentUsesSize: true);
     double childExtent = child.size.height;
     assert(childExtent != null);
@@ -237,10 +247,9 @@ class _RenderSliverLoading extends RenderSliver
         calculatePaintOffset(constraints, from: 0.0, to: childExtent);
     final double cacheExtent =
         calculateCacheOffset(constraints, from: 0.0, to: childExtent);
-
-//    assert(paintedChildSize.isFinite);
-//    assert(paintedChildSize >= 0.0);
-    if (active)
+    assert(paintedChildSize.isFinite);
+    assert(paintedChildSize >= 0.0);
+    if (active) {
       geometry = SliverGeometry(
         scrollExtent: childExtent,
         paintExtent: paintedChildSize,
@@ -250,16 +259,9 @@ class _RenderSliverLoading extends RenderSliver
         hasVisualOverflow: childExtent > constraints.remainingPaintExtent ||
             constraints.scrollOffset > 0.0,
       );
-    else {
+      setChildParentData(child, constraints, geometry);
+    } else {
       geometry = SliverGeometry.zero;
     }
   }
-
-  @override
-  void paint(PaintingContext paintContext, Offset offset) {
-    paintContext.paintChild(child, offset);
-  }
-
-  @override
-  void applyPaintTransform(RenderObject child, Matrix4 transform) {}
 }
