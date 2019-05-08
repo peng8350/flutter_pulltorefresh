@@ -205,7 +205,7 @@ class SliverLoading extends SingleChildRenderObjectWidget {
     return _RenderSliverLoading(
         enableLayout: enableLayout,
         headerHeight: refresher.widget.header.height,
-        hasHeaderLayout:refresher.hasHeaderLayout);
+        hasHeaderLayout: refresher.hasHeaderLayout);
   }
 
   @override
@@ -214,7 +214,11 @@ class SliverLoading extends SingleChildRenderObjectWidget {
 }
 
 class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
-  _RenderSliverLoading({RenderBox child, this.enableLayout, this.headerHeight,this.hasHeaderLayout})
+  _RenderSliverLoading(
+      {RenderBox child,
+      this.enableLayout,
+      this.headerHeight,
+      this.hasHeaderLayout})
       : assert(enableLayout != null) {
     this.child = child;
   }
@@ -237,7 +241,8 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       geometry = SliverGeometry.zero;
       return;
     }
-    bool active = constraints.precedingScrollExtent - (hasHeaderLayout.value?headerHeight:0.0) >
+    bool active = constraints.precedingScrollExtent -
+            (hasHeaderLayout.value ? headerHeight : 0.0) >
         constraints.viewportMainAxisExtent;
     enableLayout.value = active;
     child.layout(constraints.asBoxConstraints(), parentUsesSize: true);

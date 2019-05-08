@@ -3,7 +3,6 @@ description: A new Flutter project.
 
 dependencies:
 
-
   flutter:
     sdk: flutter
 
@@ -12,12 +11,13 @@ dependencies:
 
   http: 0.12.0
 
-  flutter_spinkit: "^2.1.0"
+  flutter_staggered_grid_view: 0.2.7
+
+  flutter_spinkit: 2.1.0
 
   residemenu: 1.2.5
 
-  flutter_sticky_header:  "^0.3.4"
-
+  flutter_sticky_header: 0.3.4
 
 dev_dependencies:
   flutter_test:

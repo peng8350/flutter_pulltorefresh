@@ -7,7 +7,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ## Features
 * Android and iOS both spported
 * pull up and pull down
-* It's almost fit for all witgets,like GridView,ListView,SingleChildScrollView...
+* It's almost fit for all Scroll witgets,like GridView,ListView...
 * High extensibility,High degree of freedom
 * powerful Bouncing
 * support reverse ScrollView

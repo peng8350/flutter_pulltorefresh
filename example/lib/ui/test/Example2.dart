@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as HTTP;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class Example2 extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class Example2 extends StatefulWidget {
 
 class _Example2State extends State<Example2> with TickerProviderStateMixin {
   RefreshController _controller;
-  int indexPage = 2;
+  int indexPage = 0;
   List<String> data = [];
 
   void _fetch() {
@@ -30,7 +31,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       setState(() {});
       _controller.loadComplete();
       indexPage++;
-    }).catchError(() {
+    }).catchError((_) {
       _controller.loadComplete();
     });
   }
@@ -76,7 +77,9 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     _controller = RefreshController();
+    _fetch();
   }
 
   @override
@@ -89,11 +92,14 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       onRefresh: _onRefresh,
       onLoading: _onLoading,
       onOffsetChange: _onOffsetCallback,
-      child: GridView.builder(
-        gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      child: new StaggeredGridView.countBuilder(
+        crossAxisCount: 8,
         itemCount: data.length,
-        itemBuilder: buildImage,
+        itemBuilder: (BuildContext context, int index) => Container(height: 50.0,color: Colors.redAccent,),
+        staggeredTileBuilder: (int index) =>
+        new StaggeredTile.count(2, index.isEven ? 2 : 1),
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
       ),
     );
   }

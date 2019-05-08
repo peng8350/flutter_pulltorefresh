@@ -110,3 +110,9 @@ Notice: This version of the code changes much, Api too
 * Fix enablepullUp or down invalid
 * Fix error Loading after 1.3.0 updated
 
+## 1.3.2
+* Fix WaterDropHeader some attributes invalid
+* Fix enablePullUp and enablePullDown Dynamic set
+* implements auto hide FooterView when less than one page,no need to set enablePullUp to false
+* improve safety after disposed
+

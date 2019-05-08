@@ -6,7 +6,7 @@
 ## 特性
 * 同时支持Android,IOS
 * 提供上拉加载和下拉刷新
-* 几乎适合所有的部件,例如GridView,ListView,NestedScrollView,SingleChildScrollView...
+* 几乎适合所有滚动部件,例如GridView,ListView...
 * 高度扩展性和很低的限制性
 * 灵活的回弹能力
 * 支持反转列表
@@ -28,7 +28,7 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.1
+     pull_to_refresh: ^1.3.2
 
 ```
 

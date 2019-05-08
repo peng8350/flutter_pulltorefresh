@@ -23,7 +23,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
 
   //test #68
-  bool _enablePullUp=true,_enablePullDown=false;
+  bool _enablePullUp=false,_enablePullDown=false;
 
 
 
@@ -53,6 +53,9 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
   void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
+    setState(() {
+
+    });
     if (isUp) {
       print(offset);
       bottomOffsetLis.value = offset;

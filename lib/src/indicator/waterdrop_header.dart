@@ -151,7 +151,6 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
     );
   }
 
-
   @override
   void dispose() {
     // TODO: implement dispose

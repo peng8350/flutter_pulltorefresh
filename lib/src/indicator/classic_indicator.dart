@@ -131,7 +131,6 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
 }
 
 class ClassicFooter extends LoadIndicator {
-
   final String idleText, loadingText, noDataText;
 
   final Widget idleIcon, loadingIcon, noMoreIcon;
@@ -224,7 +223,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
             children: children,
           );
     return Container(
-      color:Colors.transparent,
+      color: Colors.transparent,
       height: widget.height,
       child: Center(
         child: container,

@@ -145,7 +145,13 @@ class SmartRefresherState extends State<SmartRefresher> {
   @override
   void didUpdateWidget(SmartRefresher oldWidget) {
     // TODO: implement didUpdateWidget
-
+    if (widget.enablePullDown != oldWidget.enablePullDown) {
+      widget.controller.headerMode.value = RefreshStatus.idle;
+      hasHeaderLayout.value = false;
+    }
+    if (widget.enablePullUp != oldWidget.enablePullUp) {
+      widget.controller.footerMode.value = LoadStatus.idle;
+    }
     if (!widget.isNestWrapped && widget.child.controller != null) {
       scrollController = widget.child.controller;
     }
