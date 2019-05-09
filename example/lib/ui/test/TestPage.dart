@@ -65,6 +65,7 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
 
         children: views,onPageChanged: (index){
            tabIndex = index;
+           if(mounted)
            setState(() {
 
            });

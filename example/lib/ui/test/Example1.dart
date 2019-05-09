@@ -104,7 +104,7 @@ class Example1State extends State<Example1> {
                       child: Text('Data '),
                     ),
                   ));
-
+                  if(mounted)
                   setState(() {
                     _refreshController.refreshCompleted();
                   });
@@ -113,6 +113,7 @@ class Example1State extends State<Example1> {
               onLoading: (){
                 Future.delayed(const Duration(milliseconds: 2009))
                     .then((val) {
+                  if(mounted)
                   setState(() {
                     data.add(Card(
                       margin: EdgeInsets.only(

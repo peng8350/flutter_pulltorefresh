@@ -67,7 +67,9 @@ class _InnerListState extends State<InnerList> {
     items.add(Item(
       title: "Data",
     ));
+    if(mounted)
     setState(() {});
+
     _refreshController.refreshCompleted();
   }
 

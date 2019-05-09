@@ -147,7 +147,6 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (widget.enablePullUp) {
       slivers.add(widget.footer);
     }
-    print(scrollController);
     return CustomScrollView(
       physics: RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
       controller: scrollController,

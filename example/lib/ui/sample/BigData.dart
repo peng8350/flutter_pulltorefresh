@@ -39,6 +39,7 @@ class _DataSmallState extends State<DataSmall> {
   _onRefresh(){
 
     items.add(Item(title: "Data",));
+    if(mounted)
     setState(() {
 
     });

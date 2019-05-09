@@ -25,8 +25,9 @@ class _MainActivityState extends State<MainActivity>
     with TickerProviderStateMixin {
   List<Widget> views;
   MenuController _menuController;
-  int _tabIndex = 1;
   TabController _tabController;
+  int _tabIndex = 0;
+  PageController _pageController;
 
   Widget buildItem(String msg, Widget icon, Function voidCallBack) {
     return Material(
@@ -49,6 +50,7 @@ class _MainActivityState extends State<MainActivity>
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
     _menuController = MenuController(vsync: this);
+    _pageController = PageController(initialPage: 1);
     views = [
       IndicatorPage(title: "指示器界面"),
       TestPage(title: "测试界面"),
@@ -82,25 +84,10 @@ class _MainActivityState extends State<MainActivity>
             controller: _tabController,
           ):null,
         ),
-        body: Stack(
-          children: <Widget>[
-            Offstage(
-              child: views[0],
-              offstage: _tabIndex != 0,
-            ),
-            Offstage(
-              child: views[1],
-              offstage: _tabIndex != 1,
-            ),
-            Offstage(
-              child: views[2],
-              offstage: _tabIndex != 2,
-            ),
-            Offstage(
-              child: views[3],
-              offstage: _tabIndex != 3,
-            )
-          ],
+        body: PageView(
+          controller: _pageController,
+          children: views,
+          physics: NeverScrollableScrollPhysics(),
         ),
       ),
       decoration: BoxDecoration(color: Colors.purple),
@@ -119,6 +106,7 @@ class _MainActivityState extends State<MainActivity>
             setState(() {
               _tabIndex = 0;
             });
+            _pageController.jumpToPage(0);
             _menuController.closeMenu();
           }),
           buildItem("测试",
@@ -128,6 +116,7 @@ class _MainActivityState extends State<MainActivity>
               _tabIndex = 1;
             });
             _menuController.closeMenu();
+            _pageController.jumpToPage(1);
           }),
           buildItem("样例", Icon(Icons.scanner, size: 18, color: Colors.grey),
               () {
@@ -135,6 +124,7 @@ class _MainActivityState extends State<MainActivity>
               _tabIndex = 2;
             });
             _menuController.closeMenu();
+            _pageController.jumpToPage(2);
           }),
           buildItem(
               "待定", Icon(Icons.format_underlined, size: 18, color: Colors.grey),
@@ -143,6 +133,7 @@ class _MainActivityState extends State<MainActivity>
               _tabIndex = 3;
             });
             _menuController.closeMenu();
+            _pageController.jumpToPage(3);
           }),
         ],
       ),

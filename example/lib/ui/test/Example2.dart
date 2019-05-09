@@ -29,6 +29,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       for (var item in array) {
         data.add(item["image_url"]);
       }
+      if(mounted)
       setState(() {});
       _controller.loadComplete();
       indexPage++;

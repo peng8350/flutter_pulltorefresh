@@ -62,6 +62,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
   void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
+    if(mounted)
     setState(() {
 
     });
@@ -82,6 +83,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //    Future.delayed(Duration(milliseconds: 3000),(){
 //      _enablePullDown = false;
 //      _enablePullUp = false;
+//    if(mounted)
 //      setState(() {
 //
 //      });
@@ -89,6 +91,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //    Future.delayed(Duration(milliseconds: 6000),(){
 //      _enablePullDown = true;
 //      _enablePullUp = true;
+//    if(mounted)
 //      setState(() {
 //
 //      });
@@ -98,6 +101,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //    Future.delayed(Duration(milliseconds: 3000),(){
 //      _enablePullDown = false;
 //      _enablePullUp = true;
+//    if(mounted)
 //      setState(() {
 //
 //      });
@@ -105,6 +109,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //    Future.delayed(Duration(milliseconds: 6000),(){
 //      _enablePullDown = true;
 //      _enablePullUp = false;
+//    if(mounted)
 //      setState(() {
 //
 //      });
@@ -113,6 +118,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //    Future.delayed(Duration(milliseconds: 3000),(){
 //      _enablePullDown = true;
 //      _enablePullUp = false;
+//    if(mounted)
 //      setState(() {
 //
 //      });
@@ -120,6 +126,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //    Future.delayed(Duration(milliseconds: 6000),(){
 //      _enablePullDown = false;
 //      _enablePullUp = true;
+//    if(mounted)
 //      setState(() {
 //
 //      });
@@ -128,12 +135,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     _scrollController = ScrollController(keepScrollOffset: true);
     _refreshController = RefreshController();
     super.initState();
-//    topOffsetLis.addListener(() {
-//      setState(() {});
-//    });
-//    bottomOffsetLis.addListener(() {
-//      setState(() {});
-//    });
   }
 
   Widget _headerCreate(BuildContext context, RefreshStatus mode) {
@@ -173,6 +174,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           },
           onLoading: () {
             Future.delayed(const Duration(milliseconds: 2009)).then((val) {
+              if(mounted)
               setState(() {});
               _refreshController.loadComplete();
             });

@@ -59,7 +59,7 @@ class _NestedState extends State<Nested> {
               Future.delayed(const Duration(milliseconds: 2009))
                   .then((val) {
                 items.add(Item(title:"item"));
-
+                if(mounted)
                 setState(() {
                   _refreshController.refreshCompleted();
                 });
@@ -68,6 +68,7 @@ class _NestedState extends State<Nested> {
             onLoading: (){
               Future.delayed(const Duration(milliseconds: 2009))
                   .then((val) {
+                if(mounted)
                 setState(() {
                   items.add(Item(title:"item"));
                   _refreshController.loadComplete();
