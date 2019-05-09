@@ -50,8 +50,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   get mode => refresher?.widget?.controller?.headerStatus;
 
-  bool get isDragging => refresher.isDragging;
-
   set mode(mode) => _headerMode?.value = mode;
 
   bool get _isComplete =>
@@ -96,21 +94,21 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if (_isComplete || _isRefreshing) return;
 
     if (floating) return;
-
-    if (!isDragging && RefreshStatus.canRefresh == mode) {
-      floating = true;
-      update();
-      readyToRefresh().then((_) {
-        mode = RefreshStatus.refreshing;
-      });
-    }
-    if (isDragging) {
+    if (_scrollController.position.activity.velocity==0.0) {
       if (offset >= widget.triggerDistance) {
         mode = RefreshStatus.canRefresh;
       } else {
         mode = RefreshStatus.idle;
       }
     }
+    else if ( RefreshStatus.canRefresh == mode) {
+      floating = true;
+      update();
+      readyToRefresh().then((_) {
+        mode = RefreshStatus.refreshing;
+      });
+    }
+
   }
 
   void handleModeChange() {
@@ -254,7 +252,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
     if (!mounted) {
       return;
     }
-
     final double overscrollPast = calculateScrollOffset(_scrollController);
     if (refresher.widget.onOffsetChange != null &&
         _scrollController.position.extentAfter == 0.0) {
@@ -293,6 +290,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   void initState() {
     super.initState();
     _scrollController = refresher.widget.controller.scrollController;
+
     _footerMode = refresher.widget.controller.footerMode;
     // it is necessary
     _footerMode.value = LoadStatus.idle;

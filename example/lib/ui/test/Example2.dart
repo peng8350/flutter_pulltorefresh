@@ -98,13 +98,10 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       onLoading: _onLoading,
       onOffsetChange: _onOffsetCallback,
       child: new StaggeredGridView.countBuilder(
-        crossAxisCount: 8,
+        crossAxisCount: 4,
         controller: _scrollController,
         itemCount: data.length,
-        itemBuilder: (BuildContext context, int index) => Container(
-              height: 50.0,
-              color: Colors.redAccent,
-            ),
+        itemBuilder: (BuildContext context, int index) => Item(url:data[index]),
         staggeredTileBuilder: (int index) =>
             new StaggeredTile.count(2, index.isEven ? 2 : 1),
         mainAxisSpacing: 4.0,

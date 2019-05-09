@@ -79,22 +79,6 @@ void dispose(){
 
 ```
 
-关于数据量太小的时候,内部没有提供自动判断去隐藏的功能,需要你动态判断listView高度和实际大小,listView高度可以借助LayoutBuilder,[example1](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example1.dart)是个例子.
-
-```
-
-       double innerListHeight= ...;
-       // listView height
-       double listHeight = ...;
-
-       new SmartRefresher(
-           enablePullUp: innerListHeight>listHeight
-          .....
-       )
-
-
-```
-
 ## 自定义指示器
 1.第一种方式,假设你要实现的指示器功能不是太过于复杂,可以使用CustomHeader或者CustomFooter
 

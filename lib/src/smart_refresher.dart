@@ -77,37 +77,8 @@ class SmartRefresher extends StatefulWidget {
 class SmartRefresherState extends State<SmartRefresher> {
   // listen the listen offset or on...
   ScrollController scrollController;
-  // check if user is dragging
-  bool isDragging = false;
   // check the header own height
   ValueNotifier<bool> hasHeaderLayout = ValueNotifier(false);
-
-  //handle the scrollStartvent
-  bool _handleScrollStart(ScrollNotification notification) {
-    isDragging = true;
-    return false;
-  }
-
-  //handle the scrollEndEvent
-  bool _handleScrollEnd(ScrollNotification notification) {
-    isDragging = false;
-    return false;
-  }
-
-  bool _dispatchScrollEvent(ScrollNotification notification) {
-    // ignore the nested scrollview's notification
-    if (notification.depth != 0) {
-      return false;
-    }
-    if (notification is ScrollStartNotification) {
-      _handleScrollStart(notification);
-    }
-    if (notification is ScrollUpdateNotification &&
-        notification.dragDetails == null) {
-      _handleScrollEnd(notification);
-    }
-    return false;
-  }
 
   @override
   void dispose() {
@@ -173,16 +144,13 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (widget.enablePullUp) {
       slivers.add(widget.footer);
     }
-    return NotificationListener(
-      child: CustomScrollView(
-        physics:
-            RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
-        controller: scrollController,
-        cacheExtent: widget.child.cacheExtent,
-        slivers: slivers,
-        reverse: widget.child.reverse,
-      ),
-      onNotification: _dispatchScrollEvent,
+    return CustomScrollView(
+      physics:
+      RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
+      controller: scrollController,
+      cacheExtent: widget.child.cacheExtent,
+      slivers: slivers,
+      reverse: widget.child.reverse,
     );
   }
 }
