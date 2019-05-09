@@ -22,7 +22,8 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin{
-  int tabIndex = 1;
+  int tabIndex = 0;
+  PageController _pageController;
 
   List<Widget> views;
   TabController _tabController;
@@ -32,6 +33,7 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
   void _changePage(){
     Navigator.of(context).pushNamed("sec");
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,26 +60,15 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
 //    );
     return  Scaffold(
 
-      body:  Stack(
+      body:  PageView(
+        controller: _pageController ,
 
-        children: <Widget>[
-           Offstage(
-            child: views[0],
-            offstage: tabIndex!=0,
-          ),
-           Offstage(
-            child: views[1],
-            offstage: tabIndex!=1,
-          ),
-           Offstage(
-            child: views[2],
-            offstage: tabIndex!=2,
-          ),
-           Offstage(
-            child: views[3],
-            offstage: tabIndex!=3,
-          )
-        ],
+        children: views,onPageChanged: (index){
+           tabIndex = index;
+           setState(() {
+
+           });
+        },
       ),
       bottomNavigationBar:  BottomNavigationBar(
         items: [
@@ -107,9 +98,7 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                       color: tabIndex == 3 ? Colors.blue : Colors.grey))),
         ],
         onTap: (index) {
-          setState(() {
-            tabIndex = index;
-          });
+          _pageController.jumpToPage(index);
         },
         currentIndex: tabIndex,
         fixedColor: Colors.grey,
@@ -122,6 +111,7 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
   void initState() {
     // TODO: implement initState
     _tabController =  TabController(length: 4, vsync: this);
+    _pageController = PageController();
     views = [ Example1(key:example1Key), Example2(), Example3(key:example3Key), Example4()];
     super.initState();
   }

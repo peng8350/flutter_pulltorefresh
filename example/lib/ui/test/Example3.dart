@@ -17,6 +17,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   ValueNotifier<double> topOffsetLis = ValueNotifier(0.0);
   ValueNotifier<double> bottomOffsetLis = ValueNotifier(0.0);
   RefreshController _refreshController;
+  ScrollController _scrollController;
 
 
   List<Widget> data = [];
@@ -124,14 +125,15 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //      });
 //    });
     _getDatas();
+    _scrollController = ScrollController(keepScrollOffset: true);
     _refreshController = RefreshController();
     super.initState();
-    topOffsetLis.addListener(() {
-      setState(() {});
-    });
-    bottomOffsetLis.addListener(() {
-      setState(() {});
-    });
+//    topOffsetLis.addListener(() {
+//      setState(() {});
+//    });
+//    bottomOffsetLis.addListener(() {
+//      setState(() {});
+//    });
   }
 
   Widget _headerCreate(BuildContext context, RefreshStatus mode) {
@@ -147,8 +149,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     // TODO: implement dispose
     super.dispose();
   }
-
-  ScrollController _controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -178,6 +178,8 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
             });
           },
           child: ListView.builder(
+            key: PageStorageKey("e"),
+            controller: _scrollController,
             itemExtent: 100.0,
             itemCount: data.length,
             itemBuilder: (context, index) {

@@ -45,7 +45,7 @@ class Example1State extends State<Example1> {
   void initState() {
     // TODO: implement initState
     _getDatas();
-    _scrollController = ScrollController();
+    _scrollController = ScrollController(keepScrollOffset: true);
     _refreshController = RefreshController();
     SchedulerBinding.instance.addPostFrameCallback((_) {
 //      _refreshController.requestRefresh(true);
@@ -60,81 +60,79 @@ class Example1State extends State<Example1> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (BuildContext c, BoxConstraints bc) {
-      double innerListHeight = data.length * 100.0;
-      double listHeight = bc.biggest.height;
-      return Container(
-          child: NestedScrollView(
-            controller: _scrollController,
-              headerSliverBuilder: (c, s) => [
-                    SliverPersistentHeader(
-                        delegate: _SliverDelegate(
-                            child: Container(
-                      height: 300.0,
-                      color: Colors.red,
-                    ))),
-                    SliverAppBar(
-                      backgroundColor: Colors.greenAccent,
-                      expandedHeight: 200.0,
-                      pinned: true,
-                      flexibleSpace: FlexibleSpaceBar(
-                          centerTitle: true,
-                          background: Image.network(
-                            "https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0c21b1ac3066ae4d354a3b2e0064c8be&auto=format&fit=crop&w=500&q=60",
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                  ],
-              body: Container(
-                child: SmartRefresher(
-                    controller: _refreshController,
-                    enablePullDown: true,
-                    isNestWrapped: true,
-                    header: ClassicHeader(
-                      idleIcon: Container(),
-                      idleText: "Load more...",
-                    ),
-                    enablePullUp: innerListHeight > listHeight,
+    return  NestedScrollView(
+        key:PageStorageKey("q"),
+        controller: _scrollController,
+        headerSliverBuilder: (c, s) => [
+          SliverPersistentHeader(
+              delegate: _SliverDelegate(
+                  child: Container(
+                    height: 300.0,
+                    color: Colors.red,
+                  ))),
+          SliverAppBar(
+            backgroundColor: Colors.greenAccent,
+            expandedHeight: 200.0,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                background: Image.network(
+                  "https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0c21b1ac3066ae4d354a3b2e0064c8be&auto=format&fit=crop&w=500&q=60",
+                  fit: BoxFit.cover,
+                )),
+          ),
+        ],
+        body: Container(
+          child: SmartRefresher(
 
-                    onRefresh: () {
-                        Future.delayed(const Duration(milliseconds: 2009))
-                            .then((val) {
-                          data.add(Card(
-                            margin: EdgeInsets.only(
-                                left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                            child: Center(
-                              child: Text('Data '),
-                            ),
-                          ));
+              controller: _refreshController,
+              enablePullDown: true,
+              isNestWrapped: true,
+              header: ClassicHeader(
+                idleIcon: Container(),
+                idleText: "Load more...",
+              ),
+              enablePullUp: true,
 
-                          setState(() {
-                            _refreshController.refreshCompleted();
-                          });
-                        });
-                    },
-                    onLoading: (){
-                      Future.delayed(const Duration(milliseconds: 2009))
-                          .then((val) {
-                        setState(() {
-                          data.add(Card(
-                            margin: EdgeInsets.only(
-                                left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                            child: Center(
-                              child: Text('Data '),
-                            ),
-                          ));
-                          _refreshController.loadComplete();
-                        });
-                      });
-                    },
-                    onOffsetChange: _onOffsetCallback,
-                    child: ListView.builder(
-                      itemExtent: 100.0,
-                      itemCount: data.length,
-                      itemBuilder: (context, index) => Item(),
-                    )),
-              )));
-    });
+              onRefresh: () {
+                Future.delayed(const Duration(milliseconds: 2009))
+                    .then((val) {
+                  data.add(Card(
+                    margin: EdgeInsets.only(
+                        left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                    child: Center(
+                      child: Text('Data '),
+                    ),
+                  ));
+
+                  setState(() {
+                    _refreshController.refreshCompleted();
+                  });
+                });
+              },
+              onLoading: (){
+                Future.delayed(const Duration(milliseconds: 2009))
+                    .then((val) {
+                  setState(() {
+                    data.add(Card(
+                      margin: EdgeInsets.only(
+                          left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                      child: Center(
+                        child: Text('Data '),
+                      ),
+                    ));
+                    _refreshController.loadComplete();
+                  });
+                });
+              },
+              onOffsetChange: _onOffsetCallback,
+              child: ListView.builder(
+
+                itemExtent: 100.0,
+                itemCount: data.length,
+                itemBuilder: (context, index) => Item(),
+              )),
+        ));
   }
 }
 

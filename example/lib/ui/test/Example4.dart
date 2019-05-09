@@ -12,6 +12,8 @@ class Example4 extends StatefulWidget {
 class _Example4State extends State<Example4> with TickerProviderStateMixin {
   List<Widget> data = [];
   RefreshController _refreshController;
+  ScrollController _scrollController ;
+
   void _getDatas() {
     for (int i = 0; i < 18; i++) {
       data.add(Container(
@@ -26,6 +28,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     _getDatas();
+    _scrollController = ScrollController(keepScrollOffset: true);
     _refreshController = RefreshController();
     super.initState();
   }
@@ -45,7 +48,8 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
       child: SmartRefresher(
        enablePullUp: true ,
           child: CustomScrollView(
-            reverse: true,
+            key: PageStorageKey("r"),
+            controller: _scrollController,
             slivers: [
               SliverToBoxAdapter(
                 child: Container(),

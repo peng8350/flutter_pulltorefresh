@@ -140,16 +140,22 @@ class SmartRefresherState extends State<SmartRefresher> {
   Widget build(BuildContext context) {
     List<Widget> slivers =
         List.from(widget.child.buildSlivers(context), growable: true);
+
     if (widget.enablePullDown) {
       slivers.insert(0, widget.header);
     }
     if (widget.enablePullUp) {
       slivers.add(widget.footer);
     }
+    print(scrollController);
     return CustomScrollView(
       physics: RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
       controller: scrollController,
       cacheExtent: widget.child.cacheExtent,
+      key: widget.child.key,
+      center: widget.child.center,
+      anchor: widget.child.anchor,
+      semanticChildCount: widget.child.semanticChildCount,
       slivers: slivers,
       reverse: widget.child.reverse,
     );
@@ -169,22 +175,18 @@ class RefreshController {
     assert(scrollController != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (headerStatus == RefreshStatus.idle)
-      scrollController
-          .animateTo(-_header.triggerDistance, duration: duration, curve: curve)
-          .then((_) {
-        headerMode?.value = RefreshStatus.refreshing;
-      });
+      scrollController.animateTo(-_header.triggerDistance,
+          duration: duration, curve: curve);
   }
 
-  void requestLoading({Duration duration: const Duration(milliseconds: 200),
-    Curve curve: Curves.linear}) {
+  void requestLoading(
+      {Duration duration: const Duration(milliseconds: 200),
+      Curve curve: Curves.linear}) {
     assert(scrollController != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (footerStatus == LoadStatus.idle) {
       scrollController.animateTo(scrollController.position.maxScrollExtent,
-          duration: duration, curve: curve).then((_){
-        footerMode?.value = LoadStatus.loading;
-      });
+          duration: duration, curve: curve);
     }
   }
 

@@ -81,7 +81,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _scrollController = ScrollController();
+    _scrollController = ScrollController(keepScrollOffset: true);
     _controller = RefreshController();
 
     _fetch();
@@ -98,6 +98,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       onLoading: _onLoading,
       onOffsetChange: _onOffsetCallback,
       child: new StaggeredGridView.countBuilder(
+        key: PageStorageKey("w"),
         crossAxisCount: 4,
         controller: _scrollController,
         itemCount: data.length,
