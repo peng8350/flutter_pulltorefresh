@@ -28,6 +28,14 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
 
   void _getDatas() {
+    data.add(Row(children: <Widget>[
+      FlatButton(onPressed: (){
+        _refreshController.requestRefresh();
+      }, child: Text("请求刷新")),
+      FlatButton(onPressed: (){
+        _refreshController.requestLoading();
+      }, child: Text("请求加载数据"))
+    ],));
     for (int i = 0; i < 6; i++) {
       data.add(GestureDetector(
         child: Container(
@@ -100,21 +108,21 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //
 //      });
 //    });
-
-    Future.delayed(Duration(milliseconds: 3000),(){
-      _enablePullDown = true;
-      _enablePullUp = false;
-      setState(() {
-
-      });
-    });
-    Future.delayed(Duration(milliseconds: 6000),(){
-      _enablePullDown = false;
-      _enablePullUp = true;
-      setState(() {
-
-      });
-    });
+//
+//    Future.delayed(Duration(milliseconds: 3000),(){
+//      _enablePullDown = true;
+//      _enablePullUp = false;
+//      setState(() {
+//
+//      });
+//    });
+//    Future.delayed(Duration(milliseconds: 6000),(){
+//      _enablePullDown = false;
+//      _enablePullUp = true;
+//      setState(() {
+//
+//      });
+//    });
     _getDatas();
     _refreshController = RefreshController();
     super.initState();
@@ -148,10 +156,9 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         child: Stack(
       children: <Widget>[
         SmartRefresher(
-          enablePullUp: _enablePullUp,
-          enablePullDown: _enablePullDown,
+          enablePullUp: true,
+          enablePullDown: true,
           controller: _refreshController,
-
           header: WaterDropHeader(waterDropColor: Colors.greenAccent),
           footer: ClassicFooter(
             onClick: () {
@@ -171,7 +178,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
             });
           },
           child: ListView.builder(
-            reverse: true,
             itemExtent: 100.0,
             itemCount: data.length,
             itemBuilder: (context, index) {

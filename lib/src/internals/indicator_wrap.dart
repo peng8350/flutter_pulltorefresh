@@ -52,10 +52,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   set mode(mode) => _headerMode?.value = mode;
 
-  bool get _isComplete =>
-      mode == RefreshStatus.completed || mode == RefreshStatus.failed;
-
-  bool get _isRefreshing => mode == RefreshStatus.refreshing;
   // if true,the indicator has a height which happen in refreshing mode
   set floating(floating) => refresher?.hasHeaderLayout?.value = floating;
 
@@ -91,24 +87,21 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   // handle the  state change between canRefresh and idle canRefresh  before refreshing
   void handleDragMove(double offset) {
-    if (_isComplete || _isRefreshing) return;
 
     if (floating) return;
-    if (_scrollController.position.activity.velocity==0.0) {
+    if (_scrollController.position.activity.velocity == 0.0) {
       if (offset >= widget.triggerDistance) {
         mode = RefreshStatus.canRefresh;
       } else {
         mode = RefreshStatus.idle;
       }
-    }
-    else if ( RefreshStatus.canRefresh == mode) {
+    } else if (RefreshStatus.canRefresh == mode) {
       floating = true;
       update();
       readyToRefresh().then((_) {
         mode = RefreshStatus.refreshing;
       });
     }
-
   }
 
   void handleModeChange() {
@@ -128,10 +121,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         endRefresh().then((_) {
           floating = false;
           update();
-
-          return Future.delayed(Duration(milliseconds: 150));
-        }).whenComplete(() {
-          mode = RefreshStatus.idle;
         });
 
         break;
@@ -139,9 +128,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         endRefresh().then((_) {
           floating = false;
           update();
-          return Future.delayed(Duration(milliseconds: 150));
-        }).whenComplete(() {
-          mode = RefreshStatus.idle;
         });
         break;
       default:
