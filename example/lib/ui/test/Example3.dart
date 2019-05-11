@@ -24,14 +24,14 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
 
   //test #68
-  bool _enablePullUp=false,_enablePullDown=false;
+  bool _enablePullUp=true,_enablePullDown=true;
 
 
 
   void _getDatas() {
     data.add(Row(children: <Widget>[
       FlatButton(onPressed: (){
-        _refreshController.requestRefresh();
+        _refreshController.requestRefresh(needDownAnimate: false);
       }, child: Text("请求刷新")),
       FlatButton(onPressed: (){
         _refreshController.requestLoading();
@@ -114,7 +114,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //
 //      });
 //    });
-//
 //    Future.delayed(Duration(milliseconds: 3000),(){
 //      _enablePullDown = true;
 //      _enablePullUp = false;
@@ -132,8 +131,10 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //      });
 //    });
     _getDatas();
-    _scrollController = ScrollController(keepScrollOffset: true);
     _refreshController = RefreshController();
+//    SchedulerBinding.instance.addPostFrameCallback((_){
+//      _refreshController.requestRefresh(needDownAnimate: false);
+//    });
     super.initState();
   }
 
@@ -157,8 +158,8 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         child: Stack(
       children: <Widget>[
         SmartRefresher(
-          enablePullUp: true,
-          enablePullDown: true,
+          enablePullUp: _enablePullDown,
+          enablePullDown: _enablePullUp,
           controller: _refreshController,
           header: WaterDropHeader(waterDropColor: Colors.greenAccent),
           footer: ClassicFooter(
@@ -168,6 +169,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
             },
           ),
           onRefresh: () {
+            print("onRefresh");
             Future.delayed(const Duration(milliseconds: 2009)).then((val) {
               _refreshController.refreshFailed();
             });

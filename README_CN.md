@@ -28,7 +28,7 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.2
+     pull_to_refresh: ^1.3.3
 
 ```
 
@@ -42,6 +42,8 @@ initState(){
 
     super.initState();
     _refreshController = RefreshController();
+    // 如果你需要开始就请求一次刷新
+   // _refreshController.requestRefresh();
 }
 
 void _onRefresh(){
@@ -80,7 +82,7 @@ void dispose(){
 ```
 
 ## 自定义指示器
-1.第一种方式,假设你要实现的指示器功能不是太过于复杂,可以使用CustomHeader或者CustomFooter
+1.第一种方式,假设你要实现的指示器功能不是太过于复杂,可以使用CustomHeader或者CustomFooter,利用SmartRefresher里的onOffsetChange回调可完成一些简单的动画
 
 ```
    Widget buildHeader(BuildContext context,RefreshStatus mode){

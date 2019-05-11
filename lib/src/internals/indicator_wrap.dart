@@ -5,7 +5,6 @@
  */
 
 import 'dart:async';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'default_constants.dart';
 import 'dart:math' as math;
@@ -69,6 +68,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if (overscrollPast < 0.0) {
       return;
     }
+
     if (refresher.widget.onOffsetChange != null) {
       refresher.widget.onOffsetChange(true, overscrollPast);
     }
@@ -87,8 +87,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   // handle the  state change between canRefresh and idle canRefresh  before refreshing
   void handleDragMove(double offset) {
-
     if (floating) return;
+
     if (_scrollController.position.activity.velocity == 0.0) {
       if (offset >= widget.triggerDistance) {
         mode = RefreshStatus.canRefresh;
@@ -108,30 +108,21 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if (!mounted) {
       return;
     }
-    update();
-    switch (mode) {
-      case RefreshStatus.refreshing:
-        floating = true;
-        update();
-        readyToRefresh().then((_) {
-          if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
-        });
-        break;
-      case RefreshStatus.completed:
-        endRefresh().then((_) {
-          floating = false;
-          update();
-        });
 
-        break;
-      case RefreshStatus.failed:
-        endRefresh().then((_) {
-          floating = false;
-          update();
-        });
-        break;
-      default:
-        break;
+    update();
+    if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
+      endRefresh().then((_) {
+        floating = false;
+        update();
+        // make gesture release
+        (_scrollController.position as ScrollActivityDelegate).goIdle();
+      });
+    } else if (mode == RefreshStatus.refreshing) {
+      floating = true;
+      update();
+      readyToRefresh().then((_) {
+        if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
+      });
     }
   }
 
@@ -175,6 +166,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     // TODO: implement initState
 
     _scrollController = refresher.scrollController;
+
     _headerMode = refresher.widget.controller.headerMode;
     // it is necessary,sometime the widget may be dispose ,it should be resume the state
     _headerMode.value = RefreshStatus.idle;

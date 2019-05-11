@@ -32,7 +32,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.2
+     pull_to_refresh: ^1.3.3
 
 ```
 
@@ -46,6 +46,8 @@ initState(){
 
     super.initState();
     _refreshController = RefreshController();
+    // if you need refreshing when init
+   // _refreshController.requestRefresh();
 }
 
 void _onRefresh(){
@@ -87,7 +89,8 @@ void dispose(){
 
 
 ## Custom
-1.In the first way, assuming that the indicator function you want to implement is not too complex, you can use CustomHeader or CustomFooter
+1.In the first way, assuming that the indicator function you want to implement is not too complex, you can use CustomHeader or CustomFooter.
+using onOffsetChange callback in SmartRefresher to implements some simple animation.
 
 ```
    Widget buildHeader(BuildContext context,RefreshStatus mode){

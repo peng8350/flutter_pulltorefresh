@@ -167,19 +167,36 @@ class RefreshController {
   ScrollController scrollController;
   RefreshIndicator _header;
 
+  RefreshStatus get headerStatus => headerMode?.value;
+
+  LoadStatus get footerStatus => footerMode?.value;
+
+  bool get isRefresh => headerMode?.value == RefreshStatus.refreshing;
+
+  bool get isLoading => footerMode?.value == LoadStatus.loading;
+
   void requestRefresh(
       {bool needDownAnimate: true,
-      Duration duration: const Duration(milliseconds: 400),
+      Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
     assert(scrollController != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    if (headerStatus == RefreshStatus.idle)
-      scrollController.animateTo(-_header.triggerDistance,
-          duration: duration, curve: curve);
+    if(headerMode?.value !=RefreshStatus.idle)return;
+    if(needDownAnimate){
+      scrollController.animateTo(-_header.triggerDistance, duration: duration, curve: curve);
+    }
+    else {
+      headerMode?.value = RefreshStatus.refreshing;
+      // only afte the header has Layout,else it will generate a bouncing effect
+      SchedulerBinding.instance.addPostFrameCallback((_){
+        scrollController.jumpTo(0.0);
+      });
+
+    }
   }
 
   void requestLoading(
-      {Duration duration: const Duration(milliseconds: 200),
+      {Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
     assert(scrollController != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
@@ -210,6 +227,10 @@ class RefreshController {
     });
   }
 
+  void resetNoData() {
+    footerMode?.value = LoadStatus.idle;
+  }
+
   void dispose() {
     headerMode.dispose();
     footerMode.dispose();
@@ -217,11 +238,5 @@ class RefreshController {
     footerMode = null;
   }
 
-  RefreshStatus get headerStatus => headerMode?.value;
 
-  LoadStatus get footerStatus => footerMode?.value;
-
-  bool get isRefresh => headerMode?.value == RefreshStatus.refreshing;
-
-  bool get isLoading => footerMode?.value == LoadStatus.loading;
 }

@@ -116,3 +116,8 @@ Notice: This version of the code changes much, Api too
 * implements auto hide FooterView when less than one page,no need to set enablePullUp to false
 * improve safety after disposed
 
+## 1.3.3
+* Fixed the request Refresh problem: Sometimes it takes two times to be effective
+* Add child key support
+* Fix Bug:Pull-down triggers need to be pulled down more distances to trigger
+* Add resetNoData to resume footer state to idle

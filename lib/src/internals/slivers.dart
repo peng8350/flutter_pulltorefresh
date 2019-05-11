@@ -115,7 +115,7 @@ class _RenderSliverRefresh extends RenderSliver
       layoutExtentOffsetCompensation = layoutExtent;
       return;
     }
-    final bool active = constraints.overlap <= 0.0 || layoutExtent >= 0.0;
+    final bool active = constraints.overlap < 0.0 || layoutExtent > 0.0;
     final double overscrolledExtent = constraints.overlap.abs();
     if (refreshStyle == RefreshStyle.Behind) {
       child.layout(
