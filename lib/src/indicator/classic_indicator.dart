@@ -34,6 +34,7 @@ class ClassicHeader extends RefreshIndicator {
     this.completeText: 'Refresh complete',
     double height: default_height,
     this.failedText: 'Refresh failed',
+    double maxDragExtent:default_maxDragExtent,
     this.idleText: 'Pull down to refresh',
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
@@ -50,6 +51,7 @@ class ClassicHeader extends RefreshIndicator {
             key: key,
             refreshStyle: refreshStyle,
             height: height,
+            maxDragExtent:maxDragExtent,
             triggerDistance: triggerDistance);
 
   @override
@@ -148,7 +150,9 @@ class ClassicFooter extends LoadIndicator {
     Function onClick,
     bool autoLoad: default_AutoLoad,
     double triggerDistance: default_load_triggerDistance,
-    this.textStyle: const TextStyle(color: const Color(0xff555555)),
+    this.textStyle: const TextStyle(color:
+    const Color(0xff555555)),
+    double maxDragExtent:default_maxDragExtent,
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
     this.height: 60.0,
@@ -168,6 +172,7 @@ class ClassicFooter extends LoadIndicator {
             key: key,
             triggerDistance: triggerDistance,
             onClick: onClick,
+            maxDragExtent:maxDragExtent,
             autoLoad: autoLoad);
 
   @override

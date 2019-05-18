@@ -13,8 +13,9 @@ import 'slivers.dart';
 
 abstract class Indicator extends StatefulWidget {
   final double triggerDistance;
-
-  const Indicator({Key key, this.triggerDistance}) : super(key: key);
+  final double maxDragExtent;
+  const Indicator({Key key, this.triggerDistance, this.maxDragExtent})
+      : super(key: key);
 }
 
 abstract class RefreshIndicator extends Indicator {
@@ -25,9 +26,13 @@ abstract class RefreshIndicator extends Indicator {
   const RefreshIndicator(
       {this.height: default_height,
       Key key,
+      double maxDragExtent: default_maxDragExtent,
       double triggerDistance: 100.0,
       this.refreshStyle: RefreshStyle.Follow})
-      : super(key: key, triggerDistance: triggerDistance);
+      : super(
+            key: key,
+            triggerDistance: triggerDistance,
+            maxDragExtent: maxDragExtent);
 }
 
 abstract class LoadIndicator extends Indicator {
@@ -38,9 +43,13 @@ abstract class LoadIndicator extends Indicator {
   const LoadIndicator(
       {Key key,
       double triggerDistance: 15.0,
+      double maxDragExtent: default_maxDragExtent,
       this.autoLoad: true,
       this.onClick})
-      : super(key: key, triggerDistance: triggerDistance);
+      : super(
+            key: key,
+            triggerDistance: triggerDistance,
+            maxDragExtent: maxDragExtent);
 }
 
 abstract class RefreshIndicatorState<T extends RefreshIndicator>
@@ -65,6 +74,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       return;
     }
     final overscrollPast = calculateScrollOffset(_scrollController);
+    print(overscrollPast);
     if (overscrollPast < 0.0) {
       return;
     }

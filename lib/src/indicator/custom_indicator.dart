@@ -18,11 +18,13 @@ class CustomHeader extends RefreshIndicator {
     Key key,
     @required this.builder,
     double height: default_height,
+    double maxDragExtent:default_maxDragExtent,
     RefreshStyle refreshStyle: RefreshStyle.Follow,
     double triggerDistance: default_refresh_triggerDistance,
   }) : super(
             key: key,
             triggerDistance: triggerDistance,
+            maxDragExtent:maxDragExtent,
             refreshStyle: refreshStyle,
             height: height);
 
@@ -49,10 +51,12 @@ class CustomFooter extends LoadIndicator {
     @required this.builder,
     bool autoLoad: true,
     Function onClick,
+    double maxDragExtent:default_maxDragExtent,
     double triggerDistance: default_load_triggerDistance,
   }) : super(
             key: key,
             autoLoad: autoLoad,
+            maxDragExtent:maxDragExtent,
             triggerDistance: triggerDistance,
             onClick: onClick);
 
