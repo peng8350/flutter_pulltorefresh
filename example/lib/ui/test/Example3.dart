@@ -154,10 +154,10 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Stack(
+    return Column(
       children: <Widget>[
-        SmartRefresher(
+        Container(color: Colors.red,height: 50.0,),
+        Expanded(child: SmartRefresher(
           enablePullUp: _enablePullDown,
           enablePullDown: _enablePullUp,
           controller: _refreshController,
@@ -177,7 +177,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           onLoading: () {
             Future.delayed(const Duration(milliseconds: 2009)).then((val) {
               if(mounted)
-              setState(() {});
+                setState(() {});
               _refreshController.loadComplete();
             });
           },
@@ -190,9 +190,9 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
               return data[index];
             },
           ),
-        )
+        ))
       ],
-    ));
+    );
   }
 }
 

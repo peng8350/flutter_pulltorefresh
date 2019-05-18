@@ -136,6 +136,7 @@ class _RenderSliverRefresh extends RenderSliver
             0.0,
           ),
           constraints.remainingPaintExtent);
+      print(overscrolledExtent<refreshIndicatorLayoutExtent);
       switch (refreshStyle) {
         case RefreshStyle.Follow:
           geometry = SliverGeometry(
@@ -144,6 +145,7 @@ class _RenderSliverRefresh extends RenderSliver
                 constraints.scrollOffset +
                 layoutExtent,
             paintExtent: needPaintExtent,
+            hasVisualOverflow: overscrolledExtent<refreshIndicatorLayoutExtent,
             maxPaintExtent: needPaintExtent,
             layoutExtent: Math.min(needPaintExtent,
                 Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
@@ -169,6 +171,7 @@ class _RenderSliverRefresh extends RenderSliver
                     constraints.scrollOffset +
                     layoutExtent),
             paintExtent: needPaintExtent,
+            hasVisualOverflow: overscrolledExtent<refreshIndicatorLayoutExtent,
             maxPaintExtent: needPaintExtent,
             layoutExtent: Math.min(needPaintExtent,
                 Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
