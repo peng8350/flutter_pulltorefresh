@@ -13,18 +13,13 @@ import 'package:flutter/material.dart';
     because it doesn't fit my idea,
     Fixed the problem that child parts could not be dragged without data.
  */
-class RefreshScrollPhysics extends ScrollPhysics {
-  final bool enableOverScroll;
-
+class RefreshBouncePhysics extends ScrollPhysics {
   /// Creates scroll physics that bounce back from the edge.
-  const RefreshScrollPhysics(
-      {ScrollPhysics parent, this.enableOverScroll: true})
-      : super(parent: parent);
+  const RefreshBouncePhysics({ScrollPhysics parent}) : super(parent: parent);
 
   @override
-  RefreshScrollPhysics applyTo(ScrollPhysics ancestor) {
-    return RefreshScrollPhysics(
-        parent: buildParent(ancestor), enableOverScroll: enableOverScroll);
+  RefreshBouncePhysics applyTo(ScrollPhysics ancestor) {
+    return RefreshBouncePhysics(parent: buildParent(ancestor));
   }
 
   /// The multiple applied to overscroll to make it appear that scrolling past
@@ -84,23 +79,6 @@ class RefreshScrollPhysics extends ScrollPhysics {
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
-    if (!enableOverScroll) {
-      if (value < position.pixels &&
-          position.pixels <= position.minScrollExtent) // underscroll
-        return value - position.pixels;
-      if (value < position.minScrollExtent &&
-          position.minScrollExtent < position.pixels) {
-        // hit top edge
-        return value - position.minScrollExtent;
-      }
-      if (position.maxScrollExtent <= position.pixels &&
-          position.pixels < value) // overscroll
-        return value - position.pixels;
-
-      if (position.pixels < position.maxScrollExtent &&
-          position.maxScrollExtent < value) // hit bottom edge
-        return value - position.maxScrollExtent;
-    }
     return 0.0;
   }
 
@@ -153,4 +131,59 @@ class RefreshScrollPhysics extends ScrollPhysics {
   // from the natural motion of lifting the finger after a scroll.
   @override
   double get dragStartDistanceMotionThreshold => 3.5;
+}
+
+class RefreshClampPhysics extends ScrollPhysics {
+  final double headerHeight;
+
+  /// Creates scroll physics that bounce back from the edge.
+  const RefreshClampPhysics({ScrollPhysics parent, this.headerHeight})
+      : super(parent: parent);
+
+  @override
+  RefreshClampPhysics applyTo(ScrollPhysics ancestor) {
+    return RefreshClampPhysics(parent: buildParent(ancestor),headerHeight: this.headerHeight);
+  }
+
+  @override
+  double applyBoundaryConditions(ScrollMetrics position, double value) {
+    if (value < position.pixels &&
+        position.pixels <= position.minScrollExtent) // underscroll
+      return value - position.pixels;
+    if (position.maxScrollExtent <= position.pixels &&
+        position.pixels < value) // overscroll
+      return value - position.pixels;
+    if (value < position.minScrollExtent &&
+        position.minScrollExtent < position.pixels) // hit top edge
+      return value - position.minScrollExtent;
+    if (position.pixels < position.maxScrollExtent &&
+        position.maxScrollExtent < value) // hit bottom edge
+      return value - position.maxScrollExtent;
+    return 0.0;
+  }
+
+  @override
+  Simulation createBallisticSimulation(
+      ScrollMetrics position, double velocity) {
+    final Tolerance tolerance = this.tolerance;
+    if (position.extentBefore < headerHeight) {
+      return ScrollSpringSimulation(
+        spring,
+        position.pixels,
+        headerHeight,
+        0.0,
+        tolerance: tolerance,
+      );
+    }
+    if (velocity.abs() < tolerance.velocity) return null;
+    if (velocity > 0.0 && position.pixels >= position.maxScrollExtent)
+      return null;
+    if (velocity < 0.0 && position.pixels <= position.minScrollExtent)
+      return null;
+    return ClampingScrollSimulation(
+      position: position.pixels,
+      velocity: velocity,
+      tolerance: tolerance,
+    );
+  }
 }

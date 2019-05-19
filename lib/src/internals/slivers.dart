@@ -115,7 +115,13 @@ class _RenderSliverRefresh extends RenderSliver
       layoutExtentOffsetCompensation = layoutExtent;
       return;
     }
-    final bool active = constraints.overlap < 0.0 || layoutExtent > 0.0;
+    bool active ;
+    if(refreshStyle!=RefreshStyle.Front){
+      active = constraints.overlap < 0.0 || layoutExtent > 0.0;
+    }
+    else{
+      active = true;
+    }
     final double overscrolledExtent = constraints.overlap.abs();
     if (refreshStyle == RefreshStyle.Behind) {
       child.layout(
@@ -136,7 +142,6 @@ class _RenderSliverRefresh extends RenderSliver
             0.0,
           ),
           constraints.remainingPaintExtent);
-      print(overscrolledExtent<refreshIndicatorLayoutExtent);
       switch (refreshStyle) {
         case RefreshStyle.Follow:
           geometry = SliverGeometry(
@@ -177,6 +182,15 @@ class _RenderSliverRefresh extends RenderSliver
                 Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
           );
 
+          break;
+        case RefreshStyle.Front:
+          geometry = SliverGeometry(
+            scrollExtent: refreshIndicatorLayoutExtent,
+            paintOrigin: 0.0,
+            paintExtent: needPaintExtent,
+            maxPaintExtent: needPaintExtent,
+            layoutExtent: 0.0,
+          );
           break;
       }
     } else {

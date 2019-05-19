@@ -20,7 +20,7 @@ enum RefreshStatus { idle, canRefresh, refreshing, completed, failed }
 
 enum LoadStatus { idle, loading, noMore }
 
-enum RefreshStyle { Follow, UnFollow, Behind }
+enum RefreshStyle { Follow, UnFollow, Behind, Front }
 
 /*
     This is the most important component that provides drop-down refresh and up loading.
@@ -148,7 +148,9 @@ class SmartRefresherState extends State<SmartRefresher> {
       slivers.add(widget.footer);
     }
     return CustomScrollView(
-      physics: RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
+      physics: widget.header.refreshStyle == RefreshStyle.Front
+          ? RefreshClampPhysics(headerHeight: widget.header.height)
+          : RefreshBouncePhysics(),
       controller: scrollController,
       cacheExtent: widget.child.cacheExtent,
       key: widget.child.key,
@@ -181,17 +183,16 @@ class RefreshController {
       Curve curve: Curves.linear}) {
     assert(scrollController != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    if(headerMode?.value !=RefreshStatus.idle)return;
-    if(needDownAnimate){
-      scrollController.animateTo(-_header.triggerDistance, duration: duration, curve: curve);
-    }
-    else {
+    if (headerMode?.value != RefreshStatus.idle) return;
+    if (needDownAnimate) {
+      scrollController.animateTo(-_header.triggerDistance,
+          duration: duration, curve: curve);
+    } else {
       headerMode?.value = RefreshStatus.refreshing;
       // only afte the header has Layout,else it will generate a bouncing effect
-      SchedulerBinding.instance.addPostFrameCallback((_){
+      SchedulerBinding.instance.addPostFrameCallback((_) {
         scrollController.jumpTo(0.0);
       });
-
     }
   }
 
@@ -237,6 +238,4 @@ class RefreshController {
     headerMode = null;
     footerMode = null;
   }
-
-
 }

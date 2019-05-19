@@ -5,7 +5,6 @@
  */
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 class AppBarHeader extends StatefulWidget {
   @override
@@ -71,88 +70,6 @@ class _AppBarHeaderState extends State<AppBarHeader> {
                       "https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0c21b1ac3066ae4d354a3b2e0064c8be&auto=format&fit=crop&w=500&q=60",
                       fit: BoxFit.cover,
                     )),
-              ),
-              SliverStickyHeader(
-                header: Container(
-                  padding: EdgeInsets.only(
-                    left: 12.0,
-                    top: 4.0,
-                    right: 12.0,
-                    bottom: 4.0,
-                  ),
-                  color: Colors.white,
-                  child: Text(
-                    'Title0',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Container(
-                        height: 200.0,
-                        color: Colors.red,
-                      ),
-                      Container(
-                        height: 200.0,
-                        color: Colors.blue,
-                      ),
-                      Container(
-                        height: 200.0,
-                        color: Colors.red,
-                      ),
-                      Container(
-                        height: 200.0,
-                        color: Colors.blue,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SliverStickyHeader(
-                header: Container(
-                  padding: EdgeInsets.only(
-                    left: 12.0,
-                    top: 4.0,
-                    right: 12.0,
-                    bottom: 4.0,
-                  ),
-                  color: Colors.white,
-                  child: Text(
-                    'Title0',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Container(
-                        height: 200.0,
-                        color: Colors.red,
-                      ),
-                      Container(
-                        height: 200.0,
-                        color: Colors.blue,
-                      ),
-                      Container(
-                        height: 200.0,
-                        color: Colors.red,
-                      ),
-                      Container(
-                        height: 200.0,
-                        color: Colors.blue,
-                      ),
-                    ],
-                  ),
-                ),
               ),
               SliverList(
                   delegate: SliverChildListDelegate(buildList()))

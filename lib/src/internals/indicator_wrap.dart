@@ -78,6 +78,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   }
 
   double calculateScrollOffset(ScrollController controller) {
+    if(widget.refreshStyle==RefreshStyle.Front){
+      return widget.height-controller.position.extentBefore;
+    }
     return (floating ? widget.height : 0.0) - _scrollController.offset;
   }
 
