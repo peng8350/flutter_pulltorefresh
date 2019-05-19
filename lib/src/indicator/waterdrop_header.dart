@@ -11,7 +11,6 @@ import 'package:flutter/material.dart'
 import '../internals/indicator_wrap.dart';
 import 'package:flutter/cupertino.dart';
 import '../smart_refresher.dart';
-import '../internals/default_constants.dart';
 
 class WaterDropHeader extends RefreshIndicator {
   final Widget refresh;
@@ -28,7 +27,6 @@ class WaterDropHeader extends RefreshIndicator {
     Key key,
     this.refresh,
     this.complete,
-    double maxDragExtent:default_maxDragExtent,
     this.failed,
     this.waterDropColor: Colors.grey,
     this.idleIcon,
@@ -36,7 +34,6 @@ class WaterDropHeader extends RefreshIndicator {
   }) : super(
             key: key,
             triggerDistance: triggerDistance,
-            maxDragExtent:maxDragExtent,
             refreshStyle: RefreshStyle.UnFollow);
 
   @override

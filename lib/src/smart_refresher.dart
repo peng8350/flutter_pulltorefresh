@@ -148,7 +148,7 @@ class SmartRefresherState extends State<SmartRefresher> {
       slivers.add(widget.footer);
     }
     return CustomScrollView(
-      physics: RefreshScrollPhysics(header: widget.header,footer: widget.footer),
+      physics: RefreshScrollPhysics(enableOverScroll: widget.enableOverScroll),
       controller: scrollController,
       cacheExtent: widget.child.cacheExtent,
       key: widget.child.key,

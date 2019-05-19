@@ -6,7 +6,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
-import 'indicator_wrap.dart';
+import 'package:flutter/material.dart';
 
 /*
     this class  is copy from BouncingScrollPhysics,
@@ -14,19 +14,17 @@ import 'indicator_wrap.dart';
     Fixed the problem that child parts could not be dragged without data.
  */
 class RefreshScrollPhysics extends ScrollPhysics {
-  final RefreshIndicator header;
-  final LoadIndicator footer;
+  final bool enableOverScroll;
 
   /// Creates scroll physics that bounce back from the edge.
-  const RefreshScrollPhysics({ScrollPhysics parent, this.header, this.footer})
-      : assert(header != null),
-        assert(footer != null),
-        super(parent: parent);
+  const RefreshScrollPhysics(
+      {ScrollPhysics parent, this.enableOverScroll: true})
+      : super(parent: parent);
 
   @override
   RefreshScrollPhysics applyTo(ScrollPhysics ancestor) {
     return RefreshScrollPhysics(
-        parent: buildParent(ancestor), header: header, footer: footer);
+        parent: buildParent(ancestor), enableOverScroll: enableOverScroll);
   }
 
   /// The multiple applied to overscroll to make it appear that scrolling past
@@ -86,25 +84,23 @@ class RefreshScrollPhysics extends ScrollPhysics {
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
-    // if not ,it will not  springback when trigger overscroll
-    if ((position as ScrollPosition).activity is BallisticScrollActivity) {
-      return 0.0;
-    }
-    final double topEdgePos = position.minScrollExtent-header.maxDragExtent;
-    final double bottomEdgePos = position.maxScrollExtent+header.maxDragExtent;
-    if (value < position.pixels && position.pixels <= topEdgePos) // underscroll
-      return value - position.pixels;
-    if (value < topEdgePos && topEdgePos < position.pixels) {
-      // hit top edge
-      return value - topEdgePos;
-    }
-    if (bottomEdgePos <= position.pixels &&
-        position.pixels < value) // overscroll
-      return value - position.pixels;
+    if (!enableOverScroll) {
+      if (value < position.pixels &&
+          position.pixels <= position.minScrollExtent) // underscroll
+        return value - position.pixels;
+      if (value < position.minScrollExtent &&
+          position.minScrollExtent < position.pixels) {
+        // hit top edge
+        return value - position.minScrollExtent;
+      }
+      if (position.maxScrollExtent <= position.pixels &&
+          position.pixels < value) // overscroll
+        return value - position.pixels;
 
-    if (position.pixels < bottomEdgePos &&
-        bottomEdgePos < value) // hit bottom edge
-      return value - bottomEdgePos;
+      if (position.pixels < position.maxScrollExtent &&
+          position.maxScrollExtent < value) // hit bottom edge
+        return value - position.maxScrollExtent;
+    }
     return 0.0;
   }
 

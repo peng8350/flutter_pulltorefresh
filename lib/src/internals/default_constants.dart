@@ -23,8 +23,6 @@ const double default_headerExceed = 100.0;
 
 const double default_footerExceed = 100.0;
 
-const double default_maxDragExtent = 130.0;
-
 const bool default_AutoLoad = true;
 
 const bool default_enablePullDown = true;
