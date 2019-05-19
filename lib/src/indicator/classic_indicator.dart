@@ -27,12 +27,14 @@ class ClassicHeader extends RefreshIndicator {
   const ClassicHeader({
     Key key,
     RefreshStyle refreshStyle: default_refreshStyle,
-    this.textStyle: const TextStyle(color: const Color(0xff555555)),
+    double height: default_height,
     double triggerDistance: default_refresh_triggerDistance,
+    this.textStyle: const TextStyle(color: const Color(0xff555555)),
+
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
     this.completeText: 'Refresh complete',
-    double height: default_height,
+
     this.failedText: 'Refresh failed',
     this.idleText: 'Pull down to refresh',
     this.iconPos: IconPosition.left,

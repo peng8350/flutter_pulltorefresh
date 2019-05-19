@@ -65,9 +65,11 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       return;
     }
     final overscrollPast = calculateScrollOffset(_scrollController);
+    print(overscrollPast);
     if (overscrollPast < 0.0) {
       return;
     }
+  // 81 111 97 125 100
 
     if (refresher.widget.onOffsetChange != null) {
       refresher.widget.onOffsetChange(true, overscrollPast);
@@ -118,6 +120,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         floating = false;
         update();
         // make gesture release
+        if(widget.refreshStyle!=RefreshStyle.Front)
         (_scrollController.position as ScrollActivityDelegate).goIdle();
       });
     } else if (mode == RefreshStatus.refreshing) {

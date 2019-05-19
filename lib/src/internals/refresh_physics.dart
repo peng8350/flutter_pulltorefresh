@@ -142,20 +142,34 @@ class RefreshClampPhysics extends ScrollPhysics {
 
   @override
   RefreshClampPhysics applyTo(ScrollPhysics ancestor) {
-    return RefreshClampPhysics(parent: buildParent(ancestor),headerHeight: this.headerHeight);
+    return RefreshClampPhysics(
+        parent: buildParent(ancestor), headerHeight: this.headerHeight);
   }
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
-    if (value < position.pixels &&
-        position.pixels <= position.minScrollExtent) // underscroll
+    if ((position as ScrollPositionWithSingleContext).activity
+            is BallisticScrollActivity &&
+        value < headerHeight) {
+      (position as ScrollPositionWithSingleContext).setPixels(headerHeight);
+//      (position as ScrollPositionWithSingleContext).activity.resetActivity();
+
       return value - position.pixels;
+    }
+    if (value < position.pixels &&
+        position.pixels <= position.minScrollExtent) {
+      // underscroll
+
+      return value - position.pixels;
+    }
     if (position.maxScrollExtent <= position.pixels &&
         position.pixels < value) // overscroll
       return value - position.pixels;
     if (value < position.minScrollExtent &&
-        position.minScrollExtent < position.pixels) // hit top edge
+        position.minScrollExtent < position.pixels) {
+      // hit top edge{
       return value - position.minScrollExtent;
+    }
     if (position.pixels < position.maxScrollExtent &&
         position.maxScrollExtent < value) // hit bottom edge
       return value - position.maxScrollExtent;
@@ -166,6 +180,7 @@ class RefreshClampPhysics extends ScrollPhysics {
   Simulation createBallisticSimulation(
       ScrollMetrics position, double velocity) {
     final Tolerance tolerance = this.tolerance;
+
     if (position.extentBefore < headerHeight) {
       return ScrollSpringSimulation(
         spring,
@@ -175,15 +190,15 @@ class RefreshClampPhysics extends ScrollPhysics {
         tolerance: tolerance,
       );
     }
-    if (velocity.abs() < tolerance.velocity) return null;
+    if (velocity == 0.0) return null;
     if (velocity > 0.0 && position.pixels >= position.maxScrollExtent)
       return null;
     if (velocity < 0.0 && position.pixels <= position.minScrollExtent)
       return null;
     return ClampingScrollSimulation(
-      position: position.pixels,
-      velocity: velocity,
-      tolerance: tolerance,
-    );
+        position: position.pixels,
+        velocity: velocity,
+        tolerance: tolerance,
+     );
   }
 }

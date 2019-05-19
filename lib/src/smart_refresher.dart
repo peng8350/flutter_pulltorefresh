@@ -99,6 +99,11 @@ class SmartRefresherState extends State<SmartRefresher> {
       widget.controller.scrollController = scrollController;
     }
     widget.controller._header = widget.header;
+    if(widget.header.refreshStyle == RefreshStyle.Front){
+      SchedulerBinding.instance.addPostFrameCallback((_){
+        scrollController.jumpTo(widget.header.height);
+      });
+    }
     super.initState();
   }
 
