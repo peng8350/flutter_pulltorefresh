@@ -161,7 +161,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           enablePullUp: _enablePullDown,
           enablePullDown: _enablePullUp,
           controller: _refreshController,
-          header: ClassicHeader(refreshStyle: RefreshStyle.Front,),
+          header: ClassicHeader(refreshStyle: RefreshStyle.Front,triggerDistance: 60.0,height: 60.0,),
           footer: ClassicFooter(
             onClick: () {
               if (_refreshController.footerStatus == LoadStatus.idle)

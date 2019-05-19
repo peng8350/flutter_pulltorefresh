@@ -108,7 +108,7 @@ class _RenderSliverRefresh extends RenderSliver
     // If the new layoutExtent instructive changed, the SliverGeometry's
     // layoutExtent will take that value (on the next performLayout run). Shift
     // the scroll offset first so it doesn't make the scroll position suddenly jump.
-    if (layoutExtent != layoutExtentOffsetCompensation) {
+    if (layoutExtent != layoutExtentOffsetCompensation&&refreshStyle!=RefreshStyle.Front) {
       geometry = SliverGeometry(
         scrollOffsetCorrection: layoutExtent - layoutExtentOffsetCompensation,
       );
@@ -120,7 +120,7 @@ class _RenderSliverRefresh extends RenderSliver
       active = constraints.overlap < 0.0 || layoutExtent > 0.0;
     }
     else{
-      active = true;
+      active = constraints.scrollOffset<refreshIndicatorLayoutExtent || hasLayoutExtent;
     }
     final double overscrolledExtent = constraints.overlap.abs();
     if (refreshStyle == RefreshStyle.Behind) {
@@ -187,14 +187,14 @@ class _RenderSliverRefresh extends RenderSliver
           geometry = SliverGeometry(
             scrollExtent: refreshIndicatorLayoutExtent,
             paintOrigin: 0.0,
-            paintExtent: needPaintExtent,
-            maxPaintExtent: needPaintExtent,
+            paintExtent: refreshIndicatorLayoutExtent,
+            maxPaintExtent: refreshIndicatorLayoutExtent,
             layoutExtent: 0.0,
           );
           break;
       }
     } else {
-      geometry = SliverGeometry.zero;
+      geometry = refreshStyle==RefreshStyle.Front?SliverGeometry(scrollExtent: refreshIndicatorLayoutExtent):SliverGeometry.zero;
     }
   }
 
