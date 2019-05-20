@@ -66,7 +66,7 @@ class _MaterialRefreshHeaderState
         upperBound: 1.0,
         duration: Duration(milliseconds: 300));
     _positionFactor = _positionController
-        .drive(Tween<Offset>(begin: Offset(0.0, -40.0/widget.height), end: Offset(0.0, 1.0)));
+        .drive(Tween<Offset>(begin: Offset(0.0, -50.0/widget.height), end: Offset(0.0, 1.0)));
     super.initState();
   }
 

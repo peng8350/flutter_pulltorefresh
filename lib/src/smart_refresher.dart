@@ -154,7 +154,7 @@ class SmartRefresherState extends State<SmartRefresher> with TickerProviderState
     }
     return CustomScrollView(
       physics: widget.header.refreshStyle == RefreshStyle.Front
-          ? RefreshClampPhysics(headerHeight: widget.header.height,provider: this)
+          ? RefreshClampPhysics(headerHeight: widget.header.height)
           : RefreshBouncePhysics(),
       controller: scrollController,
       cacheExtent: widget.child.cacheExtent,
