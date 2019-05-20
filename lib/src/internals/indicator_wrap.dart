@@ -93,7 +93,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   // handle the  state change between canRefresh and idle canRefresh  before refreshing
   void handleDragMove(double offset) {
     if (floating) return;
-
     if (_scrollController.position.activity.velocity == 0.0) {
       if (offset >= widget.triggerDistance) {
         mode = RefreshStatus.canRefresh;
@@ -119,6 +118,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       endRefresh().then((_) {
         floating = false;
         update();
+        if(widget.refreshStyle==RefreshStyle.Front){
+          mode= RefreshStatus.idle;
+        }
         // make gesture release
         if (widget.refreshStyle != RefreshStyle.Front)
           (_scrollController.position as ScrollActivityDelegate).goIdle();
@@ -224,7 +226,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
 
   void _handleVisiable() {
     if (_enableLayout.value ||!widget.hideWhenNotFull) {
-      print("Qqq");
       _footerMode.addListener(handleModeChange);
       _scrollController.addListener(_handleOffsetChange);
     } else  {

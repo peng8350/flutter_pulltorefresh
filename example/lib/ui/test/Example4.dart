@@ -15,7 +15,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   ScrollController _scrollController ;
 
   void _getDatas() {
-    for (int i = 0; i < 18; i++) {
+    for (int i = 0; i < 4; i++) {
       data.add(Container(
         color: Colors.redAccent,
         child: Text('Data $i'),
@@ -47,9 +47,11 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
       color: Colors.white,
       child: SmartRefresher(
           enablePullUp: true ,
+          footer: ClassicFooter(hideWhenNotFull: false,),
           child: CustomScrollView(
             key: PageStorageKey("r"),
             controller: _scrollController,
+
             slivers: [
               SliverToBoxAdapter(
                 child: Container(),
@@ -67,61 +69,6 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
               ),
               SliverList(
                   delegate: SliverChildListDelegate([
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
                     Text('wewew'),
                     Text('wewew'),
                     Text('wewew'),

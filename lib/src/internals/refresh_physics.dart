@@ -61,7 +61,7 @@ class RefreshBouncePhysics extends ScrollPhysics {
             (overscrollPast - offset.abs()) / position.viewportDimension)
         : frictionFactor(overscrollPast / position.viewportDimension);
     final double direction = offset.sign;
-    return direction * _applyFriction(overscrollPast, offset.abs(), friction);
+    return direction * _applyFriction(overscrollPast, offset.abs(), friction)*0.7;
   }
 
   static double _applyFriction(
@@ -91,7 +91,7 @@ class RefreshBouncePhysics extends ScrollPhysics {
         spring: spring,
         position: position.pixels,
         velocity: velocity *
-            0.91, // TODO(abarth): We should move this constant closer to the drag end.
+            0.51, // TODO(abarth): We should move this constant closer to the drag end.
         leadingExtent: position.minScrollExtent,
         trailingExtent: position.maxScrollExtent,
         tolerance: tolerance,
@@ -204,6 +204,7 @@ class RefreshClampPhysics extends ScrollPhysics {
     return 0.0;
   }
 
+
   @override
   Simulation createBallisticSimulation(
       ScrollMetrics position, double velocity) {
@@ -213,7 +214,7 @@ class RefreshClampPhysics extends ScrollPhysics {
     if (position.extentBefore < headerHeight) {
       return ScrollSpringSimulation(
         spring,
-        position.pixels,
+        math.max(0.0, position.pixels),
         headerHeight,
         0.0,
         tolerance: tolerance,

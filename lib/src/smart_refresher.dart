@@ -190,13 +190,13 @@ class RefreshController {
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (headerMode?.value != RefreshStatus.idle) return;
     if (needDownAnimate) {
-      scrollController.animateTo(-_header.triggerDistance,
+      scrollController.animateTo(_header.refreshStyle==RefreshStyle.Front?_header.height-_header.triggerDistance:-_header.triggerDistance,
           duration: duration, curve: curve);
     } else {
       headerMode?.value = RefreshStatus.refreshing;
       // only afte the header has Layout,else it will generate a bouncing effect
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        scrollController.jumpTo(0.0);
+        scrollController.jumpTo(_header.refreshStyle==RefreshStyle.Front?_header.height:0.0);
       });
     }
   }
@@ -208,8 +208,14 @@ class RefreshController {
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (footerStatus == LoadStatus.idle) {
       if(_header.refreshStyle==RefreshStyle.Front){
-        // avoid trigger refresh together
-        footerMode.value = LoadStatus.loading;
+        if(scrollController.position.maxScrollExtent==0.0){
+          footerMode.value = LoadStatus.loading;
+        }
+        else
+        scrollController.animateTo(scrollController.position.maxScrollExtent,
+            duration: duration, curve: curve).whenComplete((){
+          footerMode.value = LoadStatus.loading;
+        });
       }
       else{
         scrollController.animateTo(scrollController.position.maxScrollExtent,
