@@ -158,7 +158,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       enablePullUp: _enablePullDown,
       enablePullDown: _enablePullUp,
       controller: _refreshController,
-      header: WaterDropMaterialHeader(color: Colors.white,distance: 200.0,),
+      header: WaterDropMaterialHeader(color: Colors.white,backgroundColor: Theme.of(context).primaryColor,distance: 150.0,),
       footer: ClassicFooter(
         hideWhenNotFull: false,
         onClick: () {
