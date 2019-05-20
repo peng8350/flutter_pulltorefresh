@@ -14,15 +14,25 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 * provide more refreshStyle: Behind,Follow,UnFollow
 
 
-## 指示器截图
+## ScreenShots
 
-|Classic Follow| Classic UnFollow |
-|:---:|:---:|
-|![](example/images/classical_follow.gif)|![](example/images/classical_unfollow.gif)|
+### Four RefreshStyle
+|Style| Follow | nFollow |
+|:---:|:---:|:---:|
+|art| ![](example/images/classical_follow.gif) | ![](example/images/classical_unfollow.gif) |
 
-| Behind | WaterDrop(QQ)|
-|:---:|:---:|
-|![](arts/screen1.gif)|![](example/images/warterdrop.gif)|
+|Style| Behind | Front |
+|:---:|:---:|:---:|
+|art| ![](arts/screen1.gif) | ![](example/images/material_classic.gif) |
+
+### Indicator
+
+|Style| Classical(Follow,UnFollow) | QQ WaterDrop |
+|:---:|:---:|:---:|
+|art| ![](example/images/classical_follow.gif) | ![](example/images/waterdrop.gif) |
+|Style| flutter RefreshIndicator | WaterDropMaterial(Front) |
+|:---:|:---:|:---:|
+|art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
 
 
 
@@ -32,7 +42,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.3
+     pull_to_refresh: ^1.3.5
 
 ```
 
@@ -86,27 +96,11 @@ void dispose(){
 ```
 
 
-
-
-## Custom
-1.In the first way, assuming that the indicator function you want to implement is not too complex, you can use CustomHeader or CustomFooter.
-using onOffsetChange callback in SmartRefresher to implements some simple animation.
-
-```
-   Widget buildHeader(BuildContext context,RefreshStatus mode){
-      .....
-   }
-
-   SmartRefresher(
-      ...
-      header: CustomHeader(builder:buildHeader)
-
-      ...
-   )
-
-```
-
-2.The second way is by integrating RefreshInditor or Load Indicator, for detailed reference [ClassicIndicator](lib/src/indicator/classic_indicator.dart)
+## More
+- [SmartRefresher,RefreshController](refresher_controller.md)
+- [Custom Indicator](custom_indicator.md)
+- [Inner Attribute Of Indicators](indicator_attribute.md)
+- [Update Log](CHANGELOG.md)
 
 ## Props Table
 
@@ -123,7 +117,6 @@ SmartRefresher:
 | onRefresh | will callback when the header indicator is getting refreshing   | () => Void | null | optional |
 | onLoad | will callback when the footer indicator is getting loading   | () => Void | null | optional |
 | onOffsetChange | callback while you dragging and outOfrange  | (bool,double) => Void | null | optional |
-| enableOverScroll |  the switch of Overscroll,When you use  RefreshIndicator(Material), you may have to shut down.    | bool | true | optional |
 | isNestWrapped | it will set true when SmartRefresher is wrapped by NestedScrollView  | bool | false | optional |
 
 
@@ -144,9 +137,9 @@ the reason may be SafeArea,the solution: wrap SmartRefresher in SafeArea
 Yes, as long as you set the node properties enableOverScroll = false, enablePullDown = false, it's OK to wrap a single RefreshIndicator outside, and
 [Example4](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart) has given an example in demo.
 
+## Thanks
 
-
-
+[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout)
 
 ## LICENSE
  

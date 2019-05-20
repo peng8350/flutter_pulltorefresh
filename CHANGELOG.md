@@ -121,3 +121,10 @@ Notice: This version of the code changes much, Api too
 * Add child key support
 * Fix Bug:Pull-down triggers need to be pulled down more distances to trigger
 * Add resetNoData to resume footer state to idle
+
+## 1.3.5
+* Add hideWhenNotFull bool to disable auto hide footer when  data not enough one page
+* Add one new RefreshStyle:Front(just like RefreshIndicator)
+* Fix a bug: When the head overflows the view area, there is no clipping operation
+* Add material header(two indicator for FrontStyle)
+* Remove enableOverScroll

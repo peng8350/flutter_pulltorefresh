@@ -31,13 +31,13 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   void _getDatas() {
     data.add(Row(children: <Widget>[
       FlatButton(onPressed: (){
-        _refreshController.requestRefresh(needDownAnimate: false);
+        _refreshController.requestRefresh();
       }, child: Text("请求刷新")),
       FlatButton(onPressed: (){
         _refreshController.requestLoading();
       }, child: Text("请求加载数据"))
     ],));
-    for (int i = 0; i < 14; i++) {
+    for (int i = 0; i < 3; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
@@ -158,7 +158,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       enablePullUp: _enablePullDown,
       enablePullDown: _enablePullUp,
       controller: _refreshController,
-      header: WaterDropMaterialHeader(color: Colors.white,backgroundColor: Theme.of(context).primaryColor,distance: 150.0,),
+      header: WaterDropMaterialHeader(distance: 100.0,),
       footer: ClassicFooter(
         hideWhenNotFull: false,
         onClick: () {

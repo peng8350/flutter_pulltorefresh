@@ -89,9 +89,7 @@ class Example1State extends State<Example1> {
               controller: _refreshController,
               enablePullDown: true,
               isNestWrapped: true,
-              header: ClassicHeader(
-                idleIcon: Container(),
-                idleText: "Load more...",
+              header: MaterialClassicHeader(
               ),
               enablePullUp: true,
 

@@ -74,7 +74,8 @@ class SmartRefresher extends StatefulWidget {
   }
 }
 
-class SmartRefresherState extends State<SmartRefresher> with TickerProviderStateMixin {
+class SmartRefresherState extends State<SmartRefresher>
+    with TickerProviderStateMixin {
   // listen the listen offset or on...
   ScrollController scrollController;
   // check the header own height
@@ -95,12 +96,17 @@ class SmartRefresherState extends State<SmartRefresher> with TickerProviderState
   void initState() {
     // TODO: implement initState
     if (!widget.isNestWrapped) {
-      scrollController = widget.child.controller ?? ScrollController();
+      scrollController = widget.child.controller ??
+          ScrollController(
+              initialScrollOffset:
+                  widget.header.refreshStyle != RefreshStyle.Front
+                      ? 0.0
+                      : widget.header.height);
       widget.controller.scrollController = scrollController;
     }
     widget.controller._header = widget.header;
-    if(widget.header.refreshStyle == RefreshStyle.Front){
-      SchedulerBinding.instance.addPostFrameCallback((_){
+    if (widget.header.refreshStyle == RefreshStyle.Front) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
         scrollController.jumpTo(widget.header.height);
       });
     }
@@ -183,22 +189,18 @@ class RefreshController {
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
   void requestRefresh(
-      {bool needDownAnimate: true,
+      {
       Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
     assert(scrollController != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (headerMode?.value != RefreshStatus.idle) return;
-    if (needDownAnimate) {
-      scrollController.animateTo(_header.refreshStyle==RefreshStyle.Front?_header.height-_header.triggerDistance:-_header.triggerDistance,
-          duration: duration, curve: curve);
-    } else {
-      headerMode?.value = RefreshStatus.refreshing;
-      // only afte the header has Layout,else it will generate a bouncing effect
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        scrollController.jumpTo(_header.refreshStyle==RefreshStyle.Front?_header.height:0.0);
-      });
-    }
+    scrollController.animateTo(
+        _header.refreshStyle == RefreshStyle.Front
+            ? 0.0
+            : -_header.triggerDistance,
+        duration: duration,
+        curve: curve);
   }
 
   void requestLoading(
@@ -207,19 +209,21 @@ class RefreshController {
     assert(scrollController != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (footerStatus == LoadStatus.idle) {
-      if(_header.refreshStyle==RefreshStyle.Front){
-        if(scrollController.position.maxScrollExtent==0.0){
+      if (_header.refreshStyle == RefreshStyle.Front) {
+        if (scrollController.position.maxScrollExtent - _header.height < 0.0) {
           footerMode.value = LoadStatus.loading;
-        }
-        else
-        scrollController.animateTo(scrollController.position.maxScrollExtent,
-            duration: duration, curve: curve).whenComplete((){
-          footerMode.value = LoadStatus.loading;
-        });
-      }
-      else{
-        scrollController.animateTo(scrollController.position.maxScrollExtent,
-            duration: duration, curve: curve).whenComplete((){
+        } else
+          scrollController
+              .animateTo(scrollController.position.maxScrollExtent,
+                  duration: duration, curve: curve)
+              .whenComplete(() {
+            footerMode.value = LoadStatus.loading;
+          });
+      } else {
+        scrollController
+            .animateTo(scrollController.position.maxScrollExtent,
+                duration: duration, curve: curve)
+            .whenComplete(() {
           footerMode.value = LoadStatus.loading;
         });
       }

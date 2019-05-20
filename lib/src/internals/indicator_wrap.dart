@@ -126,9 +126,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           (_scrollController.position as ScrollActivityDelegate).goIdle();
       });
     } else if (mode == RefreshStatus.refreshing) {
-      floating = true;
-      update();
-      if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
+      if(refresher.widget.onRefresh!=null)refresher.widget.onRefresh();
     }
   }
 
