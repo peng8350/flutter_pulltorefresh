@@ -154,46 +154,41 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(color: Colors.red,height: 50.0,),
-        Expanded(child: SmartRefresher(
-          enablePullUp: _enablePullDown,
-          enablePullDown: _enablePullUp,
-          controller: _refreshController,
-          header: MaterialRefreshHeader(),
-          footer: ClassicFooter(
-            hideWhenNotFull: false,
-            onClick: () {
-              if (_refreshController.footerStatus == LoadStatus.idle)
-                _refreshController.requestLoading();
-            },
-          ),
-          onRefresh: () {
-            print("onRefresh");
-            Future.delayed(const Duration(milliseconds: 2009)).then((val) {
-              _refreshController.refreshFailed();
-            });
-          },
-          onLoading: () {
-            print("onload");
-            Future.delayed(const Duration(milliseconds: 2009)).then((val) {
-              if(mounted)
-                setState(() {});
-              _refreshController.loadComplete();
-            });
-          },
-          child: ListView.builder(
-            key: PageStorageKey("e"),
-            controller: _scrollController,
-            itemExtent: 100.0,
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              return data[index];
-            },
-          ),
-        ))
-      ],
+    return SmartRefresher(
+      enablePullUp: _enablePullDown,
+      enablePullDown: _enablePullUp,
+      controller: _refreshController,
+      header: WaterDropMaterialHeader(color: Colors.white,distance: 200.0,),
+      footer: ClassicFooter(
+        hideWhenNotFull: false,
+        onClick: () {
+          if (_refreshController.footerStatus == LoadStatus.idle)
+            _refreshController.requestLoading();
+        },
+      ),
+      onRefresh: () {
+        print("onRefresh");
+        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
+          _refreshController.refreshFailed();
+        });
+      },
+      onLoading: () {
+        print("onload");
+        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
+          if(mounted)
+            setState(() {});
+          _refreshController.loadComplete();
+        });
+      },
+      child: ListView.builder(
+        key: PageStorageKey("e"),
+        controller: _scrollController,
+        itemExtent: 100.0,
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          return data[index];
+        },
+      ),
     );
   }
 }

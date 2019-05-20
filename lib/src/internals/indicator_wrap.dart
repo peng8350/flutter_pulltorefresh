@@ -128,9 +128,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     } else if (mode == RefreshStatus.refreshing) {
       floating = true;
       update();
-      readyToRefresh().then((_) {
-        if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
-      });
+      if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
     }
   }
 
