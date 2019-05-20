@@ -63,7 +63,7 @@ initState(){
 void _onRefresh(){
 
    /*.  after the data return,
-        use _refreshController.refreshComplete() or refreshFailed() to end refreshing
+        use _refreshController.refreshCompleted() or refreshFailed() to end refreshing
    */
 }
 
