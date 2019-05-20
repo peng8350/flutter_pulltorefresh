@@ -136,42 +136,44 @@ class RefreshBouncePhysics extends ScrollPhysics {
 class RefreshClampPhysics extends ScrollPhysics {
   final double headerHeight;
 
+  final TickerProvider provider;
+
   /// Creates scroll physics that bounce back from the edge.
-  const RefreshClampPhysics({ScrollPhysics parent, this.headerHeight})
+  const RefreshClampPhysics({ScrollPhysics parent, this.headerHeight,this.provider})
       : super(parent: parent);
 
   @override
   RefreshClampPhysics applyTo(ScrollPhysics ancestor) {
     return RefreshClampPhysics(
-        parent: buildParent(ancestor), headerHeight: this.headerHeight);
+        parent: buildParent(ancestor), headerHeight: this.headerHeight,provider: this.provider);
+  }
+
+  @override
+  bool shouldAcceptUserOffset(ScrollMetrics position) {
+    // TODO: implement shouldAcceptUserOffset
+    return true;
+  }
+
+  @override
+  double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
+    // TODO: implement applyPhysicsToUserOffset
+    if (position.extentBefore <= headerHeight && offset > 0.0) {
+      return offset*0.3;
+    }
+    return super.applyPhysicsToUserOffset(position, offset);
   }
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
-    if ((position as ScrollPositionWithSingleContext).activity
-            is BallisticScrollActivity &&
-        value < headerHeight) {
-      (position as ScrollPositionWithSingleContext).setPixels(headerHeight);
-//      (position as ScrollPositionWithSingleContext).activity.resetActivity();
-
+    final ScrollPositionWithSingleContext scrollPosition =
+        position as ScrollPositionWithSingleContext;
+    if (value < position.pixels && position.pixels <= position.minScrollExtent) // underscroll
       return value - position.pixels;
-    }
-    if (value < position.pixels &&
-        position.pixels <= position.minScrollExtent) {
-      // underscroll
-
+    if (position.maxScrollExtent <= position.pixels && position.pixels < value) // overscroll
       return value - position.pixels;
-    }
-    if (position.maxScrollExtent <= position.pixels &&
-        position.pixels < value) // overscroll
-      return value - position.pixels;
-    if (value < position.minScrollExtent &&
-        position.minScrollExtent < position.pixels) {
-      // hit top edge{
+    if (value < position.minScrollExtent && position.minScrollExtent < position.pixels) // hit top edge
       return value - position.minScrollExtent;
-    }
-    if (position.pixels < position.maxScrollExtent &&
-        position.maxScrollExtent < value) // hit bottom edge
+    if (position.pixels < position.maxScrollExtent && position.maxScrollExtent < value) // hit bottom edge
       return value - position.maxScrollExtent;
     return 0.0;
   }
@@ -180,7 +182,6 @@ class RefreshClampPhysics extends ScrollPhysics {
   Simulation createBallisticSimulation(
       ScrollMetrics position, double velocity) {
     final Tolerance tolerance = this.tolerance;
-
     if (position.extentBefore < headerHeight) {
       return ScrollSpringSimulation(
         spring,
@@ -190,15 +191,10 @@ class RefreshClampPhysics extends ScrollPhysics {
         tolerance: tolerance,
       );
     }
-    if (velocity == 0.0) return null;
-    if (velocity > 0.0 && position.pixels >= position.maxScrollExtent)
-      return null;
-    if (velocity < 0.0 && position.pixels <= position.minScrollExtent)
-      return null;
     return ClampingScrollSimulation(
-        position: position.pixels,
-        velocity: velocity,
-        tolerance: tolerance,
-     );
+      position: position.pixels,
+      velocity: velocity,
+      tolerance: tolerance,
+    );
   }
 }

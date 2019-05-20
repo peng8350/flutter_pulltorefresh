@@ -74,7 +74,7 @@ class SmartRefresher extends StatefulWidget {
   }
 }
 
-class SmartRefresherState extends State<SmartRefresher> {
+class SmartRefresherState extends State<SmartRefresher> with TickerProviderStateMixin {
   // listen the listen offset or on...
   ScrollController scrollController;
   // check the header own height
@@ -154,7 +154,7 @@ class SmartRefresherState extends State<SmartRefresher> {
     }
     return CustomScrollView(
       physics: widget.header.refreshStyle == RefreshStyle.Front
-          ? RefreshClampPhysics(headerHeight: widget.header.height)
+          ? RefreshClampPhysics(headerHeight: widget.header.height,provider: this)
           : RefreshBouncePhysics(),
       controller: scrollController,
       cacheExtent: widget.child.cacheExtent,
@@ -207,8 +207,16 @@ class RefreshController {
     assert(scrollController != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (footerStatus == LoadStatus.idle) {
-      scrollController.animateTo(scrollController.position.maxScrollExtent,
-          duration: duration, curve: curve);
+      if(_header.refreshStyle==RefreshStyle.Front){
+        // avoid trigger refresh together
+        footerMode.value = LoadStatus.loading;
+      }
+      else{
+        scrollController.animateTo(scrollController.position.maxScrollExtent,
+            duration: duration, curve: curve).whenComplete((){
+          footerMode.value = LoadStatus.loading;
+        });
+      }
     }
   }
 

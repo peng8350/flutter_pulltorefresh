@@ -163,6 +163,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           controller: _refreshController,
           header: MaterialRefreshHeader(),
           footer: ClassicFooter(
+            hideWhenNotFull: false,
             onClick: () {
               if (_refreshController.footerStatus == LoadStatus.idle)
                 _refreshController.requestLoading();
@@ -175,6 +176,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
             });
           },
           onLoading: () {
+            print("onload");
             Future.delayed(const Duration(milliseconds: 2009)).then((val) {
               if(mounted)
                 setState(() {});

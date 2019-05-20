@@ -45,9 +45,8 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
 //    )
     return Container(
       color: Colors.white,
-      child: RefreshIndicator(child: SmartRefresher(
+      child: SmartRefresher(
           enablePullUp: true ,
-          enablePullDown: false,
           child: CustomScrollView(
             key: PageStorageKey("r"),
             controller: _scrollController,
@@ -131,11 +130,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
                   ]))
             ],
           ),
-          controller: _refreshController), onRefresh: (){
-        return Future.delayed(Duration(milliseconds: 3000)).then((_){
-          return Future.value(true);
-        });
-      }),
+          controller: _refreshController),
     );
   }
 }

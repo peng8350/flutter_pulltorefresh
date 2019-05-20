@@ -48,11 +48,13 @@ class CustomFooter extends LoadIndicator {
     Key key,
     @required this.builder,
     bool autoLoad: true,
+    bool hideWhenNotFull: true,
     Function onClick,
     double triggerDistance: default_load_triggerDistance,
   }) : super(
             key: key,
             autoLoad: autoLoad,
+            hideWhenNotFull: hideWhenNotFull,
             triggerDistance: triggerDistance,
             onClick: onClick);
 

@@ -35,10 +35,13 @@ abstract class LoadIndicator extends Indicator {
 
   final Function onClick;
 
+  final bool hideWhenNotFull;
+
   const LoadIndicator(
       {Key key,
       double triggerDistance: 15.0,
       this.autoLoad: true,
+      this.hideWhenNotFull: true,
       this.onClick})
       : super(key: key, triggerDistance: triggerDistance);
 }
@@ -65,12 +68,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       return;
     }
     final overscrollPast = calculateScrollOffset(_scrollController);
-    print(overscrollPast);
     if (overscrollPast < 0.0) {
       return;
     }
-  // 81 111 97 125 100
-
     if (refresher.widget.onOffsetChange != null) {
       refresher.widget.onOffsetChange(true, overscrollPast);
     }
@@ -80,8 +80,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   }
 
   double calculateScrollOffset(ScrollController controller) {
-    if(widget.refreshStyle==RefreshStyle.Front){
-      return widget.height-controller.position.extentBefore;
+    if (widget.refreshStyle == RefreshStyle.Front) {
+      return widget.height - controller.position.extentBefore;
     }
     return (floating ? widget.height : 0.0) - _scrollController.offset;
   }
@@ -120,8 +120,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         floating = false;
         update();
         // make gesture release
-        if(widget.refreshStyle!=RefreshStyle.Front)
-        (_scrollController.position as ScrollActivityDelegate).goIdle();
+        if (widget.refreshStyle != RefreshStyle.Front)
+          (_scrollController.position as ScrollActivityDelegate).goIdle();
       });
     } else if (mode == RefreshStatus.refreshing) {
       floating = true;
@@ -223,10 +223,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   }
 
   void _handleVisiable() {
-    if (_enableLayout.value) {
+    if (_enableLayout.value ||!widget.hideWhenNotFull) {
+      print("Qqq");
       _footerMode.addListener(handleModeChange);
       _scrollController.addListener(_handleOffsetChange);
-    } else {
+    } else  {
       _footerMode.removeListener(handleModeChange);
       _scrollController.removeListener(_handleOffsetChange);
     }
@@ -255,7 +256,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
     if (!mounted) {
       return;
     }
-
     update();
     if (mode == LoadStatus.loading) {
       if (refresher.widget.onLoading != null) {
@@ -265,7 +265,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   }
 
   void handleDragMove() {
-    if (_scrollController.position.extentAfter <= widget.triggerDistance &&
+    if (_scrollController.position.userScrollDirection.index==2&&_scrollController.position.extentAfter <= widget.triggerDistance &&
         widget.autoLoad &&
         mode == LoadStatus.idle) mode = LoadStatus.loading;
   }
@@ -309,6 +309,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
     // TODO: implement build
     return SliverLoading(
         enableLayout: _enableLayout,
+        hideWhenNotFull: widget.hideWhenNotFull,
         child: GestureDetector(
           onTap: () {
             if (widget.onClick != null) {

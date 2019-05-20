@@ -150,6 +150,7 @@ class ClassicFooter extends LoadIndicator {
     Function onClick,
     bool autoLoad: default_AutoLoad,
     double triggerDistance: default_load_triggerDistance,
+    bool hideWhenNotFull:true,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
@@ -170,6 +171,7 @@ class ClassicFooter extends LoadIndicator {
             key: key,
             triggerDistance: triggerDistance,
             onClick: onClick,
+            hideWhenNotFull:hideWhenNotFull,
             autoLoad: autoLoad);
 
   @override
