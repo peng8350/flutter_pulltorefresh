@@ -13,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 class SliverRefresh extends SingleChildRenderObjectWidget {
   const SliverRefresh({
     Key key,
+    this.paintOffsetY,
     this.refreshIndicatorLayoutExtent = 0.0,
     this.floating = false,
     Widget child,
@@ -33,11 +34,14 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
 
   final RefreshStyle refreshStyle;
 
+  final double paintOffsetY;
+
   @override
   _RenderSliverRefresh createRenderObject(BuildContext context) {
     return _RenderSliverRefresh(
       refreshIndicatorExtent: refreshIndicatorLayoutExtent,
       hasLayoutExtent: floating,
+      paintOffsetY: paintOffsetY,
       refreshStyle: refreshStyle,
     );
   }
@@ -47,7 +51,8 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
       BuildContext context, covariant _RenderSliverRefresh renderObject) {
     renderObject
       ..refreshIndicatorLayoutExtent = refreshIndicatorLayoutExtent
-      ..hasLayoutExtent = floating;
+      ..hasLayoutExtent = floating
+      ..paintOffsetY = paintOffsetY;
   }
 }
 
@@ -57,6 +62,7 @@ class _RenderSliverRefresh extends RenderSliver
       {@required double refreshIndicatorExtent,
       @required bool hasLayoutExtent,
       RenderBox child,
+        this.paintOffsetY,
       this.refreshStyle})
       : assert(refreshIndicatorExtent != null),
         assert(refreshIndicatorExtent >= 0.0),
@@ -71,6 +77,7 @@ class _RenderSliverRefresh extends RenderSliver
   // resting state when in the refreshing mode.
   double get refreshIndicatorLayoutExtent => _refreshIndicatorExtent;
   double _refreshIndicatorExtent;
+  double paintOffsetY;
   set refreshIndicatorLayoutExtent(double value) {
     assert(value != null);
     assert(value >= 0.0);
@@ -189,6 +196,7 @@ class _RenderSliverRefresh extends RenderSliver
         case RefreshStyle.Front:
           geometry = SliverGeometry(
             scrollExtent: refreshIndicatorLayoutExtent,
+            paintOrigin: 0.0,
             paintExtent: 0.01,
             maxPaintExtent: 0.01,
             hasVisualOverflow: true,
@@ -205,7 +213,7 @@ class _RenderSliverRefresh extends RenderSliver
 
   @override
   void paint(PaintingContext paintContext, Offset offset) {
-    paintContext.paintChild(child, offset);
+    paintContext.paintChild(child, Offset(offset.dx,offset.dy+paintOffsetY));
   }
 
   @override

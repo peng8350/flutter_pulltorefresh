@@ -38,11 +38,11 @@ TabController _tabController;
     return MaterialApp(
       home:Scaffold(
         body: SmartRefresher(
-          header: WaterDropMaterialHeader(backgroundColor: Colors.pink,),
+          header: WaterDropMaterialHeader(backgroundColor: Colors.pink,offset: 74.0,),
           child: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
-                forceElevated: true,
+                forceElevated: false,
                 leading: Icon(Icons.add),
                 backgroundColor: Colors.pink,
                 title: Text("哔哩哔哩"),

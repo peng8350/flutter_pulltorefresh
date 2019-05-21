@@ -22,14 +22,16 @@ class MaterialClassicHeader extends RefreshIndicator {
     Key key,
     this.semanticsLabel,
     this.semanticsValue,
-    this.color:Colors.white,
+    double offset,
+    this.color: Colors.white,
     this.distance: 60.0,
     this.backgroundColor,
   }) : super(
-      key: key,
-      refreshStyle: RefreshStyle.Front,
-      height: 100.0,
-      triggerDistance: 70.0);
+            key: key,
+            refreshStyle: RefreshStyle.Front,
+            height: 100.0,
+            offset: offset,
+            triggerDistance: 70.0);
 
   @override
   State<StatefulWidget> createState() {
@@ -143,17 +145,19 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
   const WaterDropMaterialHeader({
     Key key,
     String semanticsLabel,
-    double distance:120.0,
+    double distance: 120.0,
+    double offset: 0.0,
     String semanticsValue,
-    Color color:Colors.white,
-    Color backgroundColor:Colors.blueAccent,
+    Color color: Colors.white,
+    Color backgroundColor: Colors.blueAccent,
   }) : super(
-      key: key,
-      color: color,
-      distance: distance,
-      backgroundColor: backgroundColor,
-      semanticsValue: semanticsValue,
-      semanticsLabel: semanticsLabel);
+            key: key,
+            offset: offset,
+            color: color,
+            distance: distance,
+            backgroundColor: backgroundColor,
+            semanticsValue: semanticsValue,
+            semanticsLabel: semanticsLabel);
 
   @override
   State<StatefulWidget> createState() {
@@ -200,7 +204,7 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
 
     return _positionController
         .animateTo(1.0,
-        curve: Curves.bounceOut, duration: Duration(milliseconds: 550))
+            curve: Curves.bounceOut, duration: Duration(milliseconds: 550))
         .then((_) {
       _showWater = false;
     });
@@ -246,9 +250,9 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
           child: super.buildContent(context, mode),
           painter: _showWater
               ? _WaterPainter(
-              ratio: widget.distance / widget.height,
-              color: widget.backgroundColor,
-              offset: _positionFactor.value.dy)
+                  ratio: widget.distance / widget.height,
+                  color: widget.backgroundColor,
+                  offset: _positionFactor.value.dy)
               : null,
         )
       ],
@@ -269,7 +273,7 @@ class _WaterPainter extends CustomPainter {
     final Path path = Path();
     path.moveTo(size.width / 2 - 20.0, offset * 100.0 + 20.0);
     path.conicTo(size.width / 2, offset * 100.0 - 70.0 * (ratio - offset),
-        size.width / 2 + 20.0, offset * 100.0 + 20.0, 10.0*(ratio-offset));
+        size.width / 2 + 20.0, offset * 100.0 + 20.0, 10.0 * (ratio - offset));
     canvas.drawPath(path, paint);
   }
 
