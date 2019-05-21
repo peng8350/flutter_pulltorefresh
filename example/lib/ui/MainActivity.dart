@@ -65,7 +65,6 @@ class _MainActivityState extends State<MainActivity>
     // TODO: implement build
     return ResideMenu.scafford(
       controller: _menuController,
-      enableScale: false,
 
       child: Scaffold(
         appBar: AppBar(
@@ -74,7 +73,9 @@ class _MainActivityState extends State<MainActivity>
           title: Text(_tabIndex == 0
               ? "指示器界面"
               : _tabIndex == 1 ? "测试界面" : _tabIndex == 2 ? "样例界面" : "App界面"),
-          backgroundColor: Colors.greenAccent,
+          leading: GestureDetector(child: Icon(Icons.menu),onTap: (){
+            _menuController.openMenu(true);
+          },),
           bottom: _tabIndex==2?TabBar(isScrollable: true,
             tabs: [
               Tab(child: Text("超大数据量性能测试")),

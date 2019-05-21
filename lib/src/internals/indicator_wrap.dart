@@ -28,7 +28,7 @@ abstract class RefreshIndicator extends Indicator {
       {this.height: default_height,
       Key key,
       this.offset: 0.0,
-      double triggerDistance: 100.0,
+      double triggerDistance: default_refresh_triggerDistance,
       this.refreshStyle: RefreshStyle.Follow})
       : super(key: key, triggerDistance: triggerDistance);
 }

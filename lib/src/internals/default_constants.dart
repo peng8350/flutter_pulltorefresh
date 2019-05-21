@@ -13,7 +13,7 @@ typedef Widget FooterBuilder(BuildContext context, LoadStatus mode);
 
 const int default_completeDuration = 800;
 
-const double default_refresh_triggerDistance = 100.0;
+const double default_refresh_triggerDistance = 80.0;
 
 const double default_load_triggerDistance = 15.0;
 

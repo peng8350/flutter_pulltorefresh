@@ -22,20 +22,21 @@ class MaterialClassicHeader extends RefreshIndicator {
     Key key,
     this.semanticsLabel,
     this.semanticsValue,
-    double offset,
+    double offset:0.0,
     this.color: Colors.white,
-    this.distance: 60.0,
+    this.distance: 50.0,
     this.backgroundColor,
   }) : super(
             key: key,
             refreshStyle: RefreshStyle.Front,
             height: 100.0,
             offset: offset,
-            triggerDistance: 70.0);
+            );
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
+
     return _MaterialClassicHeaderState();
   }
 }
@@ -67,7 +68,7 @@ class _MaterialClassicHeaderState
         upperBound: 1.0,
         duration: Duration(milliseconds: 300));
     _positionFactor = _positionController.drive(Tween<Offset>(
-        begin: Offset(0.0, -50.0 / widget.height), end: Offset(0.0, 1.0)));
+        begin: Offset(0.0, -40.0 / widget.height), end: Offset(0.0, 1.0)));
     super.initState();
   }
 

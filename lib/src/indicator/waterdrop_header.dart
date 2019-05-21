@@ -30,9 +30,10 @@ class WaterDropHeader extends RefreshIndicator {
     this.failed,
     this.waterDropColor: Colors.grey,
     this.idleIcon,
-    double triggerDistance: 110.0,
+    double triggerDistance: 100.0,
   }) : super(
             key: key,
+
             triggerDistance: triggerDistance,
             refreshStyle: RefreshStyle.UnFollow);
 

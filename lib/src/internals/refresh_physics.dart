@@ -160,17 +160,17 @@ class RefreshClampPhysics extends ScrollPhysics {
     position as ScrollPosition;
     if (position.extentBefore < headerHeight ) {
 
-      final double newPixels = position.pixels-offset*0.3;
+      final double newPixels = position.pixels-offset*0.4;
 
       if(scrollPosition.userScrollDirection.index==2){
         if(newPixels>headerHeight){
           return position.pixels-headerHeight;
         }
         else{
-          return offset*0.3;
+          return offset*0.4;
         }
       }
-      return offset*0.3;
+      return offset*0.4;
     }
     return super.applyPhysicsToUserOffset(position, offset);
   }
