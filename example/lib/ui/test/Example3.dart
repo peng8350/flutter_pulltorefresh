@@ -37,7 +37,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         _refreshController.requestLoading();
       }, child: Text("请求加载数据"))
     ],));
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 14; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
@@ -158,7 +158,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       enablePullUp: _enablePullDown,
       enablePullDown: _enablePullUp,
       controller: _refreshController,
-      header: MaterialClassicHeader(distance: 50.0,backgroundColor: Colors.greenAccent,),
+      header: WaterDropMaterialHeader(distance: 50.0,backgroundColor: Colors.greenAccent,),
       footer: ClassicFooter(
         hideWhenNotFull: false,
         onClick: () {

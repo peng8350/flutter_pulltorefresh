@@ -30,7 +30,9 @@ you will find that Icon will be suspended in the attempt area for reasons I have
 * RefreshStyle. Front is temporarily incompatible due to design problems. Try using CustomScrollView to see if it can be implemented.
 * ScrollController need to be placed in NestedScrollView,there is not work just placed in "child"。
 * How to get the inner scrollController? by using refreshController.scrollController get the inner
-
+* The following situation (a bit difficult to describe):  pull down and then quickly pull up will have a rebound effect or pull down a little distance back and forth, moving the external ScrollController rather than the internal ScrollController, how to solve this situation?
+    First of all, let's say that even if you don't use my library, using listView as a body is a problem. And I'm not sure if it's a Bug. I can only fix this problem by modifying the source code inside nested scrollview. I'm going to fix it by modifying the source code inside nested scrollview.
+    Modify the applyOffset method in _NestedScrollCoordinator to determine which ScrollPosition to mobilize. See the modified [NestedscrollView] (example/lib/other/fix_nested scrollview.dart)
 
 ## CustomScrollView
 * For UnFollow refresh style, when you slivers first element with Sliver Appbar, Sliver Rheader, there will be a very strange phenomenon, do not know how to describe, that is,

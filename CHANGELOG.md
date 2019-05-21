@@ -128,3 +128,9 @@ Notice: This version of the code changes much, Api too
 * Fix a bug: When the head overflows the view area, there is no clipping operation
 * Add material header(two indicator for FrontStyle)
 * Remove enableOverScroll
+
+## 1.3.6
+* Fix NestedScrollView issue in 1.3.5
+* decrease default triggerDistance from 100.0 to 80.0
+* improve dragging scrolling speed of Front Style
+* Add offset attr in Front Style

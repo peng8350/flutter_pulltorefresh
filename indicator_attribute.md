@@ -36,4 +36,4 @@
 ## MaterialClassicHeader,WaterDropMaterialHeader
 这个内部实现是拿flutter RefreshIndicator内部的东西来实现的，所以它里面很多属性意思是和它一样的，所以我就不列举出来
 * double distance:当准备触发刷新时,指示器要放在距离顶部多少个距离,注意这个距离不能超过100.0
-
+* double offset:顶部空缺的距离,也可以理解为marginTop

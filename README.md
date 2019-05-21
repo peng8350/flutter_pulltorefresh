@@ -17,7 +17,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ## ScreenShots
 
 ### Four RefreshStyle
-|Style| Follow | nFollow |
+|Style| Follow | UnFollow |
 |:---:|:---:|:---:|
 |art| ![](example/images/classical_follow.gif) | ![](example/images/classical_unfollow.gif) |
 
@@ -43,7 +43,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.5
+     pull_to_refresh: ^1.3.6
 
 ```
 
@@ -58,7 +58,14 @@ initState(){
     super.initState();
     _refreshController = RefreshController();
     // if you need refreshing when init
-   // _refreshController.requestRefresh();
+   /*
+
+     SchedulerBinding.instance.addPostFrameCallback((_) {
+         _refreshController.requestRefresh();
+        });
+
+  */
+
 }
 
 void _onRefresh(){
@@ -79,7 +86,7 @@ build(){
 SmartRefresher(
       enablePullDown: true,
       enablePullUp: true,
-      header: WaterDropHeader(),
+      header: defaultTargetPlatform == TargetPlatform.iOS?WaterDropHeader():WaterDropMaterialHeader(),
       controller: _refreshController,
       onRefresh: _onRefresh,
       onLoading: _onLoading,
@@ -120,9 +127,6 @@ internally via PrimaryScrollController. of (context) To get scrollController, sc
 the reason may be SafeArea,the solution: wrap SmartRefresher in SafeArea
 
 
-* <h3>Does it support simple RefreshIndicator (material) + pull up loading and no elastic refresh combination?<br></h3>
-Yes, as long as you set the node properties enableOverScroll = false, enablePullDown = false, it's OK to wrap a single RefreshIndicator outside, and
-[Example4](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/Example3.dart) has given an example in demo.
 
 ## Thanks
 

@@ -23,7 +23,9 @@
 * 由于设计上的问题,RefreshStyle.Front暂时不能兼容,尝试去使用CustomScrollView试试能否实现。
 * ScrollController要放在NestedScrollView里,放在child里是没作用的。
 * 如何去获取内部的scrollController?通过refreshController.scrollController获取
-
+* 如下情况(有点难描述):越界准备下拉然后快速上拉这时会有一种反弹的效果或者下拉一点距离后往回拖动,移动的是外部ScrollController而不是内部的ScrollController,这种情况怎么解决呢?
+首先,说明一点,即便你没有用我的库,单纯用listView作为body也是会有这种问题的。而且我并不确定这是不是一个Bug,只能通过修改nestedscrollview内部的源代码来修正这个问题,我是通过
+修改_NestedScrollCoordinator里的applyOffset方法来决定调动哪个ScrollPosition。详见修改好的[NestedscrollView](example/lib/other/fix_nestedscrollview.dart)
 
 ## CustomScrollView
 * 对于UnFollow刷新风格,当你slivers第一个元素带有SliverAppbar,Sliverheader时,会出现很奇怪的现象,不知道怎么描述,就是SliverAppBar位置会随着指示器位置的变化而变化。对于这种情况,你可以尝试在slivers第一个元素追加SliverToBoxAdapter。

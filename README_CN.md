@@ -38,7 +38,7 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.5
+     pull_to_refresh: ^1.3.6
 
 ```
 
@@ -53,7 +53,13 @@ initState(){
     super.initState();
     _refreshController = RefreshController();
     // 如果你需要开始就请求一次刷新
-   // _refreshController.requestRefresh();
+      /*
+
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+            _refreshController.requestRefresh();
+           });
+
+     */
 }
 
 void _onRefresh(){
@@ -74,7 +80,7 @@ build(){
 SmartRefresher(
       enablePullDown: true,
       enablePullUp: true,
-      header: WaterDropHeader(),
+      header: defaultTargetPlatform == TargetPlatform.iOS?WaterDropHeader():WaterDropMaterialHeader(),
       controller: _refreshController,
       onRefresh: _onRefresh,
       onLoading: _onLoading,
@@ -108,6 +114,7 @@ void dispose(){
 
 * <h3>为什么使用CuperNavigationBar后(不只这一个情况),顶部或者尾部指示器有空白的地方?</h3>
 很大可能是因为SafeArea,。解决方法一般是在SmartRefresher外围套用SafeArea
+
 
 
 ## 感谢

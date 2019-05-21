@@ -76,6 +76,7 @@ class _MainActivityState extends State<MainActivity>
           leading: GestureDetector(child: Icon(Icons.menu),onTap: (){
             _menuController.openMenu(true);
           },),
+          backgroundColor: Colors.greenAccent,
           bottom: _tabIndex==2?TabBar(isScrollable: true,
             tabs: [
               Tab(child: Text("超大数据量性能测试")),

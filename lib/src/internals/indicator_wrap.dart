@@ -115,7 +115,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if (!mounted) {
       return;
     }
-
     update();
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
       endRefresh().then((_) {
@@ -126,7 +125,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         }
         // make gesture release
         if (widget.refreshStyle != RefreshStyle.Front)
-          (_scrollController.position as ScrollActivityDelegate).goIdle();
+          _scrollController.position.activity.delegate.goIdle();
       });
     } else if (mode == RefreshStatus.refreshing) {
       if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();

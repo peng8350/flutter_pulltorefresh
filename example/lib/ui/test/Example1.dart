@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide NestedScrollView;
 import 'package:flutter/scheduler.dart';
+import '../../other/fix_nestedscrollview.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart' hide RefreshIndicator;
 import 'package:residemenu/residemenu.dart';
 

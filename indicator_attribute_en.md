@@ -37,4 +37,5 @@
 ## MaterialClassicHeader,WaterDropMaterialHeader
 This internal implementation is implemented with something inside the flutter RefreshIndicator.many of its attributes mean the same thing, so I won't list them.
 * double distance:When preparing to trigger refresh, the indicator should be placed at a distance of not more than 100.0 from the top.
+* double offset: the distance from top,also marginTop
 

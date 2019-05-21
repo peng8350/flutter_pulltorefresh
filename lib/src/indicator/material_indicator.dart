@@ -23,7 +23,7 @@ class MaterialClassicHeader extends RefreshIndicator {
     this.semanticsLabel,
     this.semanticsValue,
     double offset:0.0,
-    this.color: Colors.white,
+    this.color,
     this.distance: 50.0,
     this.backgroundColor,
   }) : super(
@@ -221,8 +221,8 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     _BezierController.dispose();
+    super.dispose();
   }
 
   @override
@@ -295,6 +295,7 @@ class _BezierPainter extends CustomPainter {
     // TODO: implement paint
     final double middleX = size.width / 2;
     final Paint paint = Paint();
+
     paint.color = color;
     if (value < 1.0) {
       final Path path = Path();
@@ -310,8 +311,8 @@ class _BezierPainter extends CustomPainter {
       canvas.drawPath(path, paint);
     } else {
       final Path path = Path();
-      path.moveTo(30.0, 0.0);
-      path.conicTo(middleX, 60.0 * (1.5 - value), size.width - 30.0, 0.0, 5.0);
+      path.moveTo(0.0, 0.0);
+      path.conicTo(middleX, 60.0 * (1.5 - value), size.width , 0.0, 5.0);
       canvas.drawPath(path, paint);
     }
   }

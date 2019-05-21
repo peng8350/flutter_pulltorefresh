@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
 import 'indicator/classic_indicator.dart';
-import 'dart:math' as math;
+import 'indicator/material_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -61,8 +61,8 @@ class SmartRefresher extends StatefulWidget {
       this.isNestWrapped: false})
       : assert(child != null),
         assert(controller != null),
-        this.header = header ?? ClassicHeader(),
-        this.footer = footer ?? ClassicFooter(),
+        footer = footer ?? ClassicFooter(),
+        header = header ?? (defaultTargetPlatform == TargetPlatform.iOS?ClassicHeader():MaterialClassicHeader()),
         super(key: key);
 
   @override
