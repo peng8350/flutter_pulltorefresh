@@ -29,7 +29,8 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 
 |Style| Classical(Follow,UnFollow) | QQ WaterDrop |
 |:---:|:---:|:---:|
-|art| ![](example/images/classical_follow.gif) | ![](example/images/waterdrop.gif) |
+|art| ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) |
+
 |Style| flutter RefreshIndicator | WaterDropMaterial(Front) |
 |:---:|:---:|:---:|
 |art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
@@ -97,27 +98,13 @@ void dispose(){
 
 
 ## More
-- [SmartRefresher,RefreshController](refresher_controller.md)
-- [Custom Indicator](custom_indicator.md)
-- [Inner Attribute Of Indicators](indicator_attribute.md)
+- [SmartRefresher,RefreshController](refresher_controller_en.md)
+- [Custom Indicator](custom_indicator_en.md)
+- [Inner Attribute Of Indicators](indicator_attribute_en.md)
 - [Update Log](CHANGELOG.md)
+- [Notice](notice_en.md)
 
-## Props Table
 
-SmartRefresher:
-
-| Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
-|---------|--------------------------|:-----:|:-----:|:-----:|
-| controller | controll inner some states  | RefreshController | null | necessary |
-| child      | your content View   | ? extends ScrollView   |   null |  necessary |
-| header | the header indictor     | RefreshIndicator | ClassicHeader | optional |
-| footer | the footer indictor     | LoadIndicator  | ClassicFooter | optional |
-| enablePullDown | switch of the pull down      | boolean | true | optional |
-| enablePullUp |   switch of the pull up  | boolean | false |optional |
-| onRefresh | will callback when the header indicator is getting refreshing   | () => Void | null | optional |
-| onLoad | will callback when the footer indicator is getting loading   | () => Void | null | optional |
-| onOffsetChange | callback while you dragging and outOfrange  | (bool,double) => Void | null | optional |
-| isNestWrapped | it will set true when SmartRefresher is wrapped by NestedScrollView  | bool | false | optional |
 
 
 ## Frequent problems

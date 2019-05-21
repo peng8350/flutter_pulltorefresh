@@ -89,8 +89,6 @@ class Example1State extends State<Example1> {
               controller: _refreshController,
               enablePullDown: true,
               isNestWrapped: true,
-              header: MaterialClassicHeader(
-              ),
               enablePullUp: true,
 
               onRefresh: () {

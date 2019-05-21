@@ -15,7 +15,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   ScrollController _scrollController ;
 
   void _getDatas() {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 24; i++) {
       data.add(Container(
         color: Colors.redAccent,
         child: Text('Data $i'),
@@ -51,11 +51,14 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
           child: CustomScrollView(
             key: PageStorageKey("r"),
             controller: _scrollController,
-
             slivers: [
-              SliverToBoxAdapter(
-                child: Container(),
-              ),
+              SliverToBoxAdapter(),
+              SliverPersistentHeader(
+                  delegate: _SliverDelegate(
+                      child: Container(
+                        height: 300.0,
+                        color: Colors.red,
+                      ))),
               SliverAppBar(
                 backgroundColor: Colors.greenAccent,
                 expandedHeight: 200.0,
@@ -68,16 +71,40 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
                     )),
               ),
               SliverList(
-                  delegate: SliverChildListDelegate([
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                    Text('wewew'),
-                  ]))
+                  delegate: SliverChildListDelegate(data))
             ],
           ),
           controller: _refreshController),
     );
   }
+}
+
+
+class _SliverDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+
+  _SliverDelegate({this.child});
+
+  @override
+  // TODO: implement minExtent
+  double get minExtent => 50.0;
+
+  @override
+  // TODO: implement maxExtent
+  double get maxExtent => 100.0;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    // TODO: implement build
+    return child;
+  }
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    // TODO: implement shouldRebuild
+    return false;
+  }
+
+
 }
