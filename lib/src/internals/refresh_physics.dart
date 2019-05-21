@@ -138,7 +138,7 @@ class RefreshClampPhysics extends ScrollPhysics {
 
 
   /// Creates scroll physics that bounce back from the edge.
-  const RefreshClampPhysics({ScrollPhysics parent, this.headerHeight})
+  const RefreshClampPhysics({ScrollPhysics parent, this.headerHeight:100.0})
       : super(parent: parent);
 
   @override
@@ -156,8 +156,8 @@ class RefreshClampPhysics extends ScrollPhysics {
   @override
   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
     // TODO: implement applyPhysicsToUserOffset
-    final ScrollPositionWithSingleContext scrollPosition =
-    position as ScrollPositionWithSingleContext;
+    final ScrollPosition scrollPosition =
+    position as ScrollPosition;
     if (position.extentBefore < headerHeight ) {
 
       final double newPixels = position.pixels-offset*0.3;
@@ -177,8 +177,8 @@ class RefreshClampPhysics extends ScrollPhysics {
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
-    final ScrollPositionWithSingleContext scrollPosition =
-        position as ScrollPositionWithSingleContext;
+    final ScrollPosition scrollPosition =
+        position as ScrollPosition;
     if(scrollPosition.extentBefore<headerHeight) {
       if (scrollPosition.activity is BallisticScrollActivity) {
         //spring Back
@@ -208,8 +208,6 @@ class RefreshClampPhysics extends ScrollPhysics {
   @override
   Simulation createBallisticSimulation(
       ScrollMetrics position, double velocity) {
-    final ScrollPositionWithSingleContext scrollPosition =
-    position as ScrollPositionWithSingleContext;
     final Tolerance tolerance = this.tolerance;
     if (position.extentBefore < headerHeight) {
       return ScrollSpringSimulation(
@@ -224,7 +222,7 @@ class RefreshClampPhysics extends ScrollPhysics {
     return RefreshClampingSimulation(
       position: position.pixels,
       velocity: velocity,
-      extentBefore:scrollPosition.userScrollDirection.index==1?position.extentBefore-headerHeight:-1.0,
+      extentBefore:velocity<0?position.extentBefore-headerHeight:-1.0,
       tolerance: tolerance,
     );
   }

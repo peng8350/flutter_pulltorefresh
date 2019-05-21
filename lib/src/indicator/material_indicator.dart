@@ -22,7 +22,7 @@ class MaterialClassicHeader extends RefreshIndicator {
     Key key,
     this.semanticsLabel,
     this.semanticsValue,
-    this.color,
+    this.color:Colors.white,
     this.distance: 60.0,
     this.backgroundColor,
   }) : super(
@@ -52,9 +52,9 @@ class _MaterialClassicHeaderState
     // TODO: implement initState
     _valueAni = AnimationController(
         vsync: this,
-        value: 0.75,
+        value: 0.0,
         lowerBound: 0.0,
-        upperBound: 0.75,
+        upperBound: 1.0,
         duration: Duration(milliseconds: 500));
     _positionController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));

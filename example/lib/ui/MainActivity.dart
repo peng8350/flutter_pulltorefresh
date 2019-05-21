@@ -3,6 +3,7 @@
  * Email: peng8350@gmail.com
  * Time: 2019/5/3 下午6:13
  */
+import 'package:example/ui/screen/ScreenPage.dart';
 import 'package:flutter/material.dart';
 import 'package:residemenu/residemenu.dart';
 import 'test/TestPage.dart';
@@ -55,7 +56,7 @@ class _MainActivityState extends State<MainActivity>
       IndicatorPage(title: "指示器界面"),
       TestPage(title: "测试界面"),
       SamplePage(tabController: _tabController),
-      Container()
+      ScreenPage(),
     ];
   }
 
@@ -71,7 +72,7 @@ class _MainActivityState extends State<MainActivity>
           // the App.build method, and use it to set our appbar title.
           title: Text(_tabIndex == 0
               ? "指示器界面"
-              : _tabIndex == 1 ? "测试界面" : _tabIndex == 2 ? "样例界面" : "待定"),
+              : _tabIndex == 1 ? "测试界面" : _tabIndex == 2 ? "样例界面" : "App界面"),
           bottom: _tabIndex==2?TabBar(isScrollable: true,
             tabs: [
               Tab(child: Text("超大数据量性能测试")),
@@ -127,7 +128,7 @@ class _MainActivityState extends State<MainActivity>
             _pageController.jumpToPage(2);
           }),
           buildItem(
-              "待定", Icon(Icons.format_underlined, size: 18, color: Colors.grey),
+              "App界面", Icon(Icons.format_underlined, size: 18, color: Colors.grey),
               () {
             setState(() {
               _tabIndex = 3;

@@ -189,9 +189,8 @@ class _RenderSliverRefresh extends RenderSliver
         case RefreshStyle.Front:
           geometry = SliverGeometry(
             scrollExtent: refreshIndicatorLayoutExtent,
-            paintOrigin: 0.0,
-            paintExtent: refreshIndicatorLayoutExtent,
-            maxPaintExtent: refreshIndicatorLayoutExtent,
+            paintExtent: 0.01,
+            maxPaintExtent: 0.01,
             hasVisualOverflow: true,
             layoutExtent: 0.0,
           );

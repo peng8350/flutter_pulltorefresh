@@ -85,12 +85,10 @@ class Example1State extends State<Example1> {
         ],
         body: Container(
           child: SmartRefresher(
-
               controller: _refreshController,
               enablePullDown: true,
               isNestWrapped: true,
               enablePullUp: true,
-
               onRefresh: () {
                 Future.delayed(const Duration(milliseconds: 2009))
                     .then((val) {
