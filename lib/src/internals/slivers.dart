@@ -221,13 +221,11 @@ class _RenderSliverRefresh extends RenderSliver
 }
 
 class SliverLoading extends SingleChildRenderObjectWidget {
-  final ValueNotifier enableLayout;
 
   final bool hideWhenNotFull;
 
   SliverLoading({
     Key key,
-    this.enableLayout,
     this.hideWhenNotFull,
     Widget child,
   }) : super(key: key, child: child);
@@ -236,7 +234,6 @@ class SliverLoading extends SingleChildRenderObjectWidget {
   _RenderSliverLoading createRenderObject(BuildContext context) {
     final refresher = SmartRefresher.of(context);
     return _RenderSliverLoading(
-        enableLayout: enableLayout,
         hideWhenNotFull: hideWhenNotFull,
         headerHeight: refresher.widget.header.height,
         hasHeaderLayout: refresher.hasHeaderLayout);
@@ -250,11 +247,10 @@ class SliverLoading extends SingleChildRenderObjectWidget {
 class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   _RenderSliverLoading(
       {RenderBox child,
-      this.enableLayout,
       this.headerHeight,
       this.hideWhenNotFull,
       this.hasHeaderLayout})
-      : assert(enableLayout != null) {
+       {
     this.child = child;
   }
   final bool hideWhenNotFull;
@@ -265,8 +261,6 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   // the appropriate delta can be applied to keep everything in the same place
   // visually.
   final double layoutExtentOffsetCompensation = 0.0;
-
-  ValueNotifier<bool> enableLayout;
 
   @override
   void performLayout() {
@@ -285,8 +279,13 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     } else {
       active = true;
     }
-    enableLayout.value = active;
-    child.layout(constraints.asBoxConstraints(), parentUsesSize: true);
+    if(active) {
+      child.layout(constraints.asBoxConstraints(), parentUsesSize: true);
+    }
+    else{
+      child.layout(constraints.asBoxConstraints(maxExtent: 0.0,minExtent: 0.0), parentUsesSize: true);
+    }
+
     double childExtent = child.size.height;
     assert(childExtent != null);
     final double paintedChildSize =

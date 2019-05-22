@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
+import 'package:flutter/material.dart' as prefix0;
 import '../../pull_to_refresh.dart';
 
 // How much the scroll's drag gesture can overshoot the RefreshIndicator's
@@ -105,6 +106,18 @@ class _MaterialClassicHeaderState
   }
 
   @override
+  void handleModeChange() {
+    // TODO: implement handleModeChange
+    super.handleModeChange();
+    if(mode==RefreshStatus.idle){
+      //reset the state
+      _scaleFactor.value = 1.0;
+      _positionController.value = 0.0;
+      _valueAni.value = 0.0;
+    }
+  }
+
+  @override
   void didChangeDependencies() {
     final ThemeData theme = Theme.of(context);
     _valueColor = _positionController.drive(
@@ -126,10 +139,7 @@ class _MaterialClassicHeaderState
   @override
   Future<void> endRefresh() {
     // TODO: implement endRefresh
-    _valueAni.stop();
-    return _scaleFactor.animateTo(0.0).whenComplete(() {
-      _scaleFactor.value = 1.0;
-    });
+    return _scaleFactor.animateTo(0.0);
   }
 
   @override

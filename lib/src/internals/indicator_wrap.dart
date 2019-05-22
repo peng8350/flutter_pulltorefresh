@@ -10,7 +10,6 @@ import 'default_constants.dart';
 import 'dart:math' as math;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'slivers.dart';
-import 'package:flutter/scheduler.dart';
 
 abstract class Indicator extends StatefulWidget {
   final double triggerDistance;
@@ -87,7 +86,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if (widget.refreshStyle == RefreshStyle.Front) {
       return _scrollController.position.extentBefore < widget.height;
     } else {
-      return _scrollController.position.extentBefore == 0.0;
+      return _scrollController.position.extentBefore-widget.height <= 0.0;
     }
   }
 
@@ -108,7 +107,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
     // Sometimes different devices return velocity differently, so it's impossible to judge from velocity whether the user
     // has invoked animateTo (0.0) or the user is dragging the view.Sometimes animateTo (0.0) does not return velocity = 0.0
-
     if (_scrollController.position.activity.velocity == 0.0 ||
         _scrollController.position.activity is DragScrollActivity ||
         _scrollController.position.activity is DrivenScrollActivity) {
@@ -135,27 +133,24 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       endRefresh().then((_) {
         floating = false;
         update();
-
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          /*
+        /*
           handle two Situation:
           1.when user dragging to refreshing, then user scroll down not to see the indicator,then it will not spring back,
           the _onOffsetChange didn't callback,it will keep failed or success state.
           2. As FrontStyle,when user dragging in 0~100 in refreshing state,it should be reset after the state change
           */
-          if (widget.refreshStyle == RefreshStyle.Front) {
-            if (inVisual()) {
-              _scrollController.jumpTo(widget.height);
-            }
-            mode = RefreshStatus.idle;
-            _scrollController.position.activity.delegate.goIdle();
-          } else {
-            if (!inVisual()) {
-              mode = RefreshStatus.idle;
-            }
-            _scrollController.position.activity.delegate.goBallistic(0.0);
+        if (widget.refreshStyle == RefreshStyle.Front) {
+          if (inVisual()) {
+            _scrollController.jumpTo(widget.height);
           }
-        });
+          mode = RefreshStatus.idle;
+          _scrollController.position.activity.delegate.goBallistic(0.0);
+        } else {
+          if (!inVisual()) {
+            mode = RefreshStatus.idle;
+          }
+          _scrollController.position.activity.delegate.goBallistic(0.0);
+        }
       });
     } else if (mode == RefreshStatus.refreshing) {
       if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
@@ -240,14 +235,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
 
   set mode(mode) => _footerMode.value = mode;
 
-  bool get _isRefreshing =>
-      refresher.widget.controller.footerMode.value == LoadStatus.loading;
-
   ScrollController _scrollController;
 
   ValueNotifier<LoadStatus> _footerMode;
   // use to update between one page and above one page
-  ValueNotifier<bool> _enableLayout = ValueNotifier(null);
+  bool _isHide = false;
 
   double calculateScrollOffset(ScrollController controller) {
     final double overscrollPastEnd = math.max(
@@ -255,18 +247,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
     return overscrollPastEnd;
   }
 
-  void _handleVisiable() {
-    if (_enableLayout.value || !widget.hideWhenNotFull) {
-      _footerMode.addListener(handleModeChange);
-      _scrollController.addListener(_handleOffsetChange);
-    } else {
-      _footerMode.removeListener(handleModeChange);
-      _scrollController.removeListener(_handleOffsetChange);
-    }
-  }
-
   void _handleOffsetChange() {
-    if (!mounted) {
+    if (!mounted||_isHide) {
       return;
     }
     final double overscrollPast = calculateScrollOffset(_scrollController);
@@ -285,7 +267,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   }
 
   void handleModeChange() {
-    if (!mounted) {
+    if (!mounted||_isHide) {
       return;
     }
     update();
@@ -300,7 +282,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
     if (_scrollController.position.userScrollDirection.index == 2 &&
         _scrollController.position.extentAfter <= widget.triggerDistance &&
         widget.autoLoad &&
-        mode == LoadStatus.idle) mode = LoadStatus.loading;
+        mode == LoadStatus.idle){ mode = LoadStatus.loading;}
   }
 
   @override
@@ -312,7 +294,10 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
     // it is necessary
     _footerMode.value = LoadStatus.idle;
 
-    _enableLayout.addListener(_handleVisiable);
+    if(refresher.widget.enablePullUp){
+        _scrollController.addListener(_handleOffsetChange);
+        _footerMode.addListener(handleModeChange);
+    }
   }
 
   @override
@@ -321,7 +306,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
     // there is no need to update _footerMode,it will not change
     _scrollController = refresher.widget.controller.scrollController;
     _scrollController.removeListener(_handleOffsetChange);
-    if (refresher.widget.enablePullUp && _enableLayout.value) {
+    if (refresher.widget.enablePullUp) {
       _scrollController.addListener(_handleOffsetChange);
     }
     super.didUpdateWidget(oldWidget);
@@ -332,8 +317,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
     // TODO: implement dispose
     _scrollController.removeListener(_handleOffsetChange);
     _footerMode.removeListener(handleModeChange);
-    _enableLayout.removeListener(_handleVisiable);
-    _enableLayout.dispose();
     super.dispose();
   }
 
@@ -341,15 +324,20 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return SliverLoading(
-        enableLayout: _enableLayout,
         hideWhenNotFull: widget.hideWhenNotFull,
-        child: GestureDetector(
-          onTap: () {
-            if (widget.onClick != null) {
-              widget.onClick();
-            }
+        child: LayoutBuilder(
+
+          builder: (BuildContext context,BoxConstraints cons){
+            _isHide = cons.biggest.height==0.0;
+            return GestureDetector(
+              onTap: () {
+                if (widget.onClick != null) {
+                  widget.onClick();
+                }
+              },
+              child: buildContent(context, mode),
+            );
           },
-          child: buildContent(context, mode),
         ));
   }
 

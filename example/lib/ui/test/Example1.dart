@@ -20,7 +20,7 @@ class Example1State extends State<Example1> {
   ScrollController _scrollController;
   List<Widget> data = [];
   void _getDatas() {
-    for (int i = 0; i < 144; i++) {
+    for (int i = 0; i < 4; i++) {
       data.add(Container(
         color:Colors.greenAccent,
         margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
@@ -89,6 +89,7 @@ class Example1State extends State<Example1> {
               controller: _refreshController,
               enablePullDown: true,
               isNestWrapped: true,
+              header: WaterDropHeader(),
               enablePullUp: true,
               onRefresh: () {
                 Future.delayed(const Duration(milliseconds: 2009))

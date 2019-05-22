@@ -187,10 +187,11 @@ class RefreshController {
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
   void requestRefresh(
-      {Duration duration: const Duration(milliseconds: 500),
+      {Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
     assert(scrollController != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
+    print(headerMode.value);
     if (headerMode?.value != RefreshStatus.idle) return;
     scrollController.animateTo(
         _header.refreshStyle == RefreshStyle.Front

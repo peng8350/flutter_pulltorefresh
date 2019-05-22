@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Example3 extends StatefulWidget {
@@ -22,7 +21,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
   List<Widget> data = [];
 
-
   //test #68
   bool _enablePullUp=true,_enablePullDown=true;
 
@@ -37,7 +35,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         _refreshController.requestLoading();
       }, child: Text("请求加载数据"))
     ],));
-    for (int i = 0; i < 14; i++) {
+    for (int i = 0; i < 3; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
@@ -160,7 +158,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       controller: _refreshController,
       header: MaterialClassicHeader(),
       footer: ClassicFooter(
-        hideWhenNotFull: false,
         onClick: () {
           if (_refreshController.footerStatus == LoadStatus.idle)
             _refreshController.requestLoading();
@@ -168,10 +165,15 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       ),
       onRefresh: () {
         Future.delayed(const Duration(milliseconds: 2009)).then((val) {
+          data.add(Card());
+          setState(() {
+
+          });
           _refreshController.refreshFailed();
         });
       },
       onLoading: () {
+        print("onload");
         Future.delayed(const Duration(milliseconds: 2009)).then((val) {
           if(mounted)
             setState(() {});
