@@ -180,6 +180,7 @@ class RefreshClampPhysics extends ScrollPhysics {
     final ScrollPosition scrollPosition =
         position as ScrollPosition;
     if(scrollPosition.extentBefore<headerHeight) {
+
       if (scrollPosition.activity is BallisticScrollActivity) {
         //spring Back
         if (value > position.pixels) {

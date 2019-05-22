@@ -10,6 +10,7 @@ import 'default_constants.dart';
 import 'dart:math' as math;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'slivers.dart';
+import 'package:flutter/scheduler.dart';
 
 abstract class Indicator extends StatefulWidget {
   final double triggerDistance;
@@ -82,6 +83,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     onOffsetChange(overscrollPast);
   }
 
+  bool inVisual() {
+    if (widget.refreshStyle == RefreshStyle.Front) {
+      return _scrollController.position.extentBefore < widget.height;
+    } else {
+      return _scrollController.position.extentBefore == 0.0;
+    }
+  }
+
   double calculateScrollOffset(ScrollController controller) {
     if (widget.refreshStyle == RefreshStyle.Front) {
       return widget.height - controller.position.extentBefore;
@@ -96,7 +105,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   // handle the  state change between canRefresh and idle canRefresh  before refreshing
   void handleDragMove(double offset) {
     if (floating) return;
-    if (_scrollController.position.activity.velocity == 0.0) {
+
+    // Sometimes different devices return velocity differently, so it's impossible to judge from velocity whether the user
+    // has invoked animateTo (0.0) or the user is dragging the view.Sometimes animateTo (0.0) does not return velocity = 0.0
+
+    if (_scrollController.position.activity.velocity == 0.0 ||
+        _scrollController.position.activity is DragScrollActivity ||
+        _scrollController.position.activity is DrivenScrollActivity) {
       if (offset >= widget.triggerDistance) {
         mode = RefreshStatus.canRefresh;
       } else {
@@ -120,12 +135,27 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       endRefresh().then((_) {
         floating = false;
         update();
-        if (widget.refreshStyle == RefreshStyle.Front) {
-          mode = RefreshStatus.idle;
-        }
-        // make gesture release
-        if (widget.refreshStyle != RefreshStyle.Front)
-          _scrollController.position.activity.delegate.goIdle();
+
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          /*
+          handle two Situation:
+          1.when user dragging to refreshing, then user scroll down not to see the indicator,then it will not spring back,
+          the _onOffsetChange didn't callback,it will keep failed or success state.
+          2. As FrontStyle,when user dragging in 0~100 in refreshing state,it should be reset after the state change
+          */
+          if (widget.refreshStyle == RefreshStyle.Front) {
+            if (inVisual()) {
+              _scrollController.jumpTo(widget.height);
+            }
+            mode = RefreshStatus.idle;
+            _scrollController.position.activity.delegate.goIdle();
+          } else {
+            if (!inVisual()) {
+              mode = RefreshStatus.idle;
+            }
+            _scrollController.position.activity.delegate.goBallistic(0.0);
+          }
+        });
       });
     } else if (mode == RefreshStatus.refreshing) {
       if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();

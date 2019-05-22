@@ -158,7 +158,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       enablePullUp: _enablePullDown,
       enablePullDown: _enablePullUp,
       controller: _refreshController,
-      header: WaterDropMaterialHeader(distance: 50.0,backgroundColor: Colors.greenAccent,),
+      header: MaterialClassicHeader(),
       footer: ClassicFooter(
         hideWhenNotFull: false,
         onClick: () {
@@ -167,13 +167,11 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         },
       ),
       onRefresh: () {
-        print("onRefresh");
         Future.delayed(const Duration(milliseconds: 2009)).then((val) {
           _refreshController.refreshFailed();
         });
       },
       onLoading: () {
-        print("onload");
         Future.delayed(const Duration(milliseconds: 2009)).then((val) {
           if(mounted)
             setState(() {});

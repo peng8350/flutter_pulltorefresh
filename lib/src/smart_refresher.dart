@@ -62,7 +62,10 @@ class SmartRefresher extends StatefulWidget {
       : assert(child != null),
         assert(controller != null),
         footer = footer ?? ClassicFooter(),
-        header = header ?? (defaultTargetPlatform == TargetPlatform.iOS?ClassicHeader():MaterialClassicHeader()),
+        header = header ??
+            (defaultTargetPlatform == TargetPlatform.iOS
+                ? ClassicHeader()
+                : MaterialClassicHeader()),
         super(key: key);
 
   @override
@@ -105,11 +108,6 @@ class SmartRefresherState extends State<SmartRefresher>
       widget.controller.scrollController = scrollController;
     }
     widget.controller._header = widget.header;
-    if (widget.header.refreshStyle == RefreshStyle.Front) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        scrollController.jumpTo(widget.header.height);
-      });
-    }
     super.initState();
   }
 
@@ -189,8 +187,7 @@ class RefreshController {
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
   void requestRefresh(
-      {
-      Duration duration: const Duration(milliseconds: 300),
+      {Duration duration: const Duration(milliseconds: 500),
       Curve curve: Curves.linear}) {
     assert(scrollController != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
