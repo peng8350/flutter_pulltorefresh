@@ -6,7 +6,6 @@
 
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
-import 'package:flutter/material.dart' as prefix0;
 import '../../pull_to_refresh.dart';
 
 // How much the scroll's drag gesture can overshoot the RefreshIndicator's
@@ -19,20 +18,39 @@ class MaterialClassicHeader extends RefreshIndicator {
   final Color color;
   final double distance;
   final Color backgroundColor;
+
   const MaterialClassicHeader({
     Key key,
     this.semanticsLabel,
     this.semanticsValue,
-    double offset:0.0,
+    double offset: 0.0,
     this.color,
     this.distance: 50.0,
     this.backgroundColor,
   }) : super(
-            key: key,
-            refreshStyle: RefreshStyle.Front,
-            height: 100.0,
-            offset: offset,
-            );
+          key: key,
+          refreshStyle: RefreshStyle.Front,
+          height: 100.0,
+          offset: offset,
+        );
+
+  const MaterialClassicHeader.asSliver({
+    Key key,
+    @required OnRefresh onRefresh,
+    ValueNotifier<RefreshStatus> mode,
+    this.semanticsLabel,
+    this.semanticsValue,
+    double offset: 0.0,
+    this.color,
+    this.distance: 50.0,
+    this.backgroundColor,
+  }) : super(
+          key: key,
+          onRefresh: onRefresh,
+          refreshStyle: RefreshStyle.Front,
+          height: 100.0,
+          offset: offset,
+        );
 
   @override
   State<StatefulWidget> createState() {
@@ -109,7 +127,7 @@ class _MaterialClassicHeaderState
   void handleModeChange() {
     // TODO: implement handleModeChange
     super.handleModeChange();
-    if(mode==RefreshStatus.idle){
+    if (mode == RefreshStatus.idle) {
       //reset the state
       _scaleFactor.value = 1.0;
       _positionController.value = 0.0;
@@ -163,6 +181,25 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
     Color backgroundColor: Colors.blueAccent,
   }) : super(
             key: key,
+            offset: offset,
+            color: color,
+            distance: distance,
+            backgroundColor: backgroundColor,
+            semanticsValue: semanticsValue,
+            semanticsLabel: semanticsLabel);
+
+  const WaterDropMaterialHeader.asSliver({
+    Key key,
+    @required OnRefresh onRefresh,
+    String semanticsLabel,
+    double distance: 120.0,
+    double offset: 0.0,
+    String semanticsValue,
+    Color color: Colors.white,
+    Color backgroundColor: Colors.blueAccent,
+  }) : super.asSliver(
+            key: key,
+            onRefresh: onRefresh,
             offset: offset,
             color: color,
             distance: distance,
@@ -275,7 +312,9 @@ class _WaterPainter extends CustomPainter {
   final Color color;
   final double offset;
   final double ratio;
+
   _WaterPainter({this.color, this.offset, this.ratio});
+
   @override
   void paint(Canvas canvas, Size size) {
     // TODO: implement paint
@@ -300,6 +339,7 @@ class _BezierPainter extends CustomPainter {
   final Color color;
 
   _BezierPainter({this.value, this.color});
+
   @override
   void paint(Canvas canvas, Size size) {
     // TODO: implement paint
@@ -322,7 +362,7 @@ class _BezierPainter extends CustomPainter {
     } else {
       final Path path = Path();
       path.moveTo(0.0, 0.0);
-      path.conicTo(middleX, 60.0 * (1.5 - value), size.width , 0.0, 5.0);
+      path.conicTo(middleX, 60.0 * (1.5 - value), size.width, 0.0, 5.0);
       canvas.drawPath(path, paint);
     }
   }

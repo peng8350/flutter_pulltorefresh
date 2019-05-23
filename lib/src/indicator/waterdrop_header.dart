@@ -5,7 +5,6 @@
  */
 
 import 'dart:async';
-
 import 'package:flutter/material.dart'
     hide RefreshIndicatorState, RefreshIndicator;
 import '../internals/indicator_wrap.dart';
@@ -33,7 +32,21 @@ class WaterDropHeader extends RefreshIndicator {
     double triggerDistance: 100.0,
   }) : super(
             key: key,
+            triggerDistance: triggerDistance,
+            refreshStyle: RefreshStyle.UnFollow);
 
+  const WaterDropHeader.asSliver({
+    Key key,
+    @required OnRefresh onRefresh,
+    this.refresh,
+    this.complete,
+    this.failed,
+    this.waterDropColor: Colors.grey,
+    this.idleIcon,
+    double triggerDistance: 100.0,
+  }) : super(
+            key: key,
+            onRefresh: onRefresh,
             triggerDistance: triggerDistance,
             refreshStyle: RefreshStyle.UnFollow);
 
@@ -165,6 +178,7 @@ class _QqPainter extends CustomPainter {
   final double value;
   final Paint painter = Paint();
   final bool reverse;
+
   _QqPainter({this.color, this.value, this.reverse});
 
   @override

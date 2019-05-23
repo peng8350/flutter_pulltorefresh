@@ -24,7 +24,6 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin{
   int tabIndex = 0;
   PageController _pageController;
-
   List<Widget> views;
   TabController _tabController;
   GlobalKey<Example3State> example3Key=  GlobalKey();

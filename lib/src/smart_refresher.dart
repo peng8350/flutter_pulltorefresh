@@ -4,16 +4,13 @@
     createTime:2018-05-01 11:39
  */
 
-import 'package:flutter/material.dart'
-    hide RefreshIndicator, RefreshIndicatorState;
-import 'internals/default_constants.dart';
 import 'package:flutter/widgets.dart';
+import 'internals/default_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
 import 'indicator/classic_indicator.dart';
 import 'indicator/material_indicator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 
 enum RefreshStatus { idle, canRefresh, refreshing, completed, failed }
@@ -81,8 +78,6 @@ class SmartRefresherState extends State<SmartRefresher>
     with TickerProviderStateMixin {
   // listen the listen offset or on...
   ScrollController scrollController;
-  // check the header own height
-  ValueNotifier<bool> hasHeaderLayout = ValueNotifier(false);
 
   @override
   void dispose() {
@@ -90,8 +85,6 @@ class SmartRefresherState extends State<SmartRefresher>
     if (!widget.isNestWrapped && widget.child.controller == null) {
       scrollController.dispose();
     }
-    hasHeaderLayout.dispose();
-    hasHeaderLayout = null;
     super.dispose();
   }
 
@@ -128,7 +121,6 @@ class SmartRefresherState extends State<SmartRefresher>
     // TODO: implement didUpdateWidget
     if (widget.enablePullDown != oldWidget.enablePullDown) {
       widget.controller.headerMode.value = RefreshStatus.idle;
-      hasHeaderLayout.value = false;
     }
     if (widget.enablePullUp != oldWidget.enablePullUp) {
       widget.controller.footerMode.value = LoadStatus.idle;
@@ -191,7 +183,6 @@ class RefreshController {
       Curve curve: Curves.linear}) {
     assert(scrollController != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    print(headerMode.value);
     if (headerMode?.value != RefreshStatus.idle) return;
     scrollController.animateTo(
         _header.refreshStyle == RefreshStyle.Front

@@ -6,10 +6,9 @@
 
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
-import 'package:flutter/widgets.dart';
 import '../internals/default_constants.dart';
 import '../internals/indicator_wrap.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../smart_refresher.dart';
 
 enum IconPosition { left, right, top, bottom }
 
@@ -17,9 +16,7 @@ class ClassicHeader extends RefreshIndicator {
   final String releaseText, idleText, refreshingText, completeText, failedText;
 
   final Widget releaseIcon, idleIcon, refreshingIcon, completeIcon, failedIcon;
-
   final double spacing;
-
   final IconPosition iconPos;
 
   final TextStyle textStyle;
@@ -30,11 +27,9 @@ class ClassicHeader extends RefreshIndicator {
     double height: default_height,
     double triggerDistance: default_refresh_triggerDistance,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
-
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
     this.completeText: 'Refresh complete',
-
     this.failedText: 'Refresh failed',
     this.idleText: 'Pull down to refresh',
     this.iconPos: IconPosition.left,
@@ -50,6 +45,37 @@ class ClassicHeader extends RefreshIndicator {
     this.releaseIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
   }) : super(
             key: key,
+            refreshStyle: refreshStyle,
+            height: height,
+            triggerDistance: triggerDistance);
+
+  const ClassicHeader.asSliver({
+    Key key,
+    @required OnRefresh onRefresh,
+    ValueNotifier<RefreshStatus> mode,
+    RefreshStyle refreshStyle: default_refreshStyle,
+    double height: default_height,
+    double triggerDistance: default_refresh_triggerDistance,
+    this.textStyle: const TextStyle(color: const Color(0xff555555)),
+    this.releaseText: 'Refresh when release',
+    this.refreshingText: 'Refreshing...',
+    this.completeText: 'Refresh complete',
+    this.failedText: 'Refresh failed',
+    this.idleText: 'Pull down to refresh',
+    this.iconPos: IconPosition.left,
+    this.spacing: 15.0,
+    this.refreshingIcon: const SizedBox(
+      width: 25.0,
+      height: 25.0,
+      child: const CircularProgressIndicator(strokeWidth: 2.0),
+    ),
+    this.failedIcon: const Icon(Icons.clear, color: Colors.grey),
+    this.completeIcon: const Icon(Icons.done, color: Colors.grey),
+    this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
+    this.releaseIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
+  }) : super(
+            key: key,
+            onRefresh: onRefresh,
             refreshStyle: refreshStyle,
             height: height,
             triggerDistance: triggerDistance);
@@ -150,7 +176,7 @@ class ClassicFooter extends LoadIndicator {
     Function onClick,
     bool autoLoad: default_AutoLoad,
     double triggerDistance: default_load_triggerDistance,
-    bool hideWhenNotFull:true,
+    bool hideWhenNotFull: true,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
@@ -171,7 +197,39 @@ class ClassicFooter extends LoadIndicator {
             key: key,
             triggerDistance: triggerDistance,
             onClick: onClick,
-            hideWhenNotFull:hideWhenNotFull,
+            hideWhenNotFull: hideWhenNotFull,
+            autoLoad: autoLoad);
+
+  const ClassicFooter.asSliver({
+    Key key,
+    @required OnLoading onLoading,
+    ValueNotifier<LoadStatus> mode,
+    Function onClick,
+    bool autoLoad: default_AutoLoad,
+    double triggerDistance: default_load_triggerDistance,
+    bool hideWhenNotFull: true,
+    this.textStyle: const TextStyle(color: const Color(0xff555555)),
+    this.loadingText: 'Loading...',
+    this.noDataText: 'No more data',
+    this.height: 60.0,
+    this.noMoreIcon: const Icon(Icons.clear, color: Colors.grey),
+    this.idleText: 'Load More..',
+    this.iconPos: IconPosition.left,
+    this.spacing: 15.0,
+    this.loadingIcon: const SizedBox(
+      width: 25.0,
+      height: 25.0,
+      child: const CircularProgressIndicator(
+        strokeWidth: 2.0,
+      ),
+    ),
+    this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
+  }) : super(
+            key: key,
+            onLoading: onLoading,
+            triggerDistance: triggerDistance,
+            onClick: onClick,
+            hideWhenNotFull: hideWhenNotFull,
             autoLoad: autoLoad);
 
   @override

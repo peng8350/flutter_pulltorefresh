@@ -4,11 +4,10 @@
  * Time: 2019/5/2 下午5:09
  */
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:math' as Math;
 import 'package:flutter/rendering.dart';
 import '../smart_refresher.dart';
-import 'package:flutter/cupertino.dart';
 
 class SliverRefresh extends SingleChildRenderObjectWidget {
   const SliverRefresh({
@@ -62,7 +61,7 @@ class _RenderSliverRefresh extends RenderSliver
       {@required double refreshIndicatorExtent,
       @required bool hasLayoutExtent,
       RenderBox child,
-        this.paintOffsetY,
+      this.paintOffsetY,
       this.refreshStyle})
       : assert(refreshIndicatorExtent != null),
         assert(refreshIndicatorExtent >= 0.0),
@@ -73,11 +72,13 @@ class _RenderSliverRefresh extends RenderSliver
   }
 
   final RefreshStyle refreshStyle;
+
   // The amount of layout space the indicator should occupy in the sliver in a
   // resting state when in the refreshing mode.
   double get refreshIndicatorLayoutExtent => _refreshIndicatorExtent;
   double _refreshIndicatorExtent;
   double paintOffsetY;
+
   set refreshIndicatorLayoutExtent(double value) {
     assert(value != null);
     assert(value >= 0.0);
@@ -91,6 +92,7 @@ class _RenderSliverRefresh extends RenderSliver
   // [SliverGeometry.layoutExtent] space or not.
   bool get hasLayoutExtent => _hasLayoutExtent;
   bool _hasLayoutExtent;
+
   set hasLayoutExtent(bool value) {
     assert(value != null);
     if (value == _hasLayoutExtent) return;
@@ -213,7 +215,7 @@ class _RenderSliverRefresh extends RenderSliver
 
   @override
   void paint(PaintingContext paintContext, Offset offset) {
-    paintContext.paintChild(child, Offset(offset.dx,offset.dy+paintOffsetY));
+    paintContext.paintChild(child, Offset(offset.dx, offset.dy + paintOffsetY));
   }
 
   @override
@@ -221,7 +223,6 @@ class _RenderSliverRefresh extends RenderSliver
 }
 
 class SliverLoading extends SingleChildRenderObjectWidget {
-
   final bool hideWhenNotFull;
 
   SliverLoading({
@@ -232,11 +233,9 @@ class SliverLoading extends SingleChildRenderObjectWidget {
 
   @override
   _RenderSliverLoading createRenderObject(BuildContext context) {
-    final refresher = SmartRefresher.of(context);
     return _RenderSliverLoading(
-        hideWhenNotFull: hideWhenNotFull,
-        headerHeight: refresher.widget.header.height,
-        hasHeaderLayout: refresher.hasHeaderLayout);
+      hideWhenNotFull: hideWhenNotFull,
+    );
   }
 
   @override
@@ -245,17 +244,16 @@ class SliverLoading extends SingleChildRenderObjectWidget {
 }
 
 class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
-  _RenderSliverLoading(
-      {RenderBox child,
-      this.headerHeight,
-      this.hideWhenNotFull,
-      this.hasHeaderLayout})
-       {
+  _RenderSliverLoading({
+    RenderBox child,
+    this.hideWhenNotFull,
+  }) {
     this.child = child;
   }
+
   final bool hideWhenNotFull;
   double headerHeight;
-  final ValueNotifier<bool> hasHeaderLayout;
+
   // This keeps track of the previously applied scroll offsets to the scrollable
   // so that when [refreshIndicatorLayoutExtent] or [hasLayoutExtent] changes,
   // the appropriate delta can be applied to keep everything in the same place
@@ -272,18 +270,16 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     }
     bool active;
     if (hideWhenNotFull) {
-      active = constraints.precedingScrollExtent -
-              (hasHeaderLayout.value ? headerHeight : 0.0) >
+      active = constraints.precedingScrollExtent >
           constraints.viewportMainAxisExtent;
-
     } else {
       active = true;
     }
-    if(active) {
+    if (active) {
       child.layout(constraints.asBoxConstraints(), parentUsesSize: true);
-    }
-    else{
-      child.layout(constraints.asBoxConstraints(maxExtent: 0.0,minExtent: 0.0), parentUsesSize: true);
+    } else {
+      child.layout(constraints.asBoxConstraints(maxExtent: 0.0, minExtent: 0.0),
+          parentUsesSize: true);
     }
 
     double childExtent = child.size.height;
@@ -309,6 +305,4 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       geometry = SliverGeometry.zero;
     }
   }
-
-
 }

@@ -164,6 +164,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         },
       ),
       onRefresh: () {
+        print("onRefresh");
         Future.delayed(const Duration(milliseconds: 2009)).then((val) {
           data.add(Card());
           setState(() {
