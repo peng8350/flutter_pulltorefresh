@@ -38,6 +38,7 @@ class WaterDropHeader extends RefreshIndicator {
   const WaterDropHeader.asSliver({
     Key key,
     @required OnRefresh onRefresh,
+    bool offStage: false,
     this.refresh,
     this.complete,
     this.failed,
@@ -47,6 +48,7 @@ class WaterDropHeader extends RefreshIndicator {
   }) : super(
             key: key,
             onRefresh: onRefresh,
+            offStage: offStage,
             triggerDistance: triggerDistance,
             refreshStyle: RefreshStyle.UnFollow);
 

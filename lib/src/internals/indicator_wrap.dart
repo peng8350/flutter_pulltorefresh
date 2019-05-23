@@ -29,11 +29,14 @@ abstract class RefreshIndicator extends Indicator {
 
   final OnRefresh onRefresh;
 
+  final bool offStage;
+
   const RefreshIndicator(
       {this.height: default_height,
       Key key,
       this.offset: 0.0,
       this.onRefresh,
+      this.offStage: false,
       double triggerDistance: default_refresh_triggerDistance,
       this.refreshStyle: RefreshStyle.Follow})
       : super(key: key, triggerDistance: triggerDistance);
@@ -47,11 +50,13 @@ abstract class LoadIndicator extends Indicator {
   final bool hideWhenNotFull;
 
   final OnLoading onLoading;
+  final bool offStage;
 
   const LoadIndicator(
       {Key key,
       double triggerDistance: 15.0,
       this.onLoading,
+      this.offStage:false,
       this.autoLoad: true,
       this.hideWhenNotFull: true,
       this.onClick})
@@ -65,7 +70,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   bool floating = false;
 
   void _handleOffsetChange() {
-    if (!mounted) {
+    if (!mounted || widget.offStage) {
       return;
     }
     final overscrollPast = calculateScrollOffset(_scrollController);
@@ -122,13 +127,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   }
 
   void handleModeChange() {
-    if (!mounted) {
+    if (!mounted || widget.offStage) {
       return;
     }
     update();
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
       endRefresh().then((_) {
-        if(!mounted)return;
+        if (!mounted) return;
         floating = false;
         update();
         /*
@@ -152,13 +157,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       });
     } else if (mode == RefreshStatus.refreshing) {
       if (refresher == null) {
-          widget.onRefresh().then((bool result) {
-            if (result) {
-              mode = RefreshStatus.completed;
-            } else {
-              mode = RefreshStatus.failed;
-            }
-          });
+        widget.onRefresh().then((bool result) {
+          if (result) {
+            mode = RefreshStatus.completed;
+          } else {
+            mode = RefreshStatus.failed;
+          }
+        });
       } else {
         if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
       }
@@ -186,6 +191,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   Widget build(BuildContext context) {
     return SliverRefresh(
         paintOffsetY: widget.offset,
+        offStage: widget.offStage,
         child: LayoutBuilder(
           builder: (BuildContext c, BoxConstraints box) {
             return Container(
@@ -209,15 +215,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   void _update() {
     if (refresher == null) {
-      _updateListener(
-          _mode ?? ValueNotifier<RefreshStatus>(RefreshStatus.idle),
+      _updateListener(_mode ?? ValueNotifier<RefreshStatus>(RefreshStatus.idle),
           Scrollable.of(context).widget.controller);
     } else {
       _updateListener(refresher.widget.controller.headerMode,
           refresher.widget.controller.scrollController);
     }
   }
-
 
   @override
   void didChangeDependencies() {
@@ -249,7 +253,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     return overscrollPastEnd;
   }
 
-
   void update() {
     if (mounted) {
       setState(() {});
@@ -257,20 +260,18 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   void handleModeChange() {
-    if (!mounted || _isHide) {
+    if (!mounted || _isHide || widget.offStage) {
       return;
     }
     update();
     if (mode == LoadStatus.loading) {
       if (refresher?.widget?.onLoading != null) {
         refresher.widget.onLoading();
-      }
-      else if(widget.onLoading!=null){
-        widget.onLoading().then((result){
-          if(result){
+      } else if (widget.onLoading != null) {
+        widget.onLoading().then((result) {
+          if (result) {
             mode = LoadStatus.idle;
-          }
-          else{
+          } else {
             mode = LoadStatus.noMore;
           }
         });
@@ -279,7 +280,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   void handleDragMove() {
-
     if (_scrollController.position.userScrollDirection.index == 2 &&
         _scrollController.position.extentAfter <= widget.triggerDistance &&
         widget.autoLoad &&
@@ -288,9 +288,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     }
   }
 
-
   void _handleOffsetChange() {
-    if (!mounted || _isHide) {
+    if (!mounted || _isHide || widget.offStage) {
       return;
     }
     final double overscrollPast = calculateScrollOffset(_scrollController);
@@ -314,8 +313,12 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     }
   }
 
-  void resetNoData(){
+  void resetNoData() {
     mode = LoadStatus.idle;
+  }
+
+  void setNoData() {
+    mode = LoadStatus.noMore;
   }
 
   @override
@@ -344,6 +347,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     // TODO: implement build
     return SliverLoading(
         hideWhenNotFull: widget.hideWhenNotFull,
+        offStage: widget.offStage,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints cons) {
             _isHide = cons.biggest.height == 0.0;
@@ -363,9 +367,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 }
 
 abstract class IndicatorProcessor {
-  set mode(mode) => _mode.value = mode;
+  set mode(mode) => _mode?.value = mode;
 
-  get mode => _mode.value;
+  get mode => _mode?.value;
 
   ValueNotifier<dynamic> _mode;
 

@@ -13,8 +13,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   List<Widget> data = [];
   RefreshController _refreshController;
   ScrollController _scrollController;
-  ValueNotifier<RefreshStatus> headeMode = ValueNotifier(RefreshStatus.idle);
-  ValueNotifier<LoadStatus> footerMode = ValueNotifier(LoadStatus.idle);
+  GlobalKey<LoadIndicatorState> footerKey = GlobalKey<LoadIndicatorState>();
 
   void _getDatas() {
     for (int i = 0; i < 24; i++) {
@@ -45,11 +44,10 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
           height: 300.0,
           color: Colors.red,
         ))),
-        ClassicHeader.asSliver(
-            mode: headeMode
-            ,onRefresh: () {
+        ClassicHeader.asSliver(onRefresh: () {
+          print("onRefresh");
           return Future.value(true);
-        }),
+        },offStage: true,),
         SliverAppBar(
           backgroundColor: Colors.greenAccent,
           expandedHeight: 200.0,
@@ -62,10 +60,13 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
               )),
         ),
         SliverList(delegate: SliverChildListDelegate(data)),
-        ClassicFooter.asSliver(onLoading: () async {
-          await Future.delayed(Duration(milliseconds: 1000));
-          return true;
-        },mode: footerMode,)
+        ClassicFooter.asSliver(
+            key: footerKey,
+            onLoading: () async {
+              print("onLoading");
+              await Future.delayed(Duration(milliseconds: 1000));
+              return true;
+            })
       ],
     );
   }

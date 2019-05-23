@@ -15,12 +15,15 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
     this.paintOffsetY,
     this.refreshIndicatorLayoutExtent = 0.0,
     this.floating = false,
+    this.offStage,
     Widget child,
     this.refreshStyle,
   })  : assert(refreshIndicatorLayoutExtent != null),
         assert(refreshIndicatorLayoutExtent >= 0.0),
         assert(floating != null),
         super(key: key, child: child);
+
+  final bool offStage;
 
   // The amount of space the indicator should occupy in the sliver in a
   // resting state when in the refreshing mode.
@@ -41,6 +44,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
       refreshIndicatorExtent: refreshIndicatorLayoutExtent,
       hasLayoutExtent: floating,
       paintOffsetY: paintOffsetY,
+      offStage: offStage,
       refreshStyle: refreshStyle,
     );
   }
@@ -51,6 +55,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
     renderObject
       ..refreshIndicatorLayoutExtent = refreshIndicatorLayoutExtent
       ..hasLayoutExtent = floating
+      ..offStage = offStage
       ..paintOffsetY = paintOffsetY;
   }
 }
@@ -61,6 +66,7 @@ class _RenderSliverRefresh extends RenderSliver
       {@required double refreshIndicatorExtent,
       @required bool hasLayoutExtent,
       RenderBox child,
+      this.offStage,
       this.paintOffsetY,
       this.refreshStyle})
       : assert(refreshIndicatorExtent != null),
@@ -70,6 +76,8 @@ class _RenderSliverRefresh extends RenderSliver
         _hasLayoutExtent = hasLayoutExtent {
     this.child = child;
   }
+
+  bool offStage;
 
   final RefreshStyle refreshStyle;
 
@@ -131,6 +139,9 @@ class _RenderSliverRefresh extends RenderSliver
     } else {
       active = constraints.scrollOffset < refreshIndicatorLayoutExtent ||
           hasLayoutExtent;
+    }
+    if (offStage) {
+      active = false;
     }
     final double overscrolledExtent = constraints.overlap.abs();
     if (refreshStyle == RefreshStyle.Behind) {
@@ -224,9 +235,11 @@ class _RenderSliverRefresh extends RenderSliver
 
 class SliverLoading extends SingleChildRenderObjectWidget {
   final bool hideWhenNotFull;
+  final bool offStage;
 
   SliverLoading({
     Key key,
+    this.offStage,
     this.hideWhenNotFull,
     Widget child,
   }) : super(key: key, child: child);
@@ -235,23 +248,30 @@ class SliverLoading extends SingleChildRenderObjectWidget {
   _RenderSliverLoading createRenderObject(BuildContext context) {
     return _RenderSliverLoading(
       hideWhenNotFull: hideWhenNotFull,
+      offStage: offStage,
     );
   }
 
   @override
   void updateRenderObject(
-      BuildContext context, covariant _RenderSliverLoading renderObject) {}
+      BuildContext context, covariant _RenderSliverLoading renderObject) {
+    renderObject
+      ..offStage = offStage
+      ..hideWhenNotFull = hideWhenNotFull;
+  }
 }
 
 class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   _RenderSliverLoading({
     RenderBox child,
+    this.offStage,
     this.hideWhenNotFull,
   }) {
     this.child = child;
   }
 
-  final bool hideWhenNotFull;
+  bool offStage;
+  bool hideWhenNotFull;
   double headerHeight;
 
   // This keeps track of the previously applied scroll offsets to the scrollable
@@ -274,6 +294,9 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
           constraints.viewportMainAxisExtent;
     } else {
       active = true;
+    }
+    if (offStage) {
+      active = false;
     }
     if (active) {
       child.layout(constraints.asBoxConstraints(), parentUsesSize: true);
