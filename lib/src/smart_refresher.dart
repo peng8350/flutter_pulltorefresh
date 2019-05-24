@@ -94,10 +94,7 @@ class SmartRefresherState extends State<SmartRefresher>
     if (!widget.isNestWrapped) {
       scrollController = widget.child.controller ??
           ScrollController(
-              initialScrollOffset:
-                  widget.header.refreshStyle != RefreshStyle.Front
-                      ? 0.0
-                      : widget.header.height);
+              );
       widget.controller.scrollController = scrollController;
     }
     widget.controller._header = widget.header;
@@ -137,6 +134,15 @@ class SmartRefresherState extends State<SmartRefresher>
     super.didUpdateWidget(oldWidget);
   }
 
+  ScrollPhysics _getScrollPhysics(){
+    if(widget.header.refreshStyle == RefreshStyle.Front){
+      return widget.enablePullDown?RefreshClampPhysics(headerHeight: widget.header.height):ClampingScrollPhysics();
+    }
+    else{
+      return RefreshBouncePhysics();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> slivers =
@@ -149,9 +155,7 @@ class SmartRefresherState extends State<SmartRefresher>
       slivers.add(widget.footer);
     }
     return CustomScrollView(
-      physics: widget.header.refreshStyle == RefreshStyle.Front
-          ? RefreshClampPhysics(headerHeight: widget.header.height)
-          : RefreshBouncePhysics(),
+      physics: _getScrollPhysics(),
       controller: scrollController,
       cacheExtent: widget.child.cacheExtent,
       key: widget.child.key,

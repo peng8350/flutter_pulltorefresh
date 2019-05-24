@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Example3 extends StatefulWidget {
@@ -78,22 +79,22 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     // TODO: implement initState
 
     // for test #68 true-> false ->true
-//    Future.delayed(Duration(milliseconds: 3000),(){
-//      _enablePullDown = false;
-//      _enablePullUp = false;
-//    if(mounted)
-//      setState(() {
-//
-//      });
-//    });
-//    Future.delayed(Duration(milliseconds: 6000),(){
-//      _enablePullDown = true;
-//      _enablePullUp = true;
-//    if(mounted)
-//      setState(() {
-//
-//      });
-//    });
+    Future.delayed(Duration(milliseconds: 3000),(){
+      _enablePullDown = false;
+      _enablePullUp = false;
+    if(mounted)
+      setState(() {
+
+      });
+    });
+    Future.delayed(Duration(milliseconds: 6000),(){
+      _enablePullDown = true;
+      _enablePullUp = true;
+    if(mounted)
+      setState(() {
+
+      });
+    });
 
 //    // for test #68 false-> true ->false
 //    Future.delayed(Duration(milliseconds: 3000),(){
@@ -152,6 +153,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print("rebuild");
     return SmartRefresher(
       enablePullUp: _enablePullDown,
       enablePullDown: _enablePullUp,
@@ -182,7 +184,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         });
       },
       child: ListView.builder(
-        key: PageStorageKey("e"),
         controller: _scrollController,
         itemExtent: 100.0,
         itemCount: data.length,

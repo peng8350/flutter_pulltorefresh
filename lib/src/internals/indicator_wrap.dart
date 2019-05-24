@@ -60,7 +60,6 @@ abstract class LoadIndicator extends Indicator {
 
 abstract class RefreshIndicatorState<T extends RefreshIndicator>
     extends State<T> with IndicatorProcessor {
-  SmartRefresherState get refresher => SmartRefresher.of(context);
 
   bool floating = false;
 
@@ -199,6 +198,17 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   }
 
   @override
+  void deactivate() {
+    // TODO: implement deactivate
+    // careful this code ,I am not sure if it is right to do so
+    // for fix the offset after the header remove from slivers
+    if(widget.refreshStyle==RefreshStyle.Front) {
+      _scrollController.position.correctBy(-widget.height);
+    }
+    super.deactivate();
+  }
+
+  @override
   void dispose() {
     // TODO: implement dispose
     //1.3.7: here need to careful after add asSliver builder
@@ -208,6 +218,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   }
 
   void _update() {
+    refresher = SmartRefresher.of(context);
     if (refresher == null) {
       _updateListener(
           _mode ?? ValueNotifier<RefreshStatus>(RefreshStatus.idle),
@@ -217,6 +228,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           refresher.widget.controller.scrollController);
     }
   }
+
 
 
   @override
@@ -238,7 +250,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
 abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     with IndicatorProcessor {
-  SmartRefresherState get refresher => SmartRefresher.of(context);
 
   // use to update between one page and above one page
   bool _isHide = false;
@@ -305,6 +316,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   // updateListener
   void _update() {
+    refresher = SmartRefresher.of(context);
     if (refresher == null) {
       _updateListener(_mode ?? ValueNotifier<LoadStatus>(LoadStatus.idle),
           Scrollable.of(context).widget.controller);
@@ -363,6 +375,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 }
 
 abstract class IndicatorProcessor {
+  SmartRefresherState  refresher;
+
   set mode(mode) => _mode.value = mode;
 
   get mode => _mode.value;
