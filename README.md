@@ -39,11 +39,11 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 
 
 ## How to use?
-
+the first way,use SmartRefresher and RefreshController
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.6
+     pull_to_refresh: ^1.3.7
 
 ```
 
@@ -100,6 +100,54 @@ void dispose(){
     _refreshController.dispose();
     super.dispose();
 }
+
+```
+
+Second Way(1.3.7 new),Considering that sometimes Sliver doesn't have to be placed in the first
+
+```
+
+     /*
+           1. Request refresh operation
+           For FrontStyle header, animateTo (0.0), for other refresh styles, animateTo (- trigger Distance) is the default trigger distance of 80.
+           Of course, not all indicators have a trigger distance of 80, such as WaterDropHeader, which has an internal trigger distance of 100.0.
+            _scrollController.animateTo(-80.0);
+
+            2.Request loading operation
+            _scrollController
+                         .animateTo(scrollController.position.maxScrollExtent);
+
+            3.Sometimes, if you have to operate on the status of an internal indicator, you can use GlobalKey, which exposes getters and setters.
+            GlobalKey<LoadIndicatorState> key = GlobalKey();
+            key.currentState.mode = LoadStatus.idle;
+      */
+
+    /*
+     for physics:
+     1.for header: Follow,UnFollow,Behind Style
+     return RefreshBouncePhysics()
+     2.header is Front Style
+     Return RefreshClampPhysics (springBackDistance: 100.0) when displayed, and 100.0 corresponds to the header's height
+     Return to Clamping ScrollPhysics when hidden
+    */
+    CustomScrollView(
+      controller: _scrollController,
+      physics: RefreshBouncePhysics(), //don't forget,necessary
+      slivers: [
+        .....
+        _enablePullDown?ClassicHeader.asSliver(onRefresh: () async {
+          await Future.delayed(Duration(milliseconds: 1000));
+          // return true,it mean refreshCompleted,return false it mean refreshFailed
+          return true;
+        }):null,
+        .....
+        _enablePullUp?ClassicFooter.asSliver(onLoading: () async {
+          await Future.delayed(Duration(milliseconds: 1000));
+          //return true it mean set the footerStatus to idle,else set to NoData state
+          return true;
+        }):null
+      ].where((child) => child!=null).toList(),
+    );
 
 ```
 

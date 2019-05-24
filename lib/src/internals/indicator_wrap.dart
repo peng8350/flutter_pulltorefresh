@@ -4,7 +4,6 @@
     createTime:2018-05-14 15:39
  */
 
-import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'default_constants.dart';
 import 'dart:math' as math;
@@ -204,7 +203,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     // careful this code ,I am not sure if it is right to do so
     // for fix the offset after the header remove from slivers
     if(widget.refreshStyle==RefreshStyle.Front) {
-      _scrollController.position.correctBy(-widget.height);
+      if(_scrollController.position.pixels<widget.height){
+        _scrollController.position.correctPixels(0.0);
+      }
+      else{
+        _scrollController.position.correctBy(-widget.height);
+      }
+
     }
     super.deactivate();
   }
@@ -327,10 +332,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     }
   }
 
-  void resetNoData(){
-    mode = LoadStatus.idle;
-  }
-
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -378,9 +379,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 abstract class IndicatorProcessor {
   SmartRefresherState  refresher;
 
-  set mode(mode) => _mode.value = mode;
+  set mode(mode) => _mode?.value = mode;
 
-  get mode => _mode.value;
+  get mode => _mode?.value;
 
   ValueNotifier<dynamic> _mode;
 

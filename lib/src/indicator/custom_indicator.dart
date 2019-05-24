@@ -9,6 +9,10 @@ import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 import '../internals/default_constants.dart';
 
+
+typedef Widget HeaderBuilder(BuildContext context, RefreshStatus mode);
+typedef Widget FooterBuilder(BuildContext context, LoadStatus mode);
+
 class CustomHeader extends RefreshIndicator {
   final HeaderBuilder builder;
 

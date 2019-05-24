@@ -134,3 +134,11 @@ Notice: This version of the code changes much, Api too
 * decrease default triggerDistance from 100.0 to 80.0
 * improve dragging scrolling speed of Front Style
 * Add offset attr in Front Style
+
+## 1.3.7
+* Adding an asSlivers constructor can be inserted into slivers as a Sliver
+* Fix FrontStyle cannot support dynamic change enablePullDown
+* Fix FrontStyle cannot enter refresh state when init
+* Optimize indicator internal code to avoid locking widgets
+* Fix iOS click status cannot roll back without ScrollController in child
+* Fix one ignored situation after finish refresh -> completed(not in visual range)

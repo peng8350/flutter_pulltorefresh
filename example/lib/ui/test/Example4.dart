@@ -11,17 +11,27 @@ class Example4 extends StatefulWidget {
 
 class _Example4State extends State<Example4> with TickerProviderStateMixin {
   List<Widget> data = [];
-  RefreshController _refreshController;
   ScrollController _scrollController;
-  ValueNotifier<RefreshStatus> headeMode = ValueNotifier(RefreshStatus.idle);
-  ValueNotifier<LoadStatus> footerMode = ValueNotifier(LoadStatus.idle);
+  bool _enablePullDown = true;
+  bool _enablePullUp = true;
+
 
   void _getDatas() {
     for (int i = 0; i < 24; i++) {
-      data.add(Container(
-        color: Colors.redAccent,
-        child: Text('Data $i'),
-        height: 50.0,
+      data.add(GestureDetector(
+        child: Container(
+          color: Colors.redAccent,
+          child: Text('Data $i'),
+          height: 50.0,
+        ),
+        onTap: () {
+          /*
+            request refresh:
+              If your header is FrontStyle,animateTo(0.0),
+              else animateTo(-header.triggerDistance)
+           */
+          _scrollController.animateTo(-80.0);
+        },
       ));
     }
   }
@@ -31,43 +41,43 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
     // TODO: implement initState
     _getDatas();
     _scrollController = ScrollController(keepScrollOffset: true);
-    _refreshController = RefreshController();
+    Future.delayed(Duration(milliseconds: 3000),(){
+      _enablePullDown = false;
+      _enablePullUp = false;
+      if(mounted)
+        setState(() {
+
+        });
+    });
+    Future.delayed(Duration(milliseconds: 6000),(){
+      _enablePullDown = true;
+      _enablePullUp = true;
+      if(mounted)
+        setState(() {
+
+        });
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return CustomScrollView(
+      controller: _scrollController,
+      physics: _enablePullDown?RefreshClampPhysics(springBackDistance: 100.0):ClampingScrollPhysics(),
       slivers: [
-        SliverPersistentHeader(
-            delegate: _SliverDelegate(
-                child: Container(
-          height: 300.0,
-          color: Colors.red,
-        ))),
-        ClassicHeader.asSliver(
-            mode: headeMode
-            ,onRefresh: () {
-          return Future.value(true);
-        }),
-        SliverAppBar(
-          backgroundColor: Colors.greenAccent,
-          expandedHeight: 200.0,
-          pinned: true,
-          flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              background: Image.network(
-                "https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0c21b1ac3066ae4d354a3b2e0064c8be&auto=format&fit=crop&w=500&q=60",
-                fit: BoxFit.cover,
-              )),
-        ),
-        SliverList(delegate: SliverChildListDelegate(data)),
-        ClassicFooter.asSliver(onLoading: () async {
+        _enablePullDown?MaterialClassicHeader.asSliver(onRefresh: () async {
           await Future.delayed(Duration(milliseconds: 1000));
+          // return true,it mean refreshCompleted,return false it mean refreshFailed
           return true;
-        },mode: footerMode,)
-      ],
+        }):null,
+        SliverList(delegate: SliverChildListDelegate(data)),
+        _enablePullUp?ClassicFooter.asSliver(onLoading: () async {
+          await Future.delayed(Duration(milliseconds: 1000));
+          //return true it mean set the footerStatus to idle,else set to NoData state
+          return true;
+        }):null
+      ].where((child) => child!=null).toList(),
     );
   }
 }

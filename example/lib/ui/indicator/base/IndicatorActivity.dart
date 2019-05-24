@@ -95,9 +95,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
             onLoading: _onLoading,
             header: widget.header,
             footer: widget.footer,
-
             enablePullDown: true,
-            enableOverScroll: widget.enableOverScroll,
             isNestWrapped: widget.isNest,
             enablePullUp: totalHeight > lIstHeight,
             controller: _refreshController);

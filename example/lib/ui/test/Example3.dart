@@ -79,22 +79,22 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     // TODO: implement initState
 
     // for test #68 true-> false ->true
-    Future.delayed(Duration(milliseconds: 3000),(){
-      _enablePullDown = false;
-      _enablePullUp = false;
-    if(mounted)
-      setState(() {
-
-      });
-    });
-    Future.delayed(Duration(milliseconds: 6000),(){
-      _enablePullDown = true;
-      _enablePullUp = true;
-    if(mounted)
-      setState(() {
-
-      });
-    });
+//    Future.delayed(Duration(milliseconds: 3000),(){
+//      _enablePullDown = false;
+//      _enablePullUp = false;
+//    if(mounted)
+//      setState(() {
+//
+//      });
+//    });
+//    Future.delayed(Duration(milliseconds: 6000),(){
+//      _enablePullDown = true;
+//      _enablePullUp = true;
+//    if(mounted)
+//      setState(() {
+//
+//      });
+//    });
 
 //    // for test #68 false-> true ->false
 //    Future.delayed(Duration(milliseconds: 3000),(){

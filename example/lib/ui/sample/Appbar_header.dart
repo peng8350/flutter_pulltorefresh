@@ -5,6 +5,7 @@
  */
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 class AppBarHeader extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class AppBarHeader extends StatefulWidget {
 class _AppBarHeaderState extends State<AppBarHeader> {
   List<Widget> data = [];
   RefreshController _refreshController;
+
   void _getDatas() {
     for (int i = 0; i < 18; i++) {
       data.add(Container(
@@ -32,10 +34,10 @@ class _AppBarHeaderState extends State<AppBarHeader> {
     super.initState();
   }
 
-  List<Widget> buildList(){
+  List<Widget> buildList() {
     List<Widget> items = [];
 
-    for(int i = 0 ;i<100;i++){
+    for (int i = 0; i < 100; i++) {
       items.add(Text('样例数据'));
     }
     return items;
@@ -54,28 +56,57 @@ class _AppBarHeaderState extends State<AppBarHeader> {
     return Container(
       color: Colors.white,
       child: SmartRefresher(
-          child: CustomScrollView(
-            slivers: [
-              // This is necessary,if not  SliverAppbar will follow headerIndicator
-              SliverToBoxAdapter(
-                child: Container(),
+        child: CustomScrollView(
+          slivers: [
+            // This is necessary,if not  SliverAppbar will follow headerIndicator
+            SliverStickyHeader(
+              header: new Container(
+                height: 60.0,
+                color: Colors.lightBlue,
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                alignment: Alignment.centerLeft,
+                child: new Text(
+                  'Header #0',
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
-              SliverAppBar(
-                backgroundColor: Colors.greenAccent,
-                expandedHeight: 200.0,
-                pinned: true,
-                flexibleSpace: FlexibleSpaceBar(
-                    centerTitle: true,
-                    background: Image.network(
-                      "https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0c21b1ac3066ae4d354a3b2e0064c8be&auto=format&fit=crop&w=500&q=60",
-                      fit: BoxFit.cover,
-                    )),
+              sliver: new SliverList(
+                delegate: new SliverChildBuilderDelegate(
+                  (context, i) => new ListTile(
+                        leading: new CircleAvatar(
+                          child: new Text('0'),
+                        ),
+                        title: new Text('List tile #$i'),
+                      ),
+                  childCount: 4,
+                ),
               ),
-              SliverList(
-                  delegate: SliverChildListDelegate(buildList()))
-            ],
-          ),
-          controller: _refreshController,header: ClassicHeader(refreshStyle: RefreshStyle.Follow,),),
+            ),
+            SliverToBoxAdapter(
+              child: Container(),
+            ),
+
+            SliverAppBar(
+              backgroundColor: Colors.greenAccent,
+              expandedHeight: 200.0,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  background: Image.network(
+                    "https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0c21b1ac3066ae4d354a3b2e0064c8be&auto=format&fit=crop&w=500&q=60",
+                    fit: BoxFit.cover,
+                  )),
+            ),
+            SliverList(delegate: SliverChildListDelegate(buildList()))
+          ],
+        ),
+        controller: _refreshController,
+        onRefresh: (){
+          _refreshController.refreshCompleted();
+        },
+        header: MaterialClassicHeader(
+        ),
+      ),
     );
   }
 }

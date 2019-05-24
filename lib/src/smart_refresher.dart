@@ -13,6 +13,8 @@ import 'indicator/classic_indicator.dart';
 import 'indicator/material_indicator.dart';
 import 'package:flutter/scheduler.dart';
 
+typedef void OnOffsetChange(bool up, double offset);
+
 enum RefreshStatus { idle, canRefresh, refreshing, completed, failed }
 
 enum LoadStatus { idle, loading, noMore }
@@ -35,9 +37,6 @@ class SmartRefresher extends StatefulWidget {
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePullDown;
 
-  // if open OverScroll if you use RefreshIndicator and LoadFooter
-  final bool enableOverScroll;
-
   // upper and downer callback when you drag out of the distance
   final Function onRefresh, onLoading;
 
@@ -56,7 +55,6 @@ class SmartRefresher extends StatefulWidget {
       @required this.controller,
       RefreshIndicator header,
       LoadIndicator footer,
-      this.enableOverScroll: default_enableOverScroll,
       this.enablePullDown: default_enablePullDown,
       this.enablePullUp: default_enablePullUp,
       this.onRefresh,
@@ -81,11 +79,11 @@ class SmartRefresher extends StatefulWidget {
   }
 }
 
-class SmartRefresherState extends State<SmartRefresher>{
-
+class SmartRefresherState extends State<SmartRefresher> {
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
+    // there is no method to get PrimaryScrollController in initState
     widget.controller.scrollController =
         widget.child.controller ?? PrimaryScrollController.of(context);
     widget.controller._header = widget.header;
@@ -122,7 +120,6 @@ class SmartRefresherState extends State<SmartRefresher>{
   Widget build(BuildContext context) {
     List<Widget> slivers =
         List.from(widget.child.buildSlivers(context), growable: true);
-
     if (widget.enablePullDown) {
       slivers.insert(0, widget.header);
     }

@@ -38,12 +38,11 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.6
+     pull_to_refresh: ^1.3.7
 
 ```
 
-
-
+第一种使用方法,使用SmartRefresh和RefreshController
 ```
 
 RefreshController _refreshController;
@@ -94,6 +93,54 @@ void dispose(){
     _refreshController.dispose();
     super.dispose();
 }
+
+```
+
+第二种使用方法(1.3.7新增),考虑到有的时候Sliver不一定要放在头部
+
+```
+
+     /*
+             1.请求刷新操作
+             对于header为FrontStyle来说,animateTo(0.0),对于其他刷新风格来说,应animateTo(-triggerDistance),这个触发距离大部分默认为80,
+             当然不是所有指示器的触发距离都是80,比如WaterDropHeader,它内部触发距离为100.0
+            _scrollController.animateTo(-80.0);
+
+            2.请求加载更多的操作。
+            _scrollController
+                         .animateTo(scrollController.position.maxScrollExtent);
+
+            3.有时,假如不得不操作内部指示器的状态,可以使用GlobalKey,内部已经暴露好getter和setter
+            GlobalKey<LoadIndicatorState> key = GlobalKey();
+            key.currentState.mode = LoadStatus.idle;
+      */
+
+    /*
+     for physics:
+     1.header为Follow,UnFollow,Behind风格
+     返回RefreshBouncePhysics()即可
+     2.header为Front
+     当显示时需要返回RefreshClampPhysics(springBackDistance: 100.0),100.0对应header的高度
+     当隐藏时返回ClampingScrollPhysics即可
+    */
+    CustomScrollView(
+      controller: _scrollController,
+      physics: RefreshBouncePhysics(), //don't forget,necessary
+      slivers: [
+        ....,
+        _enablePullDown?ClassicHeader.asSliver(onRefresh: () async {
+          await Future.delayed(Duration(milliseconds: 1000));
+          // return true,it mean refreshCompleted,return false it mean refreshFailed
+          return true;
+        }):null,
+        ....,
+        _enablePullUp?ClassicFooter.asSliver(onLoading: () async {
+          await Future.delayed(Duration(milliseconds: 1000));
+          //return true it mean set the footerStatus to idle,else set to NoData state
+          return true;
+        }):null
+      ].where((child) => child!=null).toList(),
+    );
 
 ```
 

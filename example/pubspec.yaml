@@ -17,6 +17,7 @@ dependencies:
 
   residemenu: 1.2.5
 
+  flutter_sticky_header: ^0.4.0
 
 dev_dependencies:
   flutter_test:
