@@ -38,7 +38,7 @@ TabController _tabController;
     return MaterialApp(
       home:Scaffold(
         body: SmartRefresher(
-          header: WaterDropMaterialHeader(backgroundColor: Colors.pink,offset: 98.0,),
+          header: WaterDropMaterialHeader(backgroundColor: Colors.pink,offset: MediaQuery.of(context).padding.top+56.0,),
           child: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(

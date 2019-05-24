@@ -91,7 +91,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if (widget.refreshStyle == RefreshStyle.Front) {
       return widget.height - controller.position.extentBefore;
     }
-    return (floating ? widget.height : 0.0) - _scrollController.offset;
+    return (floating ? widget.height : 0.0) - _scrollController?.offset;
   }
 
   void update() {
@@ -115,6 +115,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       floating = true;
       update();
       readyToRefresh().then((_) {
+        if(!mounted)return;
         mode = RefreshStatus.refreshing;
       });
     }
@@ -138,7 +139,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           */
         if (widget.refreshStyle == RefreshStyle.Front) {
           if (inVisual()) {
-            _scrollController?.jumpTo(widget.height);
+            _scrollController.jumpTo(widget.height);
           }
           mode = RefreshStatus.idle;
           _scrollController.position.activity.delegate.goBallistic(0.0);
@@ -308,7 +309,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
     if (refresher?.widget?.onOffsetChange != null &&
         _scrollController.position.extentAfter == 0.0) {
-      refresher.widget.onOffsetChange(false, overscrollPast);
+      refresher?.widget?.onOffsetChange(false, overscrollPast);
     }
     handleDragMove();
     onOffsetChange(overscrollPast);
@@ -402,15 +403,6 @@ abstract class IndicatorProcessor {
       ValueNotifier<dynamic> mode, ScrollController controller) {
     final ValueNotifier<dynamic> newMode = mode;
     final ScrollController newController = controller;
-//    if (refresher == null) {
-//      newMode = indicator.mode ?? ValueNotifier<LoadStatus>(LoadStatus.idle);
-//      newController = Scrollable.of(indicator.).widget.controller
-//        ..addListener(offsetCall);
-//    } else {
-//      newMode = refresher.widget.controller.footerMode;
-//      newController = Scrollable.of(context).widget.controller
-//        ..addListener(offsetCall);
-//    }
     if (newMode != null && newMode != _mode) {
       _mode?.removeListener(handleModeChange);
       _mode = newMode;

@@ -281,7 +281,6 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   @override
   void performLayout() {
     assert(constraints.growthDirection == GrowthDirection.forward);
-
     if (child == null) {
       geometry = SliverGeometry.zero;
       return;

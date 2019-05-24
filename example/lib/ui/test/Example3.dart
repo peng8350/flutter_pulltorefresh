@@ -131,9 +131,9 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //    });
     _getDatas();
     _refreshController = RefreshController();
-//    SchedulerBinding.instance.addPostFrameCallback((_){
-//      _refreshController.requestRefresh(needDownAnimate: false);
-//    });
+    SchedulerBinding.instance.addPostFrameCallback((_){
+      _refreshController.requestRefresh();
+    });
     super.initState();
   }
 
@@ -169,6 +169,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         print("onRefresh");
         Future.delayed(const Duration(milliseconds: 2009)).then((val) {
           data.add(Card());
+          if(mounted)
           setState(() {
 
           });

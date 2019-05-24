@@ -4,6 +4,7 @@
  * Time: 2019/5/21 下午12:43
  */
 
+import 'package:example/ui/screen/cupertinoScreen.dart';
 import 'package:example/ui/screen/qqzone.dart';
 import 'package:flutter/material.dart';
 import 'bilibili.dart';
@@ -20,6 +21,12 @@ class ScreenPage extends StatelessWidget {
       title: "QQ空间",
       onClick: (BuildContext context) {
         Navigator.of(context).push( MaterialPageRoute(builder: (BuildContext context) => qqZone()));
+      },
+    ),
+    _Item(
+      title: "iOS界面(主要测试SafeArea)",
+      onClick: (BuildContext context) {
+        Navigator.of(context).push( MaterialPageRoute(builder: (BuildContext context) => CupertinoScreen()));
       },
     )
   ];
