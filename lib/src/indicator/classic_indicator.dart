@@ -52,7 +52,7 @@ class ClassicHeader extends RefreshIndicator {
   const ClassicHeader.asSliver({
     Key key,
     @required OnRefresh onRefresh,
-    bool offStage:false,
+    ValueNotifier<RefreshStatus> mode,
     RefreshStyle refreshStyle: default_refreshStyle,
     double height: default_height,
     double triggerDistance: default_refresh_triggerDistance,
@@ -76,7 +76,6 @@ class ClassicHeader extends RefreshIndicator {
   }) : super(
             key: key,
             onRefresh: onRefresh,
-            offStage:offStage,
             refreshStyle: refreshStyle,
             height: height,
             triggerDistance: triggerDistance);
@@ -204,7 +203,7 @@ class ClassicFooter extends LoadIndicator {
   const ClassicFooter.asSliver({
     Key key,
     @required OnLoading onLoading,
-    bool offStage:false,
+    ValueNotifier<LoadStatus> mode,
     Function onClick,
     bool autoLoad: default_AutoLoad,
     double triggerDistance: default_load_triggerDistance,
@@ -228,7 +227,6 @@ class ClassicFooter extends LoadIndicator {
   }) : super(
             key: key,
             onLoading: onLoading,
-            offStage:offStage,
             triggerDistance: triggerDistance,
             onClick: onClick,
             hideWhenNotFull: hideWhenNotFull,

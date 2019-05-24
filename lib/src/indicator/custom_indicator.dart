@@ -28,14 +28,13 @@ class CustomHeader extends RefreshIndicator {
     Key key,
     @required this.builder,
     @required OnRefresh onRefresh,
-    bool offStage:false,
+    ValueNotifier<RefreshStatus> mode,
     double height: default_height,
     RefreshStyle refreshStyle: RefreshStyle.Follow,
     double triggerDistance: default_refresh_triggerDistance,
   }) : super(
       key: key,
       onRefresh:onRefresh,
-      offStage:offStage,
       triggerDistance: triggerDistance,
       refreshStyle: refreshStyle,
       height: height);
@@ -76,7 +75,6 @@ class CustomFooter extends LoadIndicator {
     Key key,
     @required this.builder,
     @required OnLoading onLoading,
-    bool offStage:false,
     bool autoLoad: true,
     bool hideWhenNotFull: true,
     Function onClick,
@@ -85,7 +83,6 @@ class CustomFooter extends LoadIndicator {
       key: key,
       autoLoad: autoLoad,
       onLoading:onLoading,
-      offStage:offStage,
       hideWhenNotFull: hideWhenNotFull,
       triggerDistance: triggerDistance,
       onClick: onClick);

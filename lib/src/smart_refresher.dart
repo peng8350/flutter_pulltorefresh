@@ -28,25 +28,18 @@ class SmartRefresher extends StatefulWidget {
 
   final RefreshIndicator header;
   final LoadIndicator footer;
-
   // This bool will affect whether or not to have the function of drop-up load.
   final bool enablePullUp;
-
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePullDown;
-
   // if open OverScroll if you use RefreshIndicator and LoadFooter
   final bool enableOverScroll;
-
   // upper and downer callback when you drag out of the distance
   final Function onRefresh, onLoading;
-
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;
-
   //controll inner state
   final RefreshController controller;
-
   // When SmartRefresher is wrapped in some ScrollView,if true:it will find the primaryScrollController in parent widget
   final bool isNestWrapped;
 

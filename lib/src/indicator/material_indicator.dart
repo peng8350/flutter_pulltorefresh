@@ -37,7 +37,7 @@ class MaterialClassicHeader extends RefreshIndicator {
   const MaterialClassicHeader.asSliver({
     Key key,
     @required OnRefresh onRefresh,
-    bool offStage:false,
+    ValueNotifier<RefreshStatus> mode,
     this.semanticsLabel,
     this.semanticsValue,
     double offset: 0.0,
@@ -47,7 +47,6 @@ class MaterialClassicHeader extends RefreshIndicator {
   }) : super(
           key: key,
           onRefresh: onRefresh,
-          offStage:offStage,
           refreshStyle: RefreshStyle.Front,
           height: 100.0,
           offset: offset,
@@ -192,7 +191,6 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
   const WaterDropMaterialHeader.asSliver({
     Key key,
     @required OnRefresh onRefresh,
-    bool offStage:false,
     String semanticsLabel,
     double distance: 120.0,
     double offset: 0.0,
@@ -202,7 +200,6 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
   }) : super.asSliver(
             key: key,
             onRefresh: onRefresh,
-            offStage:offStage,
             offset: offset,
             color: color,
             distance: distance,
