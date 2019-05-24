@@ -101,8 +101,8 @@ class _MaterialClassicHeaderState
           alignment: Alignment.topCenter,
           child: RefreshProgressIndicator(
             semanticsLabel: widget.semanticsLabel ??
-                MaterialLocalizations.of(context).refreshIndicatorSemanticLabel,
-            semanticsValue: widget.semanticsValue,
+                MaterialLocalizations?.of(context)?.refreshIndicatorSemanticLabel,
+            semanticsValue: widget?.semanticsValue,
             value: floating ? null : _valueAni.value,
             valueColor: _valueColor,
             backgroundColor: widget.backgroundColor,

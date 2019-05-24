@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class CupertinoScreen extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -23,17 +24,18 @@ class CupertinoScreen extends StatelessWidget {
         home: CupertinoPageScaffold(
       child: SafeArea(
         child: CustomScrollView(
-          physics: RefreshBouncePhysics(),
+          physics: RefreshClampPhysics(springBackDistance: 100.0),
           slivers: <Widget>[
-            CupertinoSliverNavigationBar(
-              largeTitle: Text("iOS"),
-            ),
-            ClassicHeader.asSliver(
+            MaterialClassicHeader.asSliver(
               onRefresh: () async {
                 await Future.delayed(Duration(milliseconds: 400));
                 return true;
               },
             ),
+            CupertinoSliverNavigationBar(
+              largeTitle: Text("iOS"),
+            ),
+
             SliverList(
               delegate: SliverChildListDelegate(widgets),
             ),

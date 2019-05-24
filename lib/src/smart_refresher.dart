@@ -28,18 +28,25 @@ class SmartRefresher extends StatefulWidget {
 
   final RefreshIndicator header;
   final LoadIndicator footer;
+
   // This bool will affect whether or not to have the function of drop-up load.
   final bool enablePullUp;
+
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePullDown;
+
   // if open OverScroll if you use RefreshIndicator and LoadFooter
   final bool enableOverScroll;
+
   // upper and downer callback when you drag out of the distance
   final Function onRefresh, onLoading;
+
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;
+
   //controll inner state
   final RefreshController controller;
+
   // When SmartRefresher is wrapped in some ScrollView,if true:it will find the primaryScrollController in parent widget
   final bool isNestWrapped;
 
@@ -74,41 +81,14 @@ class SmartRefresher extends StatefulWidget {
   }
 }
 
-class SmartRefresherState extends State<SmartRefresher>
-    with TickerProviderStateMixin {
-  // listen the listen offset or on...
-  ScrollController scrollController;
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    if (!widget.isNestWrapped && widget.child.controller == null) {
-      scrollController.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    if (!widget.isNestWrapped) {
-      scrollController = widget.child.controller ??
-          ScrollController(
-              );
-      widget.controller.scrollController = scrollController;
-    }
-    widget.controller._header = widget.header;
-    super.initState();
-  }
+class SmartRefresherState extends State<SmartRefresher>{
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    // there is no method to get PrimaryScrollController in initState
-    if (widget.isNestWrapped) {
-      scrollController = PrimaryScrollController.of(context);
-      widget.controller.scrollController = scrollController;
-    }
+    widget.controller.scrollController =
+        widget.child.controller ?? PrimaryScrollController.of(context);
+    widget.controller._header = widget.header;
 
     super.didChangeDependencies();
   }
@@ -122,23 +102,18 @@ class SmartRefresherState extends State<SmartRefresher>
     if (widget.enablePullUp != oldWidget.enablePullUp) {
       widget.controller.footerMode.value = LoadStatus.idle;
     }
-    if (!widget.isNestWrapped && widget.child.controller != null) {
-      scrollController = widget.child.controller;
-    }
-
-    if (widget.isNestWrapped) {
-      scrollController = PrimaryScrollController.of(context);
-    }
-    widget.controller.scrollController = scrollController;
+    widget.controller.scrollController =
+        widget.child.controller ?? PrimaryScrollController.of(context);
     widget.controller._header = widget.header;
     super.didUpdateWidget(oldWidget);
   }
 
-  ScrollPhysics _getScrollPhysics(){
-    if(widget.header.refreshStyle == RefreshStyle.Front){
-      return widget.enablePullDown?RefreshClampPhysics(headerHeight: widget.header.height):ClampingScrollPhysics();
-    }
-    else{
+  ScrollPhysics _getScrollPhysics() {
+    if (widget.header.refreshStyle == RefreshStyle.Front) {
+      return widget.enablePullDown
+          ? RefreshClampPhysics(springBackDistance: widget.header.height)
+          : ClampingScrollPhysics();
+    } else {
       return RefreshBouncePhysics();
     }
   }
@@ -156,7 +131,7 @@ class SmartRefresherState extends State<SmartRefresher>
     }
     return CustomScrollView(
       physics: _getScrollPhysics(),
-      controller: scrollController,
+      controller: widget.controller.scrollController,
       cacheExtent: widget.child.cacheExtent,
       key: widget.child.key,
       center: widget.child.center,

@@ -57,53 +57,58 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
 //      ),
 //      body: new TabBarView(children: views,controller:_tabController ,),
 //    );
-    return  Scaffold(
 
-      body:  PageView(
-        controller: _pageController ,
+    return  Column(
+      children: <Widget>[
+         Expanded(
 
-        children: views,onPageChanged: (index){
-           tabIndex = index;
-           if(mounted)
-           setState(() {
+           child:     PageView(
+             controller: _pageController ,
 
-           });
-        },
-      ),
-      bottomNavigationBar:  BottomNavigationBar(
-        items: [
-           BottomNavigationBarItem(
-              icon:  Icon(Icons.home,
-                  color: tabIndex == 0 ? Colors.blue : Colors.grey),
-              title:  Text('Example1',
-                  style:  TextStyle(
-                      color: tabIndex == 0 ? Colors.blue : Colors.grey))),
-           BottomNavigationBarItem(
-              icon:  Icon(Icons.cloud,
-                  color: tabIndex == 1 ? Colors.blue : Colors.grey),
-              title:  Text('Example2',
-                  style:  TextStyle(
-                      color: tabIndex == 1 ? Colors.blue : Colors.grey))),
-           BottomNavigationBarItem(
-              icon:  Icon(Icons.call,
-                  color: tabIndex == 2 ? Colors.blue : Colors.grey),
-              title:  Text('Example3',
-                  style:  TextStyle(
-                      color: tabIndex == 2 ? Colors.blue : Colors.grey))),
-           BottomNavigationBarItem(
-              icon:  Icon(Icons.transform,
-                  color: tabIndex == 3 ? Colors.blue : Colors.grey),
-              title:  Text('Example4',
-                  style:  TextStyle(
-                      color: tabIndex == 3 ? Colors.blue : Colors.grey))),
-        ],
-        onTap: (index) {
-          _pageController.jumpToPage(index);
-        },
-        currentIndex: tabIndex,
-        fixedColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-      ),
+             children: views,onPageChanged: (index){
+             tabIndex = index;
+             if(mounted)
+               setState(() {
+
+               });
+           },
+           ),
+         ),
+        BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+                icon:  Icon(Icons.home,
+                    color: tabIndex == 0 ? Colors.blue : Colors.grey),
+                title:  Text('Example1',
+                    style:  TextStyle(
+                        color: tabIndex == 0 ? Colors.blue : Colors.grey))),
+            BottomNavigationBarItem(
+                icon:  Icon(Icons.cloud,
+                    color: tabIndex == 1 ? Colors.blue : Colors.grey),
+                title:  Text('Example2',
+                    style:  TextStyle(
+                        color: tabIndex == 1 ? Colors.blue : Colors.grey))),
+            BottomNavigationBarItem(
+                icon:  Icon(Icons.call,
+                    color: tabIndex == 2 ? Colors.blue : Colors.grey),
+                title:  Text('Example3',
+                    style:  TextStyle(
+                        color: tabIndex == 2 ? Colors.blue : Colors.grey))),
+            BottomNavigationBarItem(
+                icon:  Icon(Icons.transform,
+                    color: tabIndex == 3 ? Colors.blue : Colors.grey),
+                title:  Text('Example4',
+                    style:  TextStyle(
+                        color: tabIndex == 3 ? Colors.blue : Colors.grey))),
+          ],
+          onTap: (index) {
+            _pageController.jumpToPage(index);
+          },
+          currentIndex: tabIndex,
+          fixedColor: Colors.grey,
+          type: BottomNavigationBarType.fixed,
+        )
+      ],
     );
   }
 

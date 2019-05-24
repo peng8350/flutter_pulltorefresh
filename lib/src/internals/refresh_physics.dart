@@ -133,17 +133,17 @@ class RefreshBouncePhysics extends ScrollPhysics {
 }
 
 class RefreshClampPhysics extends ScrollPhysics {
-  final double headerHeight;
+  final double springBackDistance;
 
 
   /// Creates scroll physics that bounce back from the edge.
-  const RefreshClampPhysics({ScrollPhysics parent, this.headerHeight:100.0})
+  const RefreshClampPhysics({ScrollPhysics parent, this.springBackDistance:100.0})
       : super(parent: parent);
 
   @override
   RefreshClampPhysics applyTo(ScrollPhysics ancestor) {
     return RefreshClampPhysics(
-        parent: buildParent(ancestor), headerHeight: this.headerHeight);
+        parent: buildParent(ancestor), springBackDistance: this.springBackDistance);
   }
 
   @override
@@ -157,13 +157,13 @@ class RefreshClampPhysics extends ScrollPhysics {
     // TODO: implement applyPhysicsToUserOffset
     final ScrollPosition scrollPosition =
     position as ScrollPosition;
-    if (position.extentBefore < headerHeight ) {
+    if (position.extentBefore < springBackDistance ) {
 
       final double newPixels = position.pixels-offset*0.4;
 
       if(scrollPosition.userScrollDirection.index==2){
-        if(newPixels>headerHeight){
-          return position.pixels-headerHeight;
+        if(newPixels>springBackDistance){
+          return position.pixels-springBackDistance;
         }
         else{
           return offset*0.4;
@@ -178,7 +178,7 @@ class RefreshClampPhysics extends ScrollPhysics {
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     final ScrollPosition scrollPosition =
         position as ScrollPosition;
-    if(scrollPosition.extentBefore<headerHeight) {
+    if(scrollPosition.extentBefore<springBackDistance) {
 
       if (scrollPosition.activity is BallisticScrollActivity) {
         //spring Back
@@ -209,11 +209,11 @@ class RefreshClampPhysics extends ScrollPhysics {
   Simulation createBallisticSimulation(
       ScrollMetrics position, double velocity) {
     final Tolerance tolerance = this.tolerance;
-    if (position.extentBefore < headerHeight) {
+    if (position.extentBefore < springBackDistance) {
       return ScrollSpringSimulation(
         spring,
         math.max(0.0, position.pixels),
-        headerHeight,
+        springBackDistance,
         0.0,
         tolerance: tolerance,
       );
@@ -222,7 +222,7 @@ class RefreshClampPhysics extends ScrollPhysics {
     return RefreshClampingSimulation(
       position: position.pixels,
       velocity: velocity,
-      extentBefore:velocity<0?position.extentBefore-headerHeight:-1.0,
+      extentBefore:velocity<0?position.extentBefore-springBackDistance:-1.0,
       tolerance: tolerance,
     );
   }
