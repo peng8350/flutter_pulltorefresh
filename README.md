@@ -43,7 +43,7 @@ the first way,use SmartRefresher and RefreshController
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.7
+     pull_to_refresh: ^1.3.8
 
 ```
 
@@ -111,7 +111,7 @@ Second Way(1.3.7 new),Considering that sometimes Sliver doesn't have to be place
            1. Request refresh operation
            For FrontStyle header, animateTo (0.0), for other refresh styles, animateTo (- trigger Distance) is the default trigger distance of 80.
            Of course, not all indicators have a trigger distance of 80, such as WaterDropHeader, which has an internal trigger distance of 100.0.
-            _scrollController.animateTo(-80.0);
+            _animateTo(-80.0);
 
             2.Request loading operation
             _scrollController

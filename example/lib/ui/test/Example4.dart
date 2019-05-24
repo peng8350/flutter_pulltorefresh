@@ -63,7 +63,6 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      controller: _scrollController,
       physics: _enablePullDown?RefreshClampPhysics(springBackDistance: 100.0):ClampingScrollPhysics(),
       slivers: [
         _enablePullDown?MaterialClassicHeader.asSliver(onRefresh: () async {

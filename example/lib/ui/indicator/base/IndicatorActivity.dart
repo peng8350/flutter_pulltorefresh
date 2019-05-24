@@ -57,7 +57,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
     _scrollController = new ScrollController();
     _refreshController = RefreshController();
     Future.delayed(Duration(milliseconds: 3000)).then((_){
-//      _scrollController.jumpTo(0.0);
+//      _jumpTo(0.0);
     });
     _init();
 

@@ -38,7 +38,7 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.7
+     pull_to_refresh: ^1.3.8
 
 ```
 
@@ -104,7 +104,7 @@ void dispose(){
              1.请求刷新操作
              对于header为FrontStyle来说,animateTo(0.0),对于其他刷新风格来说,应animateTo(-triggerDistance),这个触发距离大部分默认为80,
              当然不是所有指示器的触发距离都是80,比如WaterDropHeader,它内部触发距离为100.0
-            _scrollController.animateTo(-80.0);
+            _animateTo(-80.0);
 
             2.请求加载更多的操作。
             _scrollController

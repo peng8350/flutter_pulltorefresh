@@ -142,3 +142,6 @@ Notice: This version of the code changes much, Api too
 * Optimize indicator internal code to avoid locking widgets
 * Fix iOS click status cannot roll back without ScrollController in child
 * Fix one ignored situation after finish refresh -> completed(not in visual range)
+
+## 1.3.8
+* Temporary fix deadly bug: PrimaryScrollController cannot shared by multiple Indicators
