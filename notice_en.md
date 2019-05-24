@@ -13,17 +13,18 @@
 ## Front RefreshStyle
 * This style is somewhat different from the implementation mechanism of Behind,Follow,UnFollow,Follow Implementation of Modification Based on ClampScrollPhysics
 ,Behind, Follow, UnFollow are three resilient sliding engines based on iOS。Front works for Android a little more.
-
-
-
 * This is very important. After using Front style, the initial offset of the list is 100.0, which will bounce back between 0 and 100. So when calculating the offset of scrollController,
  you need to subtract the height of the indicator (100), which is the real offset in the list.Similarly, when you scroll to the top, animateTo (100.0), not animateTo (0.0).
-
+* only support place in first sliver
 
 ## Behind RefreshStyle
 * In fact, the realization of this style is realized by the dynamic change of height. Try to use Align attributes more in the periphery, and there will be different sliding effects.
 * It has been found that this style does not support Icon as a widget, i.e. Classial Header. It does not support Icon. Using this indicator,
 you will find that Icon will be suspended in the attempt area for reasons I have not found out yet.
+
+## footer indicator
+* For the problem of not satisfying one page hiding, although the internal use of precedingScrollExtent to determine how many distances ahead, but this method is not advisable, there is a case that a sliver only occupies scrollExtent but not scrollExtent.
+  The case of layoutExtent. So if your internal slivers have this kind of sliver, my internal judgment is not legitimate, you need to judge manually. Set hideWhenNotFull to false, and then use Boolean values to determine.
 
 ## NestedScrollView
 * Use isNested Wrapped to take effect

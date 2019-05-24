@@ -151,7 +151,7 @@ void dispose(){
 - [更新日志](CHANGELOG.md)
 - [注意地方](notice.md)
 
-## 常见问题
+## F.P.S
 * <h3>IOS状态栏双击为什么ListView不自动滚动到顶部?</h3>
 这个问题经测试不是我封装的失误,当ListView里的controller被替换后,这个问题就会出现,原因大概是Scaffold里的处理操作,请issue flutter。
 
@@ -161,6 +161,10 @@ void dispose(){
 
 * <h3>为什么使用CuperNavigationBar后(不只这一个情况),顶部或者尾部指示器有空白的地方?</h3>
 很大可能是因为SafeArea,。解决方法一般是在SmartRefresher外围套用SafeArea
+
+* <h3>兼容性方面?</h3>
+自1.3.0换了一套新的方法去实现指示器，内部指示器实现是通过监听scrollController位置变化来实现的，并没有使用到类如NotificationListener和GestureDector这类可能引起滑动手势冲突的方法，
+所以应该可以兼容大多需要利用到手势之间的库。但是，可能不兼容一些库需要改写ScrollPhysics，内部的FrontStyle就很明显需要用到这个。
 
 
 

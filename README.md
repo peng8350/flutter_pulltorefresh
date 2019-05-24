@@ -174,6 +174,10 @@ internally via PrimaryScrollController. of (context) To get scrollController, sc
 * <h3>Why is there a empty space in the top or tail indicator after using CuperNavigationBar (not just in this case)?</h3>
 the reason may be SafeArea,the solution: wrap SmartRefresher in SafeArea
 
+* <h3>Compatibility?</h3>
+1.3.0 replaces a new method to implement the indicator. The internal indicator is implemented by monitoring scroll Controller position changes. There are no methods such as NotificationListener and GestureDector that may cause sliding gesture conflicts.
+So it should be compatible with most of the libraries that need to be used between gestures. However, some libraries may not be compatible and ScrollPhysics needs to be rewritten, which is clearly required for internal FrontStyle.
+
 
 
 ## Thanks

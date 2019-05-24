@@ -57,7 +57,6 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
 //      ),
 //      body: new TabBarView(children: views,controller:_tabController ,),
 //    );
-
     return  Column(
       children: <Widget>[
          Expanded(
