@@ -130,6 +130,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         if(!mounted)return;
         floating = false;
         update();
+
         /*
           handle two Situation:
           1.when user dragging to refreshing, then user scroll down not to see the indicator,then it will not spring back,
@@ -347,7 +348,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   }
 
-  //ScrollEnd Event set true
+  //ScrollEnd E
   void _listenScrollEnd(){
     if(!_position.isScrollingNotifier.value){
       _enablbeLoadingAgain = true;
@@ -371,7 +372,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   @override
   void dispose() {
     // TODO: implement dispose
+    _position.isScrollingNotifier.removeListener(_listenScrollEnd);
     disposeListener();
+
     super.dispose();
   }
 

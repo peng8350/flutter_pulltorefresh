@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart' hide RefreshIndicator;
+import 'package:example/other/RunningHeader.dart';
+import 'package:flutter/material.dart' hide RefreshIndicator,RefreshIndicatorState;
+import 'package:pull_to_refresh/pull_to_refresh.dart'  ;
 import 'package:flutter/cupertino.dart';
 
 class Example4 extends StatefulWidget {
@@ -15,14 +16,15 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   bool _enablePullDown = true;
   bool _enablePullUp = true;
 
-
   void _getDatas() {
     for (int i = 0; i < 24; i++) {
       data.add(GestureDetector(
         child: Container(
-          color: Colors.redAccent,
-          child: Text('Data $i'),
-          height: 50.0,
+          child: Card(
+            color: Colors.redAccent,
+            child: Text('Data $i'),
+          ),
+          height: 100.0,
         ),
         onTap: () {
           /*
@@ -41,45 +43,45 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
     // TODO: implement initState
     _getDatas();
     _scrollController = ScrollController(keepScrollOffset: true);
-    Future.delayed(Duration(milliseconds: 3000),(){
-      _enablePullDown = false;
-      _enablePullUp = false;
-      if(mounted)
-        setState(() {
-
-        });
-    });
-    Future.delayed(Duration(milliseconds: 6000),(){
-      _enablePullDown = true;
-      _enablePullUp = true;
-      if(mounted)
-        setState(() {
-
-        });
-    });
+//    Future.delayed(Duration(milliseconds: 3000), () {
+//      _enablePullDown = false;
+//      _enablePullUp = false;
+//      if (mounted) setState(() {});
+//    });
+//    Future.delayed(Duration(milliseconds: 6000), () {
+//      _enablePullDown = true;
+//      _enablePullUp = true;
+//      if (mounted) setState(() {});
+//    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      physics: _enablePullDown?RefreshClampPhysics(springBackDistance: 100.0):ClampingScrollPhysics(),
+      physics:RefreshBouncePhysics()
+  ,
       slivers: [
-        _enablePullDown?MaterialClassicHeader.asSliver(onRefresh: () async {
-          await Future.delayed(Duration(milliseconds: 1000));
-          // return true,it mean refreshCompleted,return false it mean refreshFailed
-          return true;
-        }):null,
+        _enablePullDown
+            ? RunningHeader.asSliver(onRefresh: () async {
+                await Future.delayed(Duration(milliseconds: 3000));
+                // return true,it mean refreshCompleted,return false it mean refreshFailed
+                return true;
+              })
+            : null,
         SliverList(delegate: SliverChildListDelegate(data)),
-        _enablePullUp?ClassicFooter.asSliver(onLoading: () async {
-          await Future.delayed(Duration(milliseconds: 1000));
-          //return true it mean set the footerStatus to idle,else set to NoData state
-          return true;
-        }):null
-      ].where((child) => child!=null).toList(),
+        _enablePullUp
+            ? ClassicFooter.asSliver(onLoading: () async {
+                await Future.delayed(Duration(milliseconds: 1000));
+                //return true it mean set the footerStatus to idle,else set to NoData state
+                return true;
+              })
+            : null
+      ].where((child) => child != null).toList(),
     );
   }
 }
+
 
 class _SliverDelegate extends SliverPersistentHeaderDelegate {
   final Widget child;

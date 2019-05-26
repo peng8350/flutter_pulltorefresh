@@ -158,7 +158,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       enablePullUp: _enablePullDown,
       enablePullDown: _enablePullUp,
       controller: _refreshController,
-      header: MaterialClassicHeader(),
+      header: ClassicHeader(),
       footer: ClassicFooter(
         onClick: () {
           if (_refreshController.footerStatus == LoadStatus.idle)
@@ -180,7 +180,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       onLoading: () {
         print("onload");
 
-        Future.delayed(const Duration(milliseconds: 200)).then((val) {
+        Future.delayed(const Duration(milliseconds: 100)).then((val) {
           if(mounted)
             setState(() {});
           _refreshController.loadComplete();
