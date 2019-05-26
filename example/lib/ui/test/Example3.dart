@@ -167,18 +167,20 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       ),
       onRefresh: () {
         print("onRefresh");
-        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
-          data.add(Card());
-          if(mounted)
+        if(mounted)
           setState(() {
 
           });
-          _refreshController.refreshFailed();
-        });
+        _refreshController.refreshFailed();
+//        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
+////          data.add(Card());
+//
+//        });
       },
       onLoading: () {
         print("onload");
-        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
+
+        Future.delayed(const Duration(milliseconds: 200)).then((val) {
           if(mounted)
             setState(() {});
           _refreshController.loadComplete();

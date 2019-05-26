@@ -225,13 +225,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   void _update() {
     refresher = SmartRefresher.of(context);
+    final ScrollPosition newPosition =  Scrollable.of(context).position;
     if (refresher == null) {
       _updateListener(
           _mode ?? ValueNotifier<RefreshStatus>(RefreshStatus.idle),
-          Scrollable.of(context).position);
+          newPosition);
     } else {
       _updateListener(refresher.widget.controller.headerMode,
-          Scrollable.of(context).position);
+          newPosition);
     }
   }
 
@@ -259,6 +260,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   // use to update between one page and above one page
   bool _isHide = false;
+
+  bool _enablbeLoadingAgain = true;
 
   double calculateScrollOffset() {
     final double overscrollPastEnd = math.max(
@@ -296,12 +299,16 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   void handleDragMove() {
-
+    // avoid trigger more time when user dragging in the same direction
+    if(_position.userScrollDirection.index == 1&&_position.activity is DragScrollActivity){
+      _enablbeLoadingAgain = true;
+    }
     if (_position.userScrollDirection.index == 2 &&
         _position.extentAfter <= widget.triggerDistance &&
-        widget.autoLoad &&
+        widget.autoLoad &&_enablbeLoadingAgain&&
         mode == LoadStatus.idle) {
-      mode = LoadStatus.loading;
+       mode = LoadStatus.loading;
+       _enablbeLoadingAgain = false;
     }
   }
 
@@ -323,12 +330,27 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   // updateListener
   void _update() {
     refresher = SmartRefresher.of(context);
+    final ScrollPosition newPosition = Scrollable.of(context).position;
     if (refresher == null) {
       _updateListener(_mode ?? ValueNotifier<LoadStatus>(LoadStatus.idle),
-          Scrollable.of(context).position);
+          newPosition,onPositionChange: (){
+            newPosition.isScrollingNotifier.removeListener(_listenScrollEnd);
+            _position.isScrollingNotifier.addListener(_listenScrollEnd);
+          });
     } else {
       _updateListener(refresher.widget.controller.footerMode,
-          Scrollable.of(context).position);
+          newPosition,onPositionChange: (){
+            newPosition.isScrollingNotifier.removeListener(_listenScrollEnd);
+            _position.isScrollingNotifier.addListener(_listenScrollEnd);
+          });
+    }
+
+  }
+
+  //ScrollEnd Event set true
+  void _listenScrollEnd(){
+    if(!_position.isScrollingNotifier.value){
+      _enablbeLoadingAgain = true;
     }
   }
 
@@ -405,18 +427,20 @@ abstract class IndicatorProcessor {
   void handleModeChange();
 
   void _updateListener(
-      ValueNotifier<dynamic> mode, ScrollPosition position) {
+      ValueNotifier<dynamic> mode, ScrollPosition position,{Function onModeChange,Function onPositionChange}) {
     final ValueNotifier<dynamic> newMode = mode;
     final ScrollPosition newPostion = position;
-    if (newMode != null && newMode != _mode) {
+    if (newMode != _mode) {
       _mode?.removeListener(handleModeChange);
       _mode = newMode;
       _mode?.addListener(handleModeChange);
+      if(onModeChange!=null)onModeChange();
     }
     if (newPostion != _position) {
       _position?.removeListener(_handleOffsetChange);
       _position = newPostion;
       _position?.addListener(_handleOffsetChange);
+      if(onPositionChange!=null)onPositionChange();
     }
   }
 }
