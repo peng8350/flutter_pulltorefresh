@@ -278,7 +278,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   void _update() {
     refresher = SmartRefresher.of(context);
-    print(refresher);
     final ScrollPosition newPosition = Scrollable.of(context).position;
     if (refresher == null) {
       _updateListener(_mode ?? ValueNotifier<RefreshStatus>(RefreshStatus.idle),

@@ -112,6 +112,17 @@ class SmartRefresherState extends State<SmartRefresher> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if(widget.controller.initialRefresh) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.controller.requestRefresh();
+      });
+    }
+  }
+
+  @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     _updateController();
@@ -196,7 +207,10 @@ class RefreshController {
   ValueNotifier<RefreshStatus> headerMode = ValueNotifier(RefreshStatus.idle);
   ValueNotifier<LoadStatus> footerMode = ValueNotifier(LoadStatus.idle);
   ScrollController scrollController;
+
   RefreshIndicator _header;
+
+  final bool initialRefresh;
 
   RefreshStatus get headerStatus => headerMode?.value;
 
@@ -205,6 +219,8 @@ class RefreshController {
   bool get isRefresh => headerMode?.value == RefreshStatus.refreshing;
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
+
+  RefreshController({this.initialRefresh:false});
 
   void requestRefresh(
       {Duration duration: const Duration(milliseconds: 300),

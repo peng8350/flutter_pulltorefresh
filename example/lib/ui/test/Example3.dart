@@ -130,10 +130,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //      });
 //    });
     _getDatas();
-    _refreshController = RefreshController();
-    SchedulerBinding.instance.addPostFrameCallback((_){
-      _refreshController.requestRefresh();
-    });
+    _refreshController = RefreshController(initialRefresh: true);
     super.initState();
   }
 
