@@ -178,7 +178,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
   const WaterDropMaterialHeader({
     Key key,
     String semanticsLabel,
-    bool skipCanRefresh,
+    bool skipCanRefresh:false,
     double distance: 120.0,
     double offset: 0.0,
     String semanticsValue,

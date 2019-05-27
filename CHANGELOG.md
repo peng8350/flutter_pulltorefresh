@@ -145,3 +145,10 @@ Notice: This version of the code changes much, Api too
 
 ## 1.3.8
 * Temporary fix deadly bug: PrimaryScrollController cannot shared by multiple Indicators
+
+## 1.3.9
+* Avoid inner inject padding by buildSlivers in child(ListView,GridView)
+* Add initialRefresh in RefreshController(when you need to requestRefresh in initState)
+* Fix exception RefreshBouncingPhysics velocity value
+* Add IndicatorConfiguration for build indicator for subtrees SmartRefresher
+* Add SkipCanRefresh attr in header

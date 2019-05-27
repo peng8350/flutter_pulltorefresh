@@ -59,42 +59,44 @@ class CupertinoScreenState extends State<CupertinoScreen>{
               groupValue: _segIndex,
             ),
           ),
-          child: Stack(
-            children: <Widget>[
-              Offstage(
-                offstage: _segIndex!=0,
-                child: CustomScrollView(
-                  physics: RefreshClampPhysics(springBackDistance: 100.0),
-                  slivers: <Widget>[
-                    MaterialClassicHeader.asSliver(
-                      onRefresh: () async {
-                        await Future.delayed(Duration(milliseconds: 400));
-                        return true;
-                      },
-                    ),
+          child: SafeArea(
+            child: Stack(
+              children: <Widget>[
+                Offstage(
+                  offstage: _segIndex!=0,
+                  child: CustomScrollView(
+                    physics: RefreshClampPhysics(springBackDistance: 100.0),
+                    slivers: <Widget>[
+                      MaterialClassicHeader.asSliver(
+                        onRefresh: () async {
+                          await Future.delayed(Duration(milliseconds: 400));
+                          return true;
+                        },
+                      ),
 
-                    SliverList(
-                      delegate: SliverChildListDelegate(widgets),
-                    ),
-                    ClassicFooter()
-                  ],
+                      SliverList(
+                        delegate: SliverChildListDelegate(widgets),
+                      ),
+                      ClassicFooter()
+                    ],
+                  ),
                 ),
-              ),
-              Offstage(
-                offstage: _segIndex!=1,
-                child: SmartRefresher(
+                Offstage(
+                  offstage: _segIndex!=1,
+                  child: SmartRefresher(
 
-                  child: ListView(children:widgets),
-                  controller: _refreshController,
-                  header: ClassicHeader(),
-                  onRefresh: (){
-                    Future.delayed(Duration(milliseconds: 1000)).whenComplete((){
-                      _refreshController.refreshCompleted();
-                    });
-                  },
-                ),
-              )
-            ],
+                    child: ListView(children:widgets),
+                    controller: _refreshController,
+                    header: ClassicHeader(),
+                    onRefresh: (){
+                      Future.delayed(Duration(milliseconds: 1000)).whenComplete((){
+                        _refreshController.refreshCompleted();
+                      });
+                    },
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }

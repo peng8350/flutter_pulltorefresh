@@ -194,8 +194,6 @@ class SmartRefresherState extends State<SmartRefresher> {
       controller: widget.controller.scrollController,
       cacheExtent: widget.child.cacheExtent,
       key: widget.child.key,
-      center: widget.child.center,
-      anchor: widget.child.anchor,
       semanticChildCount: widget.child.semanticChildCount,
       slivers: slivers,
       reverse: widget.child.reverse,

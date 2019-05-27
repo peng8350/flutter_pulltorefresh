@@ -68,12 +68,12 @@ class _IndicatorPageState extends State<IndicatorPage> {
       },imgRes: "images/warterdrop.gif"),
       IndicatorItem(title: "经典Material指示器",onClick: (){
         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
-            IndicatorActivity(reverse: true,title:"官方Material指示器" ,header: MaterialClassicHeader())
+            IndicatorActivity(reverse: false,title:"官方Material指示器" ,header: MaterialClassicHeader())
         ));
       },imgRes: "images/material_classic.gif"),
       IndicatorItem(title: "水滴坠落Material指示器",onClick: (){
         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
-            IndicatorActivity(reverse: true,title:"水滴坠落Material指示器" ,header: WaterDropMaterialHeader())
+            IndicatorActivity(reverse: false,title:"水滴坠落Material指示器" ,header: WaterDropMaterialHeader())
         ));
       },imgRes: "images/material_waterdrop.gif"),
     ];
