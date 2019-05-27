@@ -27,6 +27,7 @@ class ClassicHeader extends RefreshIndicator {
     double height: default_height,
     double triggerDistance: default_refresh_triggerDistance,
     Duration completeDuration:const Duration(milliseconds: 600),
+    bool skipCanRefresh:false,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
@@ -49,6 +50,7 @@ class ClassicHeader extends RefreshIndicator {
             refreshStyle: refreshStyle,
             completeDuration:completeDuration,
             height: height,
+            skipCanRefresh:skipCanRefresh,
             triggerDistance: triggerDistance);
 
   const ClassicHeader.asSliver({
@@ -59,6 +61,7 @@ class ClassicHeader extends RefreshIndicator {
     double height: default_height,
     Duration completeDuration:const Duration(milliseconds: 600),
     double triggerDistance: default_refresh_triggerDistance,
+    bool skipCanRefresh:false,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
@@ -81,6 +84,7 @@ class ClassicHeader extends RefreshIndicator {
             onRefresh: onRefresh,
             completeDuration:completeDuration,
             refreshStyle: refreshStyle,
+            skipCanRefresh:skipCanRefresh,
             height: height,
             triggerDistance: triggerDistance);
 

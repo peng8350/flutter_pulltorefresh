@@ -20,12 +20,14 @@ class CustomHeader extends RefreshIndicator {
     Key key,
     @required this.builder,
     double height: default_height,
+    bool skipCanRefresh:false,
     Duration completeDuration:const Duration(milliseconds: 600),
     RefreshStyle refreshStyle: RefreshStyle.Follow,
     double triggerDistance: default_refresh_triggerDistance,
   }) : super(
             key: key,
             triggerDistance: triggerDistance,
+            skipCanRefresh:skipCanRefresh,
             completeDuration:completeDuration,
             refreshStyle: refreshStyle,
             height: height);
@@ -36,6 +38,7 @@ class CustomHeader extends RefreshIndicator {
     @required OnRefresh onRefresh,
     ValueNotifier<RefreshStatus> mode,
     double height: default_height,
+    bool skipCanRefresh:false,
     Duration completeDuration:const Duration(milliseconds: 600),
     RefreshStyle refreshStyle: RefreshStyle.Follow,
     double triggerDistance: default_refresh_triggerDistance,
@@ -43,6 +46,7 @@ class CustomHeader extends RefreshIndicator {
       key: key,
       onRefresh:onRefresh,
       triggerDistance: triggerDistance,
+      skipCanRefresh:skipCanRefresh,
       completeDuration:completeDuration,
       refreshStyle: refreshStyle,
       height: height);

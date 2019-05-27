@@ -32,12 +32,14 @@ class WaterDropHeader extends RefreshIndicator {
     Duration completeDuration: const Duration(milliseconds: 600),
     this.failed,
     this.waterDropColor: Colors.grey,
+    bool skipCanRefresh:false,
     this.idleIcon,
     double triggerDistance: 100.0,
   }) : super(
             key: key,
             triggerDistance: triggerDistance,
             completeDuration: completeDuration,
+            skipCanRefresh:skipCanRefresh,
             refreshStyle: RefreshStyle.UnFollow);
 
   const WaterDropHeader.asSliver({
@@ -46,6 +48,7 @@ class WaterDropHeader extends RefreshIndicator {
     this.refresh,
     this.complete,
     this.failed,
+    bool skipCanRefresh:false,
     Duration completeDuration:const Duration(milliseconds: 600),
     this.reverse: false,
     this.waterDropColor: Colors.grey,
@@ -54,6 +57,7 @@ class WaterDropHeader extends RefreshIndicator {
   }) : super(
             key: key,
             onRefresh: onRefresh,
+            skipCanRefresh:skipCanRefresh,
             completeDuration:completeDuration,
             triggerDistance: triggerDistance,
             refreshStyle: RefreshStyle.UnFollow);

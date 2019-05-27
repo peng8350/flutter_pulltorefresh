@@ -19,8 +19,31 @@ abstract class Indicator extends StatefulWidget {
   const Indicator({Key key, this.triggerDistance}) : super(key: key);
 }
 
+/*
+ header generate template
+    const xxxx({
+    Key key,
+    double offset:0.0,
+    RefreshStyle refreshStyle: default_refreshStyle,
+    double height: default_height,
+    double triggerDistance: default_refresh_triggerDistance,
+    Duration completeDuration:const Duration(milliseconds: 600),
+    bool skipCanRefresh:false,
+    }) : super(
+    key: key,
+    offset:offset
+    refreshStyle: refreshStyle,
+    completeDuration:completeDuration,
+    height: height,
+    skipCanRefresh:skipCanRefresh,
+    triggerDistance: triggerDistance);
+
+*/
+
 abstract class RefreshIndicator extends Indicator {
   final RefreshStyle refreshStyle;
+
+  final bool skipCanRefresh;
 
   final double height;
 
@@ -34,12 +57,31 @@ abstract class RefreshIndicator extends Indicator {
       {this.height: default_height,
       Key key,
       this.offset: 0.0,
+      this.skipCanRefresh:false,
       this.completeDuration:const Duration(milliseconds: 600),
       this.onRefresh,
       double triggerDistance: default_refresh_triggerDistance,
       this.refreshStyle: RefreshStyle.Follow})
       : super(key: key, triggerDistance: triggerDistance);
 }
+
+/*
+ footer generate template
+ const xxxx({
+    Key key,
+    bool autoLoad: true,
+    bool hideWhenNotFull: true,
+    Function onClick,
+    double triggerDistance: default_load_triggerDistance,
+  }) : super(
+            key: key,
+            autoLoad: autoLoad,
+            hideWhenNotFull: hideWhenNotFull,
+            triggerDistance: triggerDistance,
+            onClick: onClick)
+
+*/
+
 
 abstract class LoadIndicator extends Indicator {
   final bool autoLoad;
@@ -108,7 +150,17 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         _position.activity is DragScrollActivity ||
         _position.activity is DrivenScrollActivity) {
       if (offset >= widget.triggerDistance) {
-        mode = RefreshStatus.canRefresh;
+        if(!widget.skipCanRefresh) {
+          mode = RefreshStatus.canRefresh;
+        }
+        else{
+          floating = true;
+          update();
+          readyToRefresh().then((_) {
+            if (!mounted) return;
+            mode = RefreshStatus.refreshing;
+          });
+        }
       } else {
         mode = RefreshStatus.idle;
       }

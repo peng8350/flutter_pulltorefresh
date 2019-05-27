@@ -97,7 +97,7 @@ class _MainActivityState extends State<MainActivity>
             children: views,
             physics: NeverScrollableScrollPhysics(),
           ),
-          headerBuilder: () => WaterDropMaterialHeader(),
+          headerBuilder: () => WaterDropMaterialHeader(skipCanRefresh: true,),
           footerBuilder:  () => ClassicFooter(),
         ),
       ),

@@ -25,12 +25,14 @@ class MaterialClassicHeader extends RefreshIndicator {
     this.semanticsValue,
     double offset: 0.0,
     this.color,
+    bool skipCanRefresh:false,
     this.distance: 50.0,
     this.backgroundColor,
   }) : super(
           key: key,
           refreshStyle: RefreshStyle.Front,
           height: 100.0,
+          skipCanRefresh:skipCanRefresh,
           offset: offset,
         );
 
@@ -41,12 +43,14 @@ class MaterialClassicHeader extends RefreshIndicator {
     this.semanticsLabel,
     this.semanticsValue,
     double offset: 0.0,
+    bool skipCanRefresh:false,
     this.color,
     this.distance: 50.0,
     this.backgroundColor,
   }) : super(
           key: key,
           onRefresh: onRefresh,
+          skipCanRefresh:skipCanRefresh,
           refreshStyle: RefreshStyle.Front,
           height: 100.0,
           offset: offset,
@@ -174,6 +178,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
   const WaterDropMaterialHeader({
     Key key,
     String semanticsLabel,
+    bool skipCanRefresh,
     double distance: 120.0,
     double offset: 0.0,
     String semanticsValue,
@@ -184,6 +189,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
             offset: offset,
             color: color,
             distance: distance,
+            skipCanRefresh:skipCanRefresh,
             backgroundColor: backgroundColor,
             semanticsValue: semanticsValue,
             semanticsLabel: semanticsLabel);
@@ -193,6 +199,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
     @required OnRefresh onRefresh,
     String semanticsLabel,
     double distance: 120.0,
+    bool skipCanRefresh:false,
     double offset: 0.0,
     String semanticsValue,
     Color color: Colors.white,
@@ -201,6 +208,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
             key: key,
             onRefresh: onRefresh,
             offset: offset,
+            skipCanRefresh:skipCanRefresh,
             color: color,
             distance: distance,
             backgroundColor: backgroundColor,
