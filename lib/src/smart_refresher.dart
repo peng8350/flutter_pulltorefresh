@@ -118,8 +118,36 @@ class SmartRefresherState extends State<SmartRefresher> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> slivers =
-        List.from(widget.child.buildSlivers(context), growable: true);
+    List<Widget> slivers;
+
+    if (widget.child is BoxScrollView) {
+      //avoid system inject padding when own indicator top or bottom
+      Widget sliver = (widget.child as BoxScrollView).buildChildLayout(context);
+      EdgeInsets effectPadding = (widget.child as BoxScrollView).padding;
+      if (effectPadding == null) {
+        final MediaQueryData mediaQuery = MediaQuery.of(context, nullOk: true);
+        if (mediaQuery != null) {
+          effectPadding = mediaQuery.padding.copyWith(
+              left: 0.0,
+              right: 0.0,
+              top: widget.enablePullDown ? 0.0 : null,
+              bottom: widget.enablePullUp ? 0.0 : null);
+          sliver = MediaQuery(
+            child: sliver,
+            data: mediaQuery.copyWith(
+              padding: effectPadding,
+            ),
+          );
+        }
+      }
+      if (effectPadding != null) {
+        sliver = SliverPadding(padding: effectPadding, sliver: sliver);
+      }
+      slivers = [sliver];
+    } else {
+      slivers = List.from(widget.child.buildSlivers(context), growable: true);
+    }
+
     if (widget.enablePullDown) {
       slivers.insert(0, widget.header);
     }
@@ -138,6 +166,7 @@ class SmartRefresherState extends State<SmartRefresher> {
       reverse: widget.child.reverse,
     );
   }
+
 }
 
 class RefreshController {
