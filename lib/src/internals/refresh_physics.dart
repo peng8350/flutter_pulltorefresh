@@ -60,7 +60,7 @@ class RefreshBouncePhysics extends ScrollPhysics {
             (overscrollPast - offset.abs()) / position.viewportDimension)
         : frictionFactor(overscrollPast / position.viewportDimension);
     final double direction = offset.sign;
-    return direction * _applyFriction(overscrollPast, offset.abs(), friction)*0.7;
+    return direction * _applyFriction(overscrollPast, offset.abs(), friction);
   }
 
   static double _applyFriction(
@@ -90,7 +90,7 @@ class RefreshBouncePhysics extends ScrollPhysics {
         spring: spring,
         position: position.pixels,
         velocity: velocity *
-            0.51, // TODO(abarth): We should move this constant closer to the drag end.
+            0.91, // TODO(abarth): We should move this constant closer to the drag end.
         leadingExtent: position.minScrollExtent,
         trailingExtent: position.maxScrollExtent,
         tolerance: tolerance,

@@ -5,6 +5,7 @@
  */
 import 'package:example/ui/screen/ScreenPage.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:residemenu/residemenu.dart';
 import 'test/TestPage.dart';
 import 'indicator/IndicatorPage.dart';
@@ -89,10 +90,15 @@ class _MainActivityState extends State<MainActivity>
             controller: _tabController,
           ):null,
         ),
-        body: PageView(
-          controller: _pageController,
-          children: views,
-          physics: NeverScrollableScrollPhysics(),
+        body:
+        RefreshConfiguration(
+          child: PageView(
+            controller: _pageController,
+            children: views,
+            physics: NeverScrollableScrollPhysics(),
+          ),
+          headerBuilder: () => WaterDropMaterialHeader(),
+
         ),
       ),
       decoration: BoxDecoration(color: Colors.purple),

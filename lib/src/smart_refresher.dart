@@ -5,6 +5,7 @@
 */
 
 import 'package:flutter/widgets.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'internals/default_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
@@ -12,6 +13,7 @@ import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
 import 'indicator/classic_indicator.dart';
 import 'indicator/material_indicator.dart';
 import 'package:flutter/scheduler.dart';
+import 'refresh_configuration.dart';
 
 typedef void OnOffsetChange(bool up, double offset);
 
@@ -46,6 +48,8 @@ class SmartRefresher extends StatefulWidget {
   //controll inner state
   final RefreshController controller;
 
+  @Deprecated(
+      'after 1.3.8,the attr has no longer use,use or not use is the same')
   // When SmartRefresher is wrapped in some ScrollView,if true:it will find the primaryScrollController in parent widget
   final bool isNestWrapped;
 
@@ -53,8 +57,8 @@ class SmartRefresher extends StatefulWidget {
       {Key key,
       @required this.child,
       @required this.controller,
-      RefreshIndicator header,
-      LoadIndicator footer,
+      this.header,
+      this.footer,
       this.enablePullDown: default_enablePullDown,
       this.enablePullUp: default_enablePullUp,
       this.onRefresh,
@@ -63,11 +67,6 @@ class SmartRefresher extends StatefulWidget {
       this.isNestWrapped: false})
       : assert(child != null),
         assert(controller != null),
-        footer = footer ?? ClassicFooter(),
-        header = header ??
-            (defaultTargetPlatform == TargetPlatform.iOS
-                ? ClassicHeader()
-                : MaterialClassicHeader()),
         super(key: key);
 
   @override
@@ -80,14 +79,42 @@ class SmartRefresher extends StatefulWidget {
 }
 
 class SmartRefresherState extends State<SmartRefresher> {
+  RefreshConfiguration _configuration;
+  RefreshIndicator _header;
+  LoadIndicator _footer;
+
+  void _updateController() {
+    _configuration = RefreshConfiguration.of(context);
+    widget.controller.scrollController =
+        widget.child.controller ?? PrimaryScrollController.of(context);
+    if (_configuration == null) {
+      _header = widget.header ??
+          (defaultTargetPlatform == TargetPlatform.iOS
+              ? ClassicHeader()
+              : MaterialClassicHeader());
+      _footer = widget.footer ?? ClassicFooter();
+    } else {
+      if (_configuration.headerBuilder != null) {
+        _header = widget.header ?? _configuration.headerBuilder();
+      } else {
+        _header = widget.header ??
+            (defaultTargetPlatform == TargetPlatform.iOS
+                ? ClassicHeader()
+                : MaterialClassicHeader());
+      }
+      if (_configuration.footerBuilder != null) {
+        _footer = widget.footer ?? _configuration.footerBuilder();
+      } else {
+        _footer = widget.footer ?? ClassicFooter();
+      }
+    }
+    widget.controller._header = _header;
+  }
+
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    // there is no method to get PrimaryScrollController in initState
-    widget.controller.scrollController =
-        widget.child.controller ?? PrimaryScrollController.of(context);
-    widget.controller._header = widget.header;
-
+    _updateController();
     super.didChangeDependencies();
   }
 
@@ -100,16 +127,14 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (widget.enablePullUp != oldWidget.enablePullUp) {
       widget.controller.footerMode.value = LoadStatus.idle;
     }
-    widget.controller.scrollController =
-        widget.child.controller ?? PrimaryScrollController.of(context);
-    widget.controller._header = widget.header;
+    _updateController();
     super.didUpdateWidget(oldWidget);
   }
 
-  ScrollPhysics _getScrollPhysics() {
-    if (widget.header.refreshStyle == RefreshStyle.Front) {
+  ScrollPhysics _getScrollPhysics(RefreshIndicator sliver) {
+    if (sliver.refreshStyle == RefreshStyle.Front) {
       return widget.enablePullDown
-          ? RefreshClampPhysics(springBackDistance: widget.header.height)
+          ? RefreshClampPhysics(springBackDistance: sliver.height)
           : ClampingScrollPhysics();
     } else {
       return RefreshBouncePhysics();
@@ -119,7 +144,6 @@ class SmartRefresherState extends State<SmartRefresher> {
   @override
   Widget build(BuildContext context) {
     List<Widget> slivers;
-
     if (widget.child is BoxScrollView) {
       //avoid system inject padding when own indicator top or bottom
       Widget sliver = (widget.child as BoxScrollView).buildChildLayout(context);
@@ -147,15 +171,15 @@ class SmartRefresherState extends State<SmartRefresher> {
     } else {
       slivers = List.from(widget.child.buildSlivers(context), growable: true);
     }
-
+    //insert header or footer
     if (widget.enablePullDown) {
-      slivers.insert(0, widget.header);
+      slivers.insert(0, _header);
     }
     if (widget.enablePullUp) {
-      slivers.add(widget.footer);
+      slivers.add(_footer);
     }
     return CustomScrollView(
-      physics: _getScrollPhysics(),
+      physics: _getScrollPhysics(slivers.elementAt(0)),
       controller: widget.controller.scrollController,
       cacheExtent: widget.child.cacheExtent,
       key: widget.child.key,
@@ -166,7 +190,6 @@ class SmartRefresherState extends State<SmartRefresher> {
       reverse: widget.child.reverse,
     );
   }
-
 }
 
 class RefreshController {
