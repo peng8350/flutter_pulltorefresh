@@ -98,7 +98,7 @@ class _MainActivityState extends State<MainActivity>
             physics: NeverScrollableScrollPhysics(),
           ),
           headerBuilder: () => WaterDropHeader(waterDropColor: Colors.green,skipCanRefresh: true,),
-          footerBuilder:  () => ClassicFooter(autoLoad: false,),
+          footerBuilder:  () => ClassicFooter(),
         ),
       ),
       decoration: BoxDecoration(color: Colors.purple),

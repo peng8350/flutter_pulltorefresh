@@ -5,9 +5,9 @@
   This property does not constrain the layout size, and sublayout can overflow the range of this value.
 * double triggerDistance: the distance to triiger refresh
 * refreshStyle: Styles used to define header refresh indicators,There is four style:Front,Behind,Follow,UnFollow
+* completeDuration: stop time when state in success or fail
 
-
-## ommon Footer attributes
+## common Footer attributes
 * double triggerDistance: the distance to trigger loading(extentAfter<=triggerDistance),need autoLoad = true
 * bool hideWhenNotFull:Whether to automatically hide the bottom indicator when the page is less than one page, default to true
 * () => {} onClick：Click on the callback method of the indicator to manually load data or reset the status of no data
@@ -23,7 +23,7 @@
 * double spacing: Spacing between icons and text
 * TextStyle textStyle: textStyle
 * IconPosition iconPos:IconPosition(Left,Top,Right,Bottom)
-* RefeshStyle refreshStyle,height,triggerDistance,autoLoad: the same Above
+* RefreshStyle refreshStyle,height,triggerDistance,autoLoad: the same Above
 
 
 

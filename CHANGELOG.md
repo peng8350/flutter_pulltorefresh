@@ -151,4 +151,6 @@ Notice: This version of the code changes much, Api too
 * Add initialRefresh in RefreshController(when you need to requestRefresh in initState)
 * Fix exception RefreshBouncingPhysics velocity value
 * Add IndicatorConfiguration for build indicator for subtrees SmartRefresher
-* Add SkipCanRefresh attr in header
+* Add SkipCanRefresh,CompleteDuration attr in header
+* Fix trigger more times loading when no data come in and too fast loadComplete
+* remove center,anchor in CustomScrollView to Compatible with old versions

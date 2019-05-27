@@ -40,3 +40,8 @@
       ScrollController scrollController;
 
 ```
+
+# IndicatorConfiguration(1.3.9 new)
+The main reason for adding this feature is that an App has the same top and bottom indicators, or that multiple pages have the same indicators. So using Indicator Configuration can reduce duplication of work.
+Under the subtree of this component, Smart Refresher will refer to the indicator in Indicator Configuration. If Smart Refresher has a header or footer inside, it will not use Indicator Configuration.
+Instead of using its own header and footer

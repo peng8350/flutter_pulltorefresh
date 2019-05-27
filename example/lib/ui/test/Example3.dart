@@ -36,7 +36,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         _refreshController.requestLoading();
       }, child: Text("请求加载数据"))
     ],));
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 13; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
@@ -170,7 +170,8 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       onLoading: () {
         print("onload");
 
-        Future.delayed(const Duration(milliseconds: 100)).then((val) {
+        Future.delayed(const Duration(milliseconds: 2000)).then((val) {
+          data.add(Card());
           if(mounted)
             setState(() {});
           _refreshController.loadComplete();

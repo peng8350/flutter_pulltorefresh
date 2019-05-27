@@ -4,6 +4,8 @@
 * double  height: 指的是指示器占用多少高度。这个属性对于不同指示器风格意义不太一样。这个属性不会约束布局大小,子布局可以溢出这个值的范围。
 * double triggerDistance: 触发刷新的越界距离
 * refreshStyle: 用于限定头部刷新指示器的风格,四种:Front,Behind,Follow,UnFollow
+* skipCanRefresh: 跳过canRefresh状态直接进入刷新状态
+* completeDuration: 完成或者失败状态停留的时间
 
 
 ## 底部通用属性

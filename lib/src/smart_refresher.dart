@@ -4,7 +4,6 @@
     createTime:2018-05-01 11:39
 */
 
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'internals/default_constants.dart';
@@ -13,7 +12,6 @@ import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
 import 'indicator/classic_indicator.dart';
 import 'indicator/material_indicator.dart';
-import 'package:flutter/scheduler.dart';
 
 typedef void OnOffsetChange(bool up, double offset);
 
@@ -271,13 +269,13 @@ class RefreshController {
 
   void loadComplete() {
     // change state after ui update,else it will have a bug:twice loading
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       footerMode?.value = LoadStatus.idle;
     });
   }
 
   void loadNoData() {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       footerMode?.value = LoadStatus.noMore;
     });
   }

@@ -36,11 +36,11 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.8
+     pull_to_refresh: ^1.3.9
 
 ```
 
-第一种使用方法,使用SmartRefresh和RefreshController
+第一种使用方法,使用SmartRefresh和RefreshController(建议)
 ```
 
 RefreshController _refreshController;
@@ -48,9 +48,10 @@ RefreshController _refreshController;
 initState(){
 
     super.initState();
-    _refreshController = RefreshController();
-    // 如果你需要开始就请求一次刷新
-      /*
+    // initialRefresh可以在组件初始化时执行一次刷新操作
+    _refreshController = RefreshController(initialRefresh:true);
+    // 如果你需要开始就请求一次刷新,1.3.9版本之前要这么做
+    /*
 
         SchedulerBinding.instance.addPostFrameCallback((_) {
             _refreshController.requestRefresh();
@@ -142,6 +143,7 @@ void dispose(){
 
 ```
 
+
 ## 更多
 - [SmartRefresher,RefreshController](refresher_controller.md)
 - [自定义指示器](custom_indicator.md)
@@ -149,7 +151,7 @@ void dispose(){
 - [更新日志](CHANGELOG.md)
 - [注意地方](notice.md)
 
-## F.P.S
+## F.A.Q
 * <h3>IOS状态栏双击为什么ListView不自动滚动到顶部?</h3>
 这个问题经测试不是我封装的失误,当ListView里的controller被替换后,这个问题就会出现,原因大概是Scaffold里的处理操作,请issue flutter。
 
@@ -157,14 +159,12 @@ void dispose(){
 1.3.0提供了一个新属性isNestWrapped来兼容这东西,注意,这个属性打开后,scollController取决于NestScrollView,内部通过PrimaryScrollController.of(context)
 来获取scrollController,所以scrollController要放在NestedScrollView里。
 
-* <h3>为什么使用CuperNavigationBar后(不只这一个情况),顶部或者尾部指示器有空白的地方?</h3>
+* <h3>为什么使用CuperNavigationBar后(不只这一个情况),顶部或者尾部指示器有空白的地方?Or why is top of listView blocked?</h3>
 很大可能是因为SafeArea,。解决方法一般是在SmartRefresher外围套用SafeArea
 
 * <h3>兼容性方面?</h3>
 自1.3.0换了一套新的方法去实现指示器，内部指示器实现是通过监听scrollController位置变化来实现的，并没有使用到类如NotificationListener和GestureDector这类可能引起滑动手势冲突的方法，
 所以应该可以兼容大多需要利用到手势之间的库。但是，可能不兼容一些库需要改写ScrollPhysics，内部的FrontStyle就很明显需要用到这个。
-
-
 
 ## 感谢
 
