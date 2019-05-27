@@ -4,6 +4,7 @@
     createTime:2018-05-01 11:39
 */
 
+import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'internals/default_constants.dart';
@@ -13,7 +14,6 @@ import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
 import 'indicator/classic_indicator.dart';
 import 'indicator/material_indicator.dart';
 import 'package:flutter/scheduler.dart';
-import 'refresh_configuration.dart';
 
 typedef void OnOffsetChange(bool up, double offset);
 
@@ -72,19 +72,19 @@ class SmartRefresher extends StatefulWidget {
   @override
   SmartRefresherState createState() => SmartRefresherState();
 
-  static SmartRefresherState of(BuildContext context) {
-    return context
-        ?.ancestorStateOfType(const TypeMatcher<SmartRefresherState>());
+  static SmartRefresher of(BuildContext context) {
+    return context.ancestorWidgetOfExactType(SmartRefresher) as SmartRefresher
+        ;
   }
 }
 
 class SmartRefresherState extends State<SmartRefresher> {
-  RefreshConfiguration _configuration;
+  IndicatorConfiguration _configuration;
   RefreshIndicator _header;
   LoadIndicator _footer;
 
   void _updateController() {
-    _configuration = RefreshConfiguration.of(context);
+    _configuration = IndicatorConfiguration.of(context);
     widget.controller.scrollController =
         widget.child.controller ?? PrimaryScrollController.of(context);
     if (_configuration == null) {
@@ -278,4 +278,25 @@ class RefreshController {
     headerMode = null;
     footerMode = null;
   }
+}
+
+typedef IndicatorBuilder = Indicator Function();
+
+class IndicatorConfiguration extends InheritedWidget {
+  final IndicatorBuilder headerBuilder;
+  final IndicatorBuilder footerBuilder;
+  final Widget child;
+
+  IndicatorConfiguration({
+    @required this.child,
+    this.headerBuilder,
+    this.footerBuilder,
+  });
+
+  static IndicatorConfiguration of(BuildContext context) {
+    return context.inheritFromWidgetOfExactType(IndicatorConfiguration);
+  }
+
+  @override
+  bool updateShouldNotify(InheritedWidget oldWidget) => false;
 }

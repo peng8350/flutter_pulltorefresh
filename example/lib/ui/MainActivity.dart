@@ -91,14 +91,14 @@ class _MainActivityState extends State<MainActivity>
           ):null,
         ),
         body:
-        RefreshConfiguration(
+        IndicatorConfiguration(
           child: PageView(
             controller: _pageController,
             children: views,
             physics: NeverScrollableScrollPhysics(),
           ),
           headerBuilder: () => WaterDropMaterialHeader(),
-
+          footerBuilder:  () => ClassicFooter(),
         ),
       ),
       decoration: BoxDecoration(color: Colors.purple),

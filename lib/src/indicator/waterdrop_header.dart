@@ -22,10 +22,14 @@ class WaterDropHeader extends RefreshIndicator {
 
   final Color waterDropColor;
 
+  final bool reverse;
+
   const WaterDropHeader({
     Key key,
     this.refresh,
     this.complete,
+    this.reverse: false,
+    Duration completeDuration: const Duration(milliseconds: 600),
     this.failed,
     this.waterDropColor: Colors.grey,
     this.idleIcon,
@@ -33,6 +37,7 @@ class WaterDropHeader extends RefreshIndicator {
   }) : super(
             key: key,
             triggerDistance: triggerDistance,
+            completeDuration: completeDuration,
             refreshStyle: RefreshStyle.UnFollow);
 
   const WaterDropHeader.asSliver({
@@ -41,12 +46,15 @@ class WaterDropHeader extends RefreshIndicator {
     this.refresh,
     this.complete,
     this.failed,
+    Duration completeDuration:const Duration(milliseconds: 600),
+    this.reverse: false,
     this.waterDropColor: Colors.grey,
     this.idleIcon,
     double triggerDistance: 100.0,
   }) : super(
             key: key,
             onRefresh: onRefresh,
+            completeDuration:completeDuration,
             triggerDistance: triggerDistance,
             refreshStyle: RefreshStyle.UnFollow);
 
@@ -153,7 +161,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
           painter: _QqPainter(
               color: widget.waterDropColor,
               value: _animationController.value,
-              reverse: refresher.widget.child.reverse),
+              reverse: widget.reverse),
         ),
       );
     }

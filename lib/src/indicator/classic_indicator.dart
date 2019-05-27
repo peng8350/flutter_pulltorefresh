@@ -26,6 +26,7 @@ class ClassicHeader extends RefreshIndicator {
     RefreshStyle refreshStyle: default_refreshStyle,
     double height: default_height,
     double triggerDistance: default_refresh_triggerDistance,
+    Duration completeDuration:const Duration(milliseconds: 600),
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
@@ -46,6 +47,7 @@ class ClassicHeader extends RefreshIndicator {
   }) : super(
             key: key,
             refreshStyle: refreshStyle,
+            completeDuration:completeDuration,
             height: height,
             triggerDistance: triggerDistance);
 
@@ -55,6 +57,7 @@ class ClassicHeader extends RefreshIndicator {
     ValueNotifier<RefreshStatus> mode,
     RefreshStyle refreshStyle: default_refreshStyle,
     double height: default_height,
+    Duration completeDuration:const Duration(milliseconds: 600),
     double triggerDistance: default_refresh_triggerDistance,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
@@ -76,6 +79,7 @@ class ClassicHeader extends RefreshIndicator {
   }) : super(
             key: key,
             onRefresh: onRefresh,
+            completeDuration:completeDuration,
             refreshStyle: refreshStyle,
             height: height,
             triggerDistance: triggerDistance);
