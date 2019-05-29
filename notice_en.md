@@ -27,7 +27,6 @@ you will find that Icon will be suspended in the attempt area for reasons I have
   The case of layoutExtent. So if your internal slivers have this kind of sliver, my internal judgment is not legitimate, you need to judge manually. Set hideWhenNotFull to false, and then use Boolean values to determine.
 
 ## NestedScrollView
-* Use isNested Wrapped to take effect
 * RefreshStyle. Front is temporarily incompatible due to design problems. Try using CustomScrollView to see if it can be implemented.
 * ScrollController need to be placed in NestedScrollView,there is not work just placed in "child"。
 * How to get the inner scrollController? by using refreshController.scrollController get the inner

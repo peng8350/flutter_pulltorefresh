@@ -46,9 +46,10 @@ class SmartRefresher extends StatefulWidget {
   //controll inner state
   final RefreshController controller;
 
+
+  // When SmartRefresher is wrapped in some ScrollView,if true:it will find the primaryScrollController in parent widget
   @Deprecated(
       'after 1.3.8,the attr has no longer use,use or not use is the same')
-  // When SmartRefresher is wrapped in some ScrollView,if true:it will find the primaryScrollController in parent widget
   final bool isNestWrapped;
 
   SmartRefresher(
@@ -140,10 +141,10 @@ class SmartRefresherState extends State<SmartRefresher> {
     super.didUpdateWidget(oldWidget);
   }
 
-  ScrollPhysics _getScrollPhysics(RefreshIndicator sliver) {
-    if (sliver.refreshStyle == RefreshStyle.Front) {
+  ScrollPhysics _getScrollPhysics() {
+    if (_header.refreshStyle == RefreshStyle.Front) {
       return widget.enablePullDown
-          ? RefreshClampPhysics(springBackDistance: sliver.height)
+          ? RefreshClampPhysics(springBackDistance: _header.height)
           : ClampingScrollPhysics();
     } else {
       return RefreshBouncePhysics();
@@ -188,7 +189,7 @@ class SmartRefresherState extends State<SmartRefresher> {
       slivers.add(_footer);
     }
     return CustomScrollView(
-      physics: _getScrollPhysics(slivers.elementAt(0)),
+      physics: _getScrollPhysics(),
       controller: widget.controller.scrollController,
       cacheExtent: widget.child.cacheExtent,
       key: widget.child.key,

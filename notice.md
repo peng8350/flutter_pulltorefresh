@@ -24,7 +24,6 @@
 
 
 ## NestedScrollView
-* 使用isNestedWrapped才能生效
 * 由于设计上的问题,RefreshStyle.Front暂时不能兼容,尝试去使用CustomScrollView配合内部有一个offset的属性来实现出现的位置。
 * ScrollController要放在NestedScrollView里,放在child里是没作用的。
 * 如何去获取内部的scrollController?通过refreshController.scrollController获取

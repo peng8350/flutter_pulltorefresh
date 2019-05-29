@@ -36,12 +36,16 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.9
+     pull_to_refresh: ^1.4.0
 
 ```
+
+
 
 第一种使用方法,使用SmartRefresh和RefreshController(建议)
 ```
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 
 RefreshController _refreshController;
 
@@ -141,6 +145,20 @@ void dispose(){
       ].where((child) => child!=null).toList(),
     );
 
+
+```
+
+另外,假如你每个页面的头部和尾部指示器几乎都是一样的情况下,可以考虑使用IndicatorConfiguration(1.3.9新增),使用这个可以减少每次新建页面构造
+header和footer的重复性的工作,在IndicatorConfiguration子树下的SmartRefresher没有header和footer节点默认会采用IndicatorConfiguration的指示器
+
+```
+
+    IndicatorConfiguration(
+        headerBuilder: () => WaterDropHeader(),
+        footerBuilder:  () => ClassicFooter(),
+        child: .....
+    )
+
 ```
 
 
@@ -157,7 +175,7 @@ void dispose(){
 
 * <h3>如何兼容NestedScrollView?</h3>
 1.3.0提供了一个新属性isNestWrapped来兼容这东西,注意,这个属性打开后,scollController取决于NestScrollView,内部通过PrimaryScrollController.of(context)
-来获取scrollController,所以scrollController要放在NestedScrollView里。
+来获取scrollController,所以scrollController要放在NestedScrollView里。(1.3.8后isNestWrapped就没必要使用了)
 
 * <h3>为什么使用CuperNavigationBar后(不只这一个情况),顶部或者尾部指示器有空白的地方?Or why is top of listView blocked?</h3>
 很大可能是因为SafeArea,。解决方法一般是在SmartRefresher外围套用SafeArea

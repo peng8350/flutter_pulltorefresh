@@ -43,16 +43,16 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
     // TODO: implement initState
     _getDatas();
     _scrollController = ScrollController(keepScrollOffset: true);
-//    Future.delayed(Duration(milliseconds: 3000), () {
-//      _enablePullDown = false;
-//      _enablePullUp = false;
-//      if (mounted) setState(() {});
-//    });
-//    Future.delayed(Duration(milliseconds: 6000), () {
-//      _enablePullDown = true;
-//      _enablePullUp = true;
-//      if (mounted) setState(() {});
-//    });
+    Future.delayed(Duration(milliseconds: 3000), () {
+      _enablePullDown = false;
+      _enablePullUp = false;
+      if (mounted) setState(() {});
+    });
+    Future.delayed(Duration(milliseconds: 6000), () {
+      _enablePullDown = true;
+      _enablePullUp = true;
+      if (mounted) setState(() {});
+    });
     super.initState();
   }
 

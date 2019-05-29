@@ -154,3 +154,6 @@ Notice: This version of the code changes much, Api too
 * Add SkipCanRefresh,CompleteDuration attr in header
 * Fix trigger more times loading when no data come in and too fast loadComplete
 * remove center,anchor in CustomScrollView to Compatible with old versions
+
+## 1.4.0
+* Fix one serious Bug after 1.3.8 upgrade to 1.3.9:enablePullDown = false throw error

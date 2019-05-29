@@ -36,7 +36,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         _refreshController.requestLoading();
       }, child: Text("请求加载数据"))
     ],));
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < 130; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
@@ -79,22 +79,22 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
     // TODO: implement initState
 
     // for test #68 true-> false ->true
-//    Future.delayed(Duration(milliseconds: 3000),(){
-//      _enablePullDown = false;
-//      _enablePullUp = false;
-//    if(mounted)
-//      setState(() {
-//
-//      });
-//    });
-//    Future.delayed(Duration(milliseconds: 6000),(){
-//      _enablePullDown = true;
-//      _enablePullUp = true;
-//    if(mounted)
-//      setState(() {
-//
-//      });
-//    });
+    Future.delayed(Duration(milliseconds: 3000),(){
+      _enablePullDown = false;
+      _enablePullUp = false;
+    if(mounted)
+      setState(() {
+
+      });
+    });
+    Future.delayed(Duration(milliseconds: 6000),(){
+      _enablePullDown = true;
+      _enablePullUp = true;
+    if(mounted)
+      setState(() {
+
+      });
+    });
 
 //    // for test #68 false-> true ->false
 //    Future.delayed(Duration(milliseconds: 3000),(){
@@ -152,9 +152,10 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     print("rebuild");
     return SmartRefresher(
-      enablePullUp: _enablePullDown,
-      enablePullDown: _enablePullUp,
+      enablePullUp: _enablePullUp,
+      enablePullDown: _enablePullDown,
       controller: _refreshController,
+      header: WaterDropMaterialHeader(),
       onRefresh: () {
         print("onRefresh");
         if(mounted)

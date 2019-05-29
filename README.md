@@ -41,13 +41,15 @@ the first way,use SmartRefresher and RefreshController(Advice use this)
 ```
 
    dependencies:
-     pull_to_refresh: ^1.3.9
+     pull_to_refresh: ^1.4.0
 
 ```
 
 
 
 ```
+
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 RefreshController _refreshController;
 
@@ -148,6 +150,19 @@ Second Way(1.3.7 new),Considering that sometimes Sliver doesn't have to be place
 
 ```
 
+In addition, if you have almost the same header and tail indicators for each page, consider using IndicatorConfiguration
+(1.3.9 new), which reduces the repeatability of constructing headers and footers for each new page.
+
+```
+
+    IndicatorConfiguration(
+        headerBuilder: () => WaterDropHeader(),
+        footerBuilder:  () => ClassicFooter(),
+        child: .....
+    )
+
+```
+
 
 ## More
 - [SmartRefresher,RefreshController](refresher_controller_en.md)
@@ -167,6 +182,7 @@ because of the processing operation in Scaffold.,please issue flutter。
 * <h3>How to use it with NestedScrollView?</h3>
 1.3.0 provides a new attribute isNestWrapped for compatibility. Note that when this attribute is opened, scollController depends on NestScrollView,
 internally via PrimaryScrollController. of (context) To get scrollController, scrollController is placed in NestedScrollView。
+(The isNestWrapped attribute is unnecessary after 1.3.8)
 
 * <h3>Why is there a empty space in the top or tail indicator after using CuperNavigationBar (not just in this case)?</h3>
 the reason may be SafeArea,the solution: wrap SmartRefresher in SafeArea
