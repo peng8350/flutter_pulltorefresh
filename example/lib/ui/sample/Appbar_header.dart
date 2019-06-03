@@ -3,6 +3,7 @@
  * Email: peng8350@gmail.com
  * Time: 2019/5/7 下午12:19
  */
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
@@ -57,35 +58,10 @@ class _AppBarHeaderState extends State<AppBarHeader> {
     return Container(
       color: Colors.white,
       child: SmartRefresher(
+        headerInsertIndex: 1,
+        enablePullDown: true,
         child: CustomScrollView(
           slivers: [
-            // This is necessary,if not  SliverAppbar will follow headerIndicator
-            SliverStickyHeader(
-              header: new Container(
-                height: 60.0,
-                color: Colors.lightBlue,
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                alignment: Alignment.centerLeft,
-                child: new Text(
-                  'Header #0',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              sliver: new SliverList(
-                delegate: new SliverChildBuilderDelegate(
-                  (context, i) => new ListTile(
-                        leading: new CircleAvatar(
-                          child: new Text('0'),
-                        ),
-                        title: new Text('List tile #$i'),
-                      ),
-                  childCount: 4,
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(),
-            ),
 
             SliverAppBar(
               backgroundColor: Colors.greenAccent,
@@ -105,7 +81,7 @@ class _AppBarHeaderState extends State<AppBarHeader> {
         onRefresh: (){
           _refreshController.refreshCompleted();
         },
-        header: MaterialClassicHeader(
+        header: ClassicHeader(
         ),
       ),
     );

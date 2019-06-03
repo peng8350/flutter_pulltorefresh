@@ -155,7 +155,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       enablePullUp: _enablePullUp,
       enablePullDown: _enablePullDown,
       controller: _refreshController,
-      header: MaterialClassicHeader(),
+      header: WaterDropMaterialHeader(reverse: true,),
       onRefresh: () {
         print("onRefresh");
         if(mounted)
@@ -181,6 +181,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       child: ListView.builder(
         controller: _scrollController,
         itemExtent: 100.0,
+        reverse: true,
         itemCount: data.length,
         itemBuilder: (context, index) {
           return data[index];

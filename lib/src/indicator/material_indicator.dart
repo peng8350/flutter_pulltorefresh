@@ -25,6 +25,7 @@ class MaterialClassicHeader extends RefreshIndicator {
     this.semanticsValue,
     double offset: 0.0,
     this.color,
+    bool reverse:false,
     bool skipCanRefresh:false,
     this.distance: 50.0,
     this.backgroundColor,
@@ -33,6 +34,7 @@ class MaterialClassicHeader extends RefreshIndicator {
           refreshStyle: RefreshStyle.Front,
           height: 100.0,
           skipCanRefresh:skipCanRefresh,
+          reverse:reverse,
           offset: offset,
         );
 
@@ -45,12 +47,14 @@ class MaterialClassicHeader extends RefreshIndicator {
     double offset: 0.0,
     bool skipCanRefresh:false,
     this.color,
+    bool reverse:false,
     this.distance: 50.0,
     this.backgroundColor,
   }) : super(
           key: key,
           onRefresh: onRefresh,
           skipCanRefresh:skipCanRefresh,
+          reverse:reverse,
           refreshStyle: RefreshStyle.Front,
           height: 100.0,
           offset: offset,
@@ -182,6 +186,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
     double distance: 120.0,
     double offset: 0.0,
     String semanticsValue,
+    bool reverse:false,
     Color color: Colors.white,
     Color backgroundColor: Colors.blueAccent,
   }) : super(
@@ -189,6 +194,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
             offset: offset,
             color: color,
             distance: distance,
+            reverse:reverse,
             skipCanRefresh:skipCanRefresh,
             backgroundColor: backgroundColor,
             semanticsValue: semanticsValue,
@@ -199,6 +205,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
     @required OnRefresh onRefresh,
     String semanticsLabel,
     double distance: 120.0,
+    bool reverse:false,
     bool skipCanRefresh:false,
     double offset: 0.0,
     String semanticsValue,
@@ -211,6 +218,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
             skipCanRefresh:skipCanRefresh,
             color: color,
             distance: distance,
+            reverse:reverse,
             backgroundColor: backgroundColor,
             semanticsValue: semanticsValue,
             semanticsLabel: semanticsLabel);

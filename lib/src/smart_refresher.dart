@@ -62,7 +62,6 @@ class SmartRefresher extends StatefulWidget {
       this.headerInsertIndex:0})
       : assert(child != null),
         assert(controller != null),
-        assert(header.refreshStyle==RefreshStyle.Front&&headerInsertIndex==0,"FrontStyle only support place in first slivers!"),
         super(key: key);
 
   @override
@@ -104,6 +103,7 @@ class SmartRefresherState extends State<SmartRefresher> {
       }
     }
     widget.controller._header = _header;
+
   }
 
   @override
@@ -178,6 +178,8 @@ class SmartRefresherState extends State<SmartRefresher> {
       slivers = List.from(widget.child.buildSlivers(context), growable: true);
     }
     assert(widget.headerInsertIndex<slivers.length);
+    if(_header.refreshStyle==RefreshStyle.Front)
+    assert(widget.headerInsertIndex==0,"FrontStyle only support place in first slivers!");
     if (widget.enablePullDown) {
       slivers.insert(widget.headerInsertIndex, _header);
     }

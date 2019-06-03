@@ -51,15 +51,18 @@ abstract class RefreshIndicator extends Indicator {
 
   final OnRefresh onRefresh;
 
+  final bool reverse;
+
   final Duration completeDuration;
 
   const RefreshIndicator(
       {this.height: default_height,
       Key key,
       this.offset: 0.0,
-      this.skipCanRefresh:false,
-      this.completeDuration:const Duration(milliseconds: 600),
+      this.skipCanRefresh: false,
+      this.completeDuration: const Duration(milliseconds: 600),
       this.onRefresh,
+      this.reverse: false,
       double triggerDistance: default_refresh_triggerDistance,
       this.refreshStyle: RefreshStyle.Follow})
       : super(key: key, triggerDistance: triggerDistance);
@@ -81,7 +84,6 @@ abstract class RefreshIndicator extends Indicator {
             onClick: onClick)
 
 */
-
 
 abstract class LoadIndicator extends Indicator {
   final bool autoLoad;
@@ -150,10 +152,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         _position.activity is DragScrollActivity ||
         _position.activity is DrivenScrollActivity) {
       if (offset >= widget.triggerDistance) {
-        if(!widget.skipCanRefresh) {
+        if (!widget.skipCanRefresh) {
           mode = RefreshStatus.canRefresh;
-        }
-        else{
+        } else {
           floating = true;
           update();
           readyToRefresh().then((_) {
@@ -229,6 +230,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     return Future.delayed(widget.completeDuration);
   }
 
+  bool needReverseAll(){
+    return true;
+  }
+
   void onOffsetChange(double offset) {
     update();
   }
@@ -240,14 +245,12 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   Widget build(BuildContext context) {
     return SliverRefresh(
         paintOffsetY: widget.offset,
-        child: LayoutBuilder(
-          builder: (BuildContext c, BoxConstraints box) {
-            return Container(
-              child: buildContent(context, mode),
-            );
-          },
+        child: RotatedBox(
+          child: buildContent(context, mode),
+          quarterTurns: needReverseAll()&&widget.reverse ? 10 : 0,
         ),
         floating: floating,
+        reverse: widget.reverse,
         refreshIndicatorLayoutExtent: widget.height,
         refreshStyle: widget.refreshStyle);
   }
@@ -257,7 +260,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     // TODO: implement deactivate
     // careful this code ,I am not sure if it is right to do so
     // for fix the offset after the header remove from slivers
-    if (widget.refreshStyle == RefreshStyle.Front&&(context as Element).dirty) {
+    if (widget.refreshStyle == RefreshStyle.Front &&
+        (context as Element).dirty) {
       if (_position.pixels < widget.height) {
         _position.correctPixels(0.0);
       } else {
@@ -365,8 +369,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     }
     final double overscrollPast = calculateScrollOffset();
 
-    if (refresher?.onOffsetChange != null &&
-        _position.extentAfter == 0.0) {
+    if (refresher?.onOffsetChange != null && _position.extentAfter == 0.0) {
       refresher?.onOffsetChange(false, overscrollPast);
     }
     handleDragMove();

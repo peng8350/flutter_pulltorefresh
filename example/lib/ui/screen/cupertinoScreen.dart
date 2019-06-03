@@ -46,8 +46,15 @@ class CupertinoScreenState extends State<CupertinoScreen>{
       ));
     }
     return CupertinoApp(
+
         home: CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
+            leading: GestureDetector(
+              child: Icon(Icons.arrow_back_ios),
+              onTap: (){
+                Navigator.pop(context);
+              },
+            ),
             middle: CupertinoSegmentedControl(
               children: {0:Text("sliver"),1:Text("refresher")},
               onValueChanged: (index) {

@@ -7,6 +7,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart'
     hide RefreshIndicatorState, RefreshIndicator;
+import 'package:flutter/widgets.dart';
 import '../internals/indicator_wrap.dart';
 import 'package:flutter/cupertino.dart';
 import '../smart_refresher.dart';
@@ -32,14 +33,14 @@ class WaterDropHeader extends RefreshIndicator {
     Duration completeDuration: const Duration(milliseconds: 600),
     this.failed,
     this.waterDropColor: Colors.grey,
-    bool skipCanRefresh:false,
+    bool skipCanRefresh: false,
     this.idleIcon,
     double triggerDistance: 100.0,
   }) : super(
             key: key,
             triggerDistance: triggerDistance,
             completeDuration: completeDuration,
-            skipCanRefresh:skipCanRefresh,
+            skipCanRefresh: skipCanRefresh,
             refreshStyle: RefreshStyle.UnFollow);
 
   const WaterDropHeader.asSliver({
@@ -48,8 +49,8 @@ class WaterDropHeader extends RefreshIndicator {
     this.refresh,
     this.complete,
     this.failed,
-    bool skipCanRefresh:false,
-    Duration completeDuration:const Duration(milliseconds: 600),
+    bool skipCanRefresh: false,
+    Duration completeDuration: const Duration(milliseconds: 600),
     this.reverse: false,
     this.waterDropColor: Colors.grey,
     this.idleIcon,
@@ -57,8 +58,8 @@ class WaterDropHeader extends RefreshIndicator {
   }) : super(
             key: key,
             onRefresh: onRefresh,
-            skipCanRefresh:skipCanRefresh,
-            completeDuration:completeDuration,
+            skipCanRefresh: skipCanRefresh,
+            completeDuration: completeDuration,
             triggerDistance: triggerDistance,
             refreshStyle: RefreshStyle.UnFollow);
 
@@ -99,6 +100,12 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
         upperBound: 50.0,
         duration: Duration(milliseconds: 400));
     super.initState();
+  }
+
+  @override
+  bool needReverseAll() {
+    // TODO: implement needReverseAll
+    return false;
   }
 
   @override
@@ -149,24 +156,32 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
         );
     } else if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
       return Container(
-        height: 80.0,
-        child: CustomPaint(
-          child: Container(
-            alignment: Alignment.topCenter,
-            margin: EdgeInsets.only(top: 15.0),
-            child: widget.idleIcon != null
-                ? widget.idleIcon
-                : const Icon(
-                    Icons.airplanemode_active,
-                    size: 15,
-                    color: Colors.white,
-                  ),
-          ),
-          painter: _QqPainter(
-              color: widget.waterDropColor,
-              value: _animationController.value,
-              reverse: widget.reverse),
+        child: Stack(
+          children: <Widget>[
+            RotatedBox(
+              child: CustomPaint(
+                child: Container(height: 80.0,),
+                painter: _QqPainter(
+                  color: widget.waterDropColor,
+                  value: _animationController.value,
+                ),
+              ),
+              quarterTurns: widget.reverse?10:0,
+            ),
+            Container(
+              alignment:widget.reverse?Alignment.bottomCenter: Alignment.topCenter,
+              margin: widget.reverse?EdgeInsets.only(bottom:15.0):EdgeInsets.only(top:15.0),
+              child: widget.idleIcon != null
+                  ? widget.idleIcon
+                  : const Icon(
+                      Icons.airplanemode_active,
+                      size: 15,
+                      color: Colors.white,
+                    ),
+            )
+          ],
         ),
+        height: 80.0,
       );
     }
     return Container(
@@ -189,9 +204,8 @@ class _QqPainter extends CustomPainter {
   final Color color;
   final double value;
   final Paint painter = Paint();
-  final bool reverse;
 
-  _QqPainter({this.color, this.value, this.reverse});
+  _QqPainter({this.color, this.value});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -203,7 +217,7 @@ class _QqPainter extends CustomPainter {
 
     final double scaleRatio = 0.1;
 
-    final double offset = reverse ? -value : value;
+    final double offset = value;
 
     painter.color = color;
     canvas.drawCircle(Offset(middleW, originH), circleSize, painter);
@@ -229,31 +243,16 @@ class _QqPainter extends CustomPainter {
         middleW + circleSize,
         originH);
     //draw upper circle
-    if (!reverse) {
-      path.moveTo(middleW - circleSize, originH);
-      path.arcToPoint(Offset(middleW + circleSize, originH),
-          radius: Radius.circular(circleSize));
+    path.moveTo(middleW - circleSize, originH);
+    path.arcToPoint(Offset(middleW + circleSize, originH),
+        radius: Radius.circular(circleSize));
 
-      //draw lowwer circle
-      path.moveTo(
-          middleW + circleSize - value * scaleRatio * 2, originH + offset);
-      path.arcToPoint(
-          Offset(
-              middleW - circleSize + value * scaleRatio * 2, originH + offset),
-          radius: Radius.circular(value * scaleRatio));
-    } else {
-      path.moveTo(middleW + circleSize, originH);
-      path.arcToPoint(Offset(middleW - circleSize, originH),
-          radius: Radius.circular(circleSize));
-
-      //draw lowwer circle
-      path.moveTo(
-          middleW - circleSize + value * scaleRatio * 2, originH + offset);
-      path.arcToPoint(
-          Offset(
-              middleW + circleSize - value * scaleRatio * 2, originH + offset),
-          radius: Radius.circular(value * scaleRatio));
-    }
+    //draw lowwer circle
+    path.moveTo(
+        middleW + circleSize - value * scaleRatio * 2, originH + offset);
+    path.arcToPoint(
+        Offset(middleW - circleSize + value * scaleRatio * 2, originH + offset),
+        radius: Radius.circular(value * scaleRatio));
 
     path.close();
     canvas.drawPath(path, painter);
