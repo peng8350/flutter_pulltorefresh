@@ -257,7 +257,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     // TODO: implement deactivate
     // careful this code ,I am not sure if it is right to do so
     // for fix the offset after the header remove from slivers
-    if (widget.refreshStyle == RefreshStyle.Front) {
+    if (widget.refreshStyle == RefreshStyle.Front&&(context as Element).dirty) {
       if (_position.pixels < widget.height) {
         _position.correctPixels(0.0);
       } else {

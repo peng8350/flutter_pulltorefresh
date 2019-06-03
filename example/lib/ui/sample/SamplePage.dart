@@ -8,6 +8,7 @@ import 'BigData.dart';
 import 'Nested.dart';
 import 'Appbar_header.dart';
 import 'InnerWrapList.dart';
+import 'Dynamic+Navigator.dart';
 
 class SamplePage extends StatefulWidget {
 
@@ -30,7 +31,7 @@ class _SamplePage extends State<SamplePage>
   @override
   void initState() {
     // TODO: implement initState
-    views = [DataSmall(),Nested(),AppBarHeader(),InnerList()];
+    views = [DataSmall(),Nested(),AppBarHeader(),InnerList(),Dynamic()];
     super.initState();
   }
 

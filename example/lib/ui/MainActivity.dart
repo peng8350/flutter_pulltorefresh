@@ -50,7 +50,7 @@ class _MainActivityState extends State<MainActivity>
     // TODO: implement initState
 
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     _menuController = MenuController(vsync: this);
     _pageController = PageController(initialPage: 1);
     views = [
@@ -86,6 +86,7 @@ class _MainActivityState extends State<MainActivity>
               ),
               Tab(child: Text("SliverAppbar+Sliverheader")),
               Tab(child: Text("嵌套滚动视图")),
+              Tab(child: Text("动态变化指示器+Navigator")),
             ],
             controller: _tabController,
           ):null,
