@@ -17,7 +17,6 @@ class IndicatorActivity extends StatefulWidget {
 
   final LoadIndicator footer;
 
-  final bool isNest;
 
   final bool enableOverScroll;
   final bool reverse;
@@ -27,7 +26,6 @@ class IndicatorActivity extends StatefulWidget {
       this.header,
         this.reverse:false,
       this.footer,
-      this.isNest: false,
       this.enableOverScroll: true});
 
   @override
@@ -96,7 +94,6 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
             header: widget.header,
             footer: widget.footer,
             enablePullDown: true,
-            isNestWrapped: widget.isNest,
             enablePullUp: totalHeight > lIstHeight,
             controller: _refreshController);
       }),

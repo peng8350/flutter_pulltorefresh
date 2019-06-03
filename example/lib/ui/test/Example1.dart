@@ -88,7 +88,6 @@ class Example1State extends State<Example1> {
           child: SmartRefresher(
               controller: _refreshController,
               enablePullDown: true,
-              isNestWrapped: true,
               header: WaterDropHeader(),
               enablePullUp: true,
               onRefresh: () {

@@ -46,11 +46,7 @@ class SmartRefresher extends StatefulWidget {
   //controll inner state
   final RefreshController controller;
 
-
-  // When SmartRefresher is wrapped in some ScrollView,if true:it will find the primaryScrollController in parent widget
-  @Deprecated(
-      'after 1.3.8,the attr has no longer use,use or not use is the same')
-  final bool isNestWrapped;
+  final int headerInsertIndex;
 
   SmartRefresher(
       {Key key,
@@ -63,17 +59,17 @@ class SmartRefresher extends StatefulWidget {
       this.onRefresh,
       this.onLoading,
       this.onOffsetChange,
-      this.isNestWrapped: false})
+      this.headerInsertIndex:0})
       : assert(child != null),
         assert(controller != null),
+        assert(header.refreshStyle==RefreshStyle.Front&&headerInsertIndex==0,"FrontStyle only support place in first slivers!"),
         super(key: key);
 
   @override
   SmartRefresherState createState() => SmartRefresherState();
 
   static SmartRefresher of(BuildContext context) {
-    return context.ancestorWidgetOfExactType(SmartRefresher) as SmartRefresher
-        ;
+    return context.ancestorWidgetOfExactType(SmartRefresher) as SmartRefresher;
   }
 }
 
@@ -114,7 +110,7 @@ class SmartRefresherState extends State<SmartRefresher> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(widget.controller.initialRefresh) {
+    if (widget.controller.initialRefresh) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         widget.controller.requestRefresh();
       });
@@ -181,13 +177,15 @@ class SmartRefresherState extends State<SmartRefresher> {
     } else {
       slivers = List.from(widget.child.buildSlivers(context), growable: true);
     }
-    //insert header or footer
+    assert(widget.headerInsertIndex<slivers.length);
     if (widget.enablePullDown) {
-      slivers.insert(0, _header);
+      slivers.insert(widget.headerInsertIndex, _header);
     }
+    //insert header or footer
     if (widget.enablePullUp) {
       slivers.add(_footer);
     }
+
     return CustomScrollView(
       physics: _getScrollPhysics(),
       controller: widget.controller.scrollController,
@@ -217,7 +215,7 @@ class RefreshController {
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
-  RefreshController({this.initialRefresh:false});
+  RefreshController({this.initialRefresh: false});
 
   void requestRefresh(
       {Duration duration: const Duration(milliseconds: 300),

@@ -51,7 +51,6 @@ class _NestedState extends State<Nested> {
         body: SmartRefresher(
             controller: _refreshController,
             enablePullDown: true,
-            isNestWrapped: true,
             header: ClassicHeader(
               idleIcon: Container(),
               idleText: "Load more...",
