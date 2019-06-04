@@ -100,7 +100,7 @@ class _MainActivityState extends State<MainActivity>
           ),
           clickLoadingWhenIdle: true,
           headerBuilder: () => WaterDropHeader(waterDropColor: Colors.green,),
-          footerBuilder:  () => ClassicFooter(decoration: BoxDecoration(color: Colors.lightBlue),),
+          footerBuilder:  () => ClassicFooter(decoration: BoxDecoration(color: Colors.pink),),
         ),
       ),
       decoration: BoxDecoration(color: Colors.purple),

@@ -71,21 +71,23 @@ class CupertinoScreenState extends State<CupertinoScreen>{
               children: <Widget>[
                 Offstage(
                   offstage: _segIndex!=0,
-                  child: CustomScrollView(
-                    physics: RefreshClampPhysics(springBackDistance: 100.0),
-                    slivers: <Widget>[
-                      MaterialClassicHeader.asSliver(
-                        onRefresh: () async {
-                          await Future.delayed(Duration(milliseconds: 400));
-                          return true;
-                        },
-                      ),
+                  child: RefreshConfiguration(
+                    child: CustomScrollView(
+                      physics: RefreshClampPhysics(springBackDistance: 100.0),
+                      slivers: <Widget>[
+                        MaterialClassicHeader.asSliver(
+                          onRefresh: () async {
+                            await Future.delayed(Duration(milliseconds: 400));
+                            return true;
+                          },
+                        ),
 
-                      SliverList(
-                        delegate: SliverChildListDelegate(widgets),
-                      ),
-                      ClassicFooter()
-                    ],
+                        SliverList(
+                          delegate: SliverChildListDelegate(widgets),
+                        ),
+                        ClassicFooter()
+                      ],
+                    ),
                   ),
                 ),
                 Offstage(

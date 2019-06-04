@@ -13,7 +13,7 @@ import 'indicator/material_indicator.dart';
 
 typedef void OnOffsetChange(bool up, double offset);
 
-typedef IndicatorBuilder = Indicator Function();
+typedef IndicatorBuilder = Widget Function();
 
 enum RefreshStatus { idle, canRefresh, refreshing, completed, failed }
 
@@ -21,6 +21,9 @@ enum LoadStatus { idle, loading, noMore }
 
 enum RefreshStyle { Follow, UnFollow, Behind, Front }
 
+const double default_refresh_triggerDistance = 80.0;
+
+const double default_load_triggerDistance = 15.0;
 
 /*
     This is the most important component that provides drop-down refresh and up loading.
@@ -79,7 +82,7 @@ class SmartRefresherState extends State<SmartRefresher> {
   LoadIndicator _footer;
 
   void _updateController() {
-    final Widget defaultHeader= (defaultTargetPlatform == TargetPlatform.iOS
+    final Widget defaultHeader = (defaultTargetPlatform == TargetPlatform.iOS
         ? ClassicHeader()
         : MaterialClassicHeader());
     final Widget defaultFooter = ClassicFooter();
@@ -88,14 +91,13 @@ class SmartRefresherState extends State<SmartRefresher> {
         widget.child.controller ?? PrimaryScrollController.of(context);
     if (_configuration == null) {
       _header = widget.header ?? defaultHeader;
-          ;
+      ;
       _footer = widget.footer ?? defaultFooter;
     } else {
       if (_configuration.headerBuilder != null) {
         _header = widget.header ?? _configuration.headerBuilder();
       } else {
-        _header = widget.header ??
-            defaultHeader;
+        _header = widget.header ?? defaultHeader;
       }
       if (_configuration.footerBuilder != null) {
         _footer = widget.footer ?? _configuration.footerBuilder();
@@ -103,7 +105,10 @@ class SmartRefresherState extends State<SmartRefresher> {
         _footer = widget.footer ?? defaultFooter;
       }
     }
-    widget.controller._header = _header;
+    widget.controller._triggerDistance =
+        _header.refreshStyle == RefreshStyle.Front
+            ? 0.0
+            : _configuration.headerTriggerDistance;
   }
 
   @override
@@ -209,8 +214,7 @@ class RefreshController {
   ValueNotifier<RefreshStatus> headerMode = ValueNotifier(RefreshStatus.idle);
   ValueNotifier<LoadStatus> footerMode = ValueNotifier(LoadStatus.idle);
   ScrollController scrollController;
-
-  RefreshIndicator _header;
+  double _triggerDistance;
 
   final bool initialRefresh;
 
@@ -230,12 +234,8 @@ class RefreshController {
     assert(scrollController != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (headerMode?.value != RefreshStatus.idle) return;
-    scrollController.animateTo(
-        _header.refreshStyle == RefreshStyle.Front
-            ? 0.0
-            : -_header.triggerDistance,
-        duration: duration,
-        curve: curve);
+    scrollController.animateTo(_triggerDistance,
+        duration: duration, curve: curve);
   }
 
   void requestLoading(
@@ -244,24 +244,12 @@ class RefreshController {
     assert(scrollController != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (footerStatus == LoadStatus.idle) {
-      if (_header.refreshStyle == RefreshStyle.Front) {
-        if (scrollController.position.maxScrollExtent - _header.height < 0.0) {
-          footerMode.value = LoadStatus.loading;
-        } else
-          scrollController
-              .animateTo(scrollController.position.maxScrollExtent,
-                  duration: duration, curve: curve)
-              .whenComplete(() {
-            footerMode.value = LoadStatus.loading;
-          });
-      } else {
-        scrollController
-            .animateTo(scrollController.position.maxScrollExtent,
-                duration: duration, curve: curve)
-            .whenComplete(() {
-          footerMode.value = LoadStatus.loading;
-        });
-      }
+      scrollController
+          .animateTo(scrollController.position.maxScrollExtent,
+              duration: duration, curve: curve)
+          .whenComplete(() {
+        footerMode.value = LoadStatus.loading;
+      });
     }
   }
 
@@ -298,8 +286,6 @@ class RefreshController {
   }
 }
 
-
-
 class RefreshConfiguration extends InheritedWidget {
   final IndicatorBuilder headerBuilder;
   final IndicatorBuilder footerBuilder;
@@ -313,15 +299,19 @@ class RefreshConfiguration extends InheritedWidget {
   final bool clickLoadingWhenIdle;
   final bool autoLoad;
   final Widget child;
+  final double headerTriggerDistance;
+  final double footerTriggerDistance;
 
   RefreshConfiguration({
     @required this.child,
     this.headerBuilder,
     this.footerBuilder,
-    this.headerOffset:0.0,
-    this.clickLoadingWhenIdle:false,
+    this.headerOffset: 0.0,
+    this.clickLoadingWhenIdle: false,
     this.skipCanRefresh: false,
     this.autoLoad: true,
+    this.headerTriggerDistance: default_refresh_triggerDistance,
+    this.footerTriggerDistance: default_load_triggerDistance,
     this.hideFooterWhenNotFull: true,
   });
 
@@ -330,5 +320,12 @@ class RefreshConfiguration extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(InheritedWidget oldWidget) => false;
+  bool updateShouldNotify(RefreshConfiguration oldWidget) {
+    return autoLoad != oldWidget.autoLoad ||
+        skipCanRefresh != oldWidget.skipCanRefresh ||
+        hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||
+        headerOffset != oldWidget.headerOffset ||
+        clickLoadingWhenIdle != oldWidget.clickLoadingWhenIdle ||
+        oldWidget.runtimeType != runtimeType;
+  }
 }

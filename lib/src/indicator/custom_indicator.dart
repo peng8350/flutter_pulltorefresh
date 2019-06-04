@@ -20,10 +20,8 @@ class CustomHeader extends RefreshIndicator {
     double height: default_height,
     Duration completeDuration: const Duration(milliseconds: 600),
     RefreshStyle refreshStyle: RefreshStyle.Follow,
-    double triggerDistance: default_refresh_triggerDistance,
   }) : super(
             key: key,
-            triggerDistance: triggerDistance,
             completeDuration: completeDuration,
             refreshStyle: refreshStyle,
             height: height);
@@ -36,11 +34,9 @@ class CustomHeader extends RefreshIndicator {
     double height: default_height,
     Duration completeDuration: const Duration(milliseconds: 600),
     RefreshStyle refreshStyle: RefreshStyle.Follow,
-    double triggerDistance: default_refresh_triggerDistance,
   }) : super(
             key: key,
             onRefresh: onRefresh,
-            triggerDistance: triggerDistance,
             completeDuration: completeDuration,
             refreshStyle: refreshStyle,
             height: height);
@@ -67,19 +63,16 @@ class CustomFooter extends LoadIndicator {
     Key key,
     @required this.builder,
     Function onClick,
-    double triggerDistance: default_load_triggerDistance,
-  }) : super(key: key, triggerDistance: triggerDistance, onClick: onClick);
+  }) : super(key: key, onClick: onClick);
 
   const CustomFooter.asSliver({
     Key key,
     @required this.builder,
     @required OnLoading onLoading,
     Function onClick,
-    double triggerDistance: default_load_triggerDistance,
   }) : super(
             key: key,
             onLoading: onLoading,
-            triggerDistance: triggerDistance,
             onClick: onClick);
 
   @override

@@ -34,10 +34,8 @@ class WaterDropHeader extends RefreshIndicator {
     this.failed,
     this.waterDropColor: Colors.grey,
     this.idleIcon,
-    double triggerDistance: 100.0,
   }) : super(
             key: key,
-            triggerDistance: triggerDistance,
             completeDuration: completeDuration,
             refreshStyle: RefreshStyle.UnFollow);
 
@@ -51,12 +49,10 @@ class WaterDropHeader extends RefreshIndicator {
     this.reverse: false,
     this.waterDropColor: Colors.grey,
     this.idleIcon,
-    double triggerDistance: 100.0,
   }) : super(
             key: key,
             onRefresh: onRefresh,
             completeDuration: completeDuration,
-            triggerDistance: triggerDistance,
             refreshStyle: RefreshStyle.UnFollow);
 
   @override
@@ -69,6 +65,7 @@ class WaterDropHeader extends RefreshIndicator {
 class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
     with TickerProviderStateMixin {
   AnimationController _animationController;
+  AnimationController _dismissCtl;
 
   @override
   void onOffsetChange(double offset) {
@@ -84,12 +81,15 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   @override
   Future<void> readyToRefresh() {
     // TODO: implement readyToRefresh
+    _dismissCtl.animateTo(0.0);
     return _animationController.animateTo(0.0);
   }
 
   @override
   void initState() {
     // TODO: implement initState
+    _dismissCtl = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 400), value: 1.0);
     _animationController = AnimationController(
         vsync: this,
         lowerBound: 0.0,
@@ -151,39 +151,42 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
           ],
         );
     } else if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
-      return Container(
-        child: Stack(
-          children: <Widget>[
-            RotatedBox(
-              child: CustomPaint(
-                child: Container(
-                  height: 80.0,
-                ),
-                painter: _QqPainter(
-                  color: widget.waterDropColor,
-                  value: _animationController.value,
-                ),
-              ),
-              quarterTurns: widget.reverse ? 10 : 0,
-            ),
-            Container(
-              alignment:
-                  widget.reverse ? Alignment.bottomCenter : Alignment.topCenter,
-              margin: widget.reverse
-                  ? EdgeInsets.only(bottom: 15.0)
-                  : EdgeInsets.only(top: 15.0),
-              child: widget.idleIcon != null
-                  ? widget.idleIcon
-                  : const Icon(
-                      Icons.airplanemode_active,
-                      size: 15,
-                      color: Colors.white,
+      return FadeTransition(
+          child: Container(
+            child: Stack(
+              children: <Widget>[
+                RotatedBox(
+                  child: CustomPaint(
+                    child: Container(
+                      height: 80.0,
                     ),
-            )
-          ],
-        ),
-        height: 80.0,
-      );
+                    painter: _QqPainter(
+                      color: widget.waterDropColor,
+                      value: _animationController.value,
+                    ),
+                  ),
+                  quarterTurns: widget.reverse ? 10 : 0,
+                ),
+                Container(
+                  alignment: widget.reverse
+                      ? Alignment.bottomCenter
+                      : Alignment.topCenter,
+                  margin: widget.reverse
+                      ? EdgeInsets.only(bottom: 15.0)
+                      : EdgeInsets.only(top: 15.0),
+                  child: widget.idleIcon != null
+                      ? widget.idleIcon
+                      : const Icon(
+                          Icons.airplanemode_active,
+                          size: 15,
+                          color: Colors.white,
+                        ),
+                )
+              ],
+            ),
+            height: 80.0,
+          ),
+          opacity: _dismissCtl);
     }
     return Container(
       height: 60.0,
@@ -194,8 +197,18 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   }
 
   @override
+  void onModeChange(RefreshStatus mode) {
+    // TODO: implement onModeChange
+    if(mode==RefreshStatus.refreshing){
+      _animationController.reset();
+      _dismissCtl.value = 1.0;
+    }
+  }
+
+  @override
   void dispose() {
     // TODO: implement dispose
+    _dismissCtl.dispose();
     _animationController.dispose();
     super.dispose();
   }

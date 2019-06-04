@@ -16,17 +16,10 @@ const int default_completeDuration = 500;
 
 const double default_height = 60.0;
 
-const double default_refresh_triggerDistance = 80.0;
 
-const double default_load_triggerDistance = 15.0;
 
 const RefreshStyle default_refreshStyle = RefreshStyle.Follow;
 
-abstract class Indicator extends StatefulWidget {
-  final double triggerDistance;
-
-  const Indicator({Key key, this.triggerDistance}) : super(key: key);
-}
 
 /*
  header generate template
@@ -49,7 +42,7 @@ abstract class Indicator extends StatefulWidget {
 
 */
 
-abstract class RefreshIndicator extends Indicator {
+abstract class RefreshIndicator extends StatefulWidget {
   final RefreshStyle refreshStyle;
 
   final double height;
@@ -67,9 +60,8 @@ abstract class RefreshIndicator extends Indicator {
       this.height: default_height,
       this.completeDuration:
           const Duration(milliseconds: default_completeDuration),
-      double triggerDistance: default_refresh_triggerDistance,
       this.refreshStyle: default_refreshStyle})
-      : super(key: key, triggerDistance: triggerDistance);
+      : super(key: key);
 }
 
 /*
@@ -89,17 +81,16 @@ abstract class RefreshIndicator extends Indicator {
 
 */
 
-abstract class LoadIndicator extends Indicator {
+abstract class LoadIndicator extends StatefulWidget {
   final Function onClick;
 
   final OnLoading onLoading;
 
   const LoadIndicator(
       {Key key,
-      double triggerDistance: default_load_triggerDistance,
       this.onLoading,
       this.onClick})
-      : super(key: key, triggerDistance: triggerDistance);
+      : super(key: key);
 }
 
 abstract class RefreshIndicatorState<T extends RefreshIndicator>
@@ -149,7 +140,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if (_position.activity.velocity == 0.0 ||
         _position.activity is DragScrollActivity ||
         _position.activity is DrivenScrollActivity) {
-      if (offset >= widget.triggerDistance) {
+      if (offset >= configuration.headerTriggerDistance) {
         if (!configuration.skipCanRefresh) {
           mode = RefreshStatus.canRefresh;
         } else {
@@ -348,7 +339,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       _enableLoadingAgain = true;
     }
     if (_position.userScrollDirection.index == 2 &&
-        _position.extentAfter <= widget.triggerDistance &&
+        _position.extentAfter <= configuration.footerTriggerDistance &&
         configuration.autoLoad &&
         _enableLoadingAgain &&
         mode == LoadStatus.idle) {
@@ -465,6 +456,7 @@ abstract class IndicatorProcessor {
   void _updateListener(BuildContext context, bool headerUpdate,
       {Function scrollEnd}) {
     configuration = RefreshConfiguration.of(context);
+    assert(configuration!=null,"when use asSliver ,please wrap scrollView in RefreshConfiguration!");
     refresher = SmartRefresher.of(context);
     ValueNotifier<dynamic> newMode;
     if (refresher == null) {

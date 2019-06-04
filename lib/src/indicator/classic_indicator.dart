@@ -25,7 +25,6 @@ class ClassicHeader extends RefreshIndicator {
     Key key,
     RefreshStyle refreshStyle: default_refreshStyle,
     double height: default_height,
-    double triggerDistance: default_refresh_triggerDistance,
     Duration completeDuration: const Duration(milliseconds: 600),
     this.decoration:const BoxDecoration(),
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
@@ -50,7 +49,7 @@ class ClassicHeader extends RefreshIndicator {
             refreshStyle: refreshStyle,
             completeDuration: completeDuration,
             height: height,
-            triggerDistance: triggerDistance);
+           );
 
   const ClassicHeader.asSliver({
     Key key,
@@ -60,7 +59,6 @@ class ClassicHeader extends RefreshIndicator {
     this.decoration:const BoxDecoration(),
     double height: default_height,
     Duration completeDuration: const Duration(milliseconds: 600),
-    double triggerDistance: default_refresh_triggerDistance,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
@@ -83,8 +81,8 @@ class ClassicHeader extends RefreshIndicator {
             onRefresh: onRefresh,
             completeDuration: completeDuration,
             refreshStyle: refreshStyle,
-            height: height,
-            triggerDistance: triggerDistance);
+            height: height
+            );
 
   @override
   State createState() {
@@ -183,7 +181,6 @@ class ClassicFooter extends LoadIndicator {
   const ClassicFooter({
     Key key,
     Function onClick,
-    double triggerDistance: default_load_triggerDistance,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
@@ -203,7 +200,6 @@ class ClassicFooter extends LoadIndicator {
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
   }) : super(
           key: key,
-          triggerDistance: triggerDistance,
           onClick: onClick,
         );
 
@@ -211,7 +207,6 @@ class ClassicFooter extends LoadIndicator {
     Key key,
     @required OnLoading onLoading,
     Function onClick,
-    double triggerDistance: default_load_triggerDistance,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.decoration:const BoxDecoration(),
     this.loadingText: 'Loading...',
@@ -232,7 +227,6 @@ class ClassicFooter extends LoadIndicator {
   }) : super(
           key: key,
           onLoading: onLoading,
-          triggerDistance: triggerDistance,
           onClick: onClick,
         );
 

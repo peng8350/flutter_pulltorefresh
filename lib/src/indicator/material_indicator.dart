@@ -119,7 +119,7 @@ class _MaterialClassicHeaderState
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
     if (!floating) {
-      _valueAni.value = offset / widget.triggerDistance;
+      _valueAni.value = offset / configuration.headerTriggerDistance;
       _positionController.value = offset / widget.height;
     }
     super.onOffsetChange(offset);
@@ -279,7 +279,7 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     // TODO: implement onOffsetChange
     if (!floating) {
       _BezierController.value = (offset / widget.height) * 0.5;
-      _valueAni.value = offset / widget.triggerDistance;
+      _valueAni.value = offset / configuration.headerTriggerDistance;
       _positionController.value =
           offset / widget.height * 0.3 / (widget.distance / widget.height);
     }

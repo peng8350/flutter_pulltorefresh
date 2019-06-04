@@ -90,8 +90,8 @@ class RefreshBouncePhysics extends ScrollPhysics {
       return BouncingScrollSimulation(
         spring: spring,
         position: position.pixels,
-        velocity: velocity * 0.91,
-        // TODO(abarth): We should move this constant closer to the drag end.
+        velocity: velocity *
+            0.91, // TODO(abarth): We should move this constant closer to the drag end.
         leadingExtent: position.minScrollExtent,
         trailingExtent: position.maxScrollExtent,
         tolerance: tolerance,
@@ -136,16 +136,15 @@ class RefreshBouncePhysics extends ScrollPhysics {
 class RefreshClampPhysics extends ScrollPhysics {
   final double springBackDistance;
 
+
   /// Creates scroll physics that bounce back from the edge.
-  const RefreshClampPhysics(
-      {ScrollPhysics parent, this.springBackDistance: 100.0})
+  const RefreshClampPhysics({ScrollPhysics parent, this.springBackDistance:100.0})
       : super(parent: parent);
 
   @override
   RefreshClampPhysics applyTo(ScrollPhysics ancestor) {
     return RefreshClampPhysics(
-        parent: buildParent(ancestor),
-        springBackDistance: this.springBackDistance);
+        parent: buildParent(ancestor), springBackDistance: this.springBackDistance);
   }
 
   @override
@@ -157,26 +156,31 @@ class RefreshClampPhysics extends ScrollPhysics {
   @override
   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
     // TODO: implement applyPhysicsToUserOffset
-    final ScrollPosition scrollPosition = position as ScrollPosition;
-    if (position.extentBefore < springBackDistance) {
-      final double newPixels = position.pixels - offset * 0.4;
+    final ScrollPosition scrollPosition =
+    position as ScrollPosition;
+    if (position.extentBefore < springBackDistance ) {
 
-      if (scrollPosition.userScrollDirection.index == 2) {
-        if (newPixels > springBackDistance) {
-          return position.pixels - springBackDistance;
-        } else {
-          return offset * 0.4;
+      final double newPixels = position.pixels-offset*0.5;
+
+      if(scrollPosition.userScrollDirection.index==2){
+        if(newPixels>springBackDistance){
+          return position.pixels-springBackDistance;
+        }
+        else{
+          return offset*0.5;
         }
       }
-      return offset * 0.4;
+      return offset*0.5;
     }
     return super.applyPhysicsToUserOffset(position, offset);
   }
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
-    final ScrollPosition scrollPosition = position as ScrollPosition;
-    if (scrollPosition.extentBefore < springBackDistance) {
+    final ScrollPosition scrollPosition =
+        position as ScrollPosition;
+    if(scrollPosition.extentBefore<springBackDistance) {
+
       if (scrollPosition.activity is BallisticScrollActivity) {
         //spring Back
         if (value > position.pixels) {
@@ -200,14 +204,13 @@ class RefreshClampPhysics extends ScrollPhysics {
     if (value < position.minScrollExtent &&
         position.minScrollExtent < position.pixels) // hit top edge
       return value - position.minScrollExtent;
-    if (position.maxScrollExtent <= position.pixels &&
-        position.pixels < value) // overscroll
+    if (position.maxScrollExtent <= position.pixels && position.pixels < value) // overscroll
       return value - position.pixels;
-    if (position.pixels < position.maxScrollExtent &&
-        position.maxScrollExtent < value) // hit bottom edge
+    if (position.pixels < position.maxScrollExtent && position.maxScrollExtent < value) // hit bottom edge
       return value - position.maxScrollExtent;
     return 0.0;
   }
+
 
   @override
   Simulation createBallisticSimulation(
@@ -222,12 +225,11 @@ class RefreshClampPhysics extends ScrollPhysics {
         tolerance: tolerance,
       );
     }
-    if (velocity.abs() <= tolerance.velocity.abs()) return null;
+    if(velocity.abs()<=tolerance.velocity.abs())return null;
     return RefreshClampingSimulation(
       position: position.pixels,
       velocity: velocity,
-      extentBefore:
-          velocity < 0 ? position.extentBefore - springBackDistance : -1.0,
+      extentBefore:velocity<0?position.extentBefore-springBackDistance:-1.0,
       tolerance: tolerance,
     );
   }
@@ -241,24 +243,25 @@ class RefreshClampingSimulation extends Simulation {
     this.extentBefore,
     this.friction = 0.015,
     Tolerance tolerance = Tolerance.defaultTolerance,
-  })  : assert(_flingVelocityPenetration(0.0) == _initialVelocityPenetration),
+  }) : assert(_flingVelocityPenetration(0.0) == _initialVelocityPenetration),
         super(tolerance: tolerance) {
-    if (extentBefore != -1.0) {
+    if(extentBefore!=-1.0) {
       _duration = _flingDuration(velocity);
       _distance = math.min(
           (velocity * _duration / _initialVelocityPenetration).abs(),
           extentBefore);
       if (_distance == extentBefore) {
-        _duration = _distance / 1000;
+        _duration = _distance/1000;
       }
-    } else {
-      _duration = _flingDuration(velocity);
-      _distance = (velocity * _duration / _initialVelocityPenetration).abs();
     }
+    else{
+      _duration = _flingDuration(velocity);
+      _distance =
+          (velocity * _duration / _initialVelocityPenetration).abs();
+    }
+
   }
-
   final double extentBefore;
-
   /// The position of the particle at the beginning of the simulation.
   final double position;
 
@@ -288,8 +291,7 @@ class RefreshClampingSimulation extends Simulation {
     final double scaledFriction = friction * _decelerationForFriction(0.84);
 
     // See getSplineDeceleration().
-    final double deceleration =
-        math.log(0.35 * velocity.abs() / scaledFriction);
+    final double deceleration = math.log(0.35 * velocity.abs() / scaledFriction);
 
     return math.exp(deceleration / (_kDecelerationRate - 1.0));
   }
@@ -310,11 +312,8 @@ class RefreshClampingSimulation extends Simulation {
   // f(t) = (1165.03 t^3 - 3143.62 t^2 + 2945.87 t) / 961.0
   //      = 1.2 t^3 - 3.27 t^2 + 3.065 t
   static const double _initialVelocityPenetration = 3.065;
-
   static double _flingDistancePenetration(double t) {
-    return (1.2 * t * t * t) -
-        (3.27 * t * t) +
-        (_initialVelocityPenetration * t);
+    return (1.2 * t * t * t) - (3.27 * t * t) + (_initialVelocityPenetration * t);
   }
 
   // The derivative of the _flingDistancePenetration() function.
