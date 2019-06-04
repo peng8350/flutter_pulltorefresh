@@ -23,19 +23,15 @@ class MaterialClassicHeader extends RefreshIndicator {
     Key key,
     this.semanticsLabel,
     this.semanticsValue,
-    double offset: 0.0,
     this.color,
-    bool reverse:false,
-    bool skipCanRefresh:false,
+    bool reverse: false,
     this.distance: 50.0,
     this.backgroundColor,
   }) : super(
           key: key,
           refreshStyle: RefreshStyle.Front,
           height: 100.0,
-          skipCanRefresh:skipCanRefresh,
-          reverse:reverse,
-          offset: offset,
+          reverse: reverse,
         );
 
   const MaterialClassicHeader.asSliver({
@@ -44,20 +40,16 @@ class MaterialClassicHeader extends RefreshIndicator {
     ValueNotifier<RefreshStatus> mode,
     this.semanticsLabel,
     this.semanticsValue,
-    double offset: 0.0,
-    bool skipCanRefresh:false,
     this.color,
-    bool reverse:false,
+    bool reverse: false,
     this.distance: 50.0,
     this.backgroundColor,
   }) : super(
           key: key,
           onRefresh: onRefresh,
-          skipCanRefresh:skipCanRefresh,
-          reverse:reverse,
+          reverse: reverse,
           refreshStyle: RefreshStyle.Front,
           height: 100.0,
-          offset: offset,
         );
 
   @override
@@ -109,7 +101,8 @@ class _MaterialClassicHeaderState
           alignment: Alignment.topCenter,
           child: RefreshProgressIndicator(
             semanticsLabel: widget.semanticsLabel ??
-                MaterialLocalizations?.of(context)?.refreshIndicatorSemanticLabel,
+                MaterialLocalizations?.of(context)
+                    ?.refreshIndicatorSemanticLabel,
             semanticsValue: widget?.semanticsValue,
             value: floating ? null : _valueAni.value,
             valueColor: _valueColor,
@@ -182,20 +175,16 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
   const WaterDropMaterialHeader({
     Key key,
     String semanticsLabel,
-    bool skipCanRefresh:false,
     double distance: 120.0,
-    double offset: 0.0,
     String semanticsValue,
-    bool reverse:false,
+    bool reverse: false,
     Color color: Colors.white,
     Color backgroundColor: Colors.blueAccent,
   }) : super(
             key: key,
-            offset: offset,
             color: color,
             distance: distance,
-            reverse:reverse,
-            skipCanRefresh:skipCanRefresh,
+            reverse: reverse,
             backgroundColor: backgroundColor,
             semanticsValue: semanticsValue,
             semanticsLabel: semanticsLabel);
@@ -205,20 +194,16 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
     @required OnRefresh onRefresh,
     String semanticsLabel,
     double distance: 120.0,
-    bool reverse:false,
-    bool skipCanRefresh:false,
-    double offset: 0.0,
+    bool reverse: false,
     String semanticsValue,
     Color color: Colors.white,
     Color backgroundColor: Colors.blueAccent,
   }) : super.asSliver(
             key: key,
             onRefresh: onRefresh,
-            offset: offset,
-            skipCanRefresh:skipCanRefresh,
             color: color,
             distance: distance,
-            reverse:reverse,
+            reverse: reverse,
             backgroundColor: backgroundColor,
             semanticsValue: semanticsValue,
             semanticsLabel: semanticsLabel);

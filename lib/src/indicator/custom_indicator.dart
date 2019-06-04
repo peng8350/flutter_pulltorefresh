@@ -7,8 +7,6 @@
 import 'package:flutter/widgets.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
-import '../internals/default_constants.dart';
-
 
 typedef Widget HeaderBuilder(BuildContext context, RefreshStatus mode);
 typedef Widget FooterBuilder(BuildContext context, LoadStatus mode);
@@ -20,15 +18,13 @@ class CustomHeader extends RefreshIndicator {
     Key key,
     @required this.builder,
     double height: default_height,
-    bool skipCanRefresh:false,
-    Duration completeDuration:const Duration(milliseconds: 600),
+    Duration completeDuration: const Duration(milliseconds: 600),
     RefreshStyle refreshStyle: RefreshStyle.Follow,
     double triggerDistance: default_refresh_triggerDistance,
   }) : super(
             key: key,
             triggerDistance: triggerDistance,
-            skipCanRefresh:skipCanRefresh,
-            completeDuration:completeDuration,
+            completeDuration: completeDuration,
             refreshStyle: refreshStyle,
             height: height);
 
@@ -38,18 +34,16 @@ class CustomHeader extends RefreshIndicator {
     @required OnRefresh onRefresh,
     ValueNotifier<RefreshStatus> mode,
     double height: default_height,
-    bool skipCanRefresh:false,
-    Duration completeDuration:const Duration(milliseconds: 600),
+    Duration completeDuration: const Duration(milliseconds: 600),
     RefreshStyle refreshStyle: RefreshStyle.Follow,
     double triggerDistance: default_refresh_triggerDistance,
   }) : super(
-      key: key,
-      onRefresh:onRefresh,
-      triggerDistance: triggerDistance,
-      skipCanRefresh:skipCanRefresh,
-      completeDuration:completeDuration,
-      refreshStyle: refreshStyle,
-      height: height);
+            key: key,
+            onRefresh: onRefresh,
+            triggerDistance: triggerDistance,
+            completeDuration: completeDuration,
+            refreshStyle: refreshStyle,
+            height: height);
 
   @override
   State<StatefulWidget> createState() {
@@ -72,32 +66,21 @@ class CustomFooter extends LoadIndicator {
   const CustomFooter({
     Key key,
     @required this.builder,
-    bool autoLoad: true,
-    bool hideWhenNotFull: true,
     Function onClick,
     double triggerDistance: default_load_triggerDistance,
-  }) : super(
-            key: key,
-            autoLoad: autoLoad,
-            hideWhenNotFull: hideWhenNotFull,
-            triggerDistance: triggerDistance,
-            onClick: onClick);
+  }) : super(key: key, triggerDistance: triggerDistance, onClick: onClick);
 
   const CustomFooter.asSliver({
     Key key,
     @required this.builder,
     @required OnLoading onLoading,
-    bool autoLoad: true,
-    bool hideWhenNotFull: true,
     Function onClick,
     double triggerDistance: default_load_triggerDistance,
   }) : super(
-      key: key,
-      autoLoad: autoLoad,
-      onLoading:onLoading,
-      hideWhenNotFull: hideWhenNotFull,
-      triggerDistance: triggerDistance,
-      onClick: onClick);
+            key: key,
+            onLoading: onLoading,
+            triggerDistance: triggerDistance,
+            onClick: onClick);
 
   @override
   State<StatefulWidget> createState() {

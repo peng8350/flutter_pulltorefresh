@@ -6,7 +6,6 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'internals/default_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
@@ -15,11 +14,19 @@ import 'indicator/material_indicator.dart';
 
 typedef void OnOffsetChange(bool up, double offset);
 
+typedef IndicatorBuilder = Indicator Function();
+
 enum RefreshStatus { idle, canRefresh, refreshing, completed, failed }
 
 enum LoadStatus { idle, loading, noMore }
 
 enum RefreshStyle { Follow, UnFollow, Behind, Front }
+
+const bool default_AutoLoad = true;
+
+const bool default_enablePullDown = true;
+
+const bool default_enablePullUp = false;
 
 /*
     This is the most important component that provides drop-down refresh and up loading.
@@ -59,7 +66,7 @@ class SmartRefresher extends StatefulWidget {
       this.onRefresh,
       this.onLoading,
       this.onOffsetChange,
-      this.headerInsertIndex:0})
+      this.headerInsertIndex: 0})
       : assert(child != null),
         assert(controller != null),
         super(key: key);
@@ -103,7 +110,6 @@ class SmartRefresherState extends State<SmartRefresher> {
       }
     }
     widget.controller._header = _header;
-
   }
 
   @override
@@ -177,9 +183,10 @@ class SmartRefresherState extends State<SmartRefresher> {
     } else {
       slivers = List.from(widget.child.buildSlivers(context), growable: true);
     }
-    assert(widget.headerInsertIndex<slivers.length);
-    if(_header.refreshStyle==RefreshStyle.Front)
-    assert(widget.headerInsertIndex==0,"FrontStyle only support place in first slivers!");
+    assert(widget.headerInsertIndex < slivers.length);
+    if (_header.refreshStyle == RefreshStyle.Front)
+      assert(widget.headerInsertIndex == 0,
+          "FrontStyle only support place in first slivers!");
     if (widget.enablePullDown) {
       slivers.insert(widget.headerInsertIndex, _header);
     }
@@ -187,8 +194,7 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (widget.enablePullUp) {
       slivers.add(_footer);
     }
-
-    return CustomScrollView(
+    Widget body = CustomScrollView(
       physics: _getScrollPhysics(),
       controller: widget.controller.scrollController,
       cacheExtent: widget.child.cacheExtent,
@@ -197,6 +203,11 @@ class SmartRefresherState extends State<SmartRefresher> {
       slivers: slivers,
       reverse: widget.child.reverse,
     );
+    if (_configuration != null) {
+      return body;
+    } else {
+      return RefreshConfiguration(child: body);
+    }
   }
 }
 
@@ -293,17 +304,29 @@ class RefreshController {
   }
 }
 
-typedef IndicatorBuilder = Indicator Function();
+
 
 class RefreshConfiguration extends InheritedWidget {
   final IndicatorBuilder headerBuilder;
   final IndicatorBuilder footerBuilder;
+
+  // If need to refreshing now when reaching triggerDistance
+  final bool skipCanRefresh;
+
+  // when listView data small(not enough one page) , it should be hide
+  final bool hideFooterWhenNotFull;
+  final double headerOffset;
+  final bool autoLoad;
   final Widget child;
 
   RefreshConfiguration({
     @required this.child,
     this.headerBuilder,
     this.footerBuilder,
+    this.headerOffset:0.0,
+    this.skipCanRefresh: false,
+    this.autoLoad: true,
+    this.hideFooterWhenNotFull: true,
   });
 
   static RefreshConfiguration of(BuildContext context) {

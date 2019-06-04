@@ -33,14 +33,12 @@ class WaterDropHeader extends RefreshIndicator {
     Duration completeDuration: const Duration(milliseconds: 600),
     this.failed,
     this.waterDropColor: Colors.grey,
-    bool skipCanRefresh: false,
     this.idleIcon,
     double triggerDistance: 100.0,
   }) : super(
             key: key,
             triggerDistance: triggerDistance,
             completeDuration: completeDuration,
-            skipCanRefresh: skipCanRefresh,
             refreshStyle: RefreshStyle.UnFollow);
 
   const WaterDropHeader.asSliver({
@@ -49,7 +47,6 @@ class WaterDropHeader extends RefreshIndicator {
     this.refresh,
     this.complete,
     this.failed,
-    bool skipCanRefresh: false,
     Duration completeDuration: const Duration(milliseconds: 600),
     this.reverse: false,
     this.waterDropColor: Colors.grey,
@@ -58,7 +55,6 @@ class WaterDropHeader extends RefreshIndicator {
   }) : super(
             key: key,
             onRefresh: onRefresh,
-            skipCanRefresh: skipCanRefresh,
             completeDuration: completeDuration,
             triggerDistance: triggerDistance,
             refreshStyle: RefreshStyle.UnFollow);
@@ -160,17 +156,22 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
           children: <Widget>[
             RotatedBox(
               child: CustomPaint(
-                child: Container(height: 80.0,),
+                child: Container(
+                  height: 80.0,
+                ),
                 painter: _QqPainter(
                   color: widget.waterDropColor,
                   value: _animationController.value,
                 ),
               ),
-              quarterTurns: widget.reverse?10:0,
+              quarterTurns: widget.reverse ? 10 : 0,
             ),
             Container(
-              alignment:widget.reverse?Alignment.bottomCenter: Alignment.topCenter,
-              margin: widget.reverse?EdgeInsets.only(bottom:15.0):EdgeInsets.only(top:15.0),
+              alignment:
+                  widget.reverse ? Alignment.bottomCenter : Alignment.topCenter,
+              margin: widget.reverse
+                  ? EdgeInsets.only(bottom: 15.0)
+                  : EdgeInsets.only(top: 15.0),
               child: widget.idleIcon != null
                   ? widget.idleIcon
                   : const Icon(

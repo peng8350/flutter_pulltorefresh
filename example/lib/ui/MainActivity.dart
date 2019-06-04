@@ -64,7 +64,7 @@ class _MainActivityState extends State<MainActivity>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return ResideMenu.scaffold(
+    return ResideMenu.scafford(
       controller: _menuController,
 
       child: Scaffold(
@@ -98,7 +98,7 @@ class _MainActivityState extends State<MainActivity>
             children: views,
             physics: NeverScrollableScrollPhysics(),
           ),
-          headerBuilder: () => WaterDropHeader(waterDropColor: Colors.green,skipCanRefresh: true,),
+          headerBuilder: () => WaterDropHeader(waterDropColor: Colors.green,),
           footerBuilder:  () => ClassicFooter(),
         ),
       ),

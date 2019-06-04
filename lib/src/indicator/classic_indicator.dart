@@ -6,7 +6,6 @@
 
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
-import '../internals/default_constants.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 
@@ -26,8 +25,7 @@ class ClassicHeader extends RefreshIndicator {
     RefreshStyle refreshStyle: default_refreshStyle,
     double height: default_height,
     double triggerDistance: default_refresh_triggerDistance,
-    Duration completeDuration:const Duration(milliseconds: 600),
-    bool skipCanRefresh:false,
+    Duration completeDuration: const Duration(milliseconds: 600),
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
@@ -48,9 +46,8 @@ class ClassicHeader extends RefreshIndicator {
   }) : super(
             key: key,
             refreshStyle: refreshStyle,
-            completeDuration:completeDuration,
+            completeDuration: completeDuration,
             height: height,
-            skipCanRefresh:skipCanRefresh,
             triggerDistance: triggerDistance);
 
   const ClassicHeader.asSliver({
@@ -59,9 +56,8 @@ class ClassicHeader extends RefreshIndicator {
     ValueNotifier<RefreshStatus> mode,
     RefreshStyle refreshStyle: default_refreshStyle,
     double height: default_height,
-    Duration completeDuration:const Duration(milliseconds: 600),
+    Duration completeDuration: const Duration(milliseconds: 600),
     double triggerDistance: default_refresh_triggerDistance,
-    bool skipCanRefresh:false,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
@@ -82,9 +78,8 @@ class ClassicHeader extends RefreshIndicator {
   }) : super(
             key: key,
             onRefresh: onRefresh,
-            completeDuration:completeDuration,
+            completeDuration: completeDuration,
             refreshStyle: refreshStyle,
-            skipCanRefresh:skipCanRefresh,
             height: height,
             triggerDistance: triggerDistance);
 
@@ -182,9 +177,7 @@ class ClassicFooter extends LoadIndicator {
   const ClassicFooter({
     Key key,
     Function onClick,
-    bool autoLoad: default_AutoLoad,
     double triggerDistance: default_load_triggerDistance,
-    bool hideWhenNotFull: true,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
@@ -202,20 +195,16 @@ class ClassicFooter extends LoadIndicator {
     ),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
   }) : super(
-            key: key,
-            triggerDistance: triggerDistance,
-            onClick: onClick,
-            hideWhenNotFull: hideWhenNotFull,
-            autoLoad: autoLoad);
+          key: key,
+          triggerDistance: triggerDistance,
+          onClick: onClick,
+        );
 
   const ClassicFooter.asSliver({
     Key key,
     @required OnLoading onLoading,
-    ValueNotifier<LoadStatus> mode,
     Function onClick,
-    bool autoLoad: default_AutoLoad,
     double triggerDistance: default_load_triggerDistance,
-    bool hideWhenNotFull: true,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
@@ -233,12 +222,11 @@ class ClassicFooter extends LoadIndicator {
     ),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
   }) : super(
-            key: key,
-            onLoading: onLoading,
-            triggerDistance: triggerDistance,
-            onClick: onClick,
-            hideWhenNotFull: hideWhenNotFull,
-            autoLoad: autoLoad);
+          key: key,
+          onLoading: onLoading,
+          triggerDistance: triggerDistance,
+          onClick: onClick,
+        );
 
   @override
   State<StatefulWidget> createState() {

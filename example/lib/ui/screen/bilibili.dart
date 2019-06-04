@@ -37,37 +37,40 @@ TabController _tabController;
     // TODO: implement build
     return MaterialApp(
       home:Scaffold(
-        body: SmartRefresher(
-          header: WaterDropMaterialHeader(backgroundColor: Colors.pink,offset: MediaQuery.of(context).padding.top+56.0,),
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                forceElevated: false,
-                leading: GestureDetector(child: Icon(Icons.add),onTap: (){
-                  Navigator.of(context).pop();
-                },),
-                backgroundColor: Colors.pink,
-                title: Text("哔哩哔哩"),
-                actions: <Widget>[Icon(Icons.verified_user)],
-              ),
-              SliverAppBar(
-                flexibleSpace: FlexibleSpaceBar(
-                  title: TabBar(tabs: [Tab(text: 'Tab1',),Tab(text: 'Tab2',),Tab(text: 'Tab3',),Tab(text: 'Tab1',)],controller: _tabController,),
+        body: RefreshConfiguration(
+          child: SmartRefresher(
+            header: WaterDropMaterialHeader(backgroundColor: Colors.pink,),
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  forceElevated: false,
+                  leading: GestureDetector(child: Icon(Icons.add),onTap: (){
+                    Navigator.of(context).pop();
+                  },),
+                  backgroundColor: Colors.pink,
+                  title: Text("哔哩哔哩"),
+                  actions: <Widget>[Icon(Icons.verified_user)],
+                ),
+                SliverAppBar(
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: TabBar(tabs: [Tab(text: 'Tab1',),Tab(text: 'Tab2',),Tab(text: 'Tab3',),Tab(text: 'Tab1',)],controller: _tabController,),
+
+                  ),
+                  pinned: true,
+                  leading: Container(),
 
                 ),
-                pinned: true,
-                leading: Container(),
-
-              ),
-              SliverList(delegate: SliverChildListDelegate(items))
-            ],
+                SliverList(delegate: SliverChildListDelegate(items))
+              ],
+            ),
+            controller: _refreshController,
+            onRefresh: () {
+              Future.delayed(Duration(milliseconds: 1500)).whenComplete(() {
+                _refreshController.refreshCompleted();
+              });
+            },
           ),
-          controller: _refreshController,
-          onRefresh: () {
-            Future.delayed(Duration(milliseconds: 1500)).whenComplete(() {
-              _refreshController.refreshCompleted();
-            });
-          },
+          headerOffset: MediaQuery.of(context).padding.top+56.0,
         ),
       ),
       theme: ThemeData( brightness: Brightness.light,

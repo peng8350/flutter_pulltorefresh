@@ -5,13 +5,22 @@
  */
 
 import 'package:flutter/widgets.dart';
-import 'default_constants.dart';
 import 'dart:math' as math;
 import '../smart_refresher.dart';
 import 'slivers.dart';
 
 typedef OnRefresh = Future<bool> Function();
 typedef OnLoading = Future<bool> Function();
+
+const int default_completeDuration = 500;
+
+const double default_height = 60.0;
+
+const double default_refresh_triggerDistance = 80.0;
+
+const double default_load_triggerDistance = 15.0;
+
+const RefreshStyle default_refreshStyle = RefreshStyle.Follow;
 
 abstract class Indicator extends StatefulWidget {
   final double triggerDistance;
@@ -43,11 +52,8 @@ abstract class Indicator extends StatefulWidget {
 abstract class RefreshIndicator extends Indicator {
   final RefreshStyle refreshStyle;
 
-  final bool skipCanRefresh;
-
   final double height;
 
-  final double offset;
 
   final OnRefresh onRefresh;
 
@@ -56,15 +62,14 @@ abstract class RefreshIndicator extends Indicator {
   final Duration completeDuration;
 
   const RefreshIndicator(
-      {this.height: default_height,
-      Key key,
-      this.offset: 0.0,
-      this.skipCanRefresh: false,
-      this.completeDuration: const Duration(milliseconds: 600),
+      {Key key,
       this.onRefresh,
       this.reverse: false,
+      this.height: default_height,
+      this.completeDuration:
+          const Duration(milliseconds: default_completeDuration),
       double triggerDistance: default_refresh_triggerDistance,
-      this.refreshStyle: RefreshStyle.Follow})
+      this.refreshStyle: default_refreshStyle})
       : super(key: key, triggerDistance: triggerDistance);
 }
 
@@ -86,20 +91,14 @@ abstract class RefreshIndicator extends Indicator {
 */
 
 abstract class LoadIndicator extends Indicator {
-  final bool autoLoad;
-
   final Function onClick;
-
-  final bool hideWhenNotFull;
 
   final OnLoading onLoading;
 
   const LoadIndicator(
       {Key key,
-      double triggerDistance: 15.0,
+      double triggerDistance: default_load_triggerDistance,
       this.onLoading,
-      this.autoLoad: true,
-      this.hideWhenNotFull: true,
       this.onClick})
       : super(key: key, triggerDistance: triggerDistance);
 }
@@ -152,7 +151,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         _position.activity is DragScrollActivity ||
         _position.activity is DrivenScrollActivity) {
       if (offset >= widget.triggerDistance) {
-        if (!widget.skipCanRefresh) {
+        if (!configuration.skipCanRefresh) {
           mode = RefreshStatus.canRefresh;
         } else {
           floating = true;
@@ -230,7 +229,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     return Future.delayed(widget.completeDuration);
   }
 
-  bool needReverseAll(){
+  bool needReverseAll() {
     return true;
   }
 
@@ -244,10 +243,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   @override
   Widget build(BuildContext context) {
     return SliverRefresh(
-        paintOffsetY: widget.offset,
+        paintOffsetY: configuration.headerOffset,
         child: RotatedBox(
           child: buildContent(context, mode),
-          quarterTurns: needReverseAll()&&widget.reverse ? 10 : 0,
+          quarterTurns: needReverseAll() && widget.reverse ? 10 : 0,
         ),
         floating: floating,
         reverse: widget.reverse,
@@ -282,6 +281,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   void _update() {
     refresher = SmartRefresher.of(context);
+    configuration = RefreshConfiguration.of(context);
     final ScrollPosition newPosition = Scrollable.of(context).position;
     if (refresher == null) {
       _updateListener(_mode ?? ValueNotifier<RefreshStatus>(RefreshStatus.idle),
@@ -355,7 +355,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     }
     if (_position.userScrollDirection.index == 2 &&
         _position.extentAfter <= widget.triggerDistance &&
-        widget.autoLoad &&
+        configuration.autoLoad &&
         _enablbeLoadingAgain &&
         mode == LoadStatus.idle) {
       mode = LoadStatus.loading;
@@ -379,6 +379,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   // updateListener
   void _update() {
     refresher = SmartRefresher.of(context);
+    configuration = RefreshConfiguration.of(context);
     final ScrollPosition newPosition = Scrollable.of(context).position;
     if (refresher == null) {
       _updateListener(
@@ -430,7 +431,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   Widget build(BuildContext context) {
     // TODO: implement build
     return SliverLoading(
-        hideWhenNotFull: widget.hideWhenNotFull,
+        hideWhenNotFull: configuration.hideFooterWhenNotFull,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints cons) {
             _isHide = cons.biggest.height == 0.0;
@@ -451,6 +452,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
 abstract class IndicatorProcessor {
   SmartRefresher refresher;
+
+  RefreshConfiguration configuration;
 
   set mode(mode) => _mode?.value = mode;
 
