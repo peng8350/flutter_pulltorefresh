@@ -64,7 +64,7 @@ class _MainActivityState extends State<MainActivity>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return ResideMenu.scafford(
+    return ResideMenu.scaffold(
       controller: _menuController,
 
       child: Scaffold(
@@ -92,7 +92,7 @@ class _MainActivityState extends State<MainActivity>
           ):null,
         ),
         body:
-        IndicatorConfiguration(
+        RefreshConfiguration(
           child: PageView(
             controller: _pageController,
             children: views,

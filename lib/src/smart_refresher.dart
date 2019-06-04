@@ -73,12 +73,12 @@ class SmartRefresher extends StatefulWidget {
 }
 
 class SmartRefresherState extends State<SmartRefresher> {
-  IndicatorConfiguration _configuration;
+  RefreshConfiguration _configuration;
   RefreshIndicator _header;
   LoadIndicator _footer;
 
   void _updateController() {
-    _configuration = IndicatorConfiguration.of(context);
+    _configuration = RefreshConfiguration.of(context);
     widget.controller.scrollController =
         widget.child.controller ?? PrimaryScrollController.of(context);
     if (_configuration == null) {
@@ -295,19 +295,19 @@ class RefreshController {
 
 typedef IndicatorBuilder = Indicator Function();
 
-class IndicatorConfiguration extends InheritedWidget {
+class RefreshConfiguration extends InheritedWidget {
   final IndicatorBuilder headerBuilder;
   final IndicatorBuilder footerBuilder;
   final Widget child;
 
-  IndicatorConfiguration({
+  RefreshConfiguration({
     @required this.child,
     this.headerBuilder,
     this.footerBuilder,
   });
 
-  static IndicatorConfiguration of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(IndicatorConfiguration);
+  static RefreshConfiguration of(BuildContext context) {
+    return context.inheritFromWidgetOfExactType(RefreshConfiguration);
   }
 
   @override
