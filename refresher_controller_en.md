@@ -41,7 +41,12 @@
 
 ```
 
-# IndicatorConfiguration(1.3.9 new)
-The main reason for adding this feature is that an App has the same top and bottom indicators, or that multiple pages have the same indicators. So using Indicator Configuration can reduce duplication of work.
-Under the subtree of this component, Smart Refresher will refer to the indicator in Indicator Configuration. If Smart Refresher has a header or footer inside, it will not use Indicator Configuration.
-Instead of using its own header and footer
+# RefreshConfiguration
+* headerBuilder: Header construction indicator, to return RefreshIndicator type, under the subtree SmartRefresher refers to it by default without header attr
+* footerBuilder: The tail constructed indicator returns the LoadIndicator type, which SmartRefresher under the subtree refers to by default without footer
+* double headerTriggerDistance: trigger refresh distance
+* double footerTriggerDistance: trigger loading distance
+* skipCanRefresh: Skip the canRefresh state and go directly to refresh state
+* bool hideWhenNotFull:Whether to automatically hide the bottom indicator when the page is less than one page, default to true
+* () => {} onClick：Click on the callback method of the indicator to manually load data or reset the status of no data
+* autoLoad:Whether to turn on the function of automatic loading at a certain distance

@@ -131,19 +131,15 @@ class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
 ```
 
 实现到这里,这个指示器基本就差不多完成了。但是,还有一步,就是你那些动画总得要还原到原来的位置吧,总不能还在那个位置停留。下次用户下拉刷新的时候就可能还是那个状态值。
-那这里,应该怎么做？内部没有特定方法,但是可以利用RefreshStatus的状态还原为idle后,接着再还原controller里的值,里面有暴露一个handleModeChange的方法
+那这里,应该怎么做？内部没有特定方法,但是可以利用RefreshStatus的状态还原为idle后,接着再还原controller里的值,里面有暴露一个resetValue的方法
 
 ```
 
   @override
-  void handleModeChange() {
+  void resetValue() {
     // TODO: implement handleModeChange
-    //这里千万别忘了调用super,里面有重要的处理逻辑
-    super.handleModeChange();
-    if (mode == RefreshStatus.idle) {
       _scaleAnimation.value = 0.0;
       _offsetController.value = 0.0;
-    }
   }
 
 ```

@@ -41,7 +41,11 @@
 
 ```
 
-# IndicatorConfiguration(1.3.9新增)
-增加这个功能,主要是考虑到一个App都是同样的顶部和底部指示器,或者多个页面之间拥有同样的指示器。所以使用IndicatorConfiguration,可以减少重复的工作。
-在这个组件的子树下的SmartRefresher都会去引用IndicatorConfiguration里的指示器,假如SmartRefresher内部拥有header或者footer,则不会使用IndicatorConfiguration
-里的指示器,而是使用自身的header和footer
+# RefreshConfiguration
+* headerBuilder: 头部构造的指示器,要返回RefreshIndicator类型,子树下的SmartRefresher没有header情况下默认引用它
+* footerBuilder: 尾部构造的指示器,要返回LoadIndicator类型,子树下的SmartRefresher没有footer情况下默认引用它
+* double headerTriggerDistance: 头部触发刷新的越界距离
+* double footerTriggerDistance: 尾部触发刷新的越界距离
+* skipCanRefresh: 跳过canRefresh状态直接进入刷新状态
+* bool hideWhenNotFull:当页面不满一页时，是否要自动隐藏掉底部指示器,默认为true
+* bool autoLoad: 是否开启到达一定距离自动加载的功能

@@ -128,19 +128,15 @@ Then when this method is finished, floating = false, the header starts to hide.
 ```
 
 So far, the indicator is almost complete. But one more step is that your animations have to be restored to their original position, and you can't stay there. The next time the user drops down and refreshes, it may still be that state value.
-So what should we do here? There is no specific method inside, but you can restore the status of RefreshStatus to idle, and then restore the value in the controller, which exposes a handleModeChange method.
+So what should we do here? There is no specific method inside, but you can restore the status of RefreshStatus to idle, and then restore the value in the controller, which exposes a resetValue method.
 
 ```
 
   @override
-  void handleModeChange() {
+  void resetValue() {
     // TODO: implement handleModeChange
-    //Don't forget to call super here. It has important processing logic.
-    super.handleModeChange();
-    if (mode == RefreshStatus.idle) {
       _scaleAnimation.value = 0.0;
       _offsetController.value = 0.0;
-    }
   }
 
 ```

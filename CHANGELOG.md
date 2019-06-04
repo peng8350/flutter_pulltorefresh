@@ -157,3 +157,13 @@ Notice: This version of the code changes much, Api too
 
 ## 1.4.0
 * Fix one serious Bug after 1.3.8 upgrade to 1.3.9:enablePullDown = false throw error
+
+## 1.4.1
+* Remove isNestedWrapped(deprecated from 1.3.8)
+* Add headerInsertIndex attr in SmartRefresher
+* Rename IndicatorConfiguration to RefreshConfiguration
+* Move some attr from Indicator to RefreshConfiguration:offset,skipCanRefresh,triggerDistance,autoLoad,hideWhenNotFull
+* Add decoration for classicIndicator(both header and footer)
+* Add Fade effect for WaterDropHeader when dismiss
+* Simplify reverse operation,Add MaterialClassicHeader,WaterDropMaterialHeader reverse feature
+

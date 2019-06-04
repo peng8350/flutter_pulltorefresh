@@ -48,12 +48,10 @@ class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
   }
 
   @override
-  void onModeChange(RefreshStatus mode) {
+  void resetValue() {
     // TODO: implement handleModeChange
-    if (mode == RefreshStatus.idle) {
       _scaleAnimation.value = 0.0;
       _offsetController.value = 0.0;
-    }
   }
 
   @override

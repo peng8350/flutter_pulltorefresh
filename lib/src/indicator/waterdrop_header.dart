@@ -197,12 +197,10 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   }
 
   @override
-  void onModeChange(RefreshStatus mode) {
-    // TODO: implement onModeChange
-    if(mode==RefreshStatus.refreshing){
-      _animationController.reset();
-      _dismissCtl.value = 1.0;
-    }
+  void resetValue() {
+    // TODO: implement resetValue
+    _animationController.reset();
+    _dismissCtl.value = 1.0;
   }
 
   @override

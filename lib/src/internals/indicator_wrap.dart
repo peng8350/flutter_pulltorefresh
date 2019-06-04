@@ -25,20 +25,15 @@ const RefreshStyle default_refreshStyle = RefreshStyle.Follow;
  header generate template
     const xxxx({
     Key key,
-    double offset:0.0,
     RefreshStyle refreshStyle: default_refreshStyle,
     double height: default_height,
-    double triggerDistance: default_refresh_triggerDistance,
     Duration completeDuration:const Duration(milliseconds: 600),
-    bool skipCanRefresh:false,
     }) : super(
     key: key,
-    offset:offset
     refreshStyle: refreshStyle,
     completeDuration:completeDuration,
     height: height,
-    skipCanRefresh:skipCanRefresh,
-    triggerDistance: triggerDistance);
+   );
 
 */
 
@@ -174,7 +169,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         if (!mounted) return;
         floating = false;
         update();
-
+        resetValue();
         /*
           handle two Situation:
           1.when user dragging to refreshing, then user scroll down not to see the indicator,then it will not spring back,
@@ -231,6 +226,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   void onModeChange(RefreshStatus mode){
 
   }
+
+
+  void resetValue() {}
 
   // indicator render layout
   Widget buildContent(BuildContext context, RefreshStatus mode);
@@ -290,6 +288,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     _updateListener(context, true);
     super.didUpdateWidget(oldWidget);
   }
+
 }
 
 abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>

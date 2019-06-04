@@ -2,13 +2,10 @@
 
 ## RefreshController
 * Remember to dispose RefreshController in widget dispose callback,Otherwise, when you refresh, the component is destroyed and the refresh happens to be finished, the null pointer warning will be reported.
-* Perform refresh and load operations in initState initialization. Don't call it directly in initState, wait for the interface render  complete before calling it.
-,Use SchedulerBinding.instance.addPostFrameCallback
 
 ## SmartRefresher
 * child only support ListView,GridView,CustomView,This means that inheriting ScrollView is all right.When you want to put a single NON-SCROLLING view, use ListView.。
 * When you want to turn off drop-down and pull-up functions, you can use enablePullUp and enablePullDown attributes
-* When developing an iOS device, apply SafeArea externally to avoid automatic iOS injection into Sliver Padding.
 
 ## Front RefreshStyle
 * This style is somewhat different from the implementation mechanism of Behind,Follow,UnFollow,Follow Implementation of Modification Based on ClampScrollPhysics
@@ -26,7 +23,7 @@ you will find that Icon will be suspended in the attempt area for reasons I have
 * For the problem of not satisfying one page hiding, although the internal use of precedingScrollExtent to determine how many distances ahead, but this method is not advisable, there is a case that a sliver only occupies scrollExtent but not scrollExtent.
   The case of layoutExtent. So if your internal slivers have this kind of sliver, my internal judgment is not legitimate, you need to judge manually. Set hideWhenNotFull to false, and then use Boolean values to determine.
 
-## NestedScrollView
+## NestedScrollView(Not advice to use unless necessary)
 * RefreshStyle. Front is temporarily incompatible due to design problems. Try using CustomScrollView to see if it can be implemented.
 * ScrollController need to be placed in NestedScrollView,there is not work just placed in "child"。
 * How to get the inner scrollController? by using refreshController.scrollController get the inner

@@ -51,7 +51,7 @@ class _MainActivityState extends State<MainActivity>
 
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
-    _menuController = MenuController(vsync: this);
+    _menuController = MenuController(vsync: this,direction: ScrollDirection.LEFT);
     _pageController = PageController(initialPage: 1);
     views = [
       IndicatorPage(title: "指示器界面"),
@@ -64,9 +64,9 @@ class _MainActivityState extends State<MainActivity>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return ResideMenu.scafford(
+    return ResideMenu.scaffold(
       controller: _menuController,
-
+    enable3dRotate: true,
       child: Scaffold(
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
@@ -99,6 +99,10 @@ class _MainActivityState extends State<MainActivity>
             physics: NeverScrollableScrollPhysics(),
           ),
           clickLoadingWhenIdle: true,
+          headerTriggerDistance: 80.0,
+          autoLoad: true,
+          skipCanRefresh: true,
+          hideFooterWhenNotFull: true,
           headerBuilder: () => WaterDropHeader(waterDropColor: Colors.green,),
           footerBuilder:  () => ClassicFooter(decoration: BoxDecoration(color: Colors.pink),),
         ),

@@ -22,11 +22,11 @@
 
 ### 各种指示器
 
-|Style| 经典指示器(跟随,不跟随) | QQ水滴脱落 |
+|Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) |
 |:---:|:---:|:---:|
 |art| ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) |
 
-|Style| flutter提供的指示器| 水滴脱落(前面悬浮) |
+|Style| [MaterialClassicHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) |
 |:---:|:---:|:---:|
 |art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
 
@@ -36,13 +36,10 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.0
+     pull_to_refresh: ^1.4.1
 
 ```
 
-
-
-第一种使用方法,使用SmartRefresh和RefreshController(建议)
 ```
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -99,63 +96,19 @@ void dispose(){
 
 ```
 
-第二种使用方法(1.3.7新增),考虑到有的时候Sliver不一定要放在头部
+
+另外,假如你每个页面的头部和尾部指示器几乎都是一样的情况下,可以考虑使用RefreshConfiguration,使用这个可以减少每次新建页面构造
+header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRefresher没有header和footer节点默认会采用IndicatorConfiguration的指示器。
+同时,你也可以设置一些全局的属性,比如是否开启自动加载,刷新触发距离,是否自动隐藏尾部指示器当不满足一页。[例子](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/MainActivity.dart)里有使用到这个
 
 ```
 
-     /*
-             1.请求刷新操作
-             对于header为FrontStyle来说,animateTo(0.0),对于其他刷新风格来说,应animateTo(-triggerDistance),这个触发距离大部分默认为80,
-             当然不是所有指示器的触发距离都是80,比如WaterDropHeader,它内部触发距离为100.0
-            _animateTo(-80.0);
-
-            2.请求加载更多的操作。
-            _scrollController
-                         .animateTo(scrollController.position.maxScrollExtent);
-
-            3.有时,假如不得不操作内部指示器的状态,可以使用GlobalKey,内部已经暴露好getter和setter
-            GlobalKey<LoadIndicatorState> key = GlobalKey();
-            key.currentState.mode = LoadStatus.idle;
-      */
-
-    /*
-     for physics:
-     1.header为Follow,UnFollow,Behind风格
-     返回RefreshBouncePhysics()即可
-     2.header为Front
-     当显示时需要返回RefreshClampPhysics(springBackDistance: 100.0),100.0对应header的高度
-     当隐藏时返回ClampingScrollPhysics即可
-    */
-    CustomScrollView(
-      controller: _scrollController,
-      physics: RefreshBouncePhysics(), //don't forget,necessary
-      slivers: [
-        ....,
-        _enablePullDown?ClassicHeader.asSliver(onRefresh: () async {
-          await Future.delayed(Duration(milliseconds: 1000));
-          // return true,it mean refreshCompleted,return false it mean refreshFailed
-          return true;
-        }):null,
-        ....,
-        _enablePullUp?ClassicFooter.asSliver(onLoading: () async {
-          await Future.delayed(Duration(milliseconds: 1000));
-          //return true it mean set the footerStatus to idle,else set to NoData state
-          return true;
-        }):null
-      ].where((child) => child!=null).toList(),
-    );
-
-
-```
-
-另外,假如你每个页面的头部和尾部指示器几乎都是一样的情况下,可以考虑使用IndicatorConfiguration(1.3.9新增),使用这个可以减少每次新建页面构造
-header和footer的重复性的工作,在IndicatorConfiguration子树下的SmartRefresher没有header和footer节点默认会采用IndicatorConfiguration的指示器
-
-```
-
-    IndicatorConfiguration(
+    RefreshConfiguration(
         headerBuilder: () => WaterDropHeader(),
         footerBuilder:  () => ClassicFooter(),
+        clickLoadingWhenIdle: true,
+         headerTriggerDistance: 80.0,
+         hideFooterWhenNotFull: true,
         child: .....
     )
 
@@ -177,7 +130,7 @@ header和footer的重复性的工作,在IndicatorConfiguration子树下的SmartR
 1.3.0提供了一个新属性isNestWrapped来兼容这东西,注意,这个属性打开后,scollController取决于NestScrollView,内部通过PrimaryScrollController.of(context)
 来获取scrollController,所以scrollController要放在NestedScrollView里。(1.3.8后isNestWrapped就没必要使用了)
 
-* <h3>为什么使用CuperNavigationBar后(不只这一个情况),顶部或者尾部指示器有空白的地方?Or why is top of listView blocked?</h3>
+* <h3>为什么使用CuperNavigationBar后(不只这一个情况),顶部或者尾部指示器有空白的地方?</h3>
 很大可能是因为SafeArea,。解决方法一般是在SmartRefresher外围套用SafeArea
 
 * <h3>兼容性方面?</h3>

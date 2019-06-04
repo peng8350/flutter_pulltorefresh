@@ -105,10 +105,11 @@ class SmartRefresherState extends State<SmartRefresher> {
         _footer = widget.footer ?? defaultFooter;
       }
     }
+
     widget.controller._triggerDistance =
         _header.refreshStyle == RefreshStyle.Front
             ? 0.0
-            : _configuration.headerTriggerDistance;
+            : _configuration?.headerTriggerDistance ?? 80.0;
   }
 
   @override
@@ -286,6 +287,9 @@ class RefreshController {
   }
 }
 
+/*
+    use to global setting indicator
+ */
 class RefreshConfiguration extends InheritedWidget {
   final IndicatorBuilder headerBuilder;
   final IndicatorBuilder footerBuilder;

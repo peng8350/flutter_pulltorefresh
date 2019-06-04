@@ -25,11 +25,11 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 
 ### Indicator
 
-|Style| Classical(Follow,UnFollow) | QQ WaterDrop |
+|Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) |
 |:---:|:---:|:---:|
 |art| ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) |
 
-|Style| flutter RefreshIndicator | WaterDropMaterial(Front) |
+|Style| [MaterialClassicHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) |
 |:---:|:---:|:---:|
 |art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
 
@@ -37,15 +37,13 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 
 
 ## How to use?
-the first way,use SmartRefresher and RefreshController(Advice use this)
+
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.0
+     pull_to_refresh: ^1.4.1
 
 ```
-
-
 
 ```
 
@@ -56,14 +54,8 @@ RefreshController _refreshController;
 initState(){
 
     super.initState();
-     // if you need refreshing when init,notice:initialRefresh is new  after 1.3.9
+    // if you need refreshing when init,notice:initialRefresh is new  after 1.3.9
     _refreshController = RefreshController(initialRefresh:true);
-   /*
-   //  before 1.3.9
-     SchedulerBinding.instance.addPostFrameCallback((_) {
-         _refreshController.requestRefresh();
-        });
-  */
 
 }
 
@@ -102,62 +94,19 @@ void dispose(){
 
 ```
 
-Second Way(1.3.7 new),Considering that sometimes Sliver doesn't have to be placed in the first
 
+In addition, if you have almost the same header and tail indicators for each page, consider using RefreshConfiguration
+, which reduces the repeatability of constructing headers and footers for each new page.
+At the same time, you can also set some global properties, such as whether to turn on automatic loading, refresh the trigger distance, whether to automatically hide the tail indicator should not meet a page.
+the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/MainActivity.dart) in my demo
 ```
 
-     /*
-           1. Request refresh operation
-           For FrontStyle header, animateTo (0.0), for other refresh styles, animateTo (- trigger Distance) is the default trigger distance of 80.
-           Of course, not all indicators have a trigger distance of 80, such as WaterDropHeader, which has an internal trigger distance of 100.0.
-            _animateTo(-80.0);
-
-            2.Request loading operation
-            _scrollController
-                         .animateTo(scrollController.position.maxScrollExtent);
-
-            3.Sometimes, if you have to operate on the status of an internal indicator, you can use GlobalKey, which exposes getters and setters.
-            GlobalKey<LoadIndicatorState> key = GlobalKey();
-            key.currentState.mode = LoadStatus.idle;
-      */
-
-    /*
-     for physics:
-     1.for header: Follow,UnFollow,Behind Style
-     return RefreshBouncePhysics()
-     2.header is Front Style
-     Return RefreshClampPhysics (springBackDistance: 100.0) when displayed, and 100.0 corresponds to the header's height
-     Return to Clamping ScrollPhysics when hidden
-    */
-    CustomScrollView(
-      controller: _scrollController,
-      physics: RefreshBouncePhysics(), //don't forget,necessary
-      slivers: [
-        .....
-        _enablePullDown?ClassicHeader.asSliver(onRefresh: () async {
-          await Future.delayed(Duration(milliseconds: 1000));
-          // return true,it mean refreshCompleted,return false it mean refreshFailed
-          return true;
-        }):null,
-        .....
-        _enablePullUp?ClassicFooter.asSliver(onLoading: () async {
-          await Future.delayed(Duration(milliseconds: 1000));
-          //return true it mean set the footerStatus to idle,else set to NoData state
-          return true;
-        }):null
-      ].where((child) => child!=null).toList(),
-    );
-
-```
-
-In addition, if you have almost the same header and tail indicators for each page, consider using IndicatorConfiguration
-(1.3.9 new), which reduces the repeatability of constructing headers and footers for each new page.
-
-```
-
-    IndicatorConfiguration(
+    RefreshConfiguration(
         headerBuilder: () => WaterDropHeader(),
         footerBuilder:  () => ClassicFooter(),
+        clickLoadingWhenIdle: true,
+         headerTriggerDistance: 80.0,
+         hideFooterWhenNotFull: true,
         child: .....
     )
 

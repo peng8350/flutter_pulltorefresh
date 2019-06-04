@@ -2,12 +2,10 @@
 
 ## RefreshController
 * 要注意记得dispose掉refreshController,否则当你刷新过程中,组件被销毁之后刷新刚好完毕，会报空指针的警告。
-* 在initState初始化执行刷新和加载操作,这里不要在initState内直接调用,要等待界面刷新完毕后才能调用,利用SchedulerBinding.instance.addPostFrameCallback
 
 ## SmartRefresher
 * child只支持ListView,GridView,CustomView,不知道还没有,总之就是继承ScrollView的都可以。当你想放一个单一的非滚动视图的话,利用ListView即可。
 * 当你想要关闭掉下拉和上拉的功能,可利用enablePullUp和enablePullDown这两个属性
-* 开发如果考虑到iOS设备的时候,要在外部套用SafeArea避免iOS自动注入SliverPadding。
 
 ## Front刷新样式
 * 这种样式跟Behind,Follow,UnFollow实现机制是有点区别的,Follow基于ClampScrollPhysics修改实现,而Behind,Follow,UnFollow这三个基于iOS里的弹性滑动引擎。Front适用于Android多一点。
@@ -16,14 +14,14 @@
 
 ## Behind刷新样式
 * 这种样式的实现事实上就是采用高度的动态变化来实现的,试试外围多利用Align属性,会有不同的滑动效果。
-* 暂时已经发现这种样式不支持Icon这个widget,也就是ClassialHeader,是不支持的,使用这个指示器,你会发现Icon会悬浮在试图区上,原因我还是未查出来。
+* 暂时已经发现这种样式不支持Icon这个widget,也就是ClassicHeader,是不支持的,使用这个指示器,你会发现Icon会悬浮在试图区上,原因我还是未查出来。
 
 ## 底部指示器
 * 对于不满足一页隐藏的问题,虽然内部采取通过precedingScrollExtent来判断前面有多少个距离,但是这种方法也是不可取的,有一种情况就是某一个sliver只占用scrollExtent而不占用
   layoutExtent的情况。所以假如你内部slivers有这种sliver,我内部判断是不合法的,需要你手动去判断。设置hideWhenNotFull为false,然后用布尔值决定。
 
 
-## NestedScrollView
+## NestedScrollView(非必要情况避免使用)
 * 由于设计上的问题,RefreshStyle.Front暂时不能兼容,尝试去使用CustomScrollView配合内部有一个offset的属性来实现出现的位置。
 * ScrollController要放在NestedScrollView里,放在child里是没作用的。
 * 如何去获取内部的scrollController?通过refreshController.scrollController获取
