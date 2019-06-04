@@ -5,7 +5,6 @@
 */
 
 import 'package:flutter/widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
@@ -22,11 +21,6 @@ enum LoadStatus { idle, loading, noMore }
 
 enum RefreshStyle { Follow, UnFollow, Behind, Front }
 
-const bool default_AutoLoad = true;
-
-const bool default_enablePullDown = true;
-
-const bool default_enablePullUp = false;
 
 /*
     This is the most important component that provides drop-down refresh and up loading.
@@ -61,8 +55,8 @@ class SmartRefresher extends StatefulWidget {
       @required this.controller,
       this.header,
       this.footer,
-      this.enablePullDown: default_enablePullDown,
-      this.enablePullUp: default_enablePullUp,
+      this.enablePullDown: true,
+      this.enablePullUp: false,
       this.onRefresh,
       this.onLoading,
       this.onOffsetChange,
@@ -85,28 +79,28 @@ class SmartRefresherState extends State<SmartRefresher> {
   LoadIndicator _footer;
 
   void _updateController() {
+    final Widget defaultHeader= (defaultTargetPlatform == TargetPlatform.iOS
+        ? ClassicHeader()
+        : MaterialClassicHeader());
+    final Widget defaultFooter = ClassicFooter();
     _configuration = RefreshConfiguration.of(context);
     widget.controller.scrollController =
         widget.child.controller ?? PrimaryScrollController.of(context);
     if (_configuration == null) {
-      _header = widget.header ??
-          (defaultTargetPlatform == TargetPlatform.iOS
-              ? ClassicHeader()
-              : MaterialClassicHeader());
-      _footer = widget.footer ?? ClassicFooter();
+      _header = widget.header ?? defaultHeader;
+          ;
+      _footer = widget.footer ?? defaultFooter;
     } else {
       if (_configuration.headerBuilder != null) {
         _header = widget.header ?? _configuration.headerBuilder();
       } else {
         _header = widget.header ??
-            (defaultTargetPlatform == TargetPlatform.iOS
-                ? ClassicHeader()
-                : MaterialClassicHeader());
+            defaultHeader;
       }
       if (_configuration.footerBuilder != null) {
         _footer = widget.footer ?? _configuration.footerBuilder();
       } else {
-        _footer = widget.footer ?? ClassicFooter();
+        _footer = widget.footer ?? defaultFooter;
       }
     }
     widget.controller._header = _header;

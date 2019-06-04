@@ -54,7 +54,6 @@ abstract class RefreshIndicator extends Indicator {
 
   final double height;
 
-
   final OnRefresh onRefresh;
 
   final bool reverse;
@@ -279,22 +278,11 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     super.dispose();
   }
 
-  void _update() {
-    refresher = SmartRefresher.of(context);
-    configuration = RefreshConfiguration.of(context);
-    final ScrollPosition newPosition = Scrollable.of(context).position;
-    if (refresher == null) {
-      _updateListener(_mode ?? ValueNotifier<RefreshStatus>(RefreshStatus.idle),
-          newPosition);
-    } else {
-      _updateListener(refresher.controller.headerMode, newPosition);
-    }
-  }
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    _update();
+    _updateListener(context, true);
     super.didChangeDependencies();
   }
 
@@ -303,7 +291,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     // TODO: implement didUpdateWidget
     // needn't to update _headerMode,because it's state will never change
     // 1.3.7: here need to careful after add asSliver builder
-    _update();
+    _updateListener(context, true);
     super.didUpdateWidget(oldWidget);
   }
 }
@@ -313,7 +301,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   // use to update between one page and above one page
   bool _isHide = false;
 
-  bool _enablbeLoadingAgain = true;
+  bool _enableLoadingAgain = true;
 
   double calculateScrollOffset() {
     final double overscrollPastEnd =
@@ -351,15 +339,15 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     // avoid trigger more time when user dragging in the same direction
     if (_position.userScrollDirection.index == 1 &&
         _position.activity is DragScrollActivity) {
-      _enablbeLoadingAgain = true;
+      _enableLoadingAgain = true;
     }
     if (_position.userScrollDirection.index == 2 &&
         _position.extentAfter <= widget.triggerDistance &&
         configuration.autoLoad &&
-        _enablbeLoadingAgain &&
+        _enableLoadingAgain &&
         mode == LoadStatus.idle) {
       mode = LoadStatus.loading;
-      _enablbeLoadingAgain = false;
+      _enableLoadingAgain = false;
     }
   }
 
@@ -376,45 +364,24 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     onOffsetChange(overscrollPast);
   }
 
-  // updateListener
-  void _update() {
-    refresher = SmartRefresher.of(context);
-    configuration = RefreshConfiguration.of(context);
-    final ScrollPosition newPosition = Scrollable.of(context).position;
-    if (refresher == null) {
-      _updateListener(
-          _mode ?? ValueNotifier<LoadStatus>(LoadStatus.idle), newPosition,
-          onPositionChange: () {
-        newPosition.isScrollingNotifier.removeListener(_listenScrollEnd);
-        _position.isScrollingNotifier.addListener(_listenScrollEnd);
-      });
-    } else {
-      _updateListener(refresher.controller.footerMode, newPosition,
-          onPositionChange: () {
-        newPosition.isScrollingNotifier.removeListener(_listenScrollEnd);
-        _position.isScrollingNotifier.addListener(_listenScrollEnd);
-      });
-    }
-  }
-
   //ScrollEnd E
   void _listenScrollEnd() {
     if (!_position.isScrollingNotifier.value) {
-      _enablbeLoadingAgain = true;
+      _enableLoadingAgain = true;
     }
   }
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    _update();
+    _updateListener(context, false,scrollEnd: _listenScrollEnd);
     super.didChangeDependencies();
   }
 
   @override
   void didUpdateWidget(T oldWidget) {
     // TODO: implement didUpdateWidget
-    _update();
+    _updateListener(context, false,scrollEnd: _listenScrollEnd);
     super.didUpdateWidget(oldWidget);
   }
 
@@ -480,21 +447,36 @@ abstract class IndicatorProcessor {
 
   void handleModeChange();
 
-  void _updateListener(ValueNotifier<dynamic> mode, ScrollPosition position,
-      {Function onModeChange, Function onPositionChange}) {
-    final ValueNotifier<dynamic> newMode = mode;
-    final ScrollPosition newPostion = position;
+  void _updateListener(BuildContext context, bool headerUpdate,
+      {Function scrollEnd}) {
+    configuration = RefreshConfiguration.of(context);
+    refresher = SmartRefresher.of(context);
+    ValueNotifier<dynamic> newMode;
+    if (refresher == null) {
+      newMode = _mode ?? (headerUpdate
+          ? ValueNotifier<RefreshStatus>(RefreshStatus.idle)
+          : ValueNotifier<LoadStatus>(LoadStatus.idle));
+    } else {
+      newMode = headerUpdate
+          ? refresher.controller.headerMode
+          : refresher.controller.footerMode;
+    }
+    final ScrollPosition newPosition = Scrollable.of(context).position;
     if (newMode != _mode) {
       _mode?.removeListener(handleModeChange);
       _mode = newMode;
       _mode?.addListener(handleModeChange);
-      if (onModeChange != null) onModeChange();
     }
-    if (newPostion != _position) {
+    if (newPosition != _position) {
       _position?.removeListener(_handleOffsetChange);
-      _position = newPostion;
+      if(!headerUpdate){
+        _position?.isScrollingNotifier?.removeListener(scrollEnd);
+      }
+      _position = newPosition;
       _position?.addListener(_handleOffsetChange);
-      if (onPositionChange != null) onPositionChange();
+      if(!headerUpdate){
+        _position?.isScrollingNotifier?.addListener(scrollEnd);
+      }
     }
   }
 }
