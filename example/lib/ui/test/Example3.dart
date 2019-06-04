@@ -150,7 +150,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print("rebuild");
     return SmartRefresher(
       enablePullUp: _enablePullUp,
       enablePullDown: _enablePullDown,

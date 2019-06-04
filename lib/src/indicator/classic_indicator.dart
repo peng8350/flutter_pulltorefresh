@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
+import 'package:flutter/widgets.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 
@@ -13,7 +14,7 @@ enum IconPosition { left, right, top, bottom }
 
 class ClassicHeader extends RefreshIndicator {
   final String releaseText, idleText, refreshingText, completeText, failedText;
-
+  final Decoration decoration;
   final Widget releaseIcon, idleIcon, refreshingIcon, completeIcon, failedIcon;
   final double spacing;
   final IconPosition iconPos;
@@ -26,6 +27,7 @@ class ClassicHeader extends RefreshIndicator {
     double height: default_height,
     double triggerDistance: default_refresh_triggerDistance,
     Duration completeDuration: const Duration(milliseconds: 600),
+    this.decoration:const BoxDecoration(),
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
@@ -55,6 +57,7 @@ class ClassicHeader extends RefreshIndicator {
     @required OnRefresh onRefresh,
     ValueNotifier<RefreshStatus> mode,
     RefreshStyle refreshStyle: default_refreshStyle,
+    this.decoration:const BoxDecoration(),
     double height: default_height,
     Duration completeDuration: const Duration(milliseconds: 600),
     double triggerDistance: default_refresh_triggerDistance,
@@ -154,6 +157,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
           );
     return Container(
       height: widget.height,
+      decoration: widget.decoration,
       child: Center(
         child: container,
       ),
@@ -163,6 +167,8 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
 
 class ClassicFooter extends LoadIndicator {
   final String idleText, loadingText, noDataText;
+
+  final Decoration decoration;
 
   final Widget idleIcon, loadingIcon, noMoreIcon;
 
@@ -182,6 +188,7 @@ class ClassicFooter extends LoadIndicator {
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
     this.height: 60.0,
+    this.decoration:const BoxDecoration(),
     this.noMoreIcon: const Icon(Icons.clear, color: Colors.grey),
     this.idleText: 'Load More..',
     this.iconPos: IconPosition.left,
@@ -206,6 +213,7 @@ class ClassicFooter extends LoadIndicator {
     Function onClick,
     double triggerDistance: default_load_triggerDistance,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
+    this.decoration:const BoxDecoration(),
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
     this.height: 60.0,
@@ -281,8 +289,8 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
             children: children,
           );
     return Container(
-      color: Colors.transparent,
       height: widget.height,
+      decoration: widget.decoration,
       child: Center(
         child: container,
       ),

@@ -6,8 +6,8 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
-import 'package:pull_to_refresh/src/internals/refresh_physics.dart';
+import 'internals/indicator_wrap.dart';
+import 'internals/refresh_physics.dart';
 import 'indicator/classic_indicator.dart';
 import 'indicator/material_indicator.dart';
 
@@ -310,6 +310,7 @@ class RefreshConfiguration extends InheritedWidget {
   // when listView data small(not enough one page) , it should be hide
   final bool hideFooterWhenNotFull;
   final double headerOffset;
+  final bool clickLoadingWhenIdle;
   final bool autoLoad;
   final Widget child;
 
@@ -318,6 +319,7 @@ class RefreshConfiguration extends InheritedWidget {
     this.headerBuilder,
     this.footerBuilder,
     this.headerOffset:0.0,
+    this.clickLoadingWhenIdle:false,
     this.skipCanRefresh: false,
     this.autoLoad: true,
     this.hideFooterWhenNotFull: true,

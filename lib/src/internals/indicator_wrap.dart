@@ -216,6 +216,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         if (refresher.onRefresh != null) refresher.onRefresh();
       }
     }
+    onModeChange(mode);
   }
 
   // the method can provide a callback to implements some animation
@@ -234,6 +235,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   void onOffsetChange(double offset) {
     update();
+  }
+
+  void onModeChange(RefreshStatus mode){
+
   }
 
   // indicator render layout
@@ -333,6 +338,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         });
       }
     }
+    onModeChange(mode);
   }
 
   void handleDragMove() {
@@ -349,6 +355,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       mode = LoadStatus.loading;
       _enableLoadingAgain = false;
     }
+  }
+
+
+  void onModeChange(LoadStatus mode){
+
   }
 
   void _handleOffsetChange() {
@@ -404,6 +415,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             _isHide = cons.biggest.height == 0.0;
             return GestureDetector(
               onTap: () {
+                if(configuration.clickLoadingWhenIdle){
+                  _mode.value = LoadStatus.loading;
+                }
                 if (widget.onClick != null) {
                   widget.onClick();
                 }
@@ -435,6 +449,7 @@ abstract class IndicatorProcessor {
   ScrollPosition _position;
 
   void onOffsetChange(double offset) {}
+
 
   void _handleOffsetChange();
 
