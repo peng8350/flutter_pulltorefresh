@@ -279,6 +279,20 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   // visually.
   final double layoutExtentOffsetCompensation = 0.0;
 
+  bool _computeIfFull(SliverConstraints cons){
+    final RenderViewport viewport = parent;
+    RenderSliver sliverP = viewport.firstChild;
+    double totalScrollExtent = cons.precedingScrollExtent;
+    while(sliverP!=this){
+      if(sliverP is _RenderSliverRefresh){
+        totalScrollExtent-=sliverP.geometry.scrollExtent;
+        break;
+      }
+      sliverP = viewport.childAfter(sliverP);
+    }
+    return totalScrollExtent>cons.viewportMainAxisExtent;
+  }
+
   @override
   void performLayout() {
     assert(constraints.growthDirection == GrowthDirection.forward);
@@ -288,8 +302,8 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     }
     bool active;
     if (hideWhenNotFull) {
-      active = constraints.precedingScrollExtent >
-          constraints.viewportMainAxisExtent;
+
+      active = _computeIfFull(constraints);
     } else {
       active = true;
     }
