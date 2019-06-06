@@ -16,8 +16,6 @@ const int default_completeDuration = 500;
 
 const double default_height = 60.0;
 
-
-
 const RefreshStyle default_refreshStyle = RefreshStyle.Follow;
 
 
@@ -340,6 +338,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         _position.activity is DragScrollActivity) {
       _enableLoadingAgain = true;
     }
+
     if (_position.userScrollDirection.index == 2 &&
         _position.extentAfter <= configuration.footerTriggerDistance &&
         configuration.autoLoad &&

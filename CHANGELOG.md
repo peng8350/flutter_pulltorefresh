@@ -167,3 +167,6 @@ Notice: This version of the code changes much, Api too
 * Add Fade effect for WaterDropHeader when dismiss
 * Simplify reverse operation,Add MaterialClassicHeader,WaterDropMaterialHeader reverse feature
 
+## 1.4.2
+* Improving hideWhenNotFull judgment mechanism
+* Fix triggerDistance error after 1.4.0-1.4.1

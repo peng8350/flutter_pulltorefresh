@@ -154,7 +154,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       enablePullUp: _enablePullUp,
       enablePullDown: _enablePullDown,
       controller: _refreshController,
-      header: WaterDropMaterialHeader(reverse: true,),
+      header: ClassicHeader(),
       onRefresh: () {
         print("onRefresh");
         data.add(Container(child: Card(),height: 100.0,));
