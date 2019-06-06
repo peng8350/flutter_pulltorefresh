@@ -101,7 +101,6 @@ class _MainActivityState extends State<MainActivity>
           clickLoadingWhenIdle: true,
           headerTriggerDistance: 80.0,
           autoLoad: true,
-          skipCanRefresh: true,
           hideFooterWhenNotFull: true,
           headerBuilder: () => WaterDropHeader(waterDropColor: Colors.green,),
           footerBuilder:  () => ClassicFooter(decoration: BoxDecoration(color: Colors.pink),),

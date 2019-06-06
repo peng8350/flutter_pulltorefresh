@@ -109,7 +109,7 @@ class SmartRefresherState extends State<SmartRefresher> {
     widget.controller._triggerDistance =
         _header.refreshStyle == RefreshStyle.Front
             ? 0.0
-            : _configuration?.headerTriggerDistance ?? 80.0;
+            : -_configuration?.headerTriggerDistance ?? -80.0;
   }
 
   @override
