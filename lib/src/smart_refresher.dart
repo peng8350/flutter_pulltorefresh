@@ -163,7 +163,7 @@ class SmartRefresherState extends State<SmartRefresher> {
     List<Widget> slivers;
     Widget body;
     // when ScrollView's scrollDirection is Axis.horizontal,
-    if(child is ScrollView) {
+    if(child is ScrollView&&child.scrollDirection!=Axis.horizontal) {
       if (widget.child is BoxScrollView) {
         //avoid system inject padding when own indicator top or bottom
         Widget sliver = (widget.child as BoxScrollView).buildChildLayout(

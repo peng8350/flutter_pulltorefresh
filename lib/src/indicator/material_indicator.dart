@@ -126,15 +126,12 @@ class _MaterialClassicHeaderState
   }
 
   @override
-  void handleModeChange() {
-    // TODO: implement handleModeChange
-    super.handleModeChange();
-    if (mode == RefreshStatus.idle) {
-      //reset the state
-      _scaleFactor.value = 1.0;
-      _positionController.value = 0.0;
-      _valueAni.value = 0.0;
-    }
+  void resetValue() {
+    // TODO: implement resetValue
+    _scaleFactor.value = 1.0;
+    _positionController.value = 0.0;
+    _valueAni.value = 0.0;
+    super.resetValue();
   }
 
   @override

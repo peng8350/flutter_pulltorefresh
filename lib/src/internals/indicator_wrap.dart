@@ -18,7 +18,6 @@ const double default_height = 60.0;
 
 const RefreshStyle default_refreshStyle = RefreshStyle.Follow;
 
-
 /*
  header generate template
     const xxxx({
@@ -32,7 +31,6 @@ const RefreshStyle default_refreshStyle = RefreshStyle.Follow;
     completeDuration:completeDuration,
     height: height,
    );
-
 */
 
 abstract class RefreshIndicator extends StatefulWidget {
@@ -61,15 +59,9 @@ abstract class RefreshIndicator extends StatefulWidget {
  footer generate template
  const xxxx({
     Key key,
-    bool autoLoad: true,
-    bool hideWhenNotFull: true,
     Function onClick,
-    double triggerDistance: default_load_triggerDistance,
   }) : super(
             key: key,
-            autoLoad: autoLoad,
-            hideWhenNotFull: hideWhenNotFull,
-            triggerDistance: triggerDistance,
             onClick: onClick)
 
 */
@@ -79,34 +71,15 @@ abstract class LoadIndicator extends StatefulWidget {
 
   final OnLoading onLoading;
 
-  const LoadIndicator(
-      {Key key,
-      this.onLoading,
-      this.onClick})
+  const LoadIndicator({Key key, this.onLoading, this.onClick})
       : super(key: key);
 }
 
 abstract class RefreshIndicatorState<T extends RefreshIndicator>
-    extends State<T> with IndicatorProcessor {
+    extends State<T> with IndicatorStateMixin<T, RefreshStatus> {
   bool floating = false;
 
-  void _handleOffsetChange() {
-    if (!mounted) {
-      return;
-    }
-    final overscrollPast = calculateScrollOffset();
-    if (overscrollPast < 0.0) {
-      return;
-    }
-    if (refresher?.onOffsetChange != null) {
-      refresher.onOffsetChange(true, overscrollPast);
-    }
-    handleDragMove(overscrollPast);
-
-    onOffsetChange(overscrollPast);
-  }
-
-  bool inVisual() {
+  bool _inVisual() {
     if (widget.refreshStyle == RefreshStyle.Front) {
       return _position.extentBefore < widget.height;
     } else {
@@ -114,19 +87,15 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     }
   }
 
-  double calculateScrollOffset() {
+  double _calculateScrollOffset() {
     if (widget.refreshStyle == RefreshStyle.Front) {
       return widget.height - _position.extentBefore;
     }
     return (floating ? widget.height : 0.0) - _position?.pixels;
   }
 
-  void update() {
-    if (mounted) setState(() {});
-  }
-
   // handle the  state change between canRefresh and idle canRefresh  before refreshing
-  void handleDragMove(double offset) {
+  void _dispatchModeByOffset(double offset) {
     if (floating) return;
     // Sometimes different devices return velocity differently, so it's impossible to judge from velocity whether the user
     // has invoked animateTo (0.0) or the user is dragging the view.Sometimes animateTo (0.0) does not return velocity = 0.0
@@ -157,12 +126,12 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     }
   }
 
-  void handleModeChange() {
+  void _handleModeChange() {
     if (!mounted) {
       return;
     }
     update();
-    if(mode==RefreshStatus.idle||mode==RefreshStatus.canRefresh){
+    if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
       resetValue();
     }
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
@@ -178,13 +147,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           2. As FrontStyle,when user dragging in 0~100 in refreshing state,it should be reset after the state change
           */
         if (widget.refreshStyle == RefreshStyle.Front) {
-          if (inVisual()) {
+          if (_inVisual()) {
             _position.jumpTo(widget.height);
           }
           mode = RefreshStatus.idle;
           _position.activity.delegate.goBallistic(0.0);
         } else {
-          if (!inVisual()) {
+          if (!_inVisual()) {
             mode = RefreshStatus.idle;
           }
           _position.activity.delegate.goBallistic(0.0);
@@ -220,19 +189,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     return true;
   }
 
-  void onOffsetChange(double offset) {
-    update();
-  }
-
-  void onModeChange(RefreshStatus mode){
-
-  }
-
-
   void resetValue() {}
-
-  // indicator render layout
-  Widget buildContent(BuildContext context, RefreshStatus mode);
 
   @override
   Widget build(BuildContext context) {
@@ -263,55 +220,22 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     }
     super.deactivate();
   }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    //1.3.7: here need to careful after add asSliver builder
-//    _removeListener(_handleOffsetChange);
-    disposeListener();
-    super.dispose();
-  }
-
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    _updateListener(context, true);
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(T oldWidget) {
-    // TODO: implement didUpdateWidget
-    // needn't to update _headerMode,because it's state will never change
-    // 1.3.7: here need to careful after add asSliver builder
-    _updateListener(context, true);
-    super.didUpdateWidget(oldWidget);
-  }
-
 }
 
 abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
-    with IndicatorProcessor {
+    with IndicatorStateMixin<T, LoadStatus> {
   // use to update between one page and above one page
   bool _isHide = false;
 
   bool _enableLoadingAgain = true;
 
-  double calculateScrollOffset() {
+  double _calculateScrollOffset() {
     final double overscrollPastEnd =
         math.max(_position.pixels - _position.maxScrollExtent, 0.0);
     return overscrollPastEnd;
   }
 
-  void update() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  void handleModeChange() {
+  void _handleModeChange() {
     if (!mounted || _isHide) {
       return;
     }
@@ -332,7 +256,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     onModeChange(mode);
   }
 
-  void handleDragMove() {
+  void _dispatchModeByOffset(double offset) {
     // avoid trigger more time when user dragging in the same direction
     if (_position.userScrollDirection.index == 1 &&
         _position.activity is DragScrollActivity) {
@@ -349,22 +273,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     }
   }
 
-
-  void onModeChange(LoadStatus mode){
-
-  }
-
   void _handleOffsetChange() {
-    if (!mounted || _isHide) {
+    if (_isHide) {
       return;
     }
-    final double overscrollPast = calculateScrollOffset();
-
-    if (refresher?.onOffsetChange != null && _position.extentAfter == 0.0) {
-      refresher?.onOffsetChange(false, overscrollPast);
-    }
-    handleDragMove();
-    onOffsetChange(overscrollPast);
+    super._handleOffsetChange();
   }
 
   //ScrollEnd E
@@ -374,25 +287,15 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     }
   }
 
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    _updateListener(context, false,scrollEnd: _listenScrollEnd);
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(T oldWidget) {
-    // TODO: implement didUpdateWidget
-    _updateListener(context, false,scrollEnd: _listenScrollEnd);
-    super.didUpdateWidget(oldWidget);
+  void _onPositionUpdated(ScrollPosition newPosition) {
+    newPosition?.isScrollingNotifier?.removeListener(_listenScrollEnd);
+    _position?.isScrollingNotifier?.addListener(_listenScrollEnd);
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    _position.isScrollingNotifier.removeListener(_listenScrollEnd);
-    disposeListener();
+    _position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
     super.dispose();
   }
 
@@ -406,7 +309,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             _isHide = cons.biggest.height == 0.0;
             return GestureDetector(
               onTap: () {
-                if(configuration.clickLoadingWhenIdle){
+                if (configuration.clickLoadingWhenIdle) {
                   _mode.value = LoadStatus.loading;
                 }
                 if (widget.onClick != null) {
@@ -418,11 +321,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
           },
         ));
   }
-
-  Widget buildContent(BuildContext context, LoadStatus mode);
 }
 
-abstract class IndicatorProcessor {
+mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   SmartRefresher refresher;
 
   RefreshConfiguration configuration;
@@ -431,7 +332,7 @@ abstract class IndicatorProcessor {
 
   get mode => _mode?.value;
 
-  ValueNotifier<dynamic> _mode;
+  ValueNotifier<V> _mode;
 
   /*
     it doesn't support get the ScrollController as the listener, because it will cause "multiple scrollview use one ScollController"
@@ -439,51 +340,100 @@ abstract class IndicatorProcessor {
    */
   ScrollPosition _position;
 
-  void onOffsetChange(double offset) {}
+  // update ui
+  void update() {
+    if (mounted) setState(() {});
+  }
 
-
-  void _handleOffsetChange();
+  void _handleOffsetChange() {
+    if (!mounted) {
+      return;
+    }
+    final double overscrollPast = _calculateScrollOffset();
+    if (overscrollPast < 0.0) {
+      return;
+    }
+    if (refresher?.onOffsetChange != null) {
+      refresher?.onOffsetChange(V == RefreshStatus, overscrollPast);
+    }
+    _dispatchModeByOffset(overscrollPast);
+    onOffsetChange(overscrollPast);
+  }
 
   void disposeListener() {
-    _mode?.removeListener(handleModeChange);
+    _mode?.removeListener(_handleModeChange);
     _position?.removeListener(_handleOffsetChange);
     _position = null;
     _mode = null;
   }
 
-  void handleModeChange();
-
-  void _updateListener(BuildContext context, bool headerUpdate,
-      {Function scrollEnd}) {
+  void _updateListener() {
     configuration = RefreshConfiguration.of(context);
-    assert(configuration!=null,"when use asSliver ,please wrap scrollView in RefreshConfiguration!");
+    assert(configuration != null,
+        "when use asSliver ,please wrap scrollView in RefreshConfiguration!");
     refresher = SmartRefresher.of(context);
-    ValueNotifier<dynamic> newMode;
+    ValueNotifier<V> newMode;
     if (refresher == null) {
-      newMode = _mode ?? (headerUpdate
-          ? ValueNotifier<RefreshStatus>(RefreshStatus.idle)
-          : ValueNotifier<LoadStatus>(LoadStatus.idle));
+      newMode = _mode ??
+          (V == RefreshStatus
+              ? ValueNotifier<RefreshStatus>(RefreshStatus.idle)
+              : ValueNotifier<LoadStatus>(LoadStatus.idle));
     } else {
-      newMode = headerUpdate
+      newMode = V == RefreshStatus
           ? refresher.controller.headerMode
           : refresher.controller.footerMode;
     }
     final ScrollPosition newPosition = Scrollable.of(context).position;
     if (newMode != _mode) {
-      _mode?.removeListener(handleModeChange);
+      _mode?.removeListener(_handleModeChange);
       _mode = newMode;
-      _mode?.addListener(handleModeChange);
+      _mode?.addListener(_handleModeChange);
     }
     if (newPosition != _position) {
       _position?.removeListener(_handleOffsetChange);
-      if(!headerUpdate){
-        _position?.isScrollingNotifier?.removeListener(scrollEnd);
-      }
+      _onPositionUpdated(newPosition);
       _position = newPosition;
       _position?.addListener(_handleOffsetChange);
-      if(!headerUpdate){
-        _position?.isScrollingNotifier?.addListener(scrollEnd);
-      }
     }
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    //1.3.7: here need to careful after add asSliver builder
+    disposeListener();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    _updateListener();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(T oldWidget) {
+    // TODO: implement didUpdateWidget
+    // needn't to update _headerMode,because it's state will never change
+    // 1.3.7: here need to careful after add asSliver builder
+    _updateListener();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void _onPositionUpdated(ScrollPosition newPosition) {}
+
+  void _handleModeChange();
+
+  double _calculateScrollOffset();
+
+  void _dispatchModeByOffset(double offset);
+
+  void onOffsetChange(double offset) {
+    update();
+  }
+
+  void onModeChange(V mode) {}
+
+  Widget buildContent(BuildContext context, V mode);
 }

@@ -178,8 +178,11 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
         });
       },
       child: Container(
-        height: 200.0,
-        color: Colors.red,
+        height: 500.0,
+        child: ListView(
+          children: <Widget>[Container(width: 355),Container(width: 355,color: Colors.red,)],
+          scrollDirection: Axis.horizontal,
+        ),
       ),
     );
   }
