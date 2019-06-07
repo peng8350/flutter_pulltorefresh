@@ -290,7 +290,7 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       }
       sliverP = viewport.childAfter(sliverP);
     }
-    return totalScrollExtent>cons.viewportMainAxisExtent;
+    return totalScrollExtent>=cons.viewportMainAxisExtent;
   }
 
   @override

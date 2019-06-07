@@ -156,7 +156,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       controller: _refreshController,
       header: ClassicHeader(),
       onRefresh: () {
-        print("onRefresh");
         data.add(Container(child: Card(),height: 100.0,));
         if(mounted)
           setState(() {
@@ -178,14 +177,9 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           _refreshController.loadComplete();
         });
       },
-      child: ListView.builder(
-        controller: _scrollController,
-        itemExtent: 100.0,
-        reverse: true,
-        itemCount: data.length,
-        itemBuilder: (context, index) {
-          return data[index];
-        },
+      child: Container(
+        height: 200.0,
+        color: Colors.red,
       ),
     );
   }

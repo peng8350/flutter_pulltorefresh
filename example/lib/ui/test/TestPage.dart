@@ -63,7 +63,7 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
 
            child:     PageView(
              controller: _pageController ,
-
+            physics: NeverScrollableScrollPhysics(),
              children: views,onPageChanged: (index){
              tabIndex = index;
              if(mounted)

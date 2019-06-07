@@ -30,7 +30,7 @@ const double default_load_triggerDistance = 15.0;
  */
 class SmartRefresher extends StatefulWidget {
   //indicate your listView
-  final ScrollView child;
+  final Widget child;
 
   final RefreshIndicator header;
   final LoadIndicator footer;
@@ -64,8 +64,7 @@ class SmartRefresher extends StatefulWidget {
       this.onLoading,
       this.onOffsetChange,
       this.headerInsertIndex: 0})
-      : assert(child != null),
-        assert(controller != null),
+      : assert(controller != null),
         super(key: key);
 
   @override
@@ -85,10 +84,16 @@ class SmartRefresherState extends State<SmartRefresher> {
     final Widget defaultHeader = (defaultTargetPlatform == TargetPlatform.iOS
         ? ClassicHeader()
         : MaterialClassicHeader());
+    final child = widget.child;
     final Widget defaultFooter = ClassicFooter();
     _configuration = RefreshConfiguration.of(context);
-    widget.controller.scrollController =
-        widget.child.controller ?? PrimaryScrollController.of(context);
+    if(child!=null&&child is ScrollView&&child.controller!=null){
+      widget.controller.scrollController = child.controller;
+    }
+    else{
+      widget.controller.scrollController = PrimaryScrollController.of(context);
+    }
+
     if (_configuration == null) {
       _header = widget.header ?? defaultHeader;
       ;
@@ -154,33 +159,58 @@ class SmartRefresherState extends State<SmartRefresher> {
 
   @override
   Widget build(BuildContext context) {
+    final child = widget.child;
     List<Widget> slivers;
-    if (widget.child is BoxScrollView) {
-      //avoid system inject padding when own indicator top or bottom
-      Widget sliver = (widget.child as BoxScrollView).buildChildLayout(context);
-      EdgeInsets effectPadding = (widget.child as BoxScrollView).padding;
-      if (effectPadding == null) {
-        final MediaQueryData mediaQuery = MediaQuery.of(context, nullOk: true);
-        if (mediaQuery != null) {
-          effectPadding = mediaQuery.padding.copyWith(
-              left: 0.0,
-              right: 0.0,
-              top: widget.enablePullDown ? 0.0 : null,
-              bottom: widget.enablePullUp ? 0.0 : null);
-          sliver = MediaQuery(
-            child: sliver,
-            data: mediaQuery.copyWith(
-              padding: effectPadding,
-            ),
-          );
+    Widget body;
+    // when ScrollView's scrollDirection is Axis.horizontal,
+    if(child is ScrollView) {
+      if (widget.child is BoxScrollView) {
+        //avoid system inject padding when own indicator top or bottom
+        Widget sliver = (widget.child as BoxScrollView).buildChildLayout(
+            context);
+        EdgeInsets effectPadding = (widget.child as BoxScrollView).padding;
+        if (effectPadding == null) {
+          final MediaQueryData mediaQuery = MediaQuery.of(
+              context, nullOk: true);
+          if (mediaQuery != null) {
+            effectPadding = mediaQuery.padding.copyWith(
+                left: 0.0,
+                right: 0.0,
+                top: widget.enablePullDown ? 0.0 : null,
+                bottom: widget.enablePullUp ? 0.0 : null);
+            sliver = MediaQuery(
+              child: sliver,
+              data: mediaQuery.copyWith(
+                padding: effectPadding,
+              ),
+            );
+          }
         }
+        if (effectPadding != null) {
+          sliver = SliverPadding(padding: effectPadding, sliver: sliver);
+        }
+        slivers = [sliver];
+      } else  {
+        slivers = List.from(child.buildSlivers(context), growable: true);
       }
-      if (effectPadding != null) {
-        sliver = SliverPadding(padding: effectPadding, sliver: sliver);
-      }
-      slivers = [sliver];
-    } else {
-      slivers = List.from(widget.child.buildSlivers(context), growable: true);
+      body =  CustomScrollView(
+        physics: _getScrollPhysics(),
+        controller: widget.controller.scrollController,
+        cacheExtent: child?.cacheExtent,
+        key: widget.child.key,
+        semanticChildCount: child?.semanticChildCount,
+        slivers: slivers,
+        reverse: child?.reverse,
+      );
+    }
+    else{
+      slivers = [SliverToBoxAdapter(child: child ?? Container(),)];
+      body =  CustomScrollView(
+        physics: _getScrollPhysics(),
+        controller: widget.controller.scrollController,
+        key: widget.child.key,
+        slivers: slivers,
+      );
     }
     assert(widget.headerInsertIndex < slivers.length);
     if (_header.refreshStyle == RefreshStyle.Front)
@@ -193,15 +223,7 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (widget.enablePullUp) {
       slivers.add(_footer);
     }
-    Widget body = CustomScrollView(
-      physics: _getScrollPhysics(),
-      controller: widget.controller.scrollController,
-      cacheExtent: widget.child.cacheExtent,
-      key: widget.child.key,
-      semanticChildCount: widget.child.semanticChildCount,
-      slivers: slivers,
-      reverse: widget.child.reverse,
-    );
+
     if (_configuration != null) {
       return body;
     } else {
