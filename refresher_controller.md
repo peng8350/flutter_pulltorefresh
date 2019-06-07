@@ -3,8 +3,8 @@
 
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
-| child      | 你的内容部件   | ? extends ScrollView   |   null |  必要
 | controller | 控制内部状态  | RefreshController | null | 必要 |
+| child      | 你的内容部件   | ? extends Widget   |   null |  可选 |
 | header | 头部指示器构造  | ? extends RefreshIndicator  | ClassicHeader | 可选|
 | footer | 尾部指示器构造     | ? extends LoadIndicator | ClassicFooter | 可选 |
 | enablePullDown | 是否允许下拉     | boolean | true | 可选 |
@@ -12,7 +12,7 @@
 | onRefresh | 进入下拉刷新时的回调   | () => Void | null | 可选 |
 | onLoading | 进入上拉加载时的回调   | () => Void | null | 可选 |
 | onOffsetChange | 它将在超出边缘范围拖动时回调  | (bool,double) => Void | null | 可选 |
-| isNestWrapped | 如果SmartRefesher被NestedScrollView包裹着,需要设置为true  | bool | false | optional |
+
 
 
 # RefreshController Api

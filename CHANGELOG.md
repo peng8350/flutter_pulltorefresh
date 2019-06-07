@@ -170,3 +170,6 @@ Notice: This version of the code changes much, Api too
 ## 1.4.2
 * Improving hideWhenNotFull judgment mechanism
 * Fix triggerDistance error after 1.4.0-1.4.1
+
+## 1.4.3
+* change "child" attr limit type from ScrollView to Widget

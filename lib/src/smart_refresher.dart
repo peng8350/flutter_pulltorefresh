@@ -159,11 +159,10 @@ class SmartRefresherState extends State<SmartRefresher> {
 
   @override
   Widget build(BuildContext context) {
-    final child = widget.child;
+    final Widget child = widget.child;
     List<Widget> slivers;
     Widget body;
-    // when ScrollView's scrollDirection is Axis.horizontal,
-    if(child is ScrollView&&child.scrollDirection!=Axis.horizontal) {
+    if(child is ScrollView) {
       if (widget.child is BoxScrollView) {
         //avoid system inject padding when own indicator top or bottom
         Widget sliver = (widget.child as BoxScrollView).buildChildLayout(
@@ -208,7 +207,7 @@ class SmartRefresherState extends State<SmartRefresher> {
       body =  CustomScrollView(
         physics: _getScrollPhysics(),
         controller: widget.controller.scrollController,
-        key: widget.child.key,
+        key: widget.child?.key,
         slivers: slivers,
       );
     }

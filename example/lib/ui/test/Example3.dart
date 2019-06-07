@@ -167,6 +167,12 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 //
 //        });
       },
+      child: Container(
+        height: 535.0,
+        child: PageView(
+          children: <Widget>[Text("第一页"),Text("第二页"),Text("第三页")],
+        ),
+      ),
       onLoading: () {
         print("onload");
 
@@ -177,13 +183,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
           _refreshController.loadComplete();
         });
       },
-      child: Container(
-        height: 500.0,
-        child: ListView(
-          children: <Widget>[Container(width: 355),Container(width: 355,color: Colors.red,)],
-          scrollDirection: Axis.horizontal,
-        ),
-      ),
     );
   }
 }

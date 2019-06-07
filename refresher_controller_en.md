@@ -3,8 +3,8 @@
 
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
-| child      | your content Scroll Widget   | ? extends ScrollView   |   null |  necessary |
 | controller | controll inner headerMode and footerMode  | RefreshController | null | necessary |
+| child      | your content  Widget   | ? extends Wiget   |   null |  optional |
 | header | refresh indicator  | ? extends RefreshIndicator  | ClassicHeader | optional|
 | footer | load indicator     | ? extends LoadIndicator | ClassicFooter | optional |
 | enablePullDown | switch of pulldownrefresh     | boolean | true | optional |

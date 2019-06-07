@@ -280,7 +280,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     super._handleOffsetChange();
   }
 
-  //ScrollEnd E
   void _listenScrollEnd() {
     if (!_position.isScrollingNotifier.value) {
       _enableLoadingAgain = true;
@@ -288,8 +287,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   void _onPositionUpdated(ScrollPosition newPosition) {
-    newPosition?.isScrollingNotifier?.removeListener(_listenScrollEnd);
-    _position?.isScrollingNotifier?.addListener(_listenScrollEnd);
+    _position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
+    newPosition?.isScrollingNotifier?.addListener(_listenScrollEnd);
   }
 
   @override
@@ -370,7 +369,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   void _updateListener() {
     configuration = RefreshConfiguration.of(context);
     assert(configuration != null,
-        "when use asSliver ,please wrap scrollView in RefreshConfiguration!");
+    "when use asSliver ,please wrap scrollView in RefreshConfiguration!");
     refresher = SmartRefresher.of(context);
     ValueNotifier<V> newMode;
     if (refresher == null) {
