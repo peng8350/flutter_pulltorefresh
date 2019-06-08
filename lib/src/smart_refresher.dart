@@ -70,8 +70,8 @@ class SmartRefresher extends StatefulWidget {
   @override
   SmartRefresherState createState() => SmartRefresherState();
 
-  static SmartRefresher of(BuildContext context) {
-    return context.ancestorWidgetOfExactType(SmartRefresher) as SmartRefresher;
+  static SmartRefresherState of(BuildContext context) {
+    return context.ancestorStateOfType(const TypeMatcher<SmartRefresherState>() ) ;
   }
 }
 
@@ -114,6 +114,11 @@ class SmartRefresherState extends State<SmartRefresher> {
         _header.refreshStyle == RefreshStyle.Front
             ? 0.0
             : -(_configuration==null?80.0:_configuration.headerTriggerDistance);
+  }
+
+  void onPositionUpdated(ScrollPosition newPosition){
+    widget.controller.position = newPosition;
+    print("hhjhj");
   }
 
   @override
@@ -234,7 +239,9 @@ class SmartRefresherState extends State<SmartRefresher> {
 class RefreshController {
   ValueNotifier<RefreshStatus> headerMode = ValueNotifier(RefreshStatus.idle);
   ValueNotifier<LoadStatus> footerMode = ValueNotifier(LoadStatus.idle);
+  @Deprecated('use position instead,jumpTo and animateTo will lead to refresh together with mutiple ScrollView depend on the same ScrollController')
   ScrollController scrollController;
+  ScrollPosition position;
   double _triggerDistance;
 
   final bool initialRefresh;
@@ -252,26 +259,27 @@ class RefreshController {
   void requestRefresh(
       {Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
-    assert(scrollController != null,
+    assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    if (headerMode?.value != RefreshStatus.idle) return;
-    scrollController.animateTo(_triggerDistance,
+    print(headerMode);
+    if(isRefresh)return;
+    position.animateTo(_triggerDistance,
         duration: duration, curve: curve);
+
   }
 
   void requestLoading(
       {Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
-    assert(scrollController != null,
+    assert(position != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
-    if (footerStatus == LoadStatus.idle) {
-      scrollController
+      if(isLoading)return;
+      position
           .animateTo(scrollController.position.maxScrollExtent,
               duration: duration, curve: curve)
           .whenComplete(() {
         footerMode.value = LoadStatus.loading;
       });
-    }
   }
 
   void refreshCompleted() {

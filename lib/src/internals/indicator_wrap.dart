@@ -169,7 +169,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           }
         });
       } else {
-        if (refresher.onRefresh != null) refresher.onRefresh();
+        if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
       }
     }
     onModeChange(mode);
@@ -241,8 +241,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     }
     update();
     if (mode == LoadStatus.loading) {
-      if (refresher?.onLoading != null) {
-        refresher.onLoading();
+      if (refresher?.widget?.onLoading != null) {
+        refresher.widget.onLoading();
       } else if (widget.onLoading != null) {
         widget.onLoading().then((result) {
           if (result) {
@@ -289,6 +289,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   void _onPositionUpdated(ScrollPosition newPosition) {
     _position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
     newPosition?.isScrollingNotifier?.addListener(_listenScrollEnd);
+    super._onPositionUpdated(newPosition);
   }
 
   @override
@@ -323,7 +324,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 }
 
 mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
-  SmartRefresher refresher;
+  SmartRefresherState refresher;
 
   RefreshConfiguration configuration;
 
@@ -352,8 +353,8 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
     if (overscrollPast < 0.0) {
       return;
     }
-    if (refresher?.onOffsetChange != null) {
-      refresher?.onOffsetChange(V == RefreshStatus, overscrollPast);
+    if (refresher?.widget?.onOffsetChange != null) {
+      refresher?.widget?.onOffsetChange(V == RefreshStatus, overscrollPast);
     }
     _dispatchModeByOffset(overscrollPast);
     onOffsetChange(overscrollPast);
@@ -379,8 +380,8 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
               : ValueNotifier<LoadStatus>(LoadStatus.idle));
     } else {
       newMode = V == RefreshStatus
-          ? refresher.controller.headerMode
-          : refresher.controller.footerMode;
+          ? refresher.widget.controller.headerMode
+          : refresher.widget.controller.footerMode;
     }
     final ScrollPosition newPosition = Scrollable.of(context).position;
     if (newMode != _mode) {
@@ -420,7 +421,9 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
     super.didUpdateWidget(oldWidget);
   }
 
-  void _onPositionUpdated(ScrollPosition newPosition) {}
+  void _onPositionUpdated(ScrollPosition newPosition) {
+    refresher?.onPositionUpdated(newPosition);
+  }
 
   void _handleModeChange();
 

@@ -13,7 +13,7 @@ class Example2 extends StatefulWidget {
   _Example2State createState() => _Example2State();
 }
 
-class _Example2State extends State<Example2> with TickerProviderStateMixin {
+class _Example2State extends State<Example2> with TickerProviderStateMixin ,AutomaticKeepAliveClientMixin{
   RefreshController _controller;
   int indexPage = 0;
   List<String> data = [];
@@ -52,8 +52,13 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
   }
 
   Widget buildImage(context, index) {
-    return Item(
-      url: data[index],
+    return GestureDetector(
+      child: Item(
+        url: data[index],
+      ),
+      onTap: (){
+        _controller.requestRefresh();
+      },
     );
   }
 
@@ -98,14 +103,16 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin {
       onLoading: _onLoading,
       onOffsetChange: _onOffsetCallback,
       child: GridView.builder(
-        key: PageStorageKey("w"),
-        controller: _scrollController,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: data.length,
         itemBuilder: buildImage,
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class Item extends StatefulWidget {

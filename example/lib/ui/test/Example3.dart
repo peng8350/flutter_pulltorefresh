@@ -11,7 +11,7 @@ class Example3 extends StatefulWidget {
   Example3State createState() => Example3State();
 }
 
-class Example3State extends State<Example3> with TickerProviderStateMixin {
+class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,TickerProviderStateMixin {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
   ValueNotifier<double> topOffsetLis = ValueNotifier(0.0);
@@ -24,7 +24,6 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
 
   //test #68
   bool _enablePullUp=true,_enablePullDown=true;
-
 
 
   void _getDatas() {
@@ -156,6 +155,7 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       controller: _refreshController,
       header: ClassicHeader(),
       onRefresh: () {
+        print("onRefresh");
         data.add(Container(child: Card(),height: 100.0,));
         if(mounted)
           setState(() {
@@ -185,6 +185,10 @@ class Example3State extends State<Example3> with TickerProviderStateMixin {
       },
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class CirclePainter extends CustomClipper<Path> {
