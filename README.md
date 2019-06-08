@@ -38,14 +38,14 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 
 ## How to use?
 
-```
+```yaml
 
    dependencies:
      pull_to_refresh: ^1.4.3
 
 ```
 
-```
+```dart
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -99,7 +99,7 @@ In addition, if you have almost the same header and tail indicators for each pag
 , which reduces the repeatability of constructing headers and footers for each new page.
 At the same time, you can also set some global properties, such as whether to turn on automatic loading, refresh the trigger distance, whether to automatically hide the tail indicator should not meet a page.
 the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/MainActivity.dart) in my demo
-```
+```dart
 
     RefreshConfiguration(
         headerBuilder: () => WaterDropHeader(),
