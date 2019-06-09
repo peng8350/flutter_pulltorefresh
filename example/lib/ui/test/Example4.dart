@@ -72,7 +72,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
         SliverList(delegate: SliverChildListDelegate(data)),
         _enablePullUp
             ? ClassicFooter.asSliver(onLoading: () async {
-                await Future.delayed(Duration(milliseconds: 1000));
+                await Future.delayed(Duration(milliseconds: 400));
                 //return true it mean set the footerStatus to idle,else set to NoData state
                 return true;
               })

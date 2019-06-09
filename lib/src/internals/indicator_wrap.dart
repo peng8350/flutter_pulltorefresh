@@ -258,12 +258,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   void _dispatchModeByOffset(double offset) {
     // avoid trigger more time when user dragging in the same direction
-    if (_position.userScrollDirection.index == 1 &&
-        _position.activity is DragScrollActivity) {
-      _enableLoadingAgain = true;
-    }
-
-    if (_position.userScrollDirection.index == 2 &&
+    if (_position.activity is! DragScrollActivity &&_position.userScrollDirection.index == 2 &&
         _position.extentAfter <= configuration.footerTriggerDistance &&
         configuration.autoLoad &&
         _enableLoadingAgain &&
