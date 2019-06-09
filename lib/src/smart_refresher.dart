@@ -118,7 +118,6 @@ class SmartRefresherState extends State<SmartRefresher> {
 
   void onPositionUpdated(ScrollPosition newPosition){
     widget.controller.position = newPosition;
-    print("hhjhj");
   }
 
   @override
@@ -261,9 +260,8 @@ class RefreshController {
       Curve curve: Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    print(headerMode);
     if(isRefresh)return;
-    position.animateTo(_triggerDistance,
+    position?.animateTo(_triggerDistance,
         duration: duration, curve: curve);
 
   }
@@ -275,11 +273,9 @@ class RefreshController {
         'Try not to call requestLoading() before build,please call after the ui was rendered');
       if(isLoading)return;
       position
-          .animateTo(scrollController.position.maxScrollExtent,
+          ?.animateTo(position.maxScrollExtent,
               duration: duration, curve: curve)
-          .whenComplete(() {
-        footerMode.value = LoadStatus.loading;
-      });
+         ;
   }
 
   void refreshCompleted() {

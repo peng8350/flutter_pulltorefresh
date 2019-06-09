@@ -68,30 +68,6 @@ class _MainActivityState extends State<MainActivity>
       controller: _menuController,
     enable3dRotate: true,
       child: Scaffold(
-        appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Text(_tabIndex == 0
-              ? "指示器界面"
-              : _tabIndex == 1 ? "测试界面" : _tabIndex == 2 ? "样例界面" : "App界面"),
-          leading: GestureDetector(child: Icon(Icons.menu),onTap: (){
-            _menuController.openMenu(true);
-          },),
-          backgroundColor: Colors.greenAccent,
-          bottom: _tabIndex==2?TabBar(isScrollable: true,
-            tabs: [
-              Tab(child: Text("超大数据量性能测试")),
-              Tab(
-                child: Text("NestedScrollView兼容"),
-              ),
-              Tab(child: Text("SliverAppbar+Sliverheader")),
-              Tab(child: Text("嵌套滚动视图")),
-              Tab(child: Text("动态变化指示器+Navigator")),
-              Tab(child: Text("主动刷新")),
-            ],
-            controller: _tabController,
-          ):null,
-        ),
         body:
         RefreshConfiguration(
           child: PageView(
