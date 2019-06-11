@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 /**
     Author: Jpeng
     Email: peng8350@gmail.com
@@ -11,6 +13,7 @@ import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 
 enum IconPosition { left, right, top, bottom }
+
 
 class ClassicHeader extends RefreshIndicator {
   final String releaseText, idleText, refreshingText, completeText, failedText;
@@ -38,7 +41,7 @@ class ClassicHeader extends RefreshIndicator {
     this.refreshingIcon: const SizedBox(
       width: 25.0,
       height: 25.0,
-      child: const CircularProgressIndicator(strokeWidth: 2.0),
+      child:const CircularProgressIndicator(strokeWidth: 2.0),
     ),
     this.failedIcon: const Icon(Icons.clear, color: Colors.grey),
     this.completeIcon: const Icon(Icons.done, color: Colors.grey),
@@ -116,13 +119,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                 : mode == RefreshStatus.failed
                     ? widget.failedIcon
                     : widget.refreshingIcon;
-    return icon;
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+    return icon ?? Container();
   }
 
   @override
@@ -132,27 +129,17 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
     Widget iconWidget = _buildIcon(mode);
     List<Widget> children = <Widget>[
       iconWidget,
-      Container(
-        width: widget.spacing,
-      ),
       textWidget
     ];
-    Widget container = (widget.iconPos == IconPosition.top ||
-            widget.iconPos == IconPosition.bottom)
-        ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            verticalDirection: widget.iconPos == IconPosition.top
-                ? VerticalDirection.down
-                : VerticalDirection.up,
-            children: children,
-          )
-        : Row(
-            textDirection: widget.iconPos == IconPosition.right
-                ? TextDirection.rtl
-                : TextDirection.ltr,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: children,
-          );
+    final Widget container = Wrap(
+      spacing: widget.spacing,
+      textDirection: widget.iconPos==IconPosition.left?TextDirection.ltr:TextDirection.rtl,
+      direction: widget.iconPos==IconPosition.bottom|| widget.iconPos==IconPosition.top?Axis.vertical:Axis.horizontal,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      verticalDirection: widget.iconPos==IconPosition.bottom?VerticalDirection.up:VerticalDirection.down,
+      alignment: WrapAlignment.center,
+      children: children,
+    );
     return Container(
       height: widget.height,
       decoration: widget.decoration,
@@ -186,7 +173,7 @@ class ClassicFooter extends LoadIndicator {
     this.noDataText: 'No more data',
     this.height: 60.0,
     this.decoration:const BoxDecoration(),
-    this.noMoreIcon: const Icon(Icons.clear, color: Colors.grey),
+    this.noMoreIcon,
     this.idleText: 'Load More..',
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
@@ -212,7 +199,7 @@ class ClassicFooter extends LoadIndicator {
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
     this.height: 60.0,
-    this.noMoreIcon: const Icon(Icons.clear, color: Colors.grey),
+    this.noMoreIcon,
     this.idleText: 'Load More..',
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
@@ -251,7 +238,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
     Widget icon = mode == LoadStatus.loading
         ? widget.loadingIcon
         : mode == LoadStatus.noMore ? widget.noMoreIcon : widget.idleIcon;
-    return icon;
+    return icon ?? Container();
   }
 
   @override
@@ -261,27 +248,17 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
     Widget iconWidget = _buildIcon(mode);
     List<Widget> children = <Widget>[
       iconWidget,
-      Container(
-        width: widget.spacing,
-      ),
       textWidget
     ];
-    Widget container = (widget.iconPos == IconPosition.top ||
-            widget.iconPos == IconPosition.bottom)
-        ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            verticalDirection: widget.iconPos == IconPosition.top
-                ? VerticalDirection.down
-                : VerticalDirection.up,
-            children: children,
-          )
-        : Row(
-            textDirection: widget.iconPos == IconPosition.right
-                ? TextDirection.rtl
-                : TextDirection.ltr,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: children,
-          );
+    final Widget container = Wrap(
+      spacing: widget.spacing,
+      textDirection: widget.iconPos==IconPosition.left?TextDirection.ltr:TextDirection.rtl,
+      direction: widget.iconPos==IconPosition.bottom|| widget.iconPos==IconPosition.top?Axis.vertical:Axis.horizontal,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      verticalDirection: widget.iconPos==IconPosition.bottom?VerticalDirection.up:VerticalDirection.down,
+      alignment: WrapAlignment.center,
+      children: children,
+    );
     return Container(
       height: widget.height,
       decoration: widget.decoration,
@@ -291,3 +268,4 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
     );
   }
 }
+

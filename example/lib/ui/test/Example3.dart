@@ -153,7 +153,7 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
       enablePullUp: _enablePullUp,
       enablePullDown: _enablePullDown,
       controller: _refreshController,
-      header: ClassicHeader(),
+      header: ClassicHeader(iconPos: IconPosition.right,),
       onRefresh: () {
         print("onRefresh");
         data.add(Container(child: Card(),height: 100.0,));
@@ -168,7 +168,7 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
 //        });
       },
       child: Container(
-        height: 535.0,
+        height: 695.0,
         child: PageView(
           children: <Widget>[Text("第一页"),Text("第二页"),Text("第三页")],
         ),
@@ -180,7 +180,7 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
           data.add(Card());
           if(mounted)
             setState(() {});
-          _refreshController.loadComplete();
+          _refreshController.loadNoData();
         });
       },
     );
