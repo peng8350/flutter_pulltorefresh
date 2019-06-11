@@ -15,15 +15,21 @@ class BiliBiliScreen extends StatefulWidget {
   }
 }
 
-class _BiliBiliScreenState extends State<BiliBiliScreen> with SingleTickerProviderStateMixin{
+class _BiliBiliScreenState extends State<BiliBiliScreen>
+    with SingleTickerProviderStateMixin {
   RefreshController _refreshController;
   List<Widget> items = [];
 
   void initData() {
-
-    for (int i = 0; i < 55; i++) items.add(Container(child: Card(),height: 100.0,));
+    for (int i = 0; i < 55; i++)
+      items.add(Container(
+        child: Card(),
+        height: 100.0,
+      ));
   }
-TabController _tabController;
+
+  TabController _tabController;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -36,29 +42,48 @@ TabController _tabController;
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
-      home:Scaffold(
+      home: Scaffold(
         body: RefreshConfiguration(
           child: SmartRefresher(
-            header: WaterDropMaterialHeader(backgroundColor: Colors.pink,),
+            header: WaterDropMaterialHeader(
+              backgroundColor: Colors.pink,
+            ),
             child: CustomScrollView(
               slivers: <Widget>[
                 SliverAppBar(
                   forceElevated: false,
-                  leading: GestureDetector(child: Icon(Icons.add),onTap: (){
-                    Navigator.of(context).pop();
-                  },),
+                  leading: GestureDetector(
+                    child: Icon(Icons.add),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
                   backgroundColor: Colors.pink,
                   title: Text("哔哩哔哩"),
                   actions: <Widget>[Icon(Icons.verified_user)],
                 ),
                 SliverAppBar(
                   flexibleSpace: FlexibleSpaceBar(
-                    title: TabBar(tabs: [Tab(text: 'Tab1',),Tab(text: 'Tab2',),Tab(text: 'Tab3',),Tab(text: 'Tab1',)],controller: _tabController,),
-
+                    title: TabBar(
+                      tabs: [
+                        Tab(
+                          text: 'Tab1',
+                        ),
+                        Tab(
+                          text: 'Tab2',
+                        ),
+                        Tab(
+                          text: 'Tab3',
+                        ),
+                        Tab(
+                          text: 'Tab1',
+                        )
+                      ],
+                      controller: _tabController,
+                    ),
                   ),
                   pinned: true,
                   leading: Container(),
-
                 ),
                 SliverList(delegate: SliverChildListDelegate(items))
               ],
@@ -70,12 +95,14 @@ TabController _tabController;
               });
             },
           ),
-          headerOffset: MediaQuery.of(context).padding.top+56.0,
+          headerOffset: MediaQuery.of(context).padding.top + 56.0,
         ),
       ),
-      theme: ThemeData( brightness: Brightness.light,
-        primaryColor: Colors.white, //Changing this will change the color of the TabBar
-        ),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor:
+            Colors.white, //Changing this will change the color of the TabBar
+      ),
     );
   }
 }

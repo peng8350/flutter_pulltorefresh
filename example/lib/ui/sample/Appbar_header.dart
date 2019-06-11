@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
-
 class AppBarHeader extends StatefulWidget {
   @override
   _AppBarHeaderState createState() => new _AppBarHeaderState();
@@ -39,7 +38,7 @@ class _AppBarHeaderState extends State<AppBarHeader> {
   List<Widget> buildList() {
     List<Widget> items = [];
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 10; i++) {
       items.add(Text('样例数据'));
     }
     return items;
@@ -60,9 +59,9 @@ class _AppBarHeaderState extends State<AppBarHeader> {
       child: SmartRefresher(
         headerInsertIndex: 1,
         enablePullDown: true,
+        enablePullUp: true,
         child: CustomScrollView(
           slivers: [
-
             SliverAppBar(
               backgroundColor: Colors.greenAccent,
               expandedHeight: 200.0,
@@ -78,11 +77,10 @@ class _AppBarHeaderState extends State<AppBarHeader> {
           ],
         ),
         controller: _refreshController,
-        onRefresh: (){
+        onRefresh: () {
           _refreshController.refreshCompleted();
         },
-        header: ClassicHeader(
-        ),
+        header: ClassicHeader(),
       ),
     );
   }

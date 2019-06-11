@@ -12,7 +12,6 @@ import 'RequestRefresh.dart';
 import 'Dynamic+Navigator.dart';
 
 class SamplePage extends StatefulWidget {
-
   final TabController tabController;
 
   SamplePage({this.tabController});
@@ -24,21 +23,29 @@ class SamplePage extends StatefulWidget {
   }
 }
 
-class _SamplePage extends State<SamplePage>
-   {
-
+class _SamplePage extends State<SamplePage> {
   List<Widget> views;
 
   @override
   void initState() {
     // TODO: implement initState
-    views = [DataSmall(),Nested(),AppBarHeader(),InnerList(),Dynamic(),RequestRefresh()];
+    views = [
+      DataSmall(),
+      Nested(),
+      AppBarHeader(),
+      InnerList(),
+      Dynamic(),
+      RequestRefresh()
+    ];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return TabBarView(children: views,controller: widget.tabController,);
+    return TabBarView(
+      children: views,
+      controller: widget.tabController,
+    );
   }
 }

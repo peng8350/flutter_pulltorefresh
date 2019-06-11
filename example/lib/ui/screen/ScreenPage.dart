@@ -14,19 +14,22 @@ class ScreenPage extends StatelessWidget {
     _Item(
       title: "哔哩哔哩首页",
       onClick: (BuildContext context) {
-        Navigator.of(context).push( MaterialPageRoute(builder: (BuildContext context) => BiliBiliScreen()));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) => BiliBiliScreen()));
       },
     ),
     _Item(
       title: "QQ空间",
       onClick: (BuildContext context) {
-        Navigator.of(context).push( MaterialPageRoute(builder: (BuildContext context) => qqZone()));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (BuildContext context) => qqZone()));
       },
     ),
     _Item(
       title: "iOS界面(主要测试SafeArea)",
       onClick: (BuildContext context) {
-        Navigator.of(context).push( MaterialPageRoute(builder: (BuildContext context) => CupertinoScreen()));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) => CupertinoScreen()));
       },
     )
   ];
@@ -46,6 +49,7 @@ class _Item extends StatelessWidget {
   final String title;
 
   _Item({this.title, this.onClick});
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -53,7 +57,7 @@ class _Item extends StatelessWidget {
       child: Card(
         child: Center(child: Text(title)),
       ),
-      onTap: (){
+      onTap: () {
         onClick(context);
       },
     );

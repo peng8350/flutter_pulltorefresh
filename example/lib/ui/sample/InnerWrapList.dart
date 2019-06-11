@@ -47,8 +47,8 @@ class _InnerListState extends State<InnerList> {
         scrollDirection: Axis.horizontal,
       ),
     ));
-    for(int i =0;i<50;i++){
-      items.add(Item(title:"数据"));
+    for (int i = 0; i < 50; i++) {
+      items.add(Item(title: "数据"));
     }
   }
 
@@ -61,15 +61,17 @@ class _InnerListState extends State<InnerList> {
   }
 
   _onLoading() {
-    _refreshController.loadComplete();
+    Future.delayed(Duration(milliseconds: 300)).whenComplete((){
+      _refreshController.loadComplete();
+    });
+
   }
 
   _onRefresh() {
     items.add(Item(
       title: "Data",
     ));
-    if(mounted)
-    setState(() {});
+    if (mounted) setState(() {});
 
     _refreshController.refreshCompleted();
   }

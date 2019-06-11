@@ -11,7 +11,8 @@ class Example3 extends StatefulWidget {
   Example3State createState() => Example3State();
 }
 
-class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,TickerProviderStateMixin {
+class Example3State extends State<Example3>
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
   ValueNotifier<double> topOffsetLis = ValueNotifier(0.0);
@@ -19,23 +20,27 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
   RefreshController _refreshController;
   ScrollController _scrollController;
 
-
   List<Widget> data = [];
 
   //test #68
-  bool _enablePullUp=true,_enablePullDown=true;
-
+  bool _enablePullUp = true, _enablePullDown = true;
 
   void _getDatas() {
-    data.add(Row(children: <Widget>[
-      FlatButton(onPressed: (){
-        _refreshController.requestRefresh();
-      }, child: Text("请求刷新")),
-      FlatButton(onPressed: (){
-        _refreshController.requestLoading();
-      }, child: Text("请求加载数据"))
-    ],));
-    for (int i = 0; i < 3; i++) {
+    data.add(Row(
+      children: <Widget>[
+        FlatButton(
+            onPressed: () {
+              _refreshController.requestRefresh();
+            },
+            child: Text("请求刷新")),
+        FlatButton(
+            onPressed: () {
+              _refreshController.requestLoading();
+            },
+            child: Text("请求加载数据"))
+      ],
+    ));
+    for (int i = 0; i < 13; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
@@ -60,10 +65,7 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
 
   void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
-    if(mounted)
-    setState(() {
-
-    });
+    if (mounted) setState(() {});
     if (isUp) {
       print(offset);
       bottomOffsetLis.value = offset;
@@ -78,21 +80,15 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
     // TODO: implement initState
 
     // for test #68 true-> false ->true
-    Future.delayed(Duration(milliseconds: 3000),(){
+    Future.delayed(Duration(milliseconds: 3000), () {
       _enablePullDown = false;
       _enablePullUp = false;
-    if(mounted)
-      setState(() {
-
-      });
+      if (mounted) setState(() {});
     });
-    Future.delayed(Duration(milliseconds: 6000),(){
+    Future.delayed(Duration(milliseconds: 6000), () {
       _enablePullDown = true;
       _enablePullUp = true;
-    if(mounted)
-      setState(() {
-
-      });
+      if (mounted) setState(() {});
     });
 
 //    // for test #68 false-> true ->false
@@ -151,16 +147,17 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
   Widget build(BuildContext context) {
     return SmartRefresher(
       enablePullUp: true,
-      enablePullDown: false,
+      enablePullDown: true,
       controller: _refreshController,
-      header: ClassicHeader(iconPos: IconPosition.bottom,),
+      header: MaterialClassicHeader(
+      ),
       onRefresh: () {
         print("onRefresh");
-        data.add(Container(child: Card(),height: 100.0,));
-        if(mounted)
-          setState(() {
-
-          });
+        data.add(Container(
+          child: Card(),
+          height: 100.0,
+        ));
+        if (mounted) setState(() {});
         _refreshController.refreshFailed();
 //        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
 ////          data.add(Card());
@@ -168,9 +165,9 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
 //        });
       },
       child: Container(
-        height: 695.0,
+        height: 395.0,
         child: PageView(
-          children: <Widget>[Text("第一页"),Text("第二页"),Text("第三页")],
+          children: <Widget>[Text("第一页"), Text("第二页"), Text("第三页")],
         ),
       ),
       onLoading: () {
@@ -178,9 +175,8 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
 
         Future.delayed(const Duration(milliseconds: 2000)).then((val) {
           data.add(Card());
-          if(mounted)
-            setState(() {});
-          _refreshController.loadFailed();
+          if (mounted) setState(() {});
+          _refreshController.loadComplete();
         });
       },
     );
@@ -188,7 +184,7 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
 
   @override
   // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => false;
+  bool get wantKeepAlive => true;
 }
 
 class CirclePainter extends CustomClipper<Path> {

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 class TestPage extends StatefulWidget {
   TestPage({Key key, this.title}) : super(key: key);
+
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -21,18 +22,18 @@ class TestPage extends StatefulWidget {
   _TestPageState createState() => new _TestPageState();
 }
 
-class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin{
+class _TestPageState extends State<TestPage>
+    with SingleTickerProviderStateMixin {
   int tabIndex = 0;
   PageController _pageController;
   List<Widget> views;
   TabController _tabController;
-  GlobalKey<Example3State> example3Key=  GlobalKey();
-  GlobalKey<Example1State> example1Key=  GlobalKey();
+  GlobalKey<Example3State> example3Key = GlobalKey();
+  GlobalKey<Example1State> example1Key = GlobalKey();
 
-  void _changePage(){
+  void _changePage() {
     Navigator.of(context).pushNamed("sec");
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,47 +58,44 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
 //      ),
 //      body: new TabBarView(children: views,controller:_tabController ,),
 //    );
-    return  Column(
+    return Column(
       children: <Widget>[
-         Expanded(
-
-           child:     PageView(
-             controller: _pageController ,
+        Expanded(
+          child: PageView(
+            controller: _pageController,
             physics: NeverScrollableScrollPhysics(),
-             children: views,onPageChanged: (index){
-             tabIndex = index;
-             if(mounted)
-               setState(() {
-
-               });
-           },
-           ),
-         ),
+            children: views,
+            onPageChanged: (index) {
+              tabIndex = index;
+              if (mounted) setState(() {});
+            },
+          ),
+        ),
         BottomNavigationBar(
           items: [
             BottomNavigationBarItem(
-                icon:  Icon(Icons.home,
+                icon: Icon(Icons.home,
                     color: tabIndex == 0 ? Colors.blue : Colors.grey),
-                title:  Text('Example1',
-                    style:  TextStyle(
+                title: Text('Example1',
+                    style: TextStyle(
                         color: tabIndex == 0 ? Colors.blue : Colors.grey))),
             BottomNavigationBarItem(
-                icon:  Icon(Icons.cloud,
+                icon: Icon(Icons.cloud,
                     color: tabIndex == 1 ? Colors.blue : Colors.grey),
-                title:  Text('Example2',
-                    style:  TextStyle(
+                title: Text('Example2',
+                    style: TextStyle(
                         color: tabIndex == 1 ? Colors.blue : Colors.grey))),
             BottomNavigationBarItem(
-                icon:  Icon(Icons.call,
+                icon: Icon(Icons.call,
                     color: tabIndex == 2 ? Colors.blue : Colors.grey),
-                title:  Text('Example3',
-                    style:  TextStyle(
+                title: Text('Example3',
+                    style: TextStyle(
                         color: tabIndex == 2 ? Colors.blue : Colors.grey))),
             BottomNavigationBarItem(
-                icon:  Icon(Icons.transform,
+                icon: Icon(Icons.transform,
                     color: tabIndex == 3 ? Colors.blue : Colors.grey),
-                title:  Text('Example4',
-                    style:  TextStyle(
+                title: Text('Example4',
+                    style: TextStyle(
                         color: tabIndex == 3 ? Colors.blue : Colors.grey))),
           ],
           onTap: (index) {
@@ -114,10 +112,14 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     // TODO: implement initState
-    _tabController =  TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _pageController = PageController();
-    views = [ Example1(key:example1Key), Example2(), Example3(key:example3Key), Example4()];
+    views = [
+      Example1(key: example1Key),
+      Example2(),
+      Example3(key: example3Key),
+      Example4()
+    ];
     super.initState();
   }
-
 }

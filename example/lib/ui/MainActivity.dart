@@ -66,8 +66,32 @@ class _MainActivityState extends State<MainActivity>
     // TODO: implement build
     return ResideMenu.scaffold(
       controller: _menuController,
-    enable3dRotate: true,
+      enable3dRotate: true,
       child: Scaffold(
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(_tabIndex == 0
+              ? "指示器界面"
+              : _tabIndex == 1 ? "测试界面" : _tabIndex == 2 ? "样例界面" : "App界面"),
+          leading: GestureDetector(child: Icon(Icons.menu),onTap: (){
+            _menuController.openMenu(true);
+          },),
+          backgroundColor: Colors.greenAccent,
+          bottom: _tabIndex==2?TabBar(isScrollable: true,
+            tabs: [
+              Tab(child: Text("超大数据量性能测试")),
+              Tab(
+                child: Text("NestedScrollView兼容"),
+              ),
+              Tab(child: Text("SliverAppbar+Sliverheader")),
+              Tab(child: Text("嵌套滚动视图")),
+              Tab(child: Text("动态变化指示器+Navigator")),
+              Tab(child: Text("主动刷新")),
+            ],
+            controller: _tabController,
+          ):null,
+        ),
         body:
         RefreshConfiguration(
           child: PageView(
@@ -78,9 +102,9 @@ class _MainActivityState extends State<MainActivity>
           clickLoadingWhenIdle: true,
           headerTriggerDistance: 80.0,
           autoLoad: true,
-          hideFooterWhenNotFull: true,
+          hideFooterWhenNotFull: false,
           headerBuilder: () => WaterDropHeader(waterDropColor: Colors.green,),
-          footerBuilder:  () => ClassicFooter(),
+          footerBuilder:  () => ClassicFooter(decoration: BoxDecoration(color: Colors.pink),),
         ),
       ),
       decoration: BoxDecoration(color: Colors.purple),
@@ -95,39 +119,39 @@ class _MainActivityState extends State<MainActivity>
         ),
         children: <Widget>[
           buildItem("各种指示器", Icon(Icons.apps, size: 18, color: Colors.grey),
-              () {
-            setState(() {
-              _tabIndex = 0;
-            });
-            _pageController.jumpToPage(0);
-            _menuController.closeMenu();
-          }),
+                  () {
+                setState(() {
+                  _tabIndex = 0;
+                });
+                _pageController.jumpToPage(0);
+                _menuController.closeMenu();
+              }),
           buildItem("测试",
               Icon(Icons.airplanemode_active, size: 18, color: Colors.grey),
-              () {
-            setState(() {
-              _tabIndex = 1;
-            });
-            _menuController.closeMenu();
-            _pageController.jumpToPage(1);
-          }),
+                  () {
+                setState(() {
+                  _tabIndex = 1;
+                });
+                _menuController.closeMenu();
+                _pageController.jumpToPage(1);
+              }),
           buildItem("样例", Icon(Icons.scanner, size: 18, color: Colors.grey),
-              () {
-            setState(() {
-              _tabIndex = 2;
-            });
-            _menuController.closeMenu();
-            _pageController.jumpToPage(2);
-          }),
+                  () {
+                setState(() {
+                  _tabIndex = 2;
+                });
+                _menuController.closeMenu();
+                _pageController.jumpToPage(2);
+              }),
           buildItem(
               "App界面", Icon(Icons.format_underlined, size: 18, color: Colors.grey),
-              () {
-            setState(() {
-              _tabIndex = 3;
-            });
-            _menuController.closeMenu();
-            _pageController.jumpToPage(3);
-          }),
+                  () {
+                setState(() {
+                  _tabIndex = 3;
+                });
+                _menuController.closeMenu();
+                _pageController.jumpToPage(3);
+              }),
         ],
       ),
     );

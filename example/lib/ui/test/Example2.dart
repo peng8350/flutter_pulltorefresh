@@ -13,7 +13,8 @@ class Example2 extends StatefulWidget {
   _Example2State createState() => _Example2State();
 }
 
-class _Example2State extends State<Example2> with TickerProviderStateMixin ,AutomaticKeepAliveClientMixin{
+class _Example2State extends State<Example2>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   RefreshController _controller;
   int indexPage = 0;
   List<String> data = [];
@@ -29,8 +30,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin ,Auto
       for (var item in array) {
         data.add(item["image_url"]);
       }
-      if(mounted)
-      setState(() {});
+      if (mounted) setState(() {});
       _controller.loadComplete();
       indexPage++;
     }).catchError((_) {
@@ -56,7 +56,7 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin ,Auto
       child: Item(
         url: data[index],
       ),
-      onTap: (){
+      onTap: () {
         _controller.requestRefresh();
       },
     );
@@ -103,7 +103,8 @@ class _Example2State extends State<Example2> with TickerProviderStateMixin ,Auto
       onLoading: _onLoading,
       onOffsetChange: _onOffsetCallback,
       child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        gridDelegate:
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: data.length,
         itemBuilder: buildImage,
       ),

@@ -17,7 +17,7 @@ typedef IndicatorBuilder = Widget Function();
 
 enum RefreshStatus { idle, canRefresh, refreshing, completed, failed }
 
-enum LoadStatus { idle, loading, noMore,failed }
+enum LoadStatus { idle, loading, noMore, failed }
 
 enum RefreshStyle { Follow, UnFollow, Behind, Front }
 
@@ -71,7 +71,8 @@ class SmartRefresher extends StatefulWidget {
   SmartRefresherState createState() => SmartRefresherState();
 
   static SmartRefresherState of(BuildContext context) {
-    return context.ancestorStateOfType(const TypeMatcher<SmartRefresherState>() ) ;
+    return context
+        .ancestorStateOfType(const TypeMatcher<SmartRefresherState>());
   }
 }
 
@@ -87,10 +88,9 @@ class SmartRefresherState extends State<SmartRefresher> {
     final child = widget.child;
     final Widget defaultFooter = ClassicFooter();
     _configuration = RefreshConfiguration.of(context);
-    if(child!=null&&child is ScrollView&&child.controller!=null){
+    if (child != null && child is ScrollView && child.controller != null) {
       widget.controller.scrollController = child.controller;
-    }
-    else{
+    } else {
       widget.controller.scrollController = PrimaryScrollController.of(context);
     }
 
@@ -113,10 +113,12 @@ class SmartRefresherState extends State<SmartRefresher> {
     widget.controller._triggerDistance =
         _header.refreshStyle == RefreshStyle.Front
             ? 0.0
-            : -(_configuration==null?80.0:_configuration.headerTriggerDistance);
+            : -(_configuration == null
+                ? 80.0
+                : _configuration.headerTriggerDistance);
   }
 
-  void onPositionUpdated(ScrollPosition newPosition){
+  void onPositionUpdated(ScrollPosition newPosition) {
     widget.controller.position = newPosition;
   }
 
@@ -124,7 +126,7 @@ class SmartRefresherState extends State<SmartRefresher> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.controller.initialRefresh&&widget.enablePullDown) {
+    if (widget.controller.initialRefresh && widget.enablePullDown) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         widget.controller.requestRefresh();
       });
@@ -166,15 +168,15 @@ class SmartRefresherState extends State<SmartRefresher> {
     final Widget child = widget.child;
     List<Widget> slivers;
     Widget body;
-    if(child is ScrollView) {
+    if (child is ScrollView) {
       if (widget.child is BoxScrollView) {
         //avoid system inject padding when own indicator top or bottom
-        Widget sliver = (widget.child as BoxScrollView).buildChildLayout(
-            context);
+        Widget sliver =
+            (widget.child as BoxScrollView).buildChildLayout(context);
         EdgeInsets effectPadding = (widget.child as BoxScrollView).padding;
         if (effectPadding == null) {
-          final MediaQueryData mediaQuery = MediaQuery.of(
-              context, nullOk: true);
+          final MediaQueryData mediaQuery =
+              MediaQuery.of(context, nullOk: true);
           if (mediaQuery != null) {
             effectPadding = mediaQuery.padding.copyWith(
                 left: 0.0,
@@ -193,10 +195,10 @@ class SmartRefresherState extends State<SmartRefresher> {
           sliver = SliverPadding(padding: effectPadding, sliver: sliver);
         }
         slivers = [sliver];
-      } else  {
+      } else {
         slivers = List.from(child.buildSlivers(context), growable: true);
       }
-      body =  CustomScrollView(
+      body = CustomScrollView(
         physics: _getScrollPhysics(),
         controller: widget.controller.scrollController,
         cacheExtent: child?.cacheExtent,
@@ -205,13 +207,15 @@ class SmartRefresherState extends State<SmartRefresher> {
         slivers: slivers,
         reverse: child?.reverse,
       );
-    }
-    else{
-      slivers = [SliverToBoxAdapter(child: child ?? Container(),)];
-      body =  CustomScrollView(
+    } else {
+      slivers = [
+        SliverToBoxAdapter(
+          child: child ?? Container(),
+        )
+      ];
+      body = CustomScrollView(
         physics: _getScrollPhysics(),
         controller: widget.controller.scrollController,
-        key: widget.child?.key,
         slivers: slivers,
       );
     }
@@ -238,7 +242,8 @@ class SmartRefresherState extends State<SmartRefresher> {
 class RefreshController {
   ValueNotifier<RefreshStatus> headerMode = ValueNotifier(RefreshStatus.idle);
   ValueNotifier<LoadStatus> footerMode = ValueNotifier(LoadStatus.idle);
-  @Deprecated('use position instead,jumpTo and animateTo will lead to refresh together with mutiple ScrollView depend on the same ScrollController')
+  @Deprecated(
+      'use position instead,jumpTo and animateTo will lead to refresh together with mutiple ScrollPositions which depending on the same ScrollController')
   ScrollController scrollController;
   ScrollPosition position;
   double _triggerDistance;
@@ -260,9 +265,8 @@ class RefreshController {
       Curve curve: Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    if(isRefresh)return;
-    position?.animateTo(_triggerDistance,
-        duration: duration, curve: curve);
+    if (isRefresh) return;
+    position?.animateTo(_triggerDistance, duration: duration, curve: curve);
   }
 
   void requestLoading(
@@ -270,20 +274,17 @@ class RefreshController {
       Curve curve: Curves.linear}) {
     assert(position != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
-      if(isLoading)return;
-      position
-          ?.animateTo(position.maxScrollExtent,
-              duration: duration, curve: curve)
-         ;
+    if (isLoading) return;
+    position?.animateTo(position.maxScrollExtent,
+        duration: duration, curve: curve);
   }
 
-  void refreshCompleted({bool resetFooterState:false}) {
+  void refreshCompleted({bool resetFooterState: false}) {
     headerMode?.value = RefreshStatus.completed;
-    if(resetFooterState){
+    if (resetFooterState) {
       resetNoData();
     }
   }
-
 
   void refreshFailed() {
     headerMode?.value = RefreshStatus.failed;
@@ -359,7 +360,6 @@ class RefreshConfiguration extends InheritedWidget {
 
   @override
   bool updateShouldNotify(RefreshConfiguration oldWidget) {
-    print(this==oldWidget);
     return autoLoad != oldWidget.autoLoad ||
         skipCanRefresh != oldWidget.skipCanRefresh ||
         hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||

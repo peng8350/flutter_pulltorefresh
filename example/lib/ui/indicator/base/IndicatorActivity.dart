@@ -17,14 +17,13 @@ class IndicatorActivity extends StatefulWidget {
 
   final LoadIndicator footer;
 
-
   final bool enableOverScroll;
   final bool reverse;
 
   IndicatorActivity(
       {this.title,
       this.header,
-        this.reverse:false,
+      this.reverse: false,
       this.footer,
       this.enableOverScroll: true});
 
@@ -41,11 +40,11 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
 
   void _init() {
     for (int i = 0; i < 5; i++) {
-      items.add(Item(title: "Data$i",));
+      items.add(Item(
+        title: "Data$i",
+      ));
     }
   }
-
-
 
   ScrollController _scrollController;
 
@@ -54,7 +53,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
     // TODO: implement initState
     _scrollController = new ScrollController();
     _refreshController = RefreshController();
-    Future.delayed(Duration(milliseconds: 3000)).then((_){
+    Future.delayed(Duration(milliseconds: 3000)).then((_) {
 //      _jumpTo(0.0);
     });
     _init();
@@ -104,10 +103,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
     print("onRefresh");
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
       items.add(Item(title: "Data"));
-      if(mounted)
-      setState(() {
-
-      });
+      if (mounted) setState(() {});
       _refreshController.refreshCompleted();
     });
   }
@@ -116,13 +112,12 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
     print("onLoading");
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
       int index = items.length;
-      if(mounted)
-      setState(() {});
-      items.add(Item(title: "Data$index",));
+      if (mounted) setState(() {});
+      items.add(Item(
+        title: "Data$index",
+      ));
       ;
       _refreshController.loadComplete();
-
     });
   }
 }
-

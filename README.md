@@ -38,10 +38,11 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 
 ## How to use?
 
+Because 1.3.0 has made great changes to the internal, version 1.3.0-1.3.9 is not recommended to use,there has a lot of Bug , 1.4.0 began to stabilize.
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.3
+     pull_to_refresh: ^1.4.4
 
 ```
 
@@ -128,10 +129,10 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
 This problem is not my encapsulation error after testing. When the controller in ListView is replaced, this problem will occur, probably
 because of the processing operation in Scaffold.,please issue flutter。
 
-* <h3>How to use it with NestedScrollView?</h3>
-1.3.0 provides a new attribute isNestWrapped for compatibility. Note that when this attribute is opened, scollController depends on NestScrollView,
-internally via PrimaryScrollController. of (context) To get scrollController, scrollController is placed in NestedScrollView。
-(The isNestWrapped attribute is unnecessary after 1.3.8)
+* <h3>Is Supporting NestedScrollView?</h3>
+It's not recommended to use NestedScrollView. Now I have found a problem that I need to modify the internal source code of
+ NestedScrollView to solve. So it's better to use CustomScrollView to avoid using it, because there may be many unknown
+ problems that I haven't found yet.
 
 * <h3>Why is there a empty space in the top or tail indicator after using CuperNavigationBar (not just in this case)?</h3>
 the reason may be SafeArea,the solution: wrap SmartRefresher in SafeArea

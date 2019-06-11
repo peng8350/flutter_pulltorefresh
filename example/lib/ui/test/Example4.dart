@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:example/other/RunningHeader.dart';
-import 'package:flutter/material.dart' hide RefreshIndicator,RefreshIndicatorState;
-import 'package:pull_to_refresh/pull_to_refresh.dart'  ;
+import 'package:flutter/material.dart'
+    hide RefreshIndicator, RefreshIndicatorState;
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/cupertino.dart';
 
 class Example4 extends StatefulWidget {
@@ -59,8 +60,7 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      physics:RefreshBouncePhysics()
-  ,
+      physics: RefreshBouncePhysics(),
       slivers: [
         _enablePullDown
             ? RunningHeader.asSliver(onRefresh: () async {
@@ -74,14 +74,13 @@ class _Example4State extends State<Example4> with TickerProviderStateMixin {
             ? ClassicFooter.asSliver(onLoading: () async {
                 await Future.delayed(Duration(milliseconds: 400));
                 //return true it mean set the footerStatus to idle,else set to NoData state
-                return true;
+                return 0;
               })
             : null
       ].where((child) => child != null).toList(),
     );
   }
 }
-
 
 class _SliverDelegate extends SliverPersistentHeaderDelegate {
   final Widget child;

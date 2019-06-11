@@ -17,44 +17,42 @@ class RequestRefresh extends StatefulWidget {
 }
 
 class _RequestRefreshState extends State<RequestRefresh> {
-
   List<Widget> items = [];
   bool _enablePullDown = true;
   bool _enablePullUp = true;
   RefreshController _refreshController;
   RefreshIndicator _header = MaterialClassicHeader();
+
   void _init() {
-    items=[];
-    items.add(Row(children: <Widget>[MaterialButton(
-      child: Text("切换为Front"),
-      onPressed:(){
-        _header = MaterialClassicHeader();
-        setState(() {
-
-        });
-      }
-    ),MaterialButton(
-        child: Text("切换为非Front"),
-        onPressed:(){
-          _header = ClassicHeader();
-          setState(() {
-
-          });
-        }
-    )],));
+    items = [];
+    items.add(Row(
+      children: <Widget>[
+        MaterialButton(
+            child: Text("切换为Front"),
+            onPressed: () {
+              _header = MaterialClassicHeader();
+              setState(() {});
+            }),
+        MaterialButton(
+            child: Text("切换为非Front"),
+            onPressed: () {
+              _header = ClassicHeader();
+              setState(() {});
+            })
+      ],
+    ));
     for (int i = 0; i < 24; i++) {
       items.add(GestureDetector(
         child: Container(
           child: Card(
-            child: Text(i%2!=0?"点我主动刷新!":"点我主动加载更多!"),
+            child: Text(i % 2 != 0 ? "点我主动刷新!" : "点我主动加载更多!"),
           ),
           height: 100.0,
         ),
-        onTap: (){
-          if(i%2!=0){
+        onTap: () {
+          if (i % 2 != 0) {
             _refreshController.requestRefresh();
-          }
-          else{
+          } else {
             _refreshController.requestLoading();
           }
         },
@@ -65,20 +63,18 @@ class _RequestRefreshState extends State<RequestRefresh> {
   @override
   void initState() {
     // TODO: implement initState
-    _refreshController  = RefreshController(initialRefresh: true);
+    _refreshController = RefreshController(initialRefresh: true);
     super.initState();
   }
 
-  _onLoading(){
+  _onLoading() {
+    Future.delayed(Duration(milliseconds: 1000)).whenComplete((){
+      _refreshController.loadComplete();
+    });
   }
 
-
-  _onRefresh(){
-
-    if(mounted)
-      setState(() {
-
-      });
+  _onRefresh() {
+    if (mounted) setState(() {});
     _refreshController.refreshCompleted();
   }
 
@@ -95,7 +91,7 @@ class _RequestRefreshState extends State<RequestRefresh> {
         onLoading: _onLoading,
         header: _header,
         enablePullDown: _enablePullDown,
-        enablePullUp:_enablePullUp,
+        enablePullUp: _enablePullUp,
         controller: _refreshController);
   }
 

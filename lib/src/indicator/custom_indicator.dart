@@ -70,10 +70,7 @@ class CustomFooter extends LoadIndicator {
     @required this.builder,
     @required OnLoading onLoading,
     Function onClick,
-  }) : super(
-            key: key,
-            onLoading: onLoading,
-            onClick: onClick);
+  }) : super(key: key, onLoading: onLoading, onClick: onClick);
 
   @override
   State<StatefulWidget> createState() {

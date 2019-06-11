@@ -173,3 +173,9 @@ Notice: This version of the code changes much, Api too
 
 ## 1.4.3
 * change "child" attr limit type from ScrollView to Widget
+
+## 1.4.4
+* Fix Bug:Multiples ScrollPositions shared one ScrollController,when calling controller.requestRefresh cause refresh together( such as keepAlive Widget )
+* When the user Dragging ScrollView(pull up), disable make it change to loading state
+* Add one new LoadStatus:failed(provide click to retry loading)
+* Fix some defaultIcon:noMoreIcon default Invisible

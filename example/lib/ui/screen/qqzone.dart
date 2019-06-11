@@ -6,24 +6,26 @@
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class qqZone extends StatefulWidget{
-
+class qqZone extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return _qqZoneState();
   }
-
 }
 
-class _qqZoneState extends State<qqZone>{
+class _qqZoneState extends State<qqZone> {
   RefreshController _refreshController;
   List<Widget> items = [];
 
   void initData() {
-
-    for (int i = 0; i < 55; i++) items.add(Container(child: Card(),height: 100.0,));
+    for (int i = 0; i < 55; i++)
+      items.add(Container(
+        child: Card(),
+        height: 100.0,
+      ));
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -35,22 +37,30 @@ class _qqZoneState extends State<qqZone>{
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
-      home:Scaffold(
+      home: Scaffold(
         body: SmartRefresher(
-          header: MaterialClassicHeader(backgroundColor: Colors.blueAccent,distance: 80.0,),
+          header: MaterialClassicHeader(
+            backgroundColor: Colors.blueAccent,
+            distance: 80.0,
+          ),
           child: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
                 pinned: true,
                 expandedHeight: 200.0,
-                leading: GestureDetector(child: Icon(Icons.arrow_back),onTap: (){
-                  Navigator.of(context).pop();
-                },),
+                leading: GestureDetector(
+                  child: Icon(Icons.arrow_back),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
-                    height: 100.0,
-                    child: Image.asset("images/qqbg.jpg",fit: BoxFit.cover,)
-                  ),
+                      height: 100.0,
+                      child: Image.asset(
+                        "images/qqbg.jpg",
+                        fit: BoxFit.cover,
+                      )),
                 ),
                 backgroundColor: Colors.white,
                 title: Text("QQ空间"),
@@ -67,8 +77,10 @@ class _qqZoneState extends State<qqZone>{
           },
         ),
       ),
-      theme: ThemeData( brightness: Brightness.light,
-        primaryColor: Colors.white, //Changing this will change the color of the TabBar
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor:
+            Colors.white, //Changing this will change the color of the TabBar
       ),
     );
   }

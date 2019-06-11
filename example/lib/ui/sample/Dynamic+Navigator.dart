@@ -4,8 +4,6 @@
  * Time:  2019-06-03 12:54
  */
 
-
-
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../Item.dart';
@@ -22,35 +20,30 @@ class Dynamic extends StatefulWidget {
 }
 
 class _DynamicState extends State<Dynamic> {
-
   List<Widget> items = [];
   bool _enablePullDown = true;
   bool _enablePullUp = true;
   RefreshController _refreshController;
 
   void _init() {
-    items=[];
+    items = [];
     items.add(Row(
       children: <Widget>[
         Text("打开下拉刷新"),
         Radio(
           value: true,
-          groupValue:_enablePullDown ,
+          groupValue: _enablePullDown,
           onChanged: (i) {
-            _enablePullDown=i;
-            setState(() {
-
-            });
+            _enablePullDown = i;
+            setState(() {});
           },
         ),
         Radio(
           value: false,
-          groupValue:_enablePullDown ,
+          groupValue: _enablePullDown,
           onChanged: (i) {
-            _enablePullDown=i;
-            setState(() {
-
-            });
+            _enablePullDown = i;
+            setState(() {});
           },
         )
       ],
@@ -60,22 +53,18 @@ class _DynamicState extends State<Dynamic> {
         Text("打开上拉加载"),
         Radio(
           value: true,
-          groupValue:_enablePullUp ,
+          groupValue: _enablePullUp,
           onChanged: (i) {
-            _enablePullUp=i;
-            setState(() {
-
-            });
+            _enablePullUp = i;
+            setState(() {});
           },
         ),
         Radio(
           value: false,
-          groupValue:_enablePullUp ,
+          groupValue: _enablePullUp,
           onChanged: (i) {
-            _enablePullUp=i;
-            setState(() {
-
-            });
+            _enablePullUp = i;
+            setState(() {});
           },
         )
       ],
@@ -85,38 +74,39 @@ class _DynamicState extends State<Dynamic> {
       children: <Widget>[
         MaterialButton(
           child: Text("延时打开/关闭下拉刷新"),
-          onPressed: (){
-            Future.delayed(Duration(milliseconds: 2000)).whenComplete((){
+          onPressed: () {
+            Future.delayed(Duration(milliseconds: 2000)).whenComplete(() {
               _enablePullDown = !_enablePullDown;
-              setState(() {
-
-              });
+              setState(() {});
             });
           },
         ),
         MaterialButton(
           child: Text("延时打开/关闭上拉加载"),
-          onPressed: (){
-            Future.delayed(Duration(milliseconds: 2000)).whenComplete((){
+          onPressed: () {
+            Future.delayed(Duration(milliseconds: 2000)).whenComplete(() {
               _enablePullUp = !_enablePullUp;
-              setState(() {
-
-              });
+              setState(() {});
             });
           },
         ),
-
       ],
     ));
-    items.add(        MaterialButton(
+    items.add(MaterialButton(
       child: Text("跳转第二个页面"),
-      onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (c) => Scaffold(appBar:AppBar(),body: Container(),)));
+      onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (c) => Scaffold(
+                  appBar: AppBar(),
+                  body: Container(),
+                )));
       },
     ));
 
     for (int i = 0; i < 24; i++) {
-      items.add(Item(title: "Data$i",));
+      items.add(Item(
+        title: "Data$i",
+      ));
     }
   }
 
@@ -124,21 +114,22 @@ class _DynamicState extends State<Dynamic> {
   void initState() {
     // TODO: implement initState
 
-    _refreshController  = RefreshController();
+    _refreshController = RefreshController();
     super.initState();
   }
 
-  _onLoading(){
+  _onLoading() {
+
+    Future.delayed(Duration(milliseconds: 1000)).whenComplete((){
+      _refreshController.loadComplete();
+    });
   }
 
-
-  _onRefresh(){
-
-    items.add(Item(title: "Data",));
-    if(mounted)
-      setState(() {
-
-      });
+  _onRefresh() {
+    items.add(Item(
+      title: "Data",
+    ));
+    if (mounted) setState(() {});
     _refreshController.refreshCompleted();
   }
 
@@ -155,7 +146,7 @@ class _DynamicState extends State<Dynamic> {
         onLoading: _onLoading,
         header: MaterialClassicHeader(),
         enablePullDown: _enablePullDown,
-        enablePullUp:_enablePullUp,
+        enablePullUp: _enablePullUp,
         controller: _refreshController);
   }
 

@@ -265,7 +265,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
           ? TextDirection.ltr
           : TextDirection.rtl,
       direction: widget.iconPos == IconPosition.bottom ||
-          widget.iconPos == IconPosition.top
+              widget.iconPos == IconPosition.top
           ? Axis.vertical
           : Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,

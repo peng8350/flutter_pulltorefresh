@@ -32,11 +32,11 @@
 
 ## 我该怎么用?
 
-
+因1.3.0对内部进行了很大的变动,1.3.0~1.3.9版本不建议使用,Bug较多,1.4.0开始稳定
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.3
+     pull_to_refresh: ^1.4.4
 
 ```
 
@@ -126,9 +126,9 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 * <h3>IOS状态栏双击为什么ListView不自动滚动到顶部?</h3>
 这个问题经测试不是我封装的失误,当ListView里的controller被替换后,这个问题就会出现,原因大概是Scaffold里的处理操作,请issue flutter。
 
-* <h3>如何兼容NestedScrollView?</h3>
-1.3.0提供了一个新属性isNestWrapped来兼容这东西,注意,这个属性打开后,scollController取决于NestScrollView,内部通过PrimaryScrollController.of(context)
-来获取scrollController,所以scrollController要放在NestedScrollView里。(1.3.8后isNestWrapped就没必要使用了)
+* <h3>NestedScrollView兼容性?</h3>
+不建议使用NestedScrollView,目前我已经发现了一个问题,要修改NestedScrollView内部源代码才能解决,所以最好用CustomScrollView,避免使用它,
+因为可能还有很多未知的问题我还没有发现。
 
 * <h3>为什么使用CuperNavigationBar后(不只这一个情况),顶部或者尾部指示器有空白的地方?</h3>
 很大可能是因为SafeArea,。解决方法一般是在SmartRefresher外围套用SafeArea

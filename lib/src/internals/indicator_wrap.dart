@@ -4,13 +4,15 @@
     createTime:2018-05-14 15:39
  */
 
+import 'package:flutter/rendering.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 import '../smart_refresher.dart';
 import 'slivers.dart';
 
 typedef OnRefresh = Future<bool> Function();
-typedef OnLoading = Future<bool> Function();
+typedef OnLoading = Future<int> Function();
 
 const int default_completeDuration = 500;
 
@@ -235,6 +237,14 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     return overscrollPastEnd;
   }
 
+  bool _checkIfCanLoading() {
+    return _position.extentAfter <= configuration.footerTriggerDistance &&
+        configuration.autoLoad &&
+        _enableLoadingAgain &&
+        _position.extentBefore > 0.0 &&
+        mode == LoadStatus.idle;
+  }
+
   void _handleModeChange() {
     if (!mounted || _isHide) {
       return;
@@ -245,8 +255,10 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         refresher.widget.onLoading();
       } else if (widget.onLoading != null) {
         widget.onLoading().then((result) {
-          if (result) {
+          if (result == 0) {
             mode = LoadStatus.idle;
+          } else if (result == 1) {
+            mode = LoadStatus.failed;
           } else {
             mode = LoadStatus.noMore;
           }
@@ -258,13 +270,13 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   void _dispatchModeByOffset(double offset) {
     // avoid trigger more time when user dragging in the same direction
-    if (_position.activity is! DragScrollActivity &&_position.userScrollDirection.index == 2 &&
-        _position.extentAfter <= configuration.footerTriggerDistance &&
-        configuration.autoLoad &&
-        _enableLoadingAgain &&
-        mode == LoadStatus.idle) {
-      mode = LoadStatus.loading;
-      _enableLoadingAgain = false;
+    if (_checkIfCanLoading()) {
+      if (_position.activity is BallisticScrollActivity ||
+          _position.activity is DrivenScrollActivity) {
+        // DrivenScrollActivity mostly scrollPosition.animateTo
+        mode = LoadStatus.loading;
+        _enableLoadingAgain = false;
+      }
     }
   }
 
@@ -277,6 +289,12 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   void _listenScrollEnd() {
     if (!_position.isScrollingNotifier.value) {
+      // when user release gesture from screen
+      if (_checkIfCanLoading()) {
+        if (_position.activity is IdleScrollActivity) {
+          mode = LoadStatus.loading;
+        }
+      }
       _enableLoadingAgain = true;
     }
   }
@@ -304,8 +322,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             _isHide = cons.biggest.height == 0.0;
             return GestureDetector(
               onTap: () {
-                if (configuration.clickLoadingWhenIdle||_mode.value == LoadStatus.failed) {
-                  _mode.value = LoadStatus.loading;
+                if (configuration.clickLoadingWhenIdle ||
+                    _mode.value == LoadStatus.failed) {
+                  mode = LoadStatus.loading;
                 }
                 if (widget.onClick != null) {
                   widget.onClick();
@@ -365,7 +384,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   void _updateListener() {
     configuration = RefreshConfiguration.of(context);
     assert(configuration != null,
-    "when use asSliver ,please wrap scrollView in RefreshConfiguration!");
+        "when use asSliver ,please wrap scrollView in RefreshConfiguration!");
     refresher = SmartRefresher.of(context);
     ValueNotifier<V> newMode;
     if (refresher == null) {

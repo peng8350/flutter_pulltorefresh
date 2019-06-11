@@ -14,12 +14,11 @@ class CupertinoScreen extends StatefulWidget {
     // TODO: implement createState
     return CupertinoScreenState();
   }
-
 }
 
-class CupertinoScreenState extends State<CupertinoScreen>{
+class CupertinoScreenState extends State<CupertinoScreen> {
+  int _segIndex = 0;
 
-  int _segIndex =0 ;
   RefreshController _refreshController;
 
   @override
@@ -28,6 +27,7 @@ class CupertinoScreenState extends State<CupertinoScreen>{
     _refreshController = RefreshController();
     super.initState();
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -46,67 +46,62 @@ class CupertinoScreenState extends State<CupertinoScreen>{
       ));
     }
     return CupertinoApp(
-
         home: CupertinoPageScaffold(
-          navigationBar: CupertinoNavigationBar(
-            leading: GestureDetector(
-              child: Icon(Icons.arrow_back_ios),
-              onTap: (){
-                Navigator.pop(context);
-              },
-            ),
-            middle: CupertinoSegmentedControl(
-              children: {0:Text("sliver"),1:Text("refresher")},
-              onValueChanged: (index) {
-                setState(() {
-
-                });
-                _segIndex = index;
-              },
-              groupValue: _segIndex,
-            ),
-          ),
-          child: SafeArea(
-            child: Stack(
-              children: <Widget>[
-                Offstage(
-                  offstage: _segIndex!=0,
-                  child: RefreshConfiguration(
-                    child: CustomScrollView(
-                      physics: RefreshClampPhysics(springBackDistance: 100.0),
-                      slivers: <Widget>[
-                        MaterialClassicHeader.asSliver(
-                          onRefresh: () async {
-                            await Future.delayed(Duration(milliseconds: 400));
-                            return true;
-                          },
-                        ),
-
-                        SliverList(
-                          delegate: SliverChildListDelegate(widgets),
-                        ),
-                        ClassicFooter()
-                      ],
+      navigationBar: CupertinoNavigationBar(
+        leading: GestureDetector(
+          child: Icon(Icons.arrow_back_ios),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+        middle: CupertinoSegmentedControl(
+          children: {0: Text("sliver"), 1: Text("refresher")},
+          onValueChanged: (index) {
+            setState(() {});
+            _segIndex = index;
+          },
+          groupValue: _segIndex,
+        ),
+      ),
+      child: SafeArea(
+        child: Stack(
+          children: <Widget>[
+            Offstage(
+              offstage: _segIndex != 0,
+              child: RefreshConfiguration(
+                child: CustomScrollView(
+                  physics: RefreshClampPhysics(springBackDistance: 100.0),
+                  slivers: <Widget>[
+                    MaterialClassicHeader.asSliver(
+                      onRefresh: () async {
+                        await Future.delayed(Duration(milliseconds: 400));
+                        return true;
+                      },
                     ),
-                  ),
+                    SliverList(
+                      delegate: SliverChildListDelegate(widgets),
+                    ),
+                    ClassicFooter()
+                  ],
                 ),
-                Offstage(
-                  offstage: _segIndex!=1,
-                  child: SmartRefresher(
-
-                    child: ListView(children:widgets),
-                    controller: _refreshController,
-                    header: ClassicHeader(),
-                    onRefresh: (){
-                      Future.delayed(Duration(milliseconds: 1000)).whenComplete((){
-                        _refreshController.refreshCompleted();
-                      });
-                    },
-                  ),
-                )
-              ],
+              ),
             ),
-          ),
-        ));
+            Offstage(
+              offstage: _segIndex != 1,
+              child: SmartRefresher(
+                child: ListView(children: widgets),
+                controller: _refreshController,
+                header: ClassicHeader(),
+                onRefresh: () {
+                  Future.delayed(Duration(milliseconds: 1000)).whenComplete(() {
+                    _refreshController.refreshCompleted();
+                  });
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    ));
   }
 }

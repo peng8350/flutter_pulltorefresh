@@ -14,13 +14,14 @@ class DataSmall extends StatefulWidget {
 }
 
 class _DataSmallState extends State<DataSmall> {
-
   List<Widget> items = [];
   RefreshController _refreshController;
 
   void _init() {
     for (int i = 0; i < 5000; i++) {
-      items.add(Item(title: "Data$i",));
+      items.add(Item(
+        title: "Data$i",
+      ));
     }
   }
 
@@ -28,21 +29,19 @@ class _DataSmallState extends State<DataSmall> {
   void initState() {
     // TODO: implement initState
     _init();
-    _refreshController  = RefreshController();
+    _refreshController = RefreshController();
     super.initState();
   }
 
-  _onLoading(){
+  _onLoading() {
     _refreshController.loadComplete();
   }
 
-  _onRefresh(){
-
-    items.add(Item(title: "Data",));
-    if(mounted)
-    setState(() {
-
-    });
+  _onRefresh() {
+    items.add(Item(
+      title: "Data",
+    ));
+    if (mounted) setState(() {});
     _refreshController.refreshCompleted();
   }
 
@@ -57,7 +56,7 @@ class _DataSmallState extends State<DataSmall> {
         onRefresh: _onRefresh,
         onLoading: _onLoading,
         enablePullDown: true,
-        enablePullUp:true,
+        enablePullUp: true,
         controller: _refreshController);
   }
 
