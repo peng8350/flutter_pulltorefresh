@@ -7,6 +7,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart'
     hide RefreshIndicatorState, RefreshIndicator;
+import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/widgets.dart';
 import '../internals/indicator_wrap.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,7 +34,11 @@ class WaterDropHeader extends RefreshIndicator {
     Duration completeDuration: const Duration(milliseconds: 600),
     this.failed,
     this.waterDropColor: Colors.grey,
-    this.idleIcon,
+    this.idleIcon: const Icon(
+      Icons.autorenew,
+      size: 15,
+      color: Colors.white,
+    ),
   }) : super(
             key: key,
             completeDuration: completeDuration,
@@ -48,7 +53,11 @@ class WaterDropHeader extends RefreshIndicator {
     Duration completeDuration: const Duration(milliseconds: 600),
     this.reverse: false,
     this.waterDropColor: Colors.grey,
-    this.idleIcon,
+    this.idleIcon: const Icon(
+      Icons.autorenew,
+      size: 15,
+      color: Colors.white,
+    ),
   }) : super(
             key: key,
             onRefresh: onRefresh,
@@ -174,13 +183,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                   margin: widget.reverse
                       ? EdgeInsets.only(bottom: 15.0)
                       : EdgeInsets.only(top: 15.0),
-                  child: widget.idleIcon != null
-                      ? widget.idleIcon
-                      : const Icon(
-                          Icons.airplanemode_active,
-                          size: 15,
-                          color: Colors.white,
-                        ),
+                  child: widget.idleIcon,
                 )
               ],
             ),

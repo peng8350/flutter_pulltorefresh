@@ -14,7 +14,6 @@ import '../smart_refresher.dart';
 
 enum IconPosition { left, right, top, bottom }
 
-
 class ClassicHeader extends RefreshIndicator {
   final String releaseText, idleText, refreshingText, completeText, failedText;
   final Decoration decoration;
@@ -29,7 +28,7 @@ class ClassicHeader extends RefreshIndicator {
     RefreshStyle refreshStyle: default_refreshStyle,
     double height: default_height,
     Duration completeDuration: const Duration(milliseconds: 600),
-    this.decoration:const BoxDecoration(),
+    this.decoration: const BoxDecoration(),
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
@@ -41,25 +40,25 @@ class ClassicHeader extends RefreshIndicator {
     this.refreshingIcon: const SizedBox(
       width: 25.0,
       height: 25.0,
-      child:const CircularProgressIndicator(strokeWidth: 2.0),
+      child: const CircularProgressIndicator(strokeWidth: 2.0),
     ),
-    this.failedIcon: const Icon(Icons.clear, color: Colors.grey),
+    this.failedIcon: const Icon(Icons.error, color: Colors.grey),
     this.completeIcon: const Icon(Icons.done, color: Colors.grey),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
     this.releaseIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
   }) : super(
-            key: key,
-            refreshStyle: refreshStyle,
-            completeDuration: completeDuration,
-            height: height,
-           );
+          key: key,
+          refreshStyle: refreshStyle,
+          completeDuration: completeDuration,
+          height: height,
+        );
 
   const ClassicHeader.asSliver({
     Key key,
     @required OnRefresh onRefresh,
     ValueNotifier<RefreshStatus> mode,
     RefreshStyle refreshStyle: default_refreshStyle,
-    this.decoration:const BoxDecoration(),
+    this.decoration: const BoxDecoration(),
     double height: default_height,
     Duration completeDuration: const Duration(milliseconds: 600),
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
@@ -84,8 +83,7 @@ class ClassicHeader extends RefreshIndicator {
             onRefresh: onRefresh,
             completeDuration: completeDuration,
             refreshStyle: refreshStyle,
-            height: height
-            );
+            height: height);
 
   @override
   State createState() {
@@ -127,16 +125,20 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
     // TODO: implement buildContent
     Widget textWidget = _buildText(mode);
     Widget iconWidget = _buildIcon(mode);
-    List<Widget> children = <Widget>[
-      iconWidget,
-      textWidget
-    ];
+    List<Widget> children = <Widget>[iconWidget, textWidget];
     final Widget container = Wrap(
       spacing: widget.spacing,
-      textDirection: widget.iconPos==IconPosition.left?TextDirection.ltr:TextDirection.rtl,
-      direction: widget.iconPos==IconPosition.bottom|| widget.iconPos==IconPosition.top?Axis.vertical:Axis.horizontal,
+      textDirection: widget.iconPos == IconPosition.left
+          ? TextDirection.ltr
+          : TextDirection.rtl,
+      direction: widget.iconPos == IconPosition.bottom ||
+              widget.iconPos == IconPosition.top
+          ? Axis.vertical
+          : Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,
-      verticalDirection: widget.iconPos==IconPosition.bottom?VerticalDirection.up:VerticalDirection.down,
+      verticalDirection: widget.iconPos == IconPosition.bottom
+          ? VerticalDirection.up
+          : VerticalDirection.down,
       alignment: WrapAlignment.center,
       children: children,
     );
@@ -151,11 +153,11 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
 }
 
 class ClassicFooter extends LoadIndicator {
-  final String idleText, loadingText, noDataText;
+  final String idleText, loadingText, noDataText, failedText;
 
   final Decoration decoration;
 
-  final Widget idleIcon, loadingIcon, noMoreIcon;
+  final Widget idleIcon, loadingIcon, noMoreIcon, failedIcon;
 
   final double height;
 
@@ -172,9 +174,11 @@ class ClassicFooter extends LoadIndicator {
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
     this.height: 60.0,
-    this.decoration:const BoxDecoration(),
+    this.decoration: const BoxDecoration(),
     this.noMoreIcon,
     this.idleText: 'Load More..',
+    this.failedText: 'Load Failed,Click Retry!',
+    this.failedIcon: const Icon(Icons.error, color: Colors.grey),
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
     this.loadingIcon: const SizedBox(
@@ -195,13 +199,15 @@ class ClassicFooter extends LoadIndicator {
     @required OnLoading onLoading,
     Function onClick,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
-    this.decoration:const BoxDecoration(),
+    this.decoration: const BoxDecoration(),
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
     this.height: 60.0,
     this.noMoreIcon,
     this.idleText: 'Load More..',
     this.iconPos: IconPosition.left,
+    this.failedText: 'Load Failed,Click Retry!',
+    this.failedIcon: const Icon(Icons.error, color: Colors.grey),
     this.spacing: 15.0,
     this.loadingIcon: const SizedBox(
       width: 25.0,
@@ -230,14 +236,20 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
     return Text(
         mode == LoadStatus.loading
             ? widget.loadingText
-            : LoadStatus.noMore == mode ? widget.noDataText : widget.idleText,
+            : LoadStatus.noMore == mode
+                ? widget.noDataText
+                : LoadStatus.failed == mode
+                    ? widget.failedText
+                    : widget.idleText,
         style: widget.textStyle);
   }
 
   Widget _buildIcon(LoadStatus mode) {
     Widget icon = mode == LoadStatus.loading
         ? widget.loadingIcon
-        : mode == LoadStatus.noMore ? widget.noMoreIcon : widget.idleIcon;
+        : mode == LoadStatus.noMore
+            ? widget.noMoreIcon
+            : mode == LoadStatus.failed ? widget.failedIcon : widget.idleIcon;
     return icon ?? Container();
   }
 
@@ -246,16 +258,20 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
     // TODO: implement buildChild
     Widget textWidget = _buildText(mode);
     Widget iconWidget = _buildIcon(mode);
-    List<Widget> children = <Widget>[
-      iconWidget,
-      textWidget
-    ];
+    List<Widget> children = <Widget>[iconWidget, textWidget];
     final Widget container = Wrap(
       spacing: widget.spacing,
-      textDirection: widget.iconPos==IconPosition.left?TextDirection.ltr:TextDirection.rtl,
-      direction: widget.iconPos==IconPosition.bottom|| widget.iconPos==IconPosition.top?Axis.vertical:Axis.horizontal,
+      textDirection: widget.iconPos == IconPosition.left
+          ? TextDirection.ltr
+          : TextDirection.rtl,
+      direction: widget.iconPos == IconPosition.bottom ||
+          widget.iconPos == IconPosition.top
+          ? Axis.vertical
+          : Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,
-      verticalDirection: widget.iconPos==IconPosition.bottom?VerticalDirection.up:VerticalDirection.down,
+      verticalDirection: widget.iconPos == IconPosition.bottom
+          ? VerticalDirection.up
+          : VerticalDirection.down,
       alignment: WrapAlignment.center,
       children: children,
     );
@@ -268,4 +284,3 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
     );
   }
 }
-

@@ -80,7 +80,7 @@ class _MainActivityState extends State<MainActivity>
           autoLoad: true,
           hideFooterWhenNotFull: true,
           headerBuilder: () => WaterDropHeader(waterDropColor: Colors.green,),
-          footerBuilder:  () => ClassicFooter(decoration: BoxDecoration(color: Colors.pink),iconPos: IconPosition.bottom,spacing: 45.0,),
+          footerBuilder:  () => ClassicFooter(),
         ),
       ),
       decoration: BoxDecoration(color: Colors.purple),

@@ -150,10 +150,10 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
   @override
   Widget build(BuildContext context) {
     return SmartRefresher(
-      enablePullUp: _enablePullUp,
-      enablePullDown: _enablePullDown,
+      enablePullUp: true,
+      enablePullDown: false,
       controller: _refreshController,
-      header: ClassicHeader(iconPos: IconPosition.right,),
+      header: ClassicHeader(iconPos: IconPosition.bottom,),
       onRefresh: () {
         print("onRefresh");
         data.add(Container(child: Card(),height: 100.0,));
@@ -180,7 +180,7 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
           data.add(Card());
           if(mounted)
             setState(() {});
-          _refreshController.loadNoData();
+          _refreshController.loadFailed();
         });
       },
     );
@@ -188,7 +188,7 @@ class Example3State extends State<Example3> with AutomaticKeepAliveClientMixin,T
 
   @override
   // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
 }
 
 class CirclePainter extends CustomClipper<Path> {

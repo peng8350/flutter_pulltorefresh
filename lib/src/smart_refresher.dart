@@ -17,7 +17,7 @@ typedef IndicatorBuilder = Widget Function();
 
 enum RefreshStatus { idle, canRefresh, refreshing, completed, failed }
 
-enum LoadStatus { idle, loading, noMore }
+enum LoadStatus { idle, loading, noMore,failed }
 
 enum RefreshStyle { Follow, UnFollow, Behind, Front }
 
@@ -124,7 +124,7 @@ class SmartRefresherState extends State<SmartRefresher> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.controller.initialRefresh) {
+    if (widget.controller.initialRefresh&&widget.enablePullDown) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         widget.controller.requestRefresh();
       });
@@ -263,7 +263,6 @@ class RefreshController {
     if(isRefresh)return;
     position?.animateTo(_triggerDistance,
         duration: duration, curve: curve);
-
   }
 
   void requestLoading(
@@ -278,9 +277,13 @@ class RefreshController {
          ;
   }
 
-  void refreshCompleted() {
+  void refreshCompleted({bool resetFooterState:false}) {
     headerMode?.value = RefreshStatus.completed;
+    if(resetFooterState){
+      resetNoData();
+    }
   }
+
 
   void refreshFailed() {
     headerMode?.value = RefreshStatus.failed;
@@ -290,6 +293,13 @@ class RefreshController {
     // change state after ui update,else it will have a bug:twice loading
     WidgetsBinding.instance.addPostFrameCallback((_) {
       footerMode?.value = LoadStatus.idle;
+    });
+  }
+
+  void loadFailed() {
+    // change state after ui update,else it will have a bug:twice loading
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      footerMode?.value = LoadStatus.failed;
     });
   }
 
@@ -349,6 +359,7 @@ class RefreshConfiguration extends InheritedWidget {
 
   @override
   bool updateShouldNotify(RefreshConfiguration oldWidget) {
+    print(this==oldWidget);
     return autoLoad != oldWidget.autoLoad ||
         skipCanRefresh != oldWidget.skipCanRefresh ||
         hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||
