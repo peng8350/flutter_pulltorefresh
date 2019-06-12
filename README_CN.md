@@ -127,11 +127,11 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 这个问题经测试不是我封装的失误,当ListView里的controller被替换后,这个问题就会出现,原因大概是Scaffold里的处理操作,请issue flutter。
 
 * <h3>NestedScrollView兼容性?</h3>
-不建议使用NestedScrollView,目前我已经发现了一个问题,要修改NestedScrollView内部源代码才能解决,所以最好用CustomScrollView,避免使用它,
-因为可能还有很多未知的问题我还没有发现。
+不建议使用NestedScrollView,目前我已经发现了一个问题(与BouncingScrollPhysics冲突),这个问题在flutter issue里也有很多类似的(33367,34316),只能等待flutter解决这个问题,
+所以最好用CustomScrollView,避免使用它,因为可能还有很多未知的问题我还没有发现。
 
-* <h3>为什么使用CuperNavigationBar后(不只这一个情况),顶部或者尾部指示器有空白的地方?</h3>
-很大可能是因为SafeArea,。解决方法一般是在SmartRefresher外围套用SafeArea
+* <h3>为什么使用CuperNavigationBar后(不只这一个情况),上面好像被遮住了一部分</h3>
+因为我内部就是采用CustomScrollView来实现的,而CustomScrollView它不像BoxScrollView会帮你注入padding,所以需要你自己注入padding或者使用SafeArea
 
 * <h3>兼容性方面?</h3>
 自1.3.0换了一套新的方法去实现指示器，内部指示器实现是通过监听scrollController位置变化来实现的，并没有使用到类如NotificationListener和GestureDector这类可能引起滑动手势冲突的方法，

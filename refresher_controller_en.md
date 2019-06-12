@@ -12,7 +12,7 @@
 | onRefresh | callback when refreshing  | () => Void | null | optional |
 | onLoading | callback when loading   | () => Void | null | optional |
 | onOffsetChange | callBack the Visible range of indicator  | (bool,double) => Void | null | optional |
-| isNestWrapped | set true to compatible NestedScrollView | bool | false | optional |
+| headerInsertIndex | the position need to be inserted in slivers(When you need to refresh under SliverAppbar)  | int | 0 | optional |
 
 
 # RefreshController Api

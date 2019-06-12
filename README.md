@@ -130,12 +130,12 @@ This problem is not my encapsulation error after testing. When the controller in
 because of the processing operation in Scaffold.,please issue flutter。
 
 * <h3>Is Supporting NestedScrollView?</h3>
-It's not recommended to use NestedScrollView. Now I have found a problem that I need to modify the internal source code of
- NestedScrollView to solve. So it's better to use CustomScrollView to avoid using it, because there may be many unknown
+It's not recommended to use NestedScrollView. Now I've found a problem (in conflict with Bouncing ScrollPhysics),
+which is similar in flutter issue (33367, 34316) and can only be solved by flutter. So it's better to use CustomScrollView to avoid using it, because there may be many unknown
  problems that I haven't found yet.
 
-* <h3>Why is there a empty space in the top or tail indicator after using CuperNavigationBar (not just in this case)?</h3>
-the reason may be SafeArea,the solution: wrap SmartRefresher in SafeArea
+* <h3>Why is it that after using Cuper Navigation Bar (and not just this case), part of the list header is obscured?</h3>
+Because I use CustomScrollView internally, and CustomScrollView doesn't inject padding like BoxScrollView does, so you need to inject padding or SafeArea yourself.
 
 * <h3>Compatibility?</h3>
 1.3.0 replaces a new method to implement the indicator. The internal indicator is implemented by monitoring scroll Controller position changes. There are no methods such as NotificationListener and GestureDector that may cause sliding gesture conflicts.
