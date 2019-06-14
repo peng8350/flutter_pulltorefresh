@@ -31,8 +31,9 @@
 |art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
 
 ## 我该怎么用?
-
-因1.3.0对内部进行了很大的变动,1.3.0~1.3.9版本不建议使用,Bug较多,1.4.0开始稳定
+提示:
+1.因1.3.0对内部进行了很大的变动,1.3.0~1.3.9版本不建议使用,Bug较多,1.4.0开始稳定
+2.确保flutter版本大于等于1.2.1
 ```
 
    dependencies:

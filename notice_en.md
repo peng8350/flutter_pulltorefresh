@@ -7,6 +7,8 @@
 * child only support ListView,GridView,CustomView,This means that inheriting ScrollView is all right.When you want to put a single NON-SCROLLING view, use ListView.。
 * When you want to turn off drop-down and pull-up functions, you can use enablePullUp and enablePullDown attributes
 * When child does not inherit ScrollView, note that box constraints are unbounded in height under Smart Refresher
+* SingleChildScrollView is not extends ScrollView,remember not to use this in child attribute,Doing so is just nesting ScrollView in ScrollView
+* When you want to add background to ScrollView, remember not to wrap Container for ListView or GridView at the child node, wrap Container outside Smart Refresher
 
 ## Front RefreshStyle
 * This style is somewhat different from the implementation mechanism of Behind,Follow,UnFollow,Follow Implementation of Modification Based on ClampScrollPhysics

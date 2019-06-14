@@ -38,7 +38,10 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 
 ## How to use?
 
-Because 1.3.0 has made great changes to the internal, version 1.3.0-1.3.9 is not recommended to use,there has a lot of Bug , 1.4.0 began to stabilize.
+tips:
+1.Because 1.3.0 has made great changes to the internal, version 1.3.0-1.3.9 is not recommended to use,there has a lot of Bug , 1.4.0 began to stabilize.
+2.Make sure flutter sdk version >= 1.2.1
+
 ```
 
    dependencies:

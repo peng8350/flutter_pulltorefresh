@@ -7,7 +7,8 @@
 * child只支持ListView,GridView,CustomView,不知道还没有,总之就是继承ScrollView的都可以。当你想放一个单一的非滚动视图的话,利用ListView即可。
 * 当你想要关闭掉下拉和上拉的功能,可利用enablePullUp和enablePullDown这两个属性
 * 当child不是继承ScrollView时,要注意盒子约束,在SmartRefresher下高度是unbounded
-
+* SingleChildScrollView它不是继承ScrollView,千万别在child节点使用它,这样做只是ScrollView里嵌套ScrollView
+* 当想在ScrollView增加背景时,记住别在child节点给ListView或者GridView包装Container,请在SmartRefresher外部包装Container
 
 ## Front刷新样式
 * 这种样式跟Behind,Follow,UnFollow实现机制是有点区别的,Follow基于ClampScrollPhysics修改实现,而Behind,Follow,UnFollow这三个基于iOS里的弹性滑动引擎。Front适用于Android多一点。
