@@ -151,10 +151,6 @@ class SmartRefresherState extends State<SmartRefresher> {
     super.didUpdateWidget(oldWidget);
   }
 
-  ScrollPhysics _getScrollPhysics() {
-      return RefreshBouncePhysics();
-  }
-
   List<Widget> _buildSliversByChild(Widget child) {
     List<Widget> slivers;
     if (child is ScrollView) {
@@ -196,7 +192,7 @@ class SmartRefresherState extends State<SmartRefresher> {
 
     if (child is ScrollView) {
       body = CustomScrollView(
-        physics: _getScrollPhysics(),
+        physics: RefreshPhysics().applyTo(child.physics),
         controller: widget.controller.scrollController,
         cacheExtent: child?.cacheExtent,
         key: widget.child.key,
@@ -206,7 +202,7 @@ class SmartRefresherState extends State<SmartRefresher> {
       );
     } else {
       body = CustomScrollView(
-        physics: _getScrollPhysics(),
+        physics: RefreshPhysics().applyTo(const AlwaysScrollableScrollPhysics()),
         controller: widget.controller.scrollController,
         slivers: slivers,
       );

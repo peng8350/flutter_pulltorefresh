@@ -131,7 +131,7 @@ class _RenderSliverRefresh extends RenderSliver
               .copyWith(overlap: Math.min(0.0, renderViewport.offset.pixels)),
           parentUsesSize: true);
     } else {
-      super.layout(constraints, parentUsesSize: true);
+      super.layout(constraints, parentUsesSize: parentUsesSize);
     }
   }
 

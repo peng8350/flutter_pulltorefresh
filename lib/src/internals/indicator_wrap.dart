@@ -82,10 +82,12 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   bool floating = false;
 
   bool _inVisual() {
+    print( _position.extentBefore );
       return _position.extentBefore - widget.height <= 0.0;
   }
 
   double _calculateScrollOffset() {
+
     return (floating ? widget.height : 0.0) - _position?.pixels;
   }
 
@@ -133,6 +135,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       endRefresh().then((_) {
         if (!mounted) return;
         floating = false;
+
         update();
 
         /*

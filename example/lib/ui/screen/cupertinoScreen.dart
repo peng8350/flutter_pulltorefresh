@@ -70,7 +70,6 @@ class CupertinoScreenState extends State<CupertinoScreen> {
               offstage: _segIndex != 0,
               child: RefreshConfiguration(
                 child: CustomScrollView(
-                  physics: RefreshClampPhysics(springBackDistance: 100.0),
                   slivers: <Widget>[
                     MaterialClassicHeader.asSliver(
                       onRefresh: () async {

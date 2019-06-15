@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert' show json, base64Decode;
 import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as HTTP;
@@ -106,6 +107,7 @@ class _Example2State extends State<Example2>
         gridDelegate:
             SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: data.length,
+        physics: ClampingScrollPhysics(),
         itemBuilder: buildImage,
       ),
     );

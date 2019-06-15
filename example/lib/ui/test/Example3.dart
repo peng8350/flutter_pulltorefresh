@@ -165,7 +165,7 @@ class Example3State extends State<Example3>
 //        });
       },
       child: Container(
-        height: 395.0,
+        height: 995.0,
         child: PageView(
           children: <Widget>[Text("第一页"), Text("第二页"), Text("第三页")],
         ),
