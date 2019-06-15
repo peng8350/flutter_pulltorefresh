@@ -82,17 +82,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   bool floating = false;
 
   bool _inVisual() {
-    if (widget.refreshStyle == RefreshStyle.Front) {
-      return _position.extentBefore < widget.height;
-    } else {
       return _position.extentBefore - widget.height <= 0.0;
-    }
   }
 
   double _calculateScrollOffset() {
-    if (widget.refreshStyle == RefreshStyle.Front) {
-      return widget.height - _position.extentBefore;
-    }
     return (floating ? widget.height : 0.0) - _position?.pixels;
   }
 
@@ -148,18 +141,16 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           the _onOffsetChange didn't callback,it will keep failed or success state.
           2. As FrontStyle,when user dragging in 0~100 in refreshing state,it should be reset after the state change
           */
-        if (widget.refreshStyle == RefreshStyle.Front) {
-          if (_inVisual()) {
-            _position.jumpTo(widget.height);
-          }
+        if (!_inVisual()) {
           mode = RefreshStatus.idle;
-          _position.activity.delegate.goBallistic(0.0);
-        } else {
-          if (!_inVisual()) {
-            mode = RefreshStatus.idle;
-          }
-          _position.activity.delegate.goBallistic(0.0);
         }
+        _position.activity.delegate.goBallistic(0.0);
+//        if (widget.refreshStyle == RefreshStyle.Front) {
+//          mode = RefreshStatus.idle;
+//          _position.activity.delegate.goBallistic(0.0);
+//        } else {
+//
+//        }
       });
     } else if (mode == RefreshStatus.refreshing) {
       if (refresher == null) {
@@ -207,21 +198,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         refreshStyle: widget.refreshStyle);
   }
 
-  @override
-  void deactivate() {
-    // TODO: implement deactivate
-    // careful this code ,I am not sure if it is right to do so
-    // for fix the offset after the header remove from slivers
-    if (widget.refreshStyle == RefreshStyle.Front &&
-        (context as Element).dirty) {
-      if (_position.pixels < widget.height) {
-        _position.correctPixels(0.0);
-      } else {
-        _position.correctBy(-widget.height);
-      }
-    }
-    super.deactivate();
-  }
 }
 
 abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>

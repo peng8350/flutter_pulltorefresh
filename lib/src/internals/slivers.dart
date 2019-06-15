@@ -112,9 +112,27 @@ class _RenderSliverRefresh extends RenderSliver
   double layoutExtentOffsetCompensation = 0.0;
 
   @override
-  void detach() {
-    // TODO: implement detach
-    super.detach();
+  // TODO: implement centerOffsetAdjustment
+  double get centerOffsetAdjustment {
+    final RenderViewportBase renderViewport = parent;
+    if (refreshStyle == RefreshStyle.Front) {
+      return Math.max(0.0, -renderViewport.offset.pixels);
+    }
+    return 0.0;
+  }
+
+  @override
+  void layout(Constraints constraints, {bool parentUsesSize = false}) {
+    // TODO: implement layout
+    if (refreshStyle == RefreshStyle.Front) {
+      final RenderViewportBase renderViewport = parent;
+      super.layout(
+          (constraints as SliverConstraints)
+              .copyWith(overlap: Math.min(0.0, renderViewport.offset.pixels)),
+          parentUsesSize: true);
+    } else {
+      super.layout(constraints, parentUsesSize: true);
+    }
   }
 
   @override
@@ -136,21 +154,8 @@ class _RenderSliverRefresh extends RenderSliver
         layoutExtentOffsetCompensation = layoutExtent;
         return;
       }
-    } else if (layoutExtentOffsetCompensation == 0.0) {
-      // when FrontStyle init ,it should  be corrected  from 0.0 to 100.0
-      geometry = SliverGeometry(
-          scrollOffsetCorrection: refreshIndicatorLayoutExtent,
-          scrollExtent: refreshIndicatorLayoutExtent);
-      layoutExtentOffsetCompensation = -1.0;
-      return;
     }
-    bool active;
-    if (refreshStyle != RefreshStyle.Front) {
-      active = constraints.overlap < 0.0 || layoutExtent > 0.0;
-    } else {
-      active = constraints.scrollOffset < refreshIndicatorLayoutExtent ||
-          hasLayoutExtent;
-    }
+    bool active = constraints.overlap < 0.0 || layoutExtent > 0.0;
     final double overscrolledExtent = constraints.overlap.abs();
     if (refreshStyle == RefreshStyle.Behind) {
       child.layout(
@@ -216,19 +221,14 @@ class _RenderSliverRefresh extends RenderSliver
           break;
         case RefreshStyle.Front:
           geometry = SliverGeometry(
-            scrollExtent: refreshIndicatorLayoutExtent,
             paintOrigin: reverse ? refreshIndicatorLayoutExtent : 0.0,
-            paintExtent: 0.01,
-            maxPaintExtent: 0.01,
+            visible: true,
             hasVisualOverflow: true,
-            layoutExtent: 0.0,
           );
           break;
       }
     } else {
-      geometry = refreshStyle == RefreshStyle.Front
-          ? SliverGeometry(scrollExtent: refreshIndicatorLayoutExtent)
-          : SliverGeometry.zero;
+      geometry = SliverGeometry.zero;
     }
   }
 

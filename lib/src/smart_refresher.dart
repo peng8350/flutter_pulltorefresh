@@ -111,9 +111,7 @@ class SmartRefresherState extends State<SmartRefresher> {
       }
     }
     widget.controller._triggerDistance =
-        _header.refreshStyle == RefreshStyle.Front
-            ? 0.0
-            : -(_configuration == null
+  -(_configuration == null
                 ? 80.0
                 : _configuration.headerTriggerDistance);
   }
@@ -154,13 +152,7 @@ class SmartRefresherState extends State<SmartRefresher> {
   }
 
   ScrollPhysics _getScrollPhysics() {
-    if (_header.refreshStyle == RefreshStyle.Front) {
-      return widget.enablePullDown
-          ? RefreshClampPhysics(springBackDistance: _header.height)
-          : ClampingScrollPhysics();
-    } else {
       return RefreshBouncePhysics();
-    }
   }
 
   List<Widget> _buildSliversByChild(Widget child) {
