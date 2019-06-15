@@ -163,61 +163,23 @@ class SmartRefresherState extends State<SmartRefresher> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final Widget child = widget.child;
+  List<Widget> _buildSliversByChild(Widget child) {
     List<Widget> slivers;
-    Widget body;
     if (child is ScrollView) {
       if (widget.child is BoxScrollView) {
         //avoid system inject padding when own indicator top or bottom
         Widget sliver =
             (widget.child as BoxScrollView).buildChildLayout(context);
-        EdgeInsets effectPadding = (widget.child as BoxScrollView).padding;
-        if (effectPadding == null) {
-          final MediaQueryData mediaQuery =
-              MediaQuery.of(context, nullOk: true);
-          if (mediaQuery != null) {
-            effectPadding = mediaQuery.padding.copyWith(
-                left: 0.0,
-                right: 0.0,
-                top: widget.enablePullDown ? 0.0 : null,
-                bottom: widget.enablePullUp ? 0.0 : null);
-            sliver = MediaQuery(
-              child: sliver,
-              data: mediaQuery.copyWith(
-                padding: effectPadding,
-              ),
-            );
-          }
-        }
-        if (effectPadding != null) {
-          sliver = SliverPadding(padding: effectPadding, sliver: sliver);
-        }
         slivers = [sliver];
       } else {
         slivers = List.from(child.buildSlivers(context), growable: true);
       }
-      body = CustomScrollView(
-        physics: _getScrollPhysics(),
-        controller: widget.controller.scrollController,
-        cacheExtent: child?.cacheExtent,
-        key: widget.child.key,
-        semanticChildCount: child?.semanticChildCount,
-        slivers: slivers,
-        reverse: child?.reverse,
-      );
     } else {
       slivers = [
         SliverToBoxAdapter(
           child: child ?? Container(),
         )
       ];
-      body = CustomScrollView(
-        physics: _getScrollPhysics(),
-        controller: widget.controller.scrollController,
-        slivers: slivers,
-      );
     }
     assert(widget.headerInsertIndex < slivers.length);
     if (_header.refreshStyle == RefreshStyle.Front)
@@ -229,6 +191,33 @@ class SmartRefresherState extends State<SmartRefresher> {
     //insert header or footer
     if (widget.enablePullUp) {
       slivers.add(_footer);
+    }
+
+    return slivers;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget child = widget.child;
+    Widget body;
+    List<Widget> slivers = _buildSliversByChild(widget.child);
+
+    if (child is ScrollView) {
+      body = CustomScrollView(
+        physics: _getScrollPhysics(),
+        controller: widget.controller.scrollController,
+        cacheExtent: child?.cacheExtent,
+        key: widget.child.key,
+        semanticChildCount: child?.semanticChildCount,
+        slivers: slivers,
+        reverse: child?.reverse,
+      );
+    } else {
+      body = CustomScrollView(
+        physics: _getScrollPhysics(),
+        controller: widget.controller.scrollController,
+        slivers: slivers,
+      );
     }
 
     if (_configuration != null) {
