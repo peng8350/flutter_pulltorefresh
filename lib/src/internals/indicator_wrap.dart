@@ -165,7 +165,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           }
         });
       } else {
-        if (refresher.widget.onRefresh != null) refresher.widget.onRefresh();
+        if (refresher.onRefresh != null) refresher.onRefresh();
       }
     }
     onModeChange(mode);
@@ -230,8 +230,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     }
     update();
     if (mode == LoadStatus.loading) {
-      if (refresher?.widget?.onLoading != null) {
-        refresher.widget.onLoading();
+      if (refresher?.onLoading != null) {
+        refresher.onLoading();
       } else if (widget.onLoading != null) {
         widget.onLoading().then((result) {
           if (result == 0) {
@@ -317,7 +317,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 }
 
 mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
-  SmartRefresherState refresher;
+  SmartRefresher refresher;
 
   RefreshConfiguration configuration;
 
@@ -346,8 +346,8 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
     if (overscrollPast < 0.0) {
       return;
     }
-    if (refresher?.widget?.onOffsetChange != null) {
-      refresher?.widget?.onOffsetChange(V == RefreshStatus, overscrollPast);
+    if (refresher?.onOffsetChange != null) {
+      refresher?.onOffsetChange(V == RefreshStatus, overscrollPast);
     }
     _dispatchModeByOffset(overscrollPast);
     onOffsetChange(overscrollPast);
@@ -373,8 +373,8 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
               : ValueNotifier<LoadStatus>(LoadStatus.idle));
     } else {
       newMode = V == RefreshStatus
-          ? refresher.widget.controller.headerMode
-          : refresher.widget.controller.footerMode;
+          ? refresher.controller.headerMode
+          : refresher.controller.footerMode;
     }
     final ScrollPosition newPosition = Scrollable.of(context).position;
     if (newMode != _mode) {
@@ -388,6 +388,17 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
       _position = newPosition;
       _position?.addListener(_handleOffsetChange);
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    if(V==RefreshStatus){
+      SmartRefresher.of(context)?.controller?.headerMode?.value = RefreshStatus.idle;}
+    else{
+      SmartRefresher.of(context)?.controller?.footerMode?.value = LoadStatus.idle;
+    }
+    super.initState();
   }
 
   @override

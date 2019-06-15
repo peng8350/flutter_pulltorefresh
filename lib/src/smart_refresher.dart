@@ -25,10 +25,16 @@ const double default_refresh_triggerDistance = 80.0;
 
 const double default_load_triggerDistance = 15.0;
 
+final RefreshIndicator defaultHeader =  defaultTargetPlatform == TargetPlatform.iOS
+    ? ClassicHeader()
+    : MaterialClassicHeader();
+
+final LoadIndicator defaultFooter =  ClassicFooter();
+
 /*
     This is the most important component that provides drop-down refresh and up loading.
  */
-class SmartRefresher extends StatefulWidget {
+class SmartRefresher extends StatelessWidget {
   //indicate your listView
   final Widget child;
 
@@ -67,97 +73,33 @@ class SmartRefresher extends StatefulWidget {
       : assert(controller != null),
         super(key: key);
 
-  @override
-  SmartRefresherState createState() => SmartRefresherState();
-
-  static SmartRefresherState of(BuildContext context) {
-    return context
-        .ancestorStateOfType(const TypeMatcher<SmartRefresherState>());
-  }
-}
-
-class SmartRefresherState extends State<SmartRefresher> {
   RefreshConfiguration _configuration;
-  RefreshIndicator _header;
-  LoadIndicator _footer;
 
-  void _updateController() {
-    final Widget defaultHeader = (defaultTargetPlatform == TargetPlatform.iOS
-        ? ClassicHeader()
-        : MaterialClassicHeader());
-    final child = widget.child;
-    final Widget defaultFooter = ClassicFooter();
+  void _updateController(BuildContext context) {
     _configuration = RefreshConfiguration.of(context);
-    if (child != null && child is ScrollView && child.controller != null) {
-      widget.controller.scrollController = child.controller;
+    if (child != null && child is ScrollView && (child as ScrollView).controller != null) {
+      controller.scrollController = (child as ScrollView).controller;
     } else {
-      widget.controller.scrollController = PrimaryScrollController.of(context);
+      controller.scrollController = PrimaryScrollController.of(context);
     }
-
-    if (_configuration == null) {
-      _header = widget.header ?? defaultHeader;
-      ;
-      _footer = widget.footer ?? defaultFooter;
-    } else {
-      if (_configuration.headerBuilder != null) {
-        _header = widget.header ?? _configuration.headerBuilder();
-      } else {
-        _header = widget.header ?? defaultHeader;
-      }
-      if (_configuration.footerBuilder != null) {
-        _footer = widget.footer ?? _configuration.footerBuilder();
-      } else {
-        _footer = widget.footer ?? defaultFooter;
-      }
-    }
-    widget.controller._triggerDistance =
-  -(_configuration == null
-                ? 80.0
-                : _configuration.headerTriggerDistance);
+    controller._triggerDistance =
+    -(_configuration == null
+        ? 80.0
+        : _configuration.headerTriggerDistance);
   }
 
   void onPositionUpdated(ScrollPosition newPosition) {
-    widget.controller.position = newPosition;
+    controller.position = newPosition;
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    if (widget.controller.initialRefresh && widget.enablePullDown) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        widget.controller.requestRefresh();
-      });
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    _updateController();
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(SmartRefresher oldWidget) {
-    // TODO: implement didUpdateWidget
-    if (widget.enablePullDown != oldWidget.enablePullDown) {
-      widget.controller.headerMode.value = RefreshStatus.idle;
-    }
-    if (widget.enablePullUp != oldWidget.enablePullUp) {
-      widget.controller.footerMode.value = LoadStatus.idle;
-    }
-    _updateController();
-    super.didUpdateWidget(oldWidget);
-  }
-
-  List<Widget> _buildSliversByChild(Widget child) {
+  //build slivers from child Widget
+  List<Widget> _buildSliversByChild(BuildContext context,Widget child) {
     List<Widget> slivers;
     if (child is ScrollView) {
-      if (widget.child is BoxScrollView) {
+      if (child is BoxScrollView) {
         //avoid system inject padding when own indicator top or bottom
         Widget sliver =
-            (widget.child as BoxScrollView).buildChildLayout(context);
+        (child as BoxScrollView).buildChildLayout(context);
         slivers = [sliver];
       } else {
         slivers = List.from(child.buildSlivers(context), growable: true);
@@ -169,52 +111,63 @@ class SmartRefresherState extends State<SmartRefresher> {
         )
       ];
     }
-    assert(widget.headerInsertIndex < slivers.length);
-    if (_header.refreshStyle == RefreshStyle.Front)
-      assert(widget.headerInsertIndex == 0,
-          "FrontStyle only support place in first slivers!");
-    if (widget.enablePullDown) {
-      slivers.insert(widget.headerInsertIndex, _header);
+//    assert(widget.headerInsertIndex < slivers.length);
+//    if (_header.refreshStyle == RefreshStyle.Front)
+//      assert(widget.headerInsertIndex == 0,
+//          "FrontStyle only support place in first slivers!");
+    if (enablePullDown) {
+      slivers.insert(headerInsertIndex, header ?? ( _configuration?.headerBuilder!=null?_configuration?.headerBuilder():null) ?? defaultHeader);
     }
     //insert header or footer
-    if (widget.enablePullUp) {
-      slivers.add(_footer);
+    if (enablePullUp) {
+      slivers.add(footer ?? (_configuration?.footerBuilder!=null?_configuration?.footerBuilder():null) ?? defaultFooter);
     }
 
     return slivers;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final Widget child = widget.child;
+  // build the customScrollView
+  Widget _buildBodyBySlivers(Widget childView,List<Widget> slivers){
     Widget body;
-    List<Widget> slivers = _buildSliversByChild(widget.child);
-
-    if (child is ScrollView) {
+    if (childView is ScrollView) {
       body = CustomScrollView(
-        physics: RefreshPhysics().applyTo(child.physics),
-        controller: widget.controller.scrollController,
-        cacheExtent: child?.cacheExtent,
-        key: widget.child.key,
-        semanticChildCount: child?.semanticChildCount,
+        physics: RefreshPhysics().applyTo(childView?.physics),
+        controller: controller.scrollController,
+        cacheExtent: childView?.cacheExtent,
+        key: childView.key,
+        semanticChildCount: childView.semanticChildCount,
         slivers: slivers,
-        reverse: child?.reverse,
+        reverse: childView?.reverse,
       );
     } else {
       body = CustomScrollView(
         physics: RefreshPhysics().applyTo(const AlwaysScrollableScrollPhysics()),
-        controller: widget.controller.scrollController,
+        controller: controller.scrollController,
         slivers: slivers,
       );
     }
+    return body;
+  }
 
+
+  @override
+  Widget build(BuildContext context) {
+    _updateController(context);
+    List<Widget> slivers = _buildSliversByChild(context,child);
+    Widget body = _buildBodyBySlivers(child, slivers);
     if (_configuration != null) {
       return body;
     } else {
       return RefreshConfiguration(child: body);
     }
   }
+
+
+  static SmartRefresher of(BuildContext context) {
+    return context.ancestorWidgetOfExactType(SmartRefresher);
+  }
 }
+
 
 class RefreshController {
   ValueNotifier<RefreshStatus> headerMode = ValueNotifier(RefreshStatus.idle);
@@ -320,7 +273,7 @@ class RefreshConfiguration extends InheritedWidget {
 
   RefreshConfiguration({
     @required this.child,
-    this.headerBuilder,
+    this.headerBuilder ,
     this.footerBuilder,
     this.headerOffset: 0.0,
     this.clickLoadingWhenIdle: false,

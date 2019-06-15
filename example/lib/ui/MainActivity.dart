@@ -103,8 +103,6 @@ class _MainActivityState extends State<MainActivity>
           headerTriggerDistance: 80.0,
           autoLoad: true,
           hideFooterWhenNotFull: true,
-          headerBuilder: () => WaterDropHeader(waterDropColor: Colors.green,),
-          footerBuilder:  () => ClassicFooter(decoration: BoxDecoration(color: Colors.pink),),
         ),
       ),
       decoration: BoxDecoration(color: Colors.purple),

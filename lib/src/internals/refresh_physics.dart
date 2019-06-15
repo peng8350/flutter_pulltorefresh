@@ -6,7 +6,6 @@
 
 import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
-import 'dart:math' as math;
 
 class RefreshPhysics extends ScrollPhysics {
   /// Creates scroll physics that bounce back from the edge.

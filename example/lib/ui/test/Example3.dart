@@ -146,10 +146,10 @@ class Example3State extends State<Example3>
   @override
   Widget build(BuildContext context) {
     return SmartRefresher(
-      enablePullUp: true,
-      enablePullDown: true,
+      enablePullUp: _enablePullDown,
+      enablePullDown: _enablePullUp,
       controller: _refreshController,
-      header: MaterialClassicHeader(
+      header: ClassicHeader(
       ),
       onRefresh: () {
         print("onRefresh");
