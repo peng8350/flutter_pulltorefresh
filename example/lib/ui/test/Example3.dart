@@ -149,8 +149,8 @@ class Example3State extends State<Example3>
       enablePullUp: _enablePullDown,
       enablePullDown: _enablePullUp,
       controller: _refreshController,
-      header: ClassicHeader(
-      ),
+      header: WaterDropMaterialHeader()
+      ,
       onRefresh: () {
         print("onRefresh");
         data.add(Container(

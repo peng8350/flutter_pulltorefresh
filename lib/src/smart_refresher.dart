@@ -25,11 +25,12 @@ const double default_refresh_triggerDistance = 80.0;
 
 const double default_load_triggerDistance = 15.0;
 
-final RefreshIndicator defaultHeader =  defaultTargetPlatform == TargetPlatform.iOS
-    ? ClassicHeader()
-    : MaterialClassicHeader();
+final RefreshIndicator defaultHeader =
+    defaultTargetPlatform == TargetPlatform.iOS
+        ? ClassicHeader()
+        : MaterialClassicHeader();
 
-final LoadIndicator defaultFooter =  ClassicFooter();
+final LoadIndicator defaultFooter = ClassicFooter();
 
 /*
     This is the most important component that provides drop-down refresh and up loading.
@@ -73,19 +74,17 @@ class SmartRefresher extends StatelessWidget {
       : assert(controller != null),
         super(key: key);
 
-  RefreshConfiguration _configuration;
-
-  void _updateController(BuildContext context) {
-    _configuration = RefreshConfiguration.of(context);
-    if (child != null && child is ScrollView && (child as ScrollView).controller != null) {
+  void _updateController(
+      BuildContext context, RefreshConfiguration configuration) {
+    if (child != null &&
+        child is ScrollView &&
+        (child as ScrollView).controller != null) {
       controller.scrollController = (child as ScrollView).controller;
     } else {
       controller.scrollController = PrimaryScrollController.of(context);
     }
     controller._triggerDistance =
-    -(_configuration == null
-        ? 80.0
-        : _configuration.headerTriggerDistance);
+        -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
   }
 
   void onPositionUpdated(ScrollPosition newPosition) {
@@ -93,13 +92,13 @@ class SmartRefresher extends StatelessWidget {
   }
 
   //build slivers from child Widget
-  List<Widget> _buildSliversByChild(BuildContext context,Widget child) {
+  List<Widget> _buildSliversByChild(
+      BuildContext context, Widget child, RefreshConfiguration configuration) {
     List<Widget> slivers;
     if (child is ScrollView) {
       if (child is BoxScrollView) {
         //avoid system inject padding when own indicator top or bottom
-        Widget sliver =
-        (child as BoxScrollView).buildChildLayout(context);
+        Widget sliver = child.buildChildLayout(context);
         slivers = [sliver];
       } else {
         slivers = List.from(child.buildSlivers(context), growable: true);
@@ -111,23 +110,29 @@ class SmartRefresher extends StatelessWidget {
         )
       ];
     }
-//    assert(widget.headerInsertIndex < slivers.length);
-//    if (_header.refreshStyle == RefreshStyle.Front)
-//      assert(widget.headerInsertIndex == 0,
-//          "FrontStyle only support place in first slivers!");
     if (enablePullDown) {
-      slivers.insert(headerInsertIndex, header ?? ( _configuration?.headerBuilder!=null?_configuration?.headerBuilder():null) ?? defaultHeader);
+      slivers.insert(
+          headerInsertIndex,
+          header ??
+              (configuration?.headerBuilder != null
+                  ? configuration?.headerBuilder()
+                  : null) ??
+              defaultHeader);
     }
     //insert header or footer
     if (enablePullUp) {
-      slivers.add(footer ?? (_configuration?.footerBuilder!=null?_configuration?.footerBuilder():null) ?? defaultFooter);
+      slivers.add(footer ??
+          (configuration?.footerBuilder != null
+              ? configuration?.footerBuilder()
+              : null) ??
+          defaultFooter);
     }
 
     return slivers;
   }
 
   // build the customScrollView
-  Widget _buildBodyBySlivers(Widget childView,List<Widget> slivers){
+  Widget _buildBodyBySlivers(Widget childView, List<Widget> slivers) {
     Widget body;
     if (childView is ScrollView) {
       body = CustomScrollView(
@@ -141,7 +146,8 @@ class SmartRefresher extends StatelessWidget {
       );
     } else {
       body = CustomScrollView(
-        physics: RefreshPhysics().applyTo(const AlwaysScrollableScrollPhysics()),
+        physics:
+            RefreshPhysics().applyTo(const AlwaysScrollableScrollPhysics()),
         controller: controller.scrollController,
         slivers: slivers,
       );
@@ -149,25 +155,23 @@ class SmartRefresher extends StatelessWidget {
     return body;
   }
 
-
   @override
   Widget build(BuildContext context) {
-    _updateController(context);
-    List<Widget> slivers = _buildSliversByChild(context,child);
+    final RefreshConfiguration configuration = RefreshConfiguration.of(context);
+    _updateController(context, configuration);
+    List<Widget> slivers = _buildSliversByChild(context, child, configuration);
     Widget body = _buildBodyBySlivers(child, slivers);
-    if (_configuration != null) {
+    if (configuration != null) {
       return body;
     } else {
       return RefreshConfiguration(child: body);
     }
   }
 
-
   static SmartRefresher of(BuildContext context) {
     return context.ancestorWidgetOfExactType(SmartRefresher);
   }
 }
-
 
 class RefreshController {
   ValueNotifier<RefreshStatus> headerMode = ValueNotifier(RefreshStatus.idle);
@@ -273,7 +277,7 @@ class RefreshConfiguration extends InheritedWidget {
 
   RefreshConfiguration({
     @required this.child,
-    this.headerBuilder ,
+    this.headerBuilder,
     this.footerBuilder,
     this.headerOffset: 0.0,
     this.clickLoadingWhenIdle: false,

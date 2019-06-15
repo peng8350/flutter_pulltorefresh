@@ -44,6 +44,7 @@ class _AppBarHeaderState extends State<AppBarHeader> {
     return items;
   }
 
+
   @override
   Widget build(BuildContext context) {
 //    new ListView.builder(
@@ -80,7 +81,7 @@ class _AppBarHeaderState extends State<AppBarHeader> {
         onRefresh: () {
           _refreshController.refreshCompleted();
         },
-        header: ClassicHeader(),
+        header: WaterDropMaterialHeader(),
       ),
     );
   }

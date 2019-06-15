@@ -274,6 +274,7 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
   @override
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
+    offset = offset>80.0?80.0:offset;
     if (!floating) {
       _BezierController.value = (offset / widget.height) * 0.5;
       _valueAni.value = offset / configuration.headerTriggerDistance;
