@@ -80,16 +80,16 @@ class Example3State extends State<Example3>
     // TODO: implement initState
 
     // for test #68 true-> false ->true
-    Future.delayed(Duration(milliseconds: 3000), () {
-      _enablePullDown = false;
-      _enablePullUp = false;
-      if (mounted) setState(() {});
-    });
-    Future.delayed(Duration(milliseconds: 6000), () {
-      _enablePullDown = true;
-      _enablePullUp = true;
-      if (mounted) setState(() {});
-    });
+//    Future.delayed(Duration(milliseconds: 3000), () {
+//      _enablePullDown = false;
+//      _enablePullUp = false;
+//      if (mounted) setState(() {});
+//    });
+//    Future.delayed(Duration(milliseconds: 6000), () {
+//      _enablePullDown = true;
+//      _enablePullUp = true;
+//      if (mounted) setState(() {});
+//    });
 
 //    // for test #68 false-> true ->false
 //    Future.delayed(Duration(milliseconds: 3000),(){
@@ -165,7 +165,7 @@ class Example3State extends State<Example3>
 //        });
       },
       child: Container(
-        height: 995.0,
+        height: 395.0,
         child: PageView(
           children: <Widget>[Text("第一页"), Text("第二页"), Text("第三页")],
         ),
@@ -184,7 +184,7 @@ class Example3State extends State<Example3>
 
   @override
   // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
 }
 
 class CirclePainter extends CustomClipper<Path> {

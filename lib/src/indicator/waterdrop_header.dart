@@ -7,7 +7,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart'
     hide RefreshIndicatorState, RefreshIndicator;
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/widgets.dart';
 import '../internals/indicator_wrap.dart';
 import 'package:flutter/cupertino.dart';
@@ -84,7 +83,6 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
     // when readyTorefresh
     if (!_animationController.isAnimating)
       _animationController.value = realOffset;
-    super.onOffsetChange(offset);
   }
 
   @override
@@ -171,7 +169,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                     ),
                     painter: _QqPainter(
                       color: widget.waterDropColor,
-                      value: _animationController.value,
+                      listener: _animationController,
                     ),
                   ),
                   quarterTurns: widget.reverse ? 10 : 0,
@@ -217,10 +215,11 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 
 class _QqPainter extends CustomPainter {
   final Color color;
-  final double value;
+  final Animation<double> listener;
+  double get value =>listener.value;
   final Paint painter = Paint();
 
-  _QqPainter({this.color, this.value});
+  _QqPainter({this.color, this.listener}):super(repaint:listener);
 
   @override
   void paint(Canvas canvas, Size size) {

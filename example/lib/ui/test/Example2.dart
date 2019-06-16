@@ -115,7 +115,7 @@ class _Example2State extends State<Example2>
 
   @override
   // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
 }
 
 class Item extends StatefulWidget {

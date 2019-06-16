@@ -4,8 +4,6 @@
     createTime:2018-05-14 15:39
  */
 
-import 'package:flutter/rendering.dart';
-import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 import '../smart_refresher.dart';
@@ -82,12 +80,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   bool floating = false;
 
   bool _inVisual() {
-    print( _position.extentBefore );
       return _position.extentBefore - widget.height <= 0.0;
   }
 
   double _calculateScrollOffset() {
-
     return (floating ? widget.height : 0.0) - _position?.pixels;
   }
 
@@ -144,16 +140,18 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           the _onOffsetChange didn't callback,it will keep failed or success state.
           2. As FrontStyle,when user dragging in 0~100 in refreshing state,it should be reset after the state change
           */
-        if (!_inVisual()) {
+        if (widget.refreshStyle == RefreshStyle.Front) {
+          if (_inVisual()) {
+            _position.jumpTo(0.0);
+          }
           mode = RefreshStatus.idle;
+          _position.activity.delegate.goBallistic(0.0);
+        } else {
+          if (!_inVisual()) {
+            mode = RefreshStatus.idle;
+          }
+          _position.activity.delegate.goBallistic(0.0);
         }
-        _position.activity.delegate.goBallistic(0.0);
-//        if (widget.refreshStyle == RefreshStyle.Front) {
-//          mode = RefreshStatus.idle;
-//          _position.activity.delegate.goBallistic(0.0);
-//        } else {
-//
-//        }
       });
     } else if (mode == RefreshStatus.refreshing) {
       if (refresher == null) {
@@ -211,6 +209,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   bool _enableLoadingAgain = true;
 
   double _calculateScrollOffset() {
+
     final double overscrollPastEnd =
         math.max(_position.pixels - _position.maxScrollExtent, 0.0);
     return overscrollPastEnd;
@@ -436,7 +435,6 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   void _dispatchModeByOffset(double offset);
 
   void onOffsetChange(double offset) {
-    update();
   }
 
   void onModeChange(V mode) {}

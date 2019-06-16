@@ -4,6 +4,7 @@
     createTime:2018-05-01 11:39
 */
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'internals/indicator_wrap.dart';
@@ -142,6 +143,7 @@ class SmartRefresher extends StatelessWidget {
         key: childView.key,
         semanticChildCount: childView.semanticChildCount,
         slivers: slivers,
+        dragStartBehavior: DragStartBehavior.start,
         reverse: childView?.reverse,
       );
     } else {
@@ -192,7 +194,13 @@ class RefreshController {
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
-  RefreshController({this.initialRefresh: false});
+  RefreshController({this.initialRefresh: false}){
+    if(initialRefresh){
+      WidgetsBinding.instance.addPostFrameCallback((_){
+        requestRefresh();
+      });
+    }
+  }
 
   void requestRefresh(
       {Duration duration: const Duration(milliseconds: 300),

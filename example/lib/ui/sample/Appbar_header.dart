@@ -44,7 +44,7 @@ class _AppBarHeaderState extends State<AppBarHeader> {
     return items;
   }
 
-
+  final GlobalKey centerKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
 //    new ListView.builder(
@@ -58,10 +58,11 @@ class _AppBarHeaderState extends State<AppBarHeader> {
     return Container(
       color: Colors.white,
       child: SmartRefresher(
-        headerInsertIndex: 1,
+        headerInsertIndex: 0,
         enablePullDown: true,
         enablePullUp: true,
         child: CustomScrollView(
+          center: centerKey,
           slivers: [
             SliverAppBar(
               backgroundColor: Colors.greenAccent,
@@ -81,7 +82,7 @@ class _AppBarHeaderState extends State<AppBarHeader> {
         onRefresh: () {
           _refreshController.refreshCompleted();
         },
-        header: WaterDropMaterialHeader(),
+        header: WaterDropMaterialHeader(key: centerKey,),
       ),
     );
   }

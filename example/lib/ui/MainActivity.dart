@@ -102,7 +102,7 @@ class _MainActivityState extends State<MainActivity>
           clickLoadingWhenIdle: true,
           headerTriggerDistance: 80.0,
           autoLoad: true,
-          hideFooterWhenNotFull: true,
+          hideFooterWhenNotFull: false,
         ),
       ),
       decoration: BoxDecoration(color: Colors.purple),

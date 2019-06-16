@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
+import 'package:flutter/widgets.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 
@@ -122,7 +123,6 @@ class _MaterialClassicHeaderState
       _valueAni.value = offset / configuration.headerTriggerDistance;
       _positionController.value = offset / widget.height;
     }
-    super.onOffsetChange(offset);
   }
 
   @override
@@ -214,22 +214,19 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
 }
 
 class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
-  AnimationController _BezierController;
+  AnimationController _bezierController;
   bool _showWater = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _BezierController = AnimationController(
+    _bezierController = AnimationController(
         vsync: this,
         duration: Duration(milliseconds: 500),
         upperBound: 1.5,
         lowerBound: 0.0,
         value: 0.0);
-    _BezierController.addListener(() {
-      update();
-    });
     _positionController = AnimationController(
         vsync: this,
         duration: Duration(milliseconds: 300),
@@ -244,9 +241,9 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
   @override
   Future<void> readyToRefresh() {
     // TODO: implement readyToRefresh
-    _BezierController.value = 1.01;
+    _bezierController.value = 1.01;
     _showWater = true;
-    _BezierController.animateTo(1.5,
+    _bezierController.animateTo(1.5,
         curve: Curves.bounceOut, duration: Duration(milliseconds: 550));
 
     return _positionController
@@ -265,33 +262,40 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
   }
 
   @override
+  void resetValue() {
+    // TODO: implement resetValue
+    _bezierController.reset();
+    super.resetValue();
+  }
+
+  @override
   void dispose() {
     // TODO: implement dispose
-    _BezierController.dispose();
+    _bezierController.dispose();
     super.dispose();
   }
 
   @override
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
-    offset = offset>80.0?80.0:offset;
+    offset = offset > 80.0 ? 80.0 : offset;
     if (!floating) {
-      _BezierController.value = (offset / widget.height) * 0.5;
+      _bezierController.value = (offset / widget.height) * 0.5;
       _valueAni.value = offset / configuration.headerTriggerDistance;
       _positionController.value =
           offset / widget.height * 0.3 / (widget.distance / widget.height);
     }
-    update();
   }
 
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
+
     return Stack(
       children: <Widget>[
         CustomPaint(
           painter: _BezierPainter(
-              value: _BezierController.value, color: widget.backgroundColor),
+              listener: _bezierController, color: widget.backgroundColor),
           child: Container(),
         ),
         CustomPaint(
@@ -300,7 +304,7 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
               ? _WaterPainter(
                   ratio: widget.distance / widget.height,
                   color: widget.backgroundColor,
-                  offset: _positionFactor.value.dy)
+                  listener: _positionFactor)
               : null,
         )
       ],
@@ -310,10 +314,11 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
 
 class _WaterPainter extends CustomPainter {
   final Color color;
-  final double offset;
+  final Animation<Offset> listener;
+  Offset get offset => listener.value;
   final double ratio;
 
-  _WaterPainter({this.color, this.offset, this.ratio});
+  _WaterPainter({this.color, this.listener, this.ratio}):super(repaint:listener);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -321,24 +326,26 @@ class _WaterPainter extends CustomPainter {
     final Paint paint = Paint();
     paint.color = color;
     final Path path = Path();
-    path.moveTo(size.width / 2 - 20.0, offset * 100.0 + 20.0);
-    path.conicTo(size.width / 2, offset * 100.0 - 70.0 * (ratio - offset),
-        size.width / 2 + 20.0, offset * 100.0 + 20.0, 10.0 * (ratio - offset));
+    path.moveTo(size.width / 2 - 20.0, offset.dy * 100.0 + 20.0);
+    path.conicTo(size.width / 2, offset.dy * 100.0 - 70.0 * (ratio - offset.dy),
+        size.width / 2 + 20.0, offset.dy * 100.0 + 20.0, 10.0 * (ratio - offset.dy));
     canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
+  bool shouldRepaint(_WaterPainter oldDelegate) {
     // TODO: implement shouldRepaint
-    return this != oldDelegate;
+    return this != oldDelegate || offset != oldDelegate.offset;
   }
 }
 
 class _BezierPainter extends CustomPainter {
-  final double value;
+  final AnimationController listener;
   final Color color;
 
-  _BezierPainter({this.value, this.color});
+  double get value => listener.value;
+
+  _BezierPainter({this.listener, this.color}) : super(repaint: listener);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -368,8 +375,8 @@ class _BezierPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
+  bool shouldRepaint(_BezierPainter oldDelegate) {
     // TODO: implement shouldRepaint
-    return this != oldDelegate;
+    return this != oldDelegate || oldDelegate.value != value;
   }
 }
