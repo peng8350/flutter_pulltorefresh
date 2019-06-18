@@ -4,7 +4,6 @@
     createTime:2018-05-01 11:39
 */
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'internals/indicator_wrap.dart';
@@ -137,14 +136,14 @@ class SmartRefresher extends StatelessWidget {
     Widget body;
     if (childView is ScrollView) {
       body = CustomScrollView(
-        physics: RefreshPhysics().applyTo(childView?.physics),
+        physics: RefreshPhysics().applyTo(childView.physics),
         controller: controller.scrollController,
-        cacheExtent: childView?.cacheExtent,
+        cacheExtent: childView.cacheExtent,
         key: childView.key,
         semanticChildCount: childView.semanticChildCount,
         slivers: slivers,
-        dragStartBehavior: DragStartBehavior.start,
-        reverse: childView?.reverse,
+        dragStartBehavior: childView.dragStartBehavior,
+        reverse: childView.reverse,
       );
     } else {
       body = CustomScrollView(
@@ -178,13 +177,12 @@ class SmartRefresher extends StatelessWidget {
 class RefreshController {
   ValueNotifier<RefreshStatus> headerMode = ValueNotifier(RefreshStatus.idle);
   ValueNotifier<LoadStatus> footerMode = ValueNotifier(LoadStatus.idle);
+
+  ScrollPosition position;
+  double _triggerDistance;
   @Deprecated(
       'use position instead,jumpTo and animateTo will lead to refresh together with mutiple ScrollPositions which depending on the same ScrollController')
   ScrollController scrollController;
-  ScrollPosition position;
-  double _triggerDistance;
-
-  final bool initialRefresh;
 
   RefreshStatus get headerStatus => headerMode?.value;
 
@@ -194,7 +192,7 @@ class RefreshController {
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
-  RefreshController({this.initialRefresh: false}){
+  RefreshController({bool initialRefresh: false}){
     if(initialRefresh){
       WidgetsBinding.instance.addPostFrameCallback((_){
         requestRefresh();

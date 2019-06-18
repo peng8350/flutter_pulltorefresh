@@ -80,6 +80,9 @@ class _MaterialClassicHeaderState
         lowerBound: 0.0,
         upperBound: 1.0,
         duration: Duration(milliseconds: 500));
+    _valueAni.addListener(() {
+      if (mounted) setState(() {});
+    });
     _positionController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _scaleFactor = AnimationController(
@@ -315,10 +318,12 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
 class _WaterPainter extends CustomPainter {
   final Color color;
   final Animation<Offset> listener;
+
   Offset get offset => listener.value;
   final double ratio;
 
-  _WaterPainter({this.color, this.listener, this.ratio}):super(repaint:listener);
+  _WaterPainter({this.color, this.listener, this.ratio})
+      : super(repaint: listener);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -327,8 +332,12 @@ class _WaterPainter extends CustomPainter {
     paint.color = color;
     final Path path = Path();
     path.moveTo(size.width / 2 - 20.0, offset.dy * 100.0 + 20.0);
-    path.conicTo(size.width / 2, offset.dy * 100.0 - 70.0 * (ratio - offset.dy),
-        size.width / 2 + 20.0, offset.dy * 100.0 + 20.0, 10.0 * (ratio - offset.dy));
+    path.conicTo(
+        size.width / 2,
+        offset.dy * 100.0 - 70.0 * (ratio - offset.dy),
+        size.width / 2 + 20.0,
+        offset.dy * 100.0 + 20.0,
+        10.0 * (ratio - offset.dy));
     canvas.drawPath(path, paint);
   }
 

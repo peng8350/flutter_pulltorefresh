@@ -101,6 +101,7 @@ class _Example2State extends State<Example2>
       enablePullUp: true,
       controller: _controller,
       onRefresh: _onRefresh,
+      header: ClassicHeader(),
       onLoading: _onLoading,
       onOffsetChange: _onOffsetCallback,
       child: GridView.builder(

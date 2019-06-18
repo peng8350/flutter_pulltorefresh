@@ -80,7 +80,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   bool floating = false;
 
   bool _inVisual() {
-      return _position.extentBefore - widget.height <= 0.0;
+    return _position.extentBefore - widget.height <= 0.0;
   }
 
   double _calculateScrollOffset() {
@@ -92,7 +92,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if (floating) return;
     // Sometimes different devices return velocity differently, so it's impossible to judge from velocity whether the user
     // has invoked animateTo (0.0) or the user is dragging the view.Sometimes animateTo (0.0) does not return velocity = 0.0
-    if (_position.activity.velocity == 0.0 ||
+    // velocity < 0.0 may be spring up,>0.0 spring down
+    if (_position.activity.velocity < 0.0 ||
         _position.activity is DragScrollActivity ||
         _position.activity is DrivenScrollActivity) {
       if (offset >= configuration.headerTriggerDistance) {
@@ -145,12 +146,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
             _position.jumpTo(0.0);
           }
           mode = RefreshStatus.idle;
-          _position.activity.delegate.goBallistic(0.0);
         } else {
           if (!_inVisual()) {
             mode = RefreshStatus.idle;
           }
-          _position.activity.delegate.goBallistic(0.0);
+          else {
+            _position.activity.delegate.goBallistic(0.0);
+          }
         }
       });
     } else if (mode == RefreshStatus.refreshing) {
@@ -198,7 +200,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         refreshIndicatorLayoutExtent: widget.height,
         refreshStyle: widget.refreshStyle);
   }
-
 }
 
 abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
@@ -209,7 +210,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   bool _enableLoadingAgain = true;
 
   double _calculateScrollOffset() {
-
     final double overscrollPastEnd =
         math.max(_position.pixels - _position.maxScrollExtent, 0.0);
     return overscrollPastEnd;
@@ -392,10 +392,12 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   @override
   void initState() {
     // TODO: implement initState
-    if(V==RefreshStatus){
-      SmartRefresher.of(context)?.controller?.headerMode?.value = RefreshStatus.idle;}
-    else{
-      SmartRefresher.of(context)?.controller?.footerMode?.value = LoadStatus.idle;
+    if (V == RefreshStatus) {
+      SmartRefresher.of(context)?.controller?.headerMode?.value =
+          RefreshStatus.idle;
+    } else {
+      SmartRefresher.of(context)?.controller?.footerMode?.value =
+          LoadStatus.idle;
     }
     super.initState();
   }
@@ -434,8 +436,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   void _dispatchModeByOffset(double offset);
 
-  void onOffsetChange(double offset) {
-  }
+  void onOffsetChange(double offset) {}
 
   void onModeChange(V mode) {}
 

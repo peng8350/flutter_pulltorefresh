@@ -38,7 +38,7 @@ class _AppBarHeaderState extends State<AppBarHeader> {
   List<Widget> buildList() {
     List<Widget> items = [];
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 100; i++) {
       items.add(Text('样例数据'));
     }
     return items;
@@ -62,7 +62,6 @@ class _AppBarHeaderState extends State<AppBarHeader> {
         enablePullDown: true,
         enablePullUp: true,
         child: CustomScrollView(
-          center: centerKey,
           slivers: [
             SliverAppBar(
               backgroundColor: Colors.greenAccent,
@@ -79,10 +78,11 @@ class _AppBarHeaderState extends State<AppBarHeader> {
           ],
         ),
         controller: _refreshController,
-        onRefresh: () {
+        onRefresh: () async{
+          await Future.delayed(const Duration(milliseconds: 1000));
           _refreshController.refreshCompleted();
         },
-        header: WaterDropMaterialHeader(key: centerKey,),
+        header: ClassicHeader(key: centerKey,),
       ),
     );
   }

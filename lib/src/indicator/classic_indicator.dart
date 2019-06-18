@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 /**
     Author: Jpeng
     Email: peng8350@gmail.com
@@ -11,6 +9,8 @@ import 'package:flutter/material.dart'
 import 'package:flutter/widgets.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 enum IconPosition { left, right, top, bottom }
 
@@ -37,11 +37,7 @@ class ClassicHeader extends RefreshIndicator {
     this.idleText: 'Pull down to refresh',
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
-    this.refreshingIcon: const SizedBox(
-      width: 25.0,
-      height: 25.0,
-      child: const CircularProgressIndicator(strokeWidth: 2.0),
-    ),
+    this.refreshingIcon,
     this.failedIcon: const Icon(Icons.error, color: Colors.grey),
     this.completeIcon: const Icon(Icons.done, color: Colors.grey),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
@@ -69,11 +65,7 @@ class ClassicHeader extends RefreshIndicator {
     this.idleText: 'Pull down to refresh',
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
-    this.refreshingIcon: const SizedBox(
-      width: 25.0,
-      height: 25.0,
-      child: const CircularProgressIndicator(strokeWidth: 2.0),
-    ),
+    this.refreshingIcon,
     this.failedIcon: const Icon(Icons.clear, color: Colors.grey),
     this.completeIcon: const Icon(Icons.done, color: Colors.grey),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
@@ -116,7 +108,15 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                 ? widget.completeIcon
                 : mode == RefreshStatus.failed
                     ? widget.failedIcon
-                    : widget.refreshingIcon;
+                    : widget.refreshingIcon ??
+                        SizedBox(
+                          width: 25.0,
+                          height: 25.0,
+                          child: defaultTargetPlatform == TargetPlatform.iOS
+                              ? const CupertinoActivityIndicator()
+                              : const CircularProgressIndicator(
+                                  strokeWidth: 2.0),
+                        );
     return icon ?? Container();
   }
 
@@ -181,13 +181,7 @@ class ClassicFooter extends LoadIndicator {
     this.failedIcon: const Icon(Icons.error, color: Colors.grey),
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
-    this.loadingIcon: const SizedBox(
-      width: 25.0,
-      height: 25.0,
-      child: const CircularProgressIndicator(
-        strokeWidth: 2.0,
-      ),
-    ),
+    this.loadingIcon,
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
   }) : super(
           key: key,
@@ -209,13 +203,7 @@ class ClassicFooter extends LoadIndicator {
     this.failedText: 'Load Failed,Click Retry!',
     this.failedIcon: const Icon(Icons.error, color: Colors.grey),
     this.spacing: 15.0,
-    this.loadingIcon: const SizedBox(
-      width: 25.0,
-      height: 25.0,
-      child: const CircularProgressIndicator(
-        strokeWidth: 2.0,
-      ),
-    ),
+    this.loadingIcon,
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
   }) : super(
           key: key,
@@ -246,7 +234,14 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
 
   Widget _buildIcon(LoadStatus mode) {
     Widget icon = mode == LoadStatus.loading
-        ? widget.loadingIcon
+        ? widget.loadingIcon ??
+            SizedBox(
+              width: 25.0,
+              height: 25.0,
+              child: defaultTargetPlatform == TargetPlatform.iOS
+                  ? const CupertinoActivityIndicator()
+                  : const CircularProgressIndicator(strokeWidth: 2.0),
+            )
         : mode == LoadStatus.noMore
             ? widget.noMoreIcon
             : mode == LoadStatus.failed ? widget.failedIcon : widget.idleIcon;

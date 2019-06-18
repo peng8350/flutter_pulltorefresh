@@ -114,8 +114,8 @@ class _RenderSliverRefresh extends RenderSliver
   @override
   // TODO: implement centerOffsetAdjustment
   double get centerOffsetAdjustment {
-    final RenderViewportBase renderViewport = parent;
     if (refreshStyle == RefreshStyle.Front) {
+      final RenderViewportBase renderViewport = parent;
       return Math.max(0.0, -renderViewport.offset.pixels);
     }
     return 0.0;
@@ -147,6 +147,7 @@ class _RenderSliverRefresh extends RenderSliver
     // layoutExtent will take that value (on the next performLayout run). Shift
     // the scroll offset first so it doesn't make the scroll position suddenly jump.
     if (refreshStyle != RefreshStyle.Front) {
+
       if (layoutExtent != layoutExtentOffsetCompensation) {
         geometry = SliverGeometry(
           scrollOffsetCorrection: layoutExtent - layoutExtentOffsetCompensation,

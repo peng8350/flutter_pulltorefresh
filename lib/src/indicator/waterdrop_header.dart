@@ -216,10 +216,11 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 class _QqPainter extends CustomPainter {
   final Color color;
   final Animation<double> listener;
-  double get value =>listener.value;
+
+  double get value => listener.value;
   final Paint painter = Paint();
 
-  _QqPainter({this.color, this.listener}):super(repaint:listener);
+  _QqPainter({this.color, this.listener}) : super(repaint: listener);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -267,7 +268,6 @@ class _QqPainter extends CustomPainter {
     path.arcToPoint(
         Offset(middleW - circleSize + value * scaleRatio * 2, originH + offset),
         radius: Radius.circular(value * scaleRatio));
-
     path.close();
     canvas.drawPath(path, painter);
   }
