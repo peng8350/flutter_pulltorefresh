@@ -145,39 +145,53 @@ class Example3State extends State<Example3>
 
   @override
   Widget build(BuildContext context) {
-    return SmartRefresher(
-      enablePullUp: _enablePullDown,
-      enablePullDown: _enablePullUp,
-      controller: _refreshController,
-      header: WaterDropMaterialHeader()
-      ,
-      onRefresh: () {
-        print("onRefresh");
-        data.add(Container(
-          child: Card(),
+    return Column(
+      children: <Widget>[
+        Container(
           height: 100.0,
-        ));
-        if (mounted) setState(() {});
-        _refreshController.refreshFailed();
+        ),
+        Expanded(
+          child: SmartRefresher(
+            enablePullUp: _enablePullDown,
+            enablePullDown: _enablePullUp,
+            controller: _refreshController,
+            header: WaterDropMaterialHeader()
+            ,
+            onRefresh: ()  async{
+              print("onRefresh");
+              await Future.delayed(const Duration(milliseconds: 4000));
+              data.add(Container(
+                child: Card(),
+                height: 100.0,
+              ));
+              if (mounted) setState(() {});
+              _refreshController.refreshFailed();
 //        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
 ////          data.add(Card());
 //
 //        });
-      },
-      child: Container(
-        height: 4333.0,
-        child: PageView(
-          children: <Widget>[Text("第一页"), Text("第二页"), Text("第三页")],
-        ),
-      ),
-      onLoading: () {
-        print("onload");
-        Future.delayed(const Duration(milliseconds: 2000)).then((val) {
-          data.add(Card());
-          if (mounted) setState(() {});
-          _refreshController.loadComplete();
-        });
-      },
+            },
+            child: GestureDetector(child:
+            Container(
+              height: 700.0,
+              child: PageView(
+                children: <Widget>[Text("第一页"), Text("第二页"), Text("第三页")],
+              ),
+            ),
+              onTap: (){
+                _refreshController.requestLoading();
+              },),
+            onLoading: () {
+              print("onload");
+              Future.delayed(const Duration(milliseconds: 2000)).then((val) {
+                data.add(Card());
+                if (mounted) setState(() {});
+                _refreshController.loadComplete();
+              });
+            },
+          ),
+        )
+      ],
     );
   }
 

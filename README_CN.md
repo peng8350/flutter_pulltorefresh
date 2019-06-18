@@ -31,13 +31,13 @@
 |art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
 
 ## 我该怎么用?
-提示:
-1.因1.3.0对内部进行了很大的变动,1.3.0~1.3.9版本不建议使用,Bug较多,1.4.0开始稳定
+提示:<br>
+1.因1.3.0对内部进行了很大的变动,1.3.0~1.3.9版本不建议使用,Bug较多,1.4.0开始稳定<br>
 2.确保flutter版本大于等于1.2.1
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.4
+     pull_to_refresh: ^1.4.5
 
 ```
 
@@ -45,25 +45,9 @@
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 
-RefreshController _refreshController;
-
-initState(){
-
-    super.initState();
-    // initialRefresh可以在组件初始化时执行一次刷新操作
-    _refreshController = RefreshController(initialRefresh:true);
-    // 如果你需要开始就请求一次刷新,1.3.9版本之前要这么做
-    /*
-
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-            _refreshController.requestRefresh();
-           });
-
-     */
-}
+RefreshController _refreshController= RefreshController(initialRefresh:true);;
 
 void _onRefresh(){
-
    /*.  after the data return,
         use _refreshController.refreshComplete() or refreshFailed() to end refreshing
    */
@@ -71,7 +55,7 @@ void _onRefresh(){
 
 void _onLoading(){
    /*
-        use _refreshController.loadComplete() or loadNoData() to end loading
+        use _refreshController.loadComplete() or loadNoData(),loadFailed() to end loading
    */
 }
 
@@ -84,7 +68,7 @@ SmartRefresher(
       controller: _refreshController,
       onRefresh: _onRefresh,
       onLoading: _onLoading,
-      child: "yourContentScrollView",
+      child: "child",
     )
 ....
 }

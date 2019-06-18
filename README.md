@@ -38,14 +38,14 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 
 ## How to use?
 
-tips:
-1.Because 1.3.0 has made great changes to the internal, version 1.3.0-1.3.9 is not recommended to use,there has a lot of Bug , 1.4.0 began to stabilize.
+tips:<br>
+1.Because 1.3.0 has made great changes to the internal, version 1.3.0-1.3.9 is not recommended to use,there has a lot of Bug , 1.4.0 began to stabilize.<br>
 2.Make sure flutter sdk version >= 1.2.1
 
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.4
+     pull_to_refresh: ^1.4.5
 
 ```
 
@@ -72,7 +72,7 @@ void _onRefresh(){
 
 void _onLoading(){
    /*
-        use _refreshController.loadComplete() or loadNoData() to end loading
+        use _refreshController.loadComplete() or loadNoData(),loadFailed() to end loading
    */
 }
 
@@ -85,7 +85,7 @@ SmartRefresher(
       controller: _refreshController,
       onRefresh: _onRefresh,
       onLoading: _onLoading,
-      child: "yourContentScrollView",
+      child: "child",
     )
 ....
 }

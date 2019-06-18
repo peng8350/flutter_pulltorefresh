@@ -179,3 +179,15 @@ Notice: This version of the code changes much, Api too
 * When the user Dragging ScrollView(pull up), disable make it change to loading state
 * Add one new LoadStatus:failed(provide click to retry loading)
 * Fix some defaultIcon:noMoreIcon default Invisible
+
+## 1.4.5
+* Remake FrontStyle implements principle,Make it close to the first three styles,Fix some small problems also:
+1.when tap StatusBar,it will trigger refresh instead of scroll to top
+2.It seems odd to set aside 100 heights in front of scrollOffset for FrontStyle
+3.When hideWhenNotFull = false, dragging to pull down will cause loading together
+
+* Remake RefreshPhysics,Simpify code,child support physics setting now.
+* ClassicIndicator default refreshingIcon:in iOS use ActivityIndicator,in Android use CircularProgressIndicator
+
+
+

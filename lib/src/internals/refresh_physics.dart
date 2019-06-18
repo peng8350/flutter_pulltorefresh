@@ -4,7 +4,6 @@
     createTime:2018-05-02 14:39
  */
 
-import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 
 class RefreshPhysics extends ScrollPhysics {

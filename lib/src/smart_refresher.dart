@@ -61,8 +61,8 @@ class SmartRefresher extends StatelessWidget {
 
   SmartRefresher(
       {Key key,
-      @required this.child,
       @required this.controller,
+      this.child,
       this.header,
       this.footer,
       this.enablePullDown: true,
@@ -192,9 +192,9 @@ class RefreshController {
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
-  RefreshController({bool initialRefresh: false}){
-    if(initialRefresh){
-      WidgetsBinding.instance.addPostFrameCallback((_){
+  RefreshController({bool initialRefresh: false}) {
+    if (initialRefresh) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         requestRefresh();
       });
     }
@@ -216,7 +216,9 @@ class RefreshController {
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (isLoading) return;
     position?.animateTo(position.maxScrollExtent,
-        duration: duration, curve: curve);
+        duration: duration, curve: curve)?.whenComplete((){
+          footerMode.value = LoadStatus.loading;
+    });
   }
 
   void refreshCompleted({bool resetFooterState: false}) {

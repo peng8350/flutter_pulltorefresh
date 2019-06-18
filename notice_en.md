@@ -13,7 +13,7 @@
 ## Front RefreshStyle
 * This style is somewhat different from the implementation mechanism of Behind,Follow,UnFollow,Follow Implementation of Modification Based on ClampScrollPhysics
 ,Behind, Follow, UnFollow are three resilient sliding engines based on iOS。Front works for Android a little more.
-* This is very important. After using Front style, the initial offset of the list is 100.0, which will bounce back between 0 and 100. So when calculating the offset of scrollController,
+* 1.4.5 Remake FrontStyle,this can be ignored. After using Front style, the initial offset of the list is 100.0, which will bounce back between 0 and 100. So when calculating the offset of scrollController,
  you need to subtract the height of the indicator (100), which is the real offset in the list.Similarly, when you scroll to the top, animateTo (100.0), not animateTo (0.0).
 * only support place in first sliver
 

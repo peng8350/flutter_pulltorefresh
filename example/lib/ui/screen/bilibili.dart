@@ -46,7 +46,7 @@ class _BiliBiliScreenState extends State<BiliBiliScreen>
         body: RefreshConfiguration(
           child: SmartRefresher(
             header: WaterDropMaterialHeader(
-              backgroundColor: Colors.pink,
+              backgroundColor: Colors.green,
             ),
             child: CustomScrollView(
               slivers: <Widget>[

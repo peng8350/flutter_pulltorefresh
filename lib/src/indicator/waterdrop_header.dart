@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:flutter/material.dart'
     hide RefreshIndicatorState, RefreshIndicator;
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import '../internals/indicator_wrap.dart';
 import 'package:flutter/cupertino.dart';
 import '../smart_refresher.dart';
@@ -116,47 +117,47 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
     // TODO: implement buildContent
     Widget child;
     if (mode == RefreshStatus.refreshing) {
-      if (widget.refresh != null)
-        child = widget.refresh;
-      else
-        child = CupertinoActivityIndicator();
+      child = widget.refresh ??
+          SizedBox(
+            width: 25.0,
+            height: 25.0,
+            child: defaultTargetPlatform == TargetPlatform.iOS
+                ? const CupertinoActivityIndicator()
+                : const CircularProgressIndicator(strokeWidth: 2.0),
+          );
     } else if (mode == RefreshStatus.completed) {
-      if (widget.complete != null)
-        child = widget.complete;
-      else
-        child = Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Icon(
-              Icons.done,
-              color: Colors.grey,
-            ),
-            Container(
-              width: 15.0,
-            ),
-            Text(
-              "刷新完成",
-              style: TextStyle(color: Colors.grey),
-            )
-          ],
-        );
+      child = widget.complete ??
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Icon(
+                Icons.done,
+                color: Colors.grey,
+              ),
+              Container(
+                width: 15.0,
+              ),
+              Text(
+                "刷新完成",
+                style: TextStyle(color: Colors.grey),
+              )
+            ],
+          );
     } else if (mode == RefreshStatus.failed) {
-      if (widget.failed != null)
-        child = widget.failed;
-      else
-        child = Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Icon(
-              Icons.close,
-              color: Colors.grey,
-            ),
-            Container(
-              width: 15.0,
-            ),
-            Text("刷新失败", style: TextStyle(color: Colors.grey))
-          ],
-        );
+      child = widget.failed ??
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Icon(
+                Icons.close,
+                color: Colors.grey,
+              ),
+              Container(
+                width: 15.0,
+              ),
+              Text("刷新失败", style: TextStyle(color: Colors.grey))
+            ],
+          );
     } else if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
       return FadeTransition(
           child: Container(

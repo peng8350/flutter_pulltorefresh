@@ -12,7 +12,7 @@
 
 ## Front刷新样式
 * 这种样式跟Behind,Follow,UnFollow实现机制是有点区别的,Follow基于ClampScrollPhysics修改实现,而Behind,Follow,UnFollow这三个基于iOS里的弹性滑动引擎。Front适用于Android多一点。
-* 这点是十分重要的,使用Front这个风格后,列表初始offset是100.0,在0~100之间会回弹回去,所以计算scrollController的offset的时候,要减去指示器的高度(100),才是列表中的真实offset。同样,当你滚动到顶部时,要animateTo(100.0),而不是animateTo(0.0)。
+* 1.4.5后重改FrontStyle,请无视这条,使用Front这个风格后,列表初始offset是100.0,在0~100之间会回弹回去,所以计算scrollController的offset的时候,要减去指示器的高度(100),才是列表中的真实offset。同样,当你滚动到顶部时,要animateTo(100.0),而不是animateTo(0.0)。
 * 只能放在第一个Sliver!
 
 ## Behind刷新样式
