@@ -4,11 +4,23 @@
     createTime:2018-05-02 14:39
  */
 
+import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 
+/*
+  use to add other scroll effect
+  only support three common physics:
+  1.  AlwaysScrollPhysics(default),
+  2. ClampedScrollPhysics,
+  3. BouncingScrollPhysics
+*/
+
 class RefreshPhysics extends ScrollPhysics {
-  /// Creates scroll physics that bounce back from the edge.
-  const RefreshPhysics({ScrollPhysics parent}) : super(parent: parent);
+
+  bool _clamped = false;
+
+  RefreshPhysics({ScrollPhysics parent}) : super(parent: parent);
+
 
   @override
   RefreshPhysics applyTo(ScrollPhysics ancestor) {
@@ -24,7 +36,8 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     // TODO: implement applyBoundaryConditions
-    if(parent is ClampingScrollPhysics) {
+    // if createBallisticSimulation() return ClampingScrollSimulation,it should be stopped before scrollView bounce out of visual area
+    if(_clamped) {
       if (value < position.minScrollExtent &&
           position.minScrollExtent < position.pixels) { // hit top edge
         return value - position.minScrollExtent;
@@ -32,9 +45,8 @@ class RefreshPhysics extends ScrollPhysics {
       if (position.pixels < position.maxScrollExtent &&
           position.maxScrollExtent < value) // hit bottom edge
         return value - position.maxScrollExtent;
-      if (position.maxScrollExtent <= position.pixels && position.pixels < value) // overscroll
-        return value - position.pixels;
     }
+
     return 0.0;
   }
 
@@ -52,7 +64,10 @@ class RefreshPhysics extends ScrollPhysics {
         tolerance: tolerance,
       );
     }
-    return super.createBallisticSimulation(position, velocity);
+    Simulation parentSimulation = super.createBallisticSimulation(position, velocity);
+
+    _clamped =  parentSimulation is ClampingScrollSimulation;
+    return parentSimulation;
   }
 
 }
