@@ -143,6 +143,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
       children: children,
     );
     return Container(
+      width: widget.height,
       height: widget.height,
       decoration: widget.decoration,
       child: Center(
@@ -271,6 +272,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
       children: children,
     );
     return Container(
+      width: widget.height,
       height: widget.height,
       decoration: widget.decoration,
       child: Center(

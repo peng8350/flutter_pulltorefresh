@@ -155,7 +155,14 @@ class Example3State extends State<Example3>
             enablePullUp: _enablePullDown,
             enablePullDown: _enablePullUp,
             controller: _refreshController,
-            header: WaterDropMaterialHeader()
+            header: ClassicHeader(
+              iconPos: IconPosition.top,
+              height: 100.0,
+            ),
+            footer: ClassicFooter(
+              iconPos: IconPosition.top,
+              height: 100.0,
+            )
             ,
             onRefresh: ()  async{
               print("onRefresh");
