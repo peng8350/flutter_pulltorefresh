@@ -171,16 +171,10 @@ class Example3State extends State<Example3>
 //
 //        });
             },
-            child: GestureDetector(child:
-            Container(
-              height: 700.0,
-              child: PageView(
-                children: <Widget>[Text("第一页"), Text("第二页"), Text("第三页")],
-              ),
+            child: ListView(
+              children: data,
+              scrollDirection: Axis.horizontal,
             ),
-              onTap: (){
-                _refreshController.requestLoading();
-              },),
             onLoading: () {
               print("onload");
               Future.delayed(const Duration(milliseconds: 2000)).then((val) {

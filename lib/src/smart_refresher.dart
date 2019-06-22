@@ -140,6 +140,7 @@ class SmartRefresher extends StatelessWidget {
         controller: controller.scrollController,
         cacheExtent: childView.cacheExtent,
         key: childView.key,
+        scrollDirection: childView.scrollDirection,
         semanticChildCount: childView.semanticChildCount,
         slivers: slivers,
         dragStartBehavior: childView.dragStartBehavior,
@@ -215,9 +216,10 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (isLoading) return;
-    position?.animateTo(position.maxScrollExtent,
-        duration: duration, curve: curve)?.whenComplete((){
-          footerMode.value = LoadStatus.loading;
+    position
+        ?.animateTo(position.maxScrollExtent, duration: duration, curve: curve)
+        ?.whenComplete(() {
+      footerMode.value = LoadStatus.loading;
     });
   }
 

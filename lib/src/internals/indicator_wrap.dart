@@ -187,13 +187,26 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   void resetValue() {}
 
+  int _getQuarterTurns(){
+    final bool reverse = needReverseAll() && widget.reverse;
+    if(refresher?.child !=null && refresher?.child is ScrollView){
+      if((refresher.child as ScrollView).scrollDirection==Axis.vertical){
+        return reverse?10:0;
+      }
+      else{
+        return reverse?5:15;
+      }
+    }
+    return 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverRefresh(
         paintOffsetY: configuration.headerOffset,
         child: RotatedBox(
           child: buildContent(context, mode),
-          quarterTurns: needReverseAll() && widget.reverse ? 10 : 0,
+          quarterTurns: 10,
         ),
         floating: floating,
         reverse: widget.reverse,

@@ -62,11 +62,11 @@ class _RenderSliverRefresh extends RenderSliver
     with RenderObjectWithChildMixin<RenderBox> {
   _RenderSliverRefresh(
       {@required double refreshIndicatorExtent,
-      @required bool hasLayoutExtent,
-      RenderBox child,
-      this.paintOffsetY,
-      this.reverse,
-      this.refreshStyle})
+        @required bool hasLayoutExtent,
+        RenderBox child,
+        this.paintOffsetY,
+        this.reverse,
+        this.refreshStyle})
       : assert(refreshIndicatorExtent != null),
         assert(refreshIndicatorExtent >= 0.0),
         assert(hasLayoutExtent != null),
@@ -147,7 +147,6 @@ class _RenderSliverRefresh extends RenderSliver
     // layoutExtent will take that value (on the next performLayout run). Shift
     // the scroll offset first so it doesn't make the scroll position suddenly jump.
     if (refreshStyle != RefreshStyle.Front) {
-
       if (layoutExtent != layoutExtentOffsetCompensation) {
         geometry = SliverGeometry(
           scrollOffsetCorrection: layoutExtent - layoutExtentOffsetCompensation,
@@ -186,7 +185,7 @@ class _RenderSliverRefresh extends RenderSliver
                 layoutExtent,
             paintExtent: needPaintExtent,
             hasVisualOverflow:
-                overscrolledExtent < refreshIndicatorLayoutExtent,
+            overscrolledExtent < refreshIndicatorLayoutExtent,
             maxPaintExtent: needPaintExtent,
             layoutExtent: Math.min(needPaintExtent,
                 Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
@@ -213,7 +212,7 @@ class _RenderSliverRefresh extends RenderSliver
                     layoutExtent),
             paintExtent: needPaintExtent,
             hasVisualOverflow:
-                overscrolledExtent < refreshIndicatorLayoutExtent,
+            overscrolledExtent < refreshIndicatorLayoutExtent,
             maxPaintExtent: needPaintExtent,
             layoutExtent: Math.min(needPaintExtent,
                 Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
@@ -221,8 +220,9 @@ class _RenderSliverRefresh extends RenderSliver
 
           break;
         case RefreshStyle.Front:
+          print(reverse);
           geometry = SliverGeometry(
-            paintOrigin: reverse ? refreshIndicatorLayoutExtent : 0.0,
+            paintOrigin: reverse ? -refreshIndicatorLayoutExtent : 0.0,
             visible: true,
             hasVisualOverflow: true,
           );
@@ -314,12 +314,16 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
           parentUsesSize: true);
     }
 
-    double childExtent = child.size.height;
+    double childExtent = (constraints.axisDirection == AxisDirection.up ||
+        constraints.axisDirection == AxisDirection.down)
+        ? child.size.height
+        : child.size.width;
+    print(childExtent);
     assert(childExtent != null);
     final double paintedChildSize =
-        calculatePaintOffset(constraints, from: 0.0, to: childExtent);
+    calculatePaintOffset(constraints, from: 0.0, to: childExtent);
     final double cacheExtent =
-        calculateCacheOffset(constraints, from: 0.0, to: childExtent);
+    calculateCacheOffset(constraints, from: 0.0, to: childExtent);
     assert(paintedChildSize.isFinite);
     assert(paintedChildSize >= 0.0);
     if (active) {
