@@ -44,6 +44,7 @@ class _qqZoneState extends State<qqZone> {
             distance: 80.0,
           ),
           child: CustomScrollView(
+            physics: ClampingScrollPhysics(),
             slivers: <Widget>[
               SliverAppBar(
                 pinned: true,

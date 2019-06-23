@@ -12,7 +12,6 @@
 | onRefresh | 进入下拉刷新时的回调   | () => Void | null | 可选 |
 | onLoading | 进入上拉加载时的回调   | () => Void | null | 可选 |
 | onOffsetChange | 它将在超出边缘范围拖动时回调  | (bool,double) => Void | null | 可选 |
-| headerInsertIndex | 头部指示器插入到slivers的位置(当你需要在SliverAppbar做刷新操作)  | int | 0 | 可选 |
 
 
 # RefreshController Api

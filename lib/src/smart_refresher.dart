@@ -56,7 +56,9 @@ class SmartRefresher extends StatelessWidget {
 
   //controll inner state
   final RefreshController controller;
-
+  // advice not to use this ,I find it has a bug when header not in first sliver,
+  // I will consider to remove this if header only work in first sliver in future version
+  // may be NestedScrollView can solution,but NestedScrollView conflict with overScroll effect too
   final int headerInsertIndex;
 
   SmartRefresher(
@@ -153,8 +155,8 @@ class SmartRefresher extends StatelessWidget {
                 clamping: childView.physics is ClampingScrollPhysics ||
                     (childView.physics is AlwaysScrollableScrollPhysics &&
                         defaultTargetPlatform != TargetPlatform.iOS),
-                maxOverScrollExtent: conf.maxOverScrollExtent,
-                maxUnderScrollExtent: conf.maxUnderScrollExtent)
+                maxOverScrollExtent: conf?.maxOverScrollExtent,
+                maxUnderScrollExtent: conf?.maxUnderScrollExtent)
             .applyTo(childView.physics),
         controller: controller.scrollController,
         cacheExtent: childView.cacheExtent,
@@ -169,8 +171,8 @@ class SmartRefresher extends StatelessWidget {
       body = CustomScrollView(
         physics: RefreshPhysics(
                 clamping: defaultTargetPlatform != TargetPlatform.iOS,
-                maxUnderScrollExtent: conf.maxUnderScrollExtent,
-                maxOverScrollExtent: conf.maxOverScrollExtent)
+                maxUnderScrollExtent: conf?.maxUnderScrollExtent,
+                maxOverScrollExtent: conf?.maxOverScrollExtent)
             .applyTo(const AlwaysScrollableScrollPhysics()),
         controller: controller.scrollController,
         slivers: slivers,

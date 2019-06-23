@@ -9,7 +9,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 * It's almost fit for all Scroll witgets,like GridView,ListView...
 * powerful Bouncing
 * support reverse ScrollView
-* provide more refreshStyle: Behind,Follow,UnFollow
+* provide more refreshStyle: Behind,Follow,UnFollow,Front
 
 
 ## ScreenShots
