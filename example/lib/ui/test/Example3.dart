@@ -157,11 +157,11 @@ class Example3State extends State<Example3>
             controller: _refreshController,
             header: ClassicHeader(
               iconPos: IconPosition.top,
-              height: 100.0,
+              height: 60.0,
             ),
             footer: ClassicFooter(
               iconPos: IconPosition.top,
-              height: 100.0,
+              height: 60.0,
             )
             ,
             onRefresh: ()  async{
@@ -178,9 +178,10 @@ class Example3State extends State<Example3>
 //
 //        });
             },
-            child: ListView(
-              children: data,
-              scrollDirection: Axis.horizontal,
+            child: ListView.builder(
+              itemExtent: 100.0,
+              itemBuilder: (c,i) => data[i],
+              itemCount: data.length,
             ),
             onLoading: () {
               print("onload");

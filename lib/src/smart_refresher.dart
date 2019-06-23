@@ -88,7 +88,19 @@ class SmartRefresher extends StatelessWidget {
   }
 
   void onPositionUpdated(ScrollPosition newPosition) {
+    assert(newPosition != null);
+    controller?.position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
     controller.position = newPosition;
+    controller.position.isScrollingNotifier.addListener(_listenScrollEnd);
+  }
+
+  // when bounce out of edge and stopped by overScroll or underScroll, it should be SpringBack to 0.0
+  // but ScrollPhysics didn't provide one way to spring back when outOfEdge(stopped by applyBouncingCondition return != 0.0)
+  // so for making it spring back, it should be trigger goBallistic make it spring back
+  void _listenScrollEnd() {
+    if (controller.position.outOfRange) {
+      controller.position.activity.applyNewDimensions();
+    }
   }
 
   //build slivers from child Widget
@@ -132,11 +144,18 @@ class SmartRefresher extends StatelessWidget {
   }
 
   // build the customScrollView
-  Widget _buildBodyBySlivers(Widget childView, List<Widget> slivers) {
+  Widget _buildBodyBySlivers(
+      Widget childView, List<Widget> slivers, RefreshConfiguration conf) {
     Widget body;
     if (childView is ScrollView) {
       body = CustomScrollView(
-        physics: RefreshPhysics().applyTo(childView.physics),
+        physics: RefreshPhysics(
+                clamping: childView.physics is ClampingScrollPhysics ||
+                    (childView.physics is AlwaysScrollableScrollPhysics &&
+                        defaultTargetPlatform != TargetPlatform.iOS),
+                maxOverScrollExtent: conf.maxOverScrollExtent,
+                maxUnderScrollExtent: conf.maxUnderScrollExtent)
+            .applyTo(childView.physics),
         controller: controller.scrollController,
         cacheExtent: childView.cacheExtent,
         key: childView.key,
@@ -148,8 +167,11 @@ class SmartRefresher extends StatelessWidget {
       );
     } else {
       body = CustomScrollView(
-        physics:
-            RefreshPhysics().applyTo(const AlwaysScrollableScrollPhysics()),
+        physics: RefreshPhysics(
+                clamping: defaultTargetPlatform != TargetPlatform.iOS,
+                maxUnderScrollExtent: conf.maxUnderScrollExtent,
+                maxOverScrollExtent: conf.maxOverScrollExtent)
+            .applyTo(const AlwaysScrollableScrollPhysics()),
         controller: controller.scrollController,
         slivers: slivers,
       );
@@ -162,7 +184,7 @@ class SmartRefresher extends StatelessWidget {
     final RefreshConfiguration configuration = RefreshConfiguration.of(context);
     _updateController(context, configuration);
     List<Widget> slivers = _buildSliversByChild(context, child, configuration);
-    Widget body = _buildBodyBySlivers(child, slivers);
+    Widget body = _buildBodyBySlivers(child, slivers, configuration);
     if (configuration != null) {
       return body;
     } else {
@@ -284,6 +306,8 @@ class RefreshConfiguration extends InheritedWidget {
   final Widget child;
   final double headerTriggerDistance;
   final double footerTriggerDistance;
+  final double maxOverScrollExtent;
+  final double maxUnderScrollExtent;
 
   RefreshConfiguration({
     @required this.child,
@@ -293,6 +317,8 @@ class RefreshConfiguration extends InheritedWidget {
     this.clickLoadingWhenIdle: false,
     this.skipCanRefresh: false,
     this.autoLoad: true,
+    this.maxOverScrollExtent,
+    this.maxUnderScrollExtent,
     this.headerTriggerDistance: default_refresh_triggerDistance,
     this.footerTriggerDistance: default_load_triggerDistance,
     this.hideFooterWhenNotFull: true,
@@ -309,6 +335,8 @@ class RefreshConfiguration extends InheritedWidget {
         hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||
         headerOffset != oldWidget.headerOffset ||
         clickLoadingWhenIdle != oldWidget.clickLoadingWhenIdle ||
-        oldWidget.runtimeType != runtimeType;
+        oldWidget.runtimeType != runtimeType ||
+        maxUnderScrollExtent != oldWidget.maxUnderScrollExtent ||
+        oldWidget.maxOverScrollExtent != maxOverScrollExtent;
   }
 }
