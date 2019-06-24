@@ -1,0 +1,67 @@
+/*
+ * Author: Jpeng
+ * Email: peng8350@gmail.com
+ * Time:  2019-06-24 17:13
+ */
+
+import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+/*
+   when listView have no data,sometime we should return a view that indicate empty state
+   there are two ways to do ,see follow
+ */
+class RefreshWithEmptyView extends StatefulWidget {
+  RefreshWithEmptyView();
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _RefreshWithEmptyViewState();
+  }
+}
+
+class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
+  List<String> data = [];
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
+
+  Widget buildEmpty() {
+    // there are two ways
+    // this way is more converient,but it doesn't reference ListView some attribute
+    // If you don't need some attribute like physics,cacheExtent,just default
+    // you can return emptyWidget directly,else return ListView
+    //first way
+    return   Image.asset("images/empty.png",fit: BoxFit.cover,);
+    // second way
+    return ListView(
+      children: [
+        Image.asset("images/empty.png",fit: BoxFit.cover,)
+      ],
+      physics: BouncingScrollPhysics(),
+      cacheExtent: 100.0,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return SmartRefresher(
+      controller: _refreshController,
+      enablePullUp: true,
+      enablePullDown: true,
+      onRefresh: () async{
+        await Future.delayed(const Duration(milliseconds: 2000));
+        setState(() {
+          data.add("new");
+        });
+        _refreshController.refreshCompleted();
+      },
+      child: data.length==0?buildEmpty():ListView.builder(
+        itemBuilder: (c, i) => Text(data[i]),
+        itemCount: data.length,
+        itemExtent: 100.0,
+      ),
+    );
+  }
+}

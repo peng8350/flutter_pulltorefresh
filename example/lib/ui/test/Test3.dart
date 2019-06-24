@@ -1,17 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class Example3 extends StatefulWidget {
-  Example3({Key key}) : super(key: key);
+class Test3 extends StatefulWidget {
+  Test3({Key key}) : super(key: key);
 
   @override
-  Example3State createState() => Example3State();
+  Test3State createState() => Test3State();
+
 }
 
-class Example3State extends State<Example3>
+class Test3State extends State<Test3>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;

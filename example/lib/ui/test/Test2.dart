@@ -9,12 +9,12 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class Example2 extends StatefulWidget {
+class Test2 extends StatefulWidget {
   @override
-  _Example2State createState() => _Example2State();
+  _Test2State createState() => _Test2State();
 }
 
-class _Example2State extends State<Example2>
+class _Test2State extends State<Test2>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   RefreshController _controller;
   int indexPage = 0;

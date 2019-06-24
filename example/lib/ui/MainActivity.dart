@@ -7,6 +7,7 @@ import 'package:example/ui/screen/ScreenPage.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:residemenu/residemenu.dart';
+import 'example/ExamplePage.dart';
 import 'test/TestPage.dart';
 import 'indicator/IndicatorPage.dart';
 import 'sample/SamplePage.dart';
@@ -50,11 +51,12 @@ class _MainActivityState extends State<MainActivity>
     // TODO: implement initState
 
     super.initState();
-    _tabController = TabController(length: 6, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     _menuController = MenuController(vsync: this,direction: ScrollDirection.LEFT);
     _pageController = PageController(initialPage: 1);
     views = [
       IndicatorPage(title: "指示器界面"),
+      ExamplePage(),
       TestPage(title: "测试界面"),
       SamplePage(tabController: _tabController),
       ScreenPage(),
@@ -73,17 +75,14 @@ class _MainActivityState extends State<MainActivity>
           // the App.build method, and use it to set our appbar title.
           title: Text(_tabIndex == 0
               ? "指示器界面"
-              : _tabIndex == 1 ? "测试界面" : _tabIndex == 2 ? "样例界面" : "App界面"),
+              : _tabIndex == 1 ? "例子界面" : _tabIndex == 2 ? "测试界面" :_tabIndex==3?"样例界面":"App界面"),
           leading: GestureDetector(child: Icon(Icons.menu),onTap: (){
             _menuController.openMenu(true);
           },),
           backgroundColor: Colors.greenAccent,
-          bottom: _tabIndex==2?TabBar(isScrollable: true,
+          bottom: _tabIndex==3?TabBar(isScrollable: true,
             tabs: [
               Tab(child: Text("超大数据量性能测试")),
-              Tab(
-                child: Text("NestedScrollView兼容"),
-              ),
               Tab(child: Text("SliverAppbar+Sliverheader")),
               Tab(child: Text("嵌套滚动视图")),
               Tab(child: Text("动态变化指示器+Navigator")),
@@ -124,16 +123,16 @@ class _MainActivityState extends State<MainActivity>
                 _pageController.jumpToPage(0);
                 _menuController.closeMenu();
               }),
-          buildItem("测试",
-              Icon(Icons.airplanemode_active, size: 18, color: Colors.grey),
+          buildItem("例子", Icon(Icons.insert_emoticon, size: 18, color: Colors.grey),
                   () {
                 setState(() {
                   _tabIndex = 1;
                 });
-                _menuController.closeMenu();
                 _pageController.jumpToPage(1);
+                _menuController.closeMenu();
               }),
-          buildItem("样例", Icon(Icons.scanner, size: 18, color: Colors.grey),
+          buildItem("测试",
+              Icon(Icons.airplanemode_active, size: 18, color: Colors.grey),
                   () {
                 setState(() {
                   _tabIndex = 2;
@@ -141,14 +140,22 @@ class _MainActivityState extends State<MainActivity>
                 _menuController.closeMenu();
                 _pageController.jumpToPage(2);
               }),
-          buildItem(
-              "App界面", Icon(Icons.format_underlined, size: 18, color: Colors.grey),
+          buildItem("样例", Icon(Icons.scanner, size: 18, color: Colors.grey),
                   () {
                 setState(() {
                   _tabIndex = 3;
                 });
                 _menuController.closeMenu();
                 _pageController.jumpToPage(3);
+              }),
+          buildItem(
+              "App界面", Icon(Icons.format_underlined, size: 18, color: Colors.grey),
+                  () {
+                setState(() {
+                  _tabIndex = 4;
+                });
+                _menuController.closeMenu();
+                _pageController.jumpToPage(4);
               }),
         ],
       ),

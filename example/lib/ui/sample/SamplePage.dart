@@ -5,7 +5,6 @@
  */
 import 'package:flutter/material.dart';
 import 'BigData.dart';
-import 'Nested.dart';
 import 'Appbar_header.dart';
 import 'InnerWrapList.dart';
 import 'RequestRefresh.dart';
@@ -31,7 +30,6 @@ class _SamplePage extends State<SamplePage> {
     // TODO: implement initState
     views = [
       DataSmall(),
-      Nested(),
       AppBarHeader(),
       InnerList(),
       Dynamic(),

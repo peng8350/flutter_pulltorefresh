@@ -1,7 +1,7 @@
-import 'Example1.dart';
-import 'Example2.dart';
-import 'Example3.dart';
-import 'Example4.dart';
+import 'Test1.dart';
+import 'Test2.dart';
+import 'Test3.dart';
+import 'Test4.dart';
 import 'package:flutter/material.dart';
 
 class TestPage extends StatefulWidget {
@@ -28,8 +28,8 @@ class _TestPageState extends State<TestPage>
   PageController _pageController;
   List<Widget> views;
   TabController _tabController;
-  GlobalKey<Example3State> example3Key = GlobalKey();
-  GlobalKey<Example1State> example1Key = GlobalKey();
+  GlobalKey<Test3State> example3Key = GlobalKey();
+  GlobalKey<Test1State> example1Key = GlobalKey();
 
   void _changePage() {
     Navigator.of(context).pushNamed("sec");
@@ -115,9 +115,9 @@ class _TestPageState extends State<TestPage>
     _tabController = TabController(length: 4, vsync: this);
     _pageController = PageController();
     views = [
-      Example1(key: example1Key),
-      Example2(),
-      Example3(key: example3Key),
+      Test1(key: example1Key),
+      Test2(),
+      Test3(key: example3Key),
       AnimatedListSample()
     ];
     super.initState();
