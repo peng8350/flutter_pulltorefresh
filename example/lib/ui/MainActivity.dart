@@ -29,7 +29,7 @@ class _MainActivityState extends State<MainActivity>
   List<Widget> views;
   MenuController _menuController;
   TabController _tabController;
-  int _tabIndex = 0;
+  int _tabIndex = 1;
   PageController _pageController;
 
   Widget buildItem(String msg, Widget icon, Function voidCallBack) {

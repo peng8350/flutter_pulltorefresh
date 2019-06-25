@@ -9,6 +9,7 @@ import 'hidefooter_bycontent.dart';
 import 'horizontal_refresh.dart';
 import 'Nested.dart';
 import 'refresh_animatedlist.dart';
+import 'custom_header.dart';
 import 'refresh_pageView.dart';
 
 class ExamplePage extends StatelessWidget {
@@ -72,6 +73,16 @@ class ExamplePage extends StatelessWidget {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
                 body: AnimatedListExample(),
+                appBar: AppBar(),
+              );
+            }));
+          }),
+      ExampleItem(
+          title: "简单自定义头部指示器",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return Scaffold(
+                body: CustomHeaderExample(),
                 appBar: AppBar(),
               );
             }));
