@@ -15,7 +15,7 @@ class Test2 extends StatefulWidget {
 }
 
 class _Test2State extends State<Test2>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+    with TickerProviderStateMixin  {
   RefreshController _controller;
   int indexPage = 0;
   List<String> data = [];
@@ -97,7 +97,7 @@ class _Test2State extends State<Test2>
   @override
   Widget build(BuildContext context) {
     return SmartRefresher(
-      enablePullDown: true,
+      enablePullDown: false,
       enablePullUp: true,
       controller: _controller,
       onRefresh: _onRefresh,
@@ -108,15 +108,11 @@ class _Test2State extends State<Test2>
         gridDelegate:
             SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: data.length,
-        physics: ClampingScrollPhysics(),
         itemBuilder: buildImage,
       ),
     );
   }
 
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => false;
 }
 
 class Item extends StatefulWidget {

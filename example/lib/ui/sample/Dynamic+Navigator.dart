@@ -4,7 +4,7 @@
  * Time:  2019-06-03 12:54
  */
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide RefreshIndicator,RefreshIndicatorState;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../Item.dart';
 
@@ -24,9 +24,53 @@ class _DynamicState extends State<Dynamic> {
   bool _enablePullDown = true;
   bool _enablePullUp = true;
   RefreshController _refreshController;
+  ScrollPhysics _physics = BouncingScrollPhysics();
+  RefreshIndicator _header = ClassicHeader();
 
   void _init() {
     items = [];
+    items.add(Row(
+      children: <Widget>[
+        Text("滑动引擎(iOS/Android)"),
+        Radio(
+          value: true,
+          groupValue: _physics is BouncingScrollPhysics,
+          onChanged: (i) {
+            _physics = BouncingScrollPhysics();
+            setState(() {});
+          },
+        ),
+        Radio(
+          value: false,
+          groupValue: _physics is BouncingScrollPhysics,
+          onChanged: (i) {
+            _physics = ClampingScrollPhysics();
+            setState(() {});
+          },
+        )
+      ],
+    ));
+    items.add(Row(
+      children: <Widget>[
+        Text("是否启用FrontStyle"),
+        Radio(
+          value: true,
+          groupValue: _header is MaterialClassicHeader,
+          onChanged: (i) {
+            _header = MaterialClassicHeader();
+            setState(() {});
+          },
+        ),
+        Radio(
+          value: false,
+          groupValue: _header is MaterialClassicHeader,
+          onChanged: (i) {
+            _header = ClassicHeader();
+            setState(() {});
+          },
+        )
+      ],
+    ));
     items.add(Row(
       children: <Widget>[
         Text("打开下拉刷新"),
@@ -141,10 +185,11 @@ class _DynamicState extends State<Dynamic> {
           itemBuilder: (c, i) => items[i],
           itemExtent: 100.0,
           itemCount: items.length,
+          physics: _physics,
         ),
         onRefresh: _onRefresh,
         onLoading: _onLoading,
-        header: MaterialClassicHeader(),
+        header: _header,
         enablePullDown: _enablePullDown,
         enablePullUp: _enablePullUp,
         controller: _refreshController);
