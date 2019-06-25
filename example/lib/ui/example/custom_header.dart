@@ -84,6 +84,7 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample> with TickerPr
         height: 800.0,
       ),
       header: CustomHeader(
+        refreshStyle: RefreshStyle.Behind,
         builder: (c,m){
           return Container(
             child: ScaleTransition(
@@ -100,6 +101,8 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample> with TickerPr
               ),
               scale: _scaleController,
             ),
+            alignment: Alignment.topCenter,
+            color: Colors.green,
           );
         },
       ),

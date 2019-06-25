@@ -189,5 +189,8 @@ Notice: This version of the code changes much, Api too
 * Remake RefreshPhysics,Simpify code,child support physics setting now.
 * ClassicIndicator default refreshingIcon:in iOS use ActivityIndicator,in Android use CircularProgressIndicator
 
-
-
+## 1.4.6
+* Add horizontal refresh support
+* Fix 1.4.5  default physics Bug  in Android simulation
+* Fix Problem: when enablePullDown or enablePullUp = false,it still can overScroll or underScroll when use ClampingScrollPhysics
+* Add maxOverScrollExtent and maxUnderScrollExtent in RefreshConfiguration

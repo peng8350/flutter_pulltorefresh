@@ -32,6 +32,7 @@ class _SpinKitFadingCircleState extends State<SpinKitFadingCircle>
   @override
   void initState() {
     super.initState();
+
 //    _controller = AnimationController(vsync: this, duration: widget.duration)
 //      ..repeat();
   }

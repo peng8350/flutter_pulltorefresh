@@ -5,10 +5,12 @@ a widget provided to the flutter scroll component drop-down refresh and pull up 
 If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter_pulltorefresh/blob/master/README_CN.md))
 
 ## Features
-* pull up and pull down
+* pull up load and pull down refresh
 * It's almost fit for all Scroll witgets,like GridView,ListView...
-* powerful Bouncing
-* support reverse ScrollView
+* provide global setting of default indicator and property
+* provide some most common indicators
+* Support Android and iOS default ScrollPhysics,the overScroll distance can be controlled
+* horizontal and vertical refresh,support reverse ScrollView also(four direction)
 * provide more refreshStyle: Behind,Follow,UnFollow,Front
 
 
@@ -45,7 +47,7 @@ tips:<br>
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.5
+     pull_to_refresh: ^1.4.6
 
 ```
 
@@ -116,6 +118,7 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
 
 ```
 
+finally,[here](https://github.com/peng8350/flutter_pulltorefresh/tree/master/example/lib/ui/example) is the examples,you can find more details in this
 
 ## More
 - [SmartRefresher,RefreshController](refresher_controller_en.md)

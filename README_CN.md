@@ -6,8 +6,10 @@
 ## 特性
 * 提供上拉加载和下拉刷新
 * 几乎适合所有部件
-* 高度扩展性和很低的限制性
-* 支持反转列表
+* 提供全局设置默认指示器和属性
+* 提供多种比较常用的指示器
+* 支持Android和iOS默认滑动引擎,可限制越界距离
+* 支持水平和垂直刷新,同时支持翻转列表(四个方向)
 * 提供多种刷新指示器风格:跟随,不跟随,位于背部,位于前部
 
 ## 指示器截图
@@ -37,7 +39,7 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.5
+     pull_to_refresh: ^1.4.6
 
 ```
 
@@ -98,6 +100,8 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
     )
 
 ```
+
+最后,[这里](https://github.com/peng8350/flutter_pulltorefresh/tree/master/example/lib/ui/example)提供了各种例子实现你所需要的功能
 
 
 ## 更多
