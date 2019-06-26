@@ -443,6 +443,9 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   double _calculateScrollOffset();
 
   void _dispatchModeByOffset(double offset);
+
+
+  Widget buildContent(BuildContext context, V mode);
 }
 
 abstract class RefreshProcessor {
@@ -450,13 +453,17 @@ abstract class RefreshProcessor {
 
   void onModeChange(RefreshStatus mode) {}
 
-  Widget buildContent(BuildContext context, RefreshStatus mode);
+  Future readyToRefresh(){
+    return Future.value();
+  }
 
-  Future readyToRefresh();
+  Future endRefresh(){
+    return Future.value();
+  }
 
-  Future endRefresh();
+  void resetValue(){
 
-  void resetValue();
+  }
 }
 
 abstract class LoadingProcessor {
@@ -464,5 +471,4 @@ abstract class LoadingProcessor {
 
   void onModeChange(LoadStatus mode) {}
 
-  Widget buildContent(BuildContext context, LoadStatus mode);
 }

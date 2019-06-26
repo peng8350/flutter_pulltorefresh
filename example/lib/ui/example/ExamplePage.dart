@@ -12,6 +12,7 @@ import 'refresh_animatedlist.dart';
 import 'custom_header.dart';
 import 'basic.dart';
 import 'refresh_pageView.dart';
+import 'link_header_example.dart';
 
 class ExamplePage extends StatelessWidget {
   @override
@@ -43,6 +44,13 @@ class ExamplePage extends StatelessWidget {
                 body: HideFooterManual(),
                 appBar: AppBar(),
               );
+            }));
+          }),
+      ExampleItem(
+          title: "LinkHeader例子",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return LinkHeaderExample();
             }));
           }),
       ExampleItem(
