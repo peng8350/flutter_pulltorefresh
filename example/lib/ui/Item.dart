@@ -17,11 +17,14 @@ class Item extends StatefulWidget {
 class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-      child: Center(
-        child: Text(widget.title),
+    return Container(
+      child: Card(
+        margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+        child: Center(
+          child: Text(widget.title),
+        ),
       ),
+      height: 100.0,
     );
   }
 

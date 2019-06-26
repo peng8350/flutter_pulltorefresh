@@ -10,6 +10,7 @@ import 'horizontal_refresh.dart';
 import 'Nested.dart';
 import 'refresh_animatedlist.dart';
 import 'custom_header.dart';
+import 'basic.dart';
 import 'refresh_pageView.dart';
 
 class ExamplePage extends StatelessWidget {
@@ -17,6 +18,13 @@ class ExamplePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     final List<ExampleItem> items = [
+      ExampleItem(
+          title: "Basic",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return BasicExample();
+            }));
+          }),
       ExampleItem(
           title: "pageView+SmartRefresher",
           onClick: () {
