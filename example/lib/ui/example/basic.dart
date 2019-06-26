@@ -22,31 +22,39 @@ class BasicExample extends StatefulWidget {
 
 class _BasicExampleState extends State<BasicExample>
     with SingleTickerProviderStateMixin {
-  RefreshController _refreshController =
+  RefreshController _refreshController1 =
       RefreshController(initialRefresh: true);
-  int pageIndex = 0;
-  List<String> data = [];
+  RefreshController _refreshController2 =
+  RefreshController(initialRefresh: true);
+  RefreshController _refreshController3 =
+  RefreshController(initialRefresh: true);
+//  int pageIndex = 0;
+  List<String> data1 = [],data2 = [],data3 = [];
   TabController _tabController;
 
   @override
   void initState() {
     // TODO: implement initState
     _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener((){
+
+    });
     super.initState();
   }
 
-  void _onRefresh() async {
+
+  void _onRefresh(RefreshController controller,List<String> data) async {
     //monitor fetch data from network
-    await Future.delayed(Duration(milliseconds: 2000));
+    await Future.delayed(Duration(milliseconds: 5000));
 
     if (data.length == 0) {
       for (int i = 0; i < 10; i++) {
         data.add("Item $i");
       }
-      pageIndex++;
+//      pageIndex++;
     }
     setState(() {});
-    _refreshController.refreshCompleted();
+    controller.refreshCompleted();
 
     /*
         if(failed){
@@ -55,21 +63,21 @@ class _BasicExampleState extends State<BasicExample>
       */
   }
 
-  void _onLoading() async {
+  void _onLoading(RefreshController controller,List<String> data) async {
     //monitor fetch data from network
     await Future.delayed(Duration(milliseconds: 2000));
     for (int i = 0; i < 10; i++) {
       data.add("Item $i");
     }
-    pageIndex++;
+//    pageIndex++;
     setState(() {});
-    _refreshController.loadComplete();
+    controller.loadComplete();
   }
 
   Widget buildList() {
     return ListView.separated(
       itemBuilder: (c, i) => Item(
-        title: data[i],
+        title: data1[i],
       ),
       separatorBuilder: (context, index) {
         return Container(
@@ -77,16 +85,16 @@ class _BasicExampleState extends State<BasicExample>
           color: Colors.greenAccent,
         );
       },
-      itemCount: data.length,
+      itemCount: data1.length,
     );
   }
 
   Widget buildGrid() {
     return GridView.builder(
       itemBuilder: (c, i) => Item(
-        title: data[i],
+        title: data2[i],
       ),
-      itemCount: data.length,
+      itemCount: data2.length,
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
     );
@@ -101,8 +109,8 @@ class _BasicExampleState extends State<BasicExample>
         ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
-            (c, i) => Item(title: data[i]),
-            childCount: data.length,
+            (c, i) => Item(title: data3[i]),
+            childCount: data3.length,
           ),
         )
       ],
@@ -132,28 +140,39 @@ class _BasicExampleState extends State<BasicExample>
         ),
         body: TabBarView(
           controller: _tabController,
-
           children: <Widget>[
             SmartRefresher(
               child: buildList(),
-              controller: _refreshController,
+              controller: _refreshController1,
               enablePullUp: true,
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
+              onRefresh: (){
+                _onRefresh(_refreshController1,data1);
+              },
+              onLoading: (){
+                _onLoading(_refreshController1, data1);
+              },
             ),
             SmartRefresher(
               child: buildGrid(),
-              controller: _refreshController,
+              controller: _refreshController2,
               enablePullUp: true,
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
+              onRefresh: (){
+                _onRefresh(_refreshController2,data2);
+              },
+              onLoading: (){
+                _onLoading(_refreshController2, data2);
+              },
             ),
             SmartRefresher(
               child: buildCustom(),
               enablePullUp: true,
-              controller: _refreshController,
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
+              controller: _refreshController3,
+              onRefresh: (){
+                _onRefresh(_refreshController3,data3);
+              },
+              onLoading: (){
+                _onLoading(_refreshController3, data3);
+              },
             )
           ],
         ),

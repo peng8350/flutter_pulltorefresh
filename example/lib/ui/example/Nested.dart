@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import '../Item.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart' hide RefreshIndicator;
 
 /*
@@ -51,20 +51,13 @@ class NestedRefreshState extends State<NestedRefresh> {
     _getDatas();
     _scrollController = ScrollController(keepScrollOffset: true);
     _refreshController = RefreshController();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-//      _refreshController.requestRefresh(true);
-    });
     super.initState();
   }
 
-//  Widget _footerCreate(BuildContext context,int mode){
-//    return new ClassicIndicator(mode: mode);
-//  }
 
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
-        key: PageStorageKey("q"),
         headerSliverBuilder: (c, s) => [
           SliverAppBar(
             backgroundColor: Colors.greenAccent,
@@ -121,30 +114,6 @@ class NestedRefreshState extends State<NestedRefresh> {
                 itemBuilder: (context, index) => Item(),
               )),
         ));
-  }
-}
-
-class Item extends StatefulWidget {
-  @override
-  _ItemState createState() => _ItemState();
-}
-
-class _ItemState extends State<Item> {
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.red,
-      margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-      child: Center(
-        child: Text('Data'),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
   }
 }
 
