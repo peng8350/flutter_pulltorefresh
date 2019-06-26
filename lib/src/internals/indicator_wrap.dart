@@ -4,6 +4,7 @@
     createTime:2018-05-14 15:39
  */
 
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 import '../smart_refresher.dart';
@@ -147,9 +148,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       endRefresh().then((_) {
         if (!mounted) return;
         floating = false;
-
         update();
-
         /*
           handle two Situation:
           1.when user dragging to refreshing, then user scroll down not to see the indicator,then it will not spring back,
@@ -185,6 +184,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     } else if (mode == RefreshStatus.twiceRefreshing &&
         refresher.enableTwiceRefresh) {
       if (refresher.onTwiceRefresh != null) refresher.onTwiceRefresh();
+      WidgetsBinding.instance.addPostFrameCallback((_){
+        _position.activity.delegate.goBallistic(0.0);
+        _position.animateTo(0.0, duration: const Duration(milliseconds: 700), curve: Curves.linear);
+      });
     }
     onModeChange(mode);
   }
@@ -215,7 +218,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         ),
         floating: floating,
         reverse: widget.reverse,
-        refreshIndicatorLayoutExtent: widget.height,
+        refreshIndicatorLayoutExtent: mode==RefreshStatus.twiceRefreshing?_position.viewportDimension:widget.height,
         refreshStyle: widget.refreshStyle);
   }
 }

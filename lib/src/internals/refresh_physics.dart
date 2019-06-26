@@ -7,6 +7,8 @@
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 /*
  only support three parent physics:
  1. AlwaysScroll
@@ -16,6 +18,7 @@ import 'dart:math' as math;
 class RefreshPhysics extends ScrollPhysics {
   final double maxOverScrollExtent,maxUnderScrollExtent;
   final bool enablePullDown,enablePullUp;
+  final ValueNotifier headerMode,footerMode;
   final bool clamping;
 
   /// Creates scroll physics that bounce back from the edge.
@@ -23,6 +26,8 @@ class RefreshPhysics extends ScrollPhysics {
       {ScrollPhysics parent,
         this.clamping: false,
         double maxUnderScrollExtent,
+        this.headerMode,
+        this.footerMode,
         this.enablePullUp,
         this.enablePullDown,
         double maxOverScrollExtent})
@@ -40,6 +45,8 @@ class RefreshPhysics extends ScrollPhysics {
         clamping: clamping,
         enablePullDown:enablePullDown,
         enablePullUp: enablePullUp,
+        headerMode: headerMode,
+        footerMode: footerMode,
         maxUnderScrollExtent: maxUnderScrollExtent,
         maxOverScrollExtent: maxOverScrollExtent);
   }
@@ -47,6 +54,9 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) {
     // TODO: implement shouldAcceptUserOffset
+    if(headerMode.value==RefreshStatus.twiceRefreshing){
+      return false;
+    }
     return true;
   }
 

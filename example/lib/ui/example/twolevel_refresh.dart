@@ -5,7 +5,13 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+/*
+
+*/
 
 class TwoLevelExample extends StatefulWidget {
   @override
@@ -17,6 +23,13 @@ class TwoLevelExample extends StatefulWidget {
 
 class _TwoLevelExampleState extends State<TwoLevelExample> {
   RefreshController _refreshController = RefreshController();
+
+  @override
+  void initState() {
+
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +45,6 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
               children: <Widget>[
                 SmartRefresher(
                   header: CustomHeader(
-                    height: 300.0,
                     refreshStyle: RefreshStyle.Behind,
                     builder: (BuildContext c, RefreshStatus mode) {
                       return Align(
@@ -70,6 +82,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                   ),
                   child: CustomScrollView(
                     slivers: <Widget>[
+                      SliverToBoxAdapter(child: Container(color: Colors.greenAccent,height: 50.0,),),
                       SliverToBoxAdapter(
                         child: Container(
                           child: RaisedButton(onPressed: (){
@@ -88,35 +101,35 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                     _refreshController.refreshCompleted();
                   },
                   onTwiceRefresh: () {
-                    Navigator.of(context).push(PageRouteBuilder(
-                        pageBuilder: (c, animation, _) {
-                          return Hero(
-                            tag: "Aa",
-                            child: Container(
-                              child: Center(
-                                child: RaisedButton(
-                                  onPressed: (){
-                                    Navigator.of(context).pop();
-                                  },
-                                  color: Colors.red,
-                                  child: Text("点这里返回"),
-                                ),
-                              ),
-                              decoration: BoxDecoration(image: DecorationImage(
-                                image: AssetImage(
-                                  "images/secondfloor.jpg",
-
-                                ),fit: BoxFit.cover,
-                              )),
-                            ),
-                          );
-                        },
-                        transitionDuration: Duration(milliseconds: 2000)
-
-                    )).whenComplete((){
-                      //import,you should call this ,else it will keep height
+                    Future.delayed(Duration(milliseconds: 2000)).then((_){
                       _refreshController.twiceRefreshCompleted();
                     });
+//                    Navigator.of(context).push(PageRouteBuilder(
+//                      pageBuilder: (c, animation, _) {
+//                        return Container(
+//                          child: Center(
+//                            child: RaisedButton(
+//                              onPressed: (){
+//                                Navigator.of(context).pop();
+//                              },
+//                              color: Colors.red,
+//                              child: Text("点这里返回"),
+//                            ),
+//                          ),
+//                          decoration: BoxDecoration(image: DecorationImage(
+//                            image: AssetImage(
+//                              "images/secondfloor.jpg",
+//
+//                            ),fit: BoxFit.cover,
+//                          )),
+//                        );
+//                      },
+//                    )).whenComplete((){
+//                      //import,you should call this ,else it will keep height
+//                      _refreshController.twiceRefreshCompleted();
+//                    });
+
+
                   },
                 )
               ],

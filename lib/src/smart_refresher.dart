@@ -159,21 +159,27 @@ class SmartRefresher extends StatelessWidget {
     return slivers;
   }
 
+  ScrollPhysics _getScrollPhysics(
+      RefreshConfiguration conf, ScrollPhysics physics) {
+    return RefreshPhysics(
+        enablePullUp: enablePullUp,
+        enablePullDown: enablePullDown,
+        footerMode: controller.footerMode,
+        headerMode: controller.headerMode,
+        clamping: physics is ClampingScrollPhysics ||
+            (physics is AlwaysScrollableScrollPhysics &&
+                defaultTargetPlatform != TargetPlatform.iOS),
+        maxOverScrollExtent: conf?.maxOverScrollExtent,
+        maxUnderScrollExtent: conf?.maxUnderScrollExtent);
+  }
+
   // build the customScrollView
   Widget _buildBodyBySlivers(
       Widget childView, List<Widget> slivers, RefreshConfiguration conf) {
     Widget body;
     if (childView is ScrollView) {
       body = CustomScrollView(
-        physics: RefreshPhysics(
-                enablePullUp: enablePullUp,
-                enablePullDown: enablePullDown,
-                clamping: childView.physics is ClampingScrollPhysics ||
-                    (childView.physics is AlwaysScrollableScrollPhysics &&
-                        defaultTargetPlatform != TargetPlatform.iOS),
-                maxOverScrollExtent: conf?.maxOverScrollExtent,
-                maxUnderScrollExtent: conf?.maxUnderScrollExtent)
-            .applyTo(childView.physics),
+        physics: _getScrollPhysics(conf, childView.physics),
         controller: controller.scrollController,
         cacheExtent: childView.cacheExtent,
         key: childView.key,
@@ -185,13 +191,7 @@ class SmartRefresher extends StatelessWidget {
       );
     } else {
       body = CustomScrollView(
-        physics: RefreshPhysics(
-                enablePullUp: enablePullUp,
-                enablePullDown: enablePullDown,
-                clamping: defaultTargetPlatform != TargetPlatform.iOS,
-                maxUnderScrollExtent: conf?.maxUnderScrollExtent,
-                maxOverScrollExtent: conf?.maxOverScrollExtent)
-            .applyTo(const AlwaysScrollableScrollPhysics()),
+        physics: _getScrollPhysics(conf, AlwaysScrollableScrollPhysics()),
         controller: controller.scrollController,
         slivers: slivers,
       );
@@ -208,7 +208,9 @@ class SmartRefresher extends StatelessWidget {
     if (configuration != null) {
       return body;
     } else {
-      return RefreshConfiguration(child: body);
+      return IgnorePointer(
+        child: RefreshConfiguration(child: body),
+      );
     }
   }
 
@@ -274,6 +276,7 @@ class RefreshController {
 
   void twiceRefreshCompleted() {
     headerMode?.value = RefreshStatus.idle;
+    position.activity.delegate.goBallistic(0.0);
   }
 
   void refreshFailed() {
@@ -333,13 +336,15 @@ class RefreshConfiguration extends InheritedWidget {
   final double footerTriggerDistance;
   final double maxOverScrollExtent;
   final double maxUnderScrollExtent;
+  final bool enableScrollWhenTwiceRefresh;
 
   RefreshConfiguration({
     @required this.child,
     this.headerBuilder,
     this.footerBuilder,
+    this.enableScrollWhenTwiceRefresh: false,
     this.headerOffset: 0.0,
-    this.twiceTriggerDistance:150.0,
+    this.twiceTriggerDistance: 150.0,
     this.clickLoadingWhenIdle: false,
     this.skipCanRefresh: false,
     this.autoLoad: true,
