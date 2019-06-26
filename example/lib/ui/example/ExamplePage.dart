@@ -13,6 +13,7 @@ import 'custom_header.dart';
 import 'basic.dart';
 import 'refresh_pageView.dart';
 import 'link_header_example.dart';
+import 'twolevel_refresh.dart';
 
 class ExamplePage extends StatelessWidget {
   @override
@@ -81,6 +82,13 @@ class ExamplePage extends StatelessWidget {
                 body: RefreshWithEmptyView(),
                 appBar: AppBar(),
               );
+            }));
+          }),
+      ExampleItem(
+          title: "淘宝二楼例子",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return TwoLevelExample();
             }));
           }),
       ExampleItem(

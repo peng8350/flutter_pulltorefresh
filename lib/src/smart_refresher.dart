@@ -15,7 +15,15 @@ typedef void OnOffsetChange(bool up, double offset);
 
 typedef IndicatorBuilder = Widget Function();
 
-enum RefreshStatus { idle, canRefresh, refreshing, completed, failed }
+enum RefreshStatus {
+  idle,
+  canRefresh,
+  refreshing,
+  completed,
+  failed,
+  canTwiceRefresh,
+  twiceRefreshing
+}
 
 enum LoadStatus { idle, loading, noMore, failed }
 
@@ -45,11 +53,14 @@ class SmartRefresher extends StatelessWidget {
   // This bool will affect whether or not to have the function of drop-up load.
   final bool enablePullUp;
 
+  // controll whether open the second floor function
+  final bool enableTwiceRefresh;
+
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePullDown;
 
   // upper and downer callback when you drag out of the distance
-  final Function onRefresh, onLoading;
+  final Function onRefresh, onLoading, onTwiceRefresh;
 
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;
@@ -70,8 +81,10 @@ class SmartRefresher extends StatelessWidget {
       this.footer,
       this.enablePullDown: true,
       this.enablePullUp: false,
+      this.enableTwiceRefresh: false,
       this.onRefresh,
       this.onLoading,
+      this.onTwiceRefresh,
       this.onOffsetChange,
       this.headerInsertIndex: 0})
       : assert(controller != null),
@@ -259,6 +272,10 @@ class RefreshController {
     }
   }
 
+  void twiceRefreshCompleted() {
+    headerMode?.value = RefreshStatus.idle;
+  }
+
   void refreshFailed() {
     headerMode?.value = RefreshStatus.failed;
   }
@@ -312,6 +329,7 @@ class RefreshConfiguration extends InheritedWidget {
   final bool autoLoad;
   final Widget child;
   final double headerTriggerDistance;
+  final double twiceTriggerDistance;
   final double footerTriggerDistance;
   final double maxOverScrollExtent;
   final double maxUnderScrollExtent;
@@ -321,6 +339,7 @@ class RefreshConfiguration extends InheritedWidget {
     this.headerBuilder,
     this.footerBuilder,
     this.headerOffset: 0.0,
+    this.twiceTriggerDistance:150.0,
     this.clickLoadingWhenIdle: false,
     this.skipCanRefresh: false,
     this.autoLoad: true,

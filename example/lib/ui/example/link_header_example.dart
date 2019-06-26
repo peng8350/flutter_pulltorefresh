@@ -95,21 +95,17 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
               )
             ],
           ),
-          !dismissAppbar
-              ? Container(
+          Container(
                   height: 64.0,
                   child: AppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0.0,
+                    backgroundColor: dismissAppbar?Colors.blueAccent:Colors.transparent,
+                    elevation: dismissAppbar?1.0:0.0,
                     title: SimpleLinkBar(
                       key: linkKey,
                     ),
                   ),
                 )
-              : Container(
-                  height: 64.0,
-                  child: AppBar(),
-                )
+
         ],
       ),
     );
@@ -131,6 +127,12 @@ class _SimpleLinkBarState extends State<SimpleLinkBar>
   RefreshStatus _status = RefreshStatus.idle;
   AnimationController _animationController;
 
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -141,8 +143,9 @@ class _SimpleLinkBarState extends State<SimpleLinkBar>
   @override
   Future endRefresh() {
     // TODO: implement endRefresh
-    return _animationController.animateTo(0.0,
+    _animationController.animateTo(0.0,
         duration: Duration(milliseconds: 300));
+    return Future.value();
   }
 
   @override

@@ -15,9 +15,21 @@ import 'package:flutter/foundation.dart';
 enum IconPosition { left, right, top, bottom }
 
 class ClassicHeader extends RefreshIndicator {
-  final String releaseText, idleText, refreshingText, completeText, failedText;
+  final String releaseText,
+      idleText,
+      refreshingText,
+      completeText,
+      failedText,
+      canTwiceRefreshText,
+      twiceRefreshingText;
   final Decoration decoration;
-  final Widget releaseIcon, idleIcon, refreshingIcon, completeIcon, failedIcon;
+  final Widget releaseIcon,
+      idleIcon,
+      refreshingIcon,
+      completeIcon,
+      failedIcon,
+      canTwiceRefreshIcon,
+      twiceRefreshingIcon;
   final double spacing;
   final IconPosition iconPos;
 
@@ -32,6 +44,10 @@ class ClassicHeader extends RefreshIndicator {
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
+    this.canTwiceRefreshIcon,
+    this.twiceRefreshingIcon,
+    this.canTwiceRefreshText: 'release to enter secondfloor',
+    this.twiceRefreshingText: 'in second floor',
     this.completeText: 'Refresh complete',
     this.failedText: 'Refresh failed',
     this.idleText: 'Pull down to refresh',
@@ -55,6 +71,10 @@ class ClassicHeader extends RefreshIndicator {
     ValueNotifier<RefreshStatus> mode,
     RefreshStyle refreshStyle: default_refreshStyle,
     this.decoration: const BoxDecoration(),
+    this.canTwiceRefreshIcon,
+    this.twiceRefreshingIcon,
+    this.canTwiceRefreshText: 'release to enter secondfloor',
+    this.twiceRefreshingText: 'in second floor',
     double height: default_height,
     Duration completeDuration: const Duration(milliseconds: 600),
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
@@ -95,7 +115,11 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                     ? widget.failedText
                     : mode == RefreshStatus.refreshing
                         ? widget.refreshingText
-                        : widget.idleText,
+                        : mode == RefreshStatus.canTwiceRefresh
+                            ? widget.canTwiceRefreshText
+                            : mode == RefreshStatus.twiceRefreshing
+                                ? widget.twiceRefreshingText
+                                : widget.idleText,
         style: widget.textStyle);
   }
 
@@ -108,15 +132,20 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                 ? widget.completeIcon
                 : mode == RefreshStatus.failed
                     ? widget.failedIcon
-                    : widget.refreshingIcon ??
-                        SizedBox(
-                          width: 25.0,
-                          height: 25.0,
-                          child: defaultTargetPlatform == TargetPlatform.iOS
-                              ? const CupertinoActivityIndicator()
-                              : const CircularProgressIndicator(
-                                  strokeWidth: 2.0),
-                        );
+                    : mode == RefreshStatus.canTwiceRefresh
+                        ? widget.canTwiceRefreshIcon
+                        : mode == RefreshStatus.twiceRefreshing
+                            ? widget.twiceRefreshingIcon
+                            : widget.refreshingIcon ??
+                                SizedBox(
+                                  width: 25.0,
+                                  height: 25.0,
+                                  child: defaultTargetPlatform ==
+                                          TargetPlatform.iOS
+                                      ? const CupertinoActivityIndicator()
+                                      : const CircularProgressIndicator(
+                                          strokeWidth: 2.0),
+                                );
     return icon ?? Container();
   }
 

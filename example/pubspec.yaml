@@ -36,6 +36,7 @@ flutter:
   assets:
     - images/animate.gif
     - images/empty.png
+    - images/secondfloor.jpg
     - images/classical_follow.gif
     - images/classical_unfollow.gif
     - images/warterdrop.gif
