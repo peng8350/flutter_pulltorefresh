@@ -58,8 +58,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   }
 }
 
-class _RenderSliverRefresh extends RenderSliver
-    with RenderObjectWithChildMixin<RenderBox> {
+class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   _RenderSliverRefresh(
       {@required double refreshIndicatorExtent,
         @required bool hasLayoutExtent,
@@ -186,6 +185,7 @@ class _RenderSliverRefresh extends RenderSliver
             paintOrigin: -refreshIndicatorLayoutExtent -
                 constraints.scrollOffset +
                 layoutExtent,
+            hitTestExtent: 500.0,
             paintExtent: needPaintExtent,
             hasVisualOverflow:
             overscrolledExtent < refreshIndicatorLayoutExtent,
@@ -200,6 +200,7 @@ class _RenderSliverRefresh extends RenderSliver
             scrollExtent: layoutExtent,
             paintOrigin: -overscrolledExtent - constraints.scrollOffset,
             paintExtent: needPaintExtent,
+            hitTestExtent:needPaintExtent,
             maxPaintExtent: needPaintExtent,
             layoutExtent: Math.min(needPaintExtent,
                 Math.max(layoutExtent - constraints.scrollOffset, 0.0)),

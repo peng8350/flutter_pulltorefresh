@@ -208,9 +208,7 @@ class SmartRefresher extends StatelessWidget {
     if (configuration != null) {
       return body;
     } else {
-      return IgnorePointer(
-        child: RefreshConfiguration(child: body),
-      );
+      return RefreshConfiguration(child: body);
     }
   }
 
@@ -234,6 +232,8 @@ class RefreshController {
   LoadStatus get footerStatus => footerMode?.value;
 
   bool get isRefresh => headerMode?.value == RefreshStatus.refreshing;
+
+  bool get isTwiceRefresh => headerMode?.value ==RefreshStatus.twiceRefreshing;
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
@@ -274,9 +274,14 @@ class RefreshController {
     }
   }
 
-  void twiceRefreshCompleted() {
+  void twiceRefreshCompleted({needSpringAnimate:true}) {
     headerMode?.value = RefreshStatus.idle;
-    position.activity.delegate.goBallistic(0.0);
+    if(needSpringAnimate) {
+      position.activity.delegate.goBallistic(0.0);
+    }
+    else{
+      position.forcePixels(0.0);
+    }
   }
 
   void refreshFailed() {

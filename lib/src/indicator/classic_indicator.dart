@@ -20,16 +20,14 @@ class ClassicHeader extends RefreshIndicator {
       refreshingText,
       completeText,
       failedText,
-      canTwiceRefreshText,
-      twiceRefreshingText;
+      canTwiceRefreshText;
   final Decoration decoration;
   final Widget releaseIcon,
       idleIcon,
       refreshingIcon,
       completeIcon,
       failedIcon,
-      canTwiceRefreshIcon,
-      twiceRefreshingIcon;
+      canTwiceRefreshIcon,twiceRefreshingView;
   final double spacing;
   final IconPosition iconPos;
 
@@ -45,9 +43,8 @@ class ClassicHeader extends RefreshIndicator {
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
     this.canTwiceRefreshIcon,
-    this.twiceRefreshingIcon,
+    this.twiceRefreshingView:const Text(""),
     this.canTwiceRefreshText: 'release to enter secondfloor',
-    this.twiceRefreshingText: 'in second floor',
     this.completeText: 'Refresh complete',
     this.failedText: 'Refresh failed',
     this.idleText: 'Pull down to refresh',
@@ -72,9 +69,8 @@ class ClassicHeader extends RefreshIndicator {
     RefreshStyle refreshStyle: default_refreshStyle,
     this.decoration: const BoxDecoration(),
     this.canTwiceRefreshIcon,
-    this.twiceRefreshingIcon,
+    this.twiceRefreshingView,
     this.canTwiceRefreshText: 'release to enter secondfloor',
-    this.twiceRefreshingText: 'in second floor',
     double height: default_height,
     Duration completeDuration: const Duration(milliseconds: 600),
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
@@ -117,9 +113,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                         ? widget.refreshingText
                         : mode == RefreshStatus.canTwiceRefresh
                             ? widget.canTwiceRefreshText
-                            : mode == RefreshStatus.twiceRefreshing
-                                ? widget.twiceRefreshingText
-                                : widget.idleText,
+                            : widget.idleText,
         style: widget.textStyle);
   }
 
@@ -134,9 +128,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                     ? widget.failedIcon
                     : mode == RefreshStatus.canTwiceRefresh
                         ? widget.canTwiceRefreshIcon
-                        : mode == RefreshStatus.twiceRefreshing
-                            ? widget.twiceRefreshingIcon
-                            : widget.refreshingIcon ??
+                        :  widget.refreshingIcon ??
                                 SizedBox(
                                   width: 25.0,
                                   height: 25.0,
