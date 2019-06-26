@@ -46,12 +46,12 @@ abstract class RefreshIndicator extends StatefulWidget {
 
   const RefreshIndicator(
       {Key key,
-      this.onRefresh,
-      this.reverse: false,
-      this.height: default_height,
-      this.completeDuration:
-          const Duration(milliseconds: default_completeDuration),
-      this.refreshStyle: default_refreshStyle})
+        this.onRefresh,
+        this.reverse: false,
+        this.height: default_height,
+        this.completeDuration:
+        const Duration(milliseconds: default_completeDuration),
+        this.refreshStyle: default_refreshStyle})
       : super(key: key);
 }
 
@@ -76,7 +76,8 @@ abstract class LoadIndicator extends StatefulWidget {
 }
 
 abstract class RefreshIndicatorState<T extends RefreshIndicator>
-    extends State<T> with IndicatorStateMixin<T, RefreshStatus> {
+    extends State<T>
+    with IndicatorStateMixin<T, RefreshStatus>,RefreshProcessor {
   bool floating = false;
 
   bool _inVisual() {
@@ -85,6 +86,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   double _calculateScrollOffset() {
     return (floating ? widget.height : 0.0) - _position?.pixels;
+  }
+
+  @override
+  void _handleOffsetChange() {
+    // TODO: implement _handleOffsetChange
+    super._handleOffsetChange();
+    final double overscrollPast = _calculateScrollOffset();
+    onOffsetChange(overscrollPast);
   }
 
   // handle the  state change between canRefresh and idle canRefresh  before refreshing
@@ -149,8 +158,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         } else {
           if (!_inVisual()) {
             mode = RefreshStatus.idle;
-          }
-          else {
+          } else {
             _position.activity.delegate.goBallistic(0.0);
           }
         }
@@ -203,15 +211,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 }
 
 abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
-    with IndicatorStateMixin<T, LoadStatus> {
+    with IndicatorStateMixin<T, LoadStatus>,LoadingProcessor {
   // use to update between one page and above one page
   bool _isHide = false;
-
   bool _enableLoadingAgain = true;
 
   double _calculateScrollOffset() {
     final double overscrollPastEnd =
-        math.max(_position.pixels - _position.maxScrollExtent, 0.0);
+    math.max(_position.pixels - _position.maxScrollExtent, 0.0);
     return overscrollPastEnd;
   }
 
@@ -263,6 +270,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       return;
     }
     super._handleOffsetChange();
+    final double overscrollPast = _calculateScrollOffset();
+    onOffsetChange(overscrollPast);
   }
 
   void _listenScrollEnd() {
@@ -349,7 +358,6 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
       refresher?.onOffsetChange(V == RefreshStatus, overscrollPast);
     }
     _dispatchModeByOffset(overscrollPast);
-    onOffsetChange(overscrollPast);
   }
 
   void disposeListener() {
@@ -362,7 +370,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   void _updateListener() {
     configuration = RefreshConfiguration.of(context);
     assert(configuration != null,
-        "when use asSliver ,please wrap scrollView in RefreshConfiguration!");
+    "when use asSliver ,please wrap scrollView in RefreshConfiguration!");
     refresher = SmartRefresher.of(context);
     ValueNotifier<V> newMode;
     if (refresher == null) {
@@ -435,10 +443,26 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   double _calculateScrollOffset();
 
   void _dispatchModeByOffset(double offset);
+}
 
+abstract class RefreshProcessor {
   void onOffsetChange(double offset) {}
 
-  void onModeChange(V mode) {}
+  void onModeChange(RefreshStatus mode) {}
 
-  Widget buildContent(BuildContext context, V mode);
+  Widget buildContent(BuildContext context, RefreshStatus mode);
+
+  Future readyToRefresh();
+
+  Future endRefresh();
+
+  void resetValue();
+}
+
+abstract class LoadingProcessor {
+  void onOffsetChange(double offset) {}
+
+  void onModeChange(LoadStatus mode) {}
+
+  Widget buildContent(BuildContext context, LoadStatus mode);
 }
