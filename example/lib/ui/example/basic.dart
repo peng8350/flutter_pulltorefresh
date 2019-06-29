@@ -76,6 +76,7 @@ class _BasicExampleState extends State<BasicExample>
 
   Widget buildList() {
     return ListView.separated(
+      padding: EdgeInsets.only(left: 5, right: 5),
       itemBuilder: (c, i) => Item(
         title: data1[i],
       ),

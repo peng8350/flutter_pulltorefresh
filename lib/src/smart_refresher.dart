@@ -127,7 +127,11 @@ class SmartRefresher extends StatelessWidget {
       if (child is BoxScrollView) {
         //avoid system inject padding when own indicator top or bottom
         Widget sliver = child.buildChildLayout(context);
-        slivers = [sliver];
+        if (child.padding != null) {
+          slivers = [SliverPadding(sliver: sliver, padding: child.padding)];
+        } else {
+          slivers = [sliver];
+        }
       } else {
         slivers = List.from(child.buildSlivers(context), growable: true);
       }
