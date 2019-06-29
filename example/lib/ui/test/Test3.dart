@@ -8,6 +8,7 @@ class Test3 extends StatefulWidget {
 
   @override
   Test3State createState() => Test3State();
+
 }
 
 class Test3State extends State<Test3>
@@ -161,8 +162,9 @@ class Test3State extends State<Test3>
             footer: ClassicFooter(
               iconPos: IconPosition.top,
               height: 60.0,
-            ),
-            onRefresh: () async {
+            )
+            ,
+            onRefresh: ()  async{
               print("onRefresh");
               await Future.delayed(const Duration(milliseconds: 4000));
               data.add(Container(
@@ -178,7 +180,7 @@ class Test3State extends State<Test3>
             },
             child: ListView.builder(
               itemExtent: 100.0,
-              itemBuilder: (c, i) => data[i],
+              itemBuilder: (c,i) => data[i],
               itemCount: data.length,
             ),
             onLoading: () {
