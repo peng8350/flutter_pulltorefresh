@@ -98,12 +98,16 @@ class _AnimatedListSampleState extends State<AnimatedListSample> {
             ),
           ],
         ),
-        body:  RefreshAnimatedList(
-          key: _listKey,
-          initialItemCount: _list.length,
-          itemBuilder: _buildItem,
+
+        body:  SmartRefresher(
+          child: AnimatedList(
+            key: _listKey,
+            initialItemCount: _list.length,
+            itemBuilder: _buildItem,
+          ),
+          injectToSubViewport: true,
           enablePullUp: true,
-          refreshController: _refreshController,
+          controller: _refreshController,
         ),
       ),
     );

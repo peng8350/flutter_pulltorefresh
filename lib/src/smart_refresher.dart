@@ -4,6 +4,8 @@
     createTime:2018-05-01 11:39
 */
 
+import 'dart:collection';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'internals/indicator_wrap.dart';
@@ -72,12 +74,17 @@ class SmartRefresher extends StatelessWidget {
   // I will consider to remove this if header only work in first sliver in future version
   // may be NestedScrollView can solution,but NestedScrollView conflict with overScroll effect too
   final int headerInsertIndex;
-
+  /* this bool use to inject indicator to subTree nearest Viewport,
+    use to compaitable some special Widget,such as: AnimatedList,
+    ListWheelScrollView,
+   */
+  final bool injectToSubViewport;
   SmartRefresher(
       {Key key,
       @required this.controller,
       this.child,
       this.header,
+      this.injectToSubViewport:false,
       this.footer,
       this.enablePullDown: true,
       this.enablePullUp: false,
@@ -204,17 +211,33 @@ class SmartRefresher extends StatelessWidget {
   }
 
   @override
+  StatelessElement createElement() {
+    // TODO: implement createElement
+    return _SmartRefresherElement(this,header,footer);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final RefreshConfiguration configuration = RefreshConfiguration.of(context);
+    Widget body;
+    final RefreshConfiguration configuration = RefreshConfiguration.of(
+        context);
     _updateController(context, configuration);
-    List<Widget> slivers = _buildSliversByChild(context, child, configuration);
-    Widget body = _buildBodyBySlivers(child, slivers, configuration);
+    if(injectToSubViewport){
+      body = child;
+    }
+    else {
+
+      List<Widget> slivers = _buildSliversByChild(
+          context, child, configuration);
+      body = _buildBodyBySlivers(child, slivers, configuration);
+    }
     if (configuration != null) {
       return body;
     } else {
       return RefreshConfiguration(child: body);
     }
   }
+
 
   static SmartRefresher of(BuildContext context) {
     return context.ancestorWidgetOfExactType(SmartRefresher);
@@ -237,7 +260,7 @@ class RefreshController {
 
   bool get isRefresh => headerMode?.value == RefreshStatus.refreshing;
 
-  bool get isTwiceRefresh => headerMode?.value ==RefreshStatus.twiceRefreshing;
+  bool get isTwiceRefresh => headerMode?.value == RefreshStatus.twiceRefreshing;
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
@@ -278,12 +301,11 @@ class RefreshController {
     }
   }
 
-  void twiceRefreshCompleted({needSpringAnimate:true}) {
+  void twiceRefreshCompleted({needSpringAnimate: true}) {
     headerMode?.value = RefreshStatus.idle;
-    if(needSpringAnimate) {
+    if (needSpringAnimate) {
       position.activity.delegate.goBallistic(0.0);
-    }
-    else{
+    } else {
       position.forcePixels(0.0);
     }
   }
@@ -378,5 +400,55 @@ class RefreshConfiguration extends InheritedWidget {
         oldWidget.runtimeType != runtimeType ||
         maxUnderScrollExtent != oldWidget.maxUnderScrollExtent ||
         oldWidget.maxOverScrollExtent != maxOverScrollExtent;
+  }
+}
+
+class _SmartRefresherElement extends StatelessElement {
+  final Widget header, footer;
+
+  _SmartRefresherElement(StatelessWidget widget, this.header, this.footer)
+      : super(widget);
+
+  void _injectToViewport() {
+    Element ele = this;
+    while (ele?.widget is! Viewport)
+      ele.visitChildren((e) {
+        ele = e;
+      });
+    List<Widget> slivers = (ele.widget as Viewport).children.toList();
+      slivers.insert(0, header ??
+          (RefreshConfiguration.of(this)?.headerBuilder != null
+              ? RefreshConfiguration.of(this)?.headerBuilder()
+              : null) ??
+          defaultHeader);
+    if(footer!=null){
+      slivers.add(footer ??
+          (RefreshConfiguration.of(this)?.footerBuilder != null
+              ? RefreshConfiguration.of(this)?.footerBuilder()
+              : null) ??
+          defaultFooter);
+    }
+    ele.update(Viewport(
+      offset: (ele.widget as Viewport).offset,
+      axisDirection: (ele.widget as Viewport).axisDirection,
+      slivers: slivers,
+      cacheExtent:  (ele.widget as Viewport).cacheExtent,
+      anchor: (ele.widget as Viewport).anchor,
+      crossAxisDirection: (ele.widget as Viewport).crossAxisDirection,
+    ));
+  }
+
+  @override
+  void mount(Element parent, newSlot) {
+    // TODO: implement mount
+    super.mount(parent, newSlot);
+    _injectToViewport();
+  }
+
+  @override
+  void update(StatelessWidget newWidget) {
+    // TODO: implement update
+    super.update(newWidget);
+    _injectToViewport();
   }
 }
