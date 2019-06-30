@@ -40,7 +40,7 @@ class Test3State extends State<Test3>
             child: Text("请求加载数据"))
       ],
     ));
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 1; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
@@ -159,6 +159,12 @@ class Test3State extends State<Test3>
             ),
             footer: ClassicFooter(
               iconPos: IconPosition.top,
+              outerBuilder: (child){
+                return Container(
+                  decoration: BoxDecoration(color: Colors.redAccent),
+                  child: child,
+                );
+              },
               height: 60.0,
             ),
             onRefresh: ()  async{
