@@ -169,6 +169,7 @@ class SmartRefresher extends StatelessWidget {
         enablePullUp: enablePullUp,
         enablePullDown: enablePullDown,
         footerMode: controller.footerMode,
+        enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? false,
         headerMode: controller.headerMode,
         clamping: physics is ClampingScrollPhysics ||
             (physics is AlwaysScrollableScrollPhysics &&
@@ -238,7 +239,7 @@ class RefreshController {
 
   bool get isRefresh => headerMode?.value == RefreshStatus.refreshing;
 
-  bool get isTwoLevel=> headerMode?.value == RefreshStatus.twoLeveling;
+  bool get isTwoLevel => headerMode?.value == RefreshStatus.twoLeveling;
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
@@ -286,14 +287,13 @@ class RefreshController {
 
   void twoLevelComplete({needSpringAnimate: true}) {
     headerMode?.value = RefreshStatus.idle;
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (needSpringAnimate) {
         position.activity.delegate.goBallistic(0.0);
       } else {
         position.jumpTo(0.0);
       }
     });
-
   }
 
   void refreshFailed() {
@@ -347,19 +347,19 @@ class RefreshConfiguration extends InheritedWidget {
   final double headerOffset;
   final bool clickLoadingWhenIdle;
   final bool autoLoad;
+  final bool enableScrollWhenTwoLevel;
   final Widget child;
   final double headerTriggerDistance;
   final double twiceTriggerDistance;
   final double footerTriggerDistance;
   final double maxOverScrollExtent;
   final double maxUnderScrollExtent;
-  final bool enableScrollWhenTwiceRefresh;
 
   RefreshConfiguration({
     @required this.child,
     this.headerBuilder,
     this.footerBuilder,
-    this.enableScrollWhenTwiceRefresh: false,
+    this.enableScrollWhenTwoLevel: false,
     this.headerOffset: 0.0,
     this.twiceTriggerDistance: 150.0,
     this.clickLoadingWhenIdle: false,

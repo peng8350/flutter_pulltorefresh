@@ -16,26 +16,26 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
  3.Bouncing 
  */
 class RefreshPhysics extends ScrollPhysics {
-  final double maxOverScrollExtent,maxUnderScrollExtent;
-  final bool enablePullDown,enablePullUp;
-  final ValueNotifier headerMode,footerMode;
+  final double maxOverScrollExtent, maxUnderScrollExtent;
+  final bool enablePullDown, enablePullUp;
+  final bool enableScrollWhenTwoLevel;
+  final ValueNotifier headerMode, footerMode;
   final bool clamping;
 
   /// Creates scroll physics that bounce back from the edge.
   RefreshPhysics(
       {ScrollPhysics parent,
-        this.clamping: false,
-        double maxUnderScrollExtent,
-        this.headerMode,
-        this.footerMode,
-        this.enablePullUp,
-        this.enablePullDown,
-        double maxOverScrollExtent})
+      this.clamping: false,
+      double maxUnderScrollExtent,
+      this.headerMode,
+      this.footerMode,
+      this.enablePullUp,
+      this.enableScrollWhenTwoLevel:false,
+      this.enablePullDown,
+      double maxOverScrollExtent})
       : maxOverScrollExtent = maxOverScrollExtent ?? double.infinity,
-        maxUnderScrollExtent = maxUnderScrollExtent ??
-            (!clamping
-                ? double.infinity
-                : 0.0),
+        maxUnderScrollExtent =
+            maxUnderScrollExtent ?? (!clamping ? double.infinity : 0.0),
         super(parent: parent);
 
   @override
@@ -43,8 +43,9 @@ class RefreshPhysics extends ScrollPhysics {
     return RefreshPhysics(
         parent: buildParent(ancestor),
         clamping: clamping,
-        enablePullDown:enablePullDown,
+        enablePullDown: enablePullDown,
         enablePullUp: enablePullUp,
+        enableScrollWhenTwoLevel: enableScrollWhenTwoLevel,
         headerMode: headerMode,
         footerMode: footerMode,
         maxUnderScrollExtent: maxUnderScrollExtent,
@@ -54,7 +55,8 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) {
     // TODO: implement shouldAcceptUserOffset
-    if(headerMode.value==RefreshStatus.twoLeveling){
+    if (headerMode.value == RefreshStatus.twoLeveling &&
+        !enableScrollWhenTwoLevel) {
       return false;
     }
     return true;
@@ -69,16 +71,13 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   // TODO: implement runtimeType
   Type get runtimeType {
-    if(enablePullDown&&!enablePullUp){
+    if (enablePullDown && !enablePullUp) {
       return Container;
-    }
-    else if(!enablePullUp&&!enablePullDown){
+    } else if (!enablePullUp && !enablePullDown) {
       return Stack;
-    }
-    else if(enablePullUp&&!enablePullDown){
+    } else if (enablePullUp && !enablePullDown) {
       return Column;
-    }
-    else{
+    } else {
       return RefreshPhysics;
     }
   }
@@ -86,7 +85,7 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
     // TODO: implement applyPhysicsToUserOffset
-    if((offset>0&&!enablePullDown)||(offset<0&&!enablePullUp)){
+    if ((offset > 0 && !enablePullDown) || (offset < 0 && !enablePullUp)) {
       return parent.applyPhysicsToUserOffset(position, offset);
     }
     if (position.outOfRange) {
@@ -94,18 +93,18 @@ class RefreshPhysics extends ScrollPhysics {
       assert(position.minScrollExtent <= position.maxScrollExtent);
 
       final double overscrollPastStart =
-      math.max(position.minScrollExtent - position.pixels, 0.0);
+          math.max(position.minScrollExtent - position.pixels, 0.0);
       final double overscrollPastEnd =
-      math.max(position.pixels - position.maxScrollExtent, 0.0);
+          math.max(position.pixels - position.maxScrollExtent, 0.0);
       final double overscrollPast =
-      math.max(overscrollPastStart, overscrollPastEnd);
+          math.max(overscrollPastStart, overscrollPastEnd);
       final bool easing = (overscrollPastStart > 0.0 && offset < 0.0) ||
           (overscrollPastEnd > 0.0 && offset > 0.0);
 
       final double friction = easing
-      // Apply less resistance when easing the overscroll vs tensioning.
+          // Apply less resistance when easing the overscroll vs tensioning.
           ? frictionFactor(
-          (overscrollPast - offset.abs()) / position.viewportDimension)
+              (overscrollPast - offset.abs()) / position.viewportDimension)
           : frictionFactor(overscrollPast / position.viewportDimension);
       final double direction = offset.sign;
       return direction * _applyFriction(overscrollPast, offset.abs(), friction);
@@ -132,7 +131,8 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     // TODO: implement applyBoundaryConditions
-    if((position.pixels-value>0&&!enablePullDown)||(position.pixels-value<0&&!enablePullUp)){
+    if ((position.pixels - value > 0 && !enablePullDown) ||
+        (position.pixels - value < 0 && !enablePullUp)) {
       return parent.applyBoundaryConditions(position, value);
     }
     final double topBoundary = position.minScrollExtent - maxOverScrollExtent;
@@ -171,7 +171,8 @@ class RefreshPhysics extends ScrollPhysics {
   Simulation createBallisticSimulation(
       ScrollMetrics position, double velocity) {
     // TODO: implement createBallisticSimulation
-    if((velocity<0.0&&!enablePullDown)||(velocity>0&&!enablePullUp)){
+    if ((velocity < 0.0 && !enablePullDown) ||
+        (velocity > 0 && !enablePullUp)) {
       return parent.createBallisticSimulation(position, velocity);
     }
     if (position.outOfRange) {

@@ -41,29 +41,31 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return LayoutBuilder(
-      builder: (q, c) {
-        double height = c.biggest.height;
-        double width = c.biggest.width;
-        return Scaffold(
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _tabIndex,
-            onTap: (index) {
-              _tabIndex = index;
-              setState(() {});
-            },
-            items: [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.add), title: Text("二级刷新例子1")),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.border_clear), title: Text("二级刷新例子2"))
-            ],
-          ),
-          body: Stack(
-            children: <Widget>[
-              Offstage(
-                offstage: _tabIndex != 0,
-                child: LayoutBuilder(
+    return RefreshConfiguration(
+      enableScrollWhenTwoLevel: true,
+      child: LayoutBuilder(
+        builder: (q, c) {
+          double height = c.biggest.height;
+          double width = c.biggest.width;
+          return Scaffold(
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: _tabIndex,
+              onTap: (index) {
+                _tabIndex = index;
+                setState(() {});
+              },
+              items: [
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.add), title: Text("二级刷新例子1")),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.border_clear), title: Text("二级刷新例子2"))
+              ],
+            ),
+            body: Stack(
+              children: <Widget>[
+                Offstage(
+                  offstage: _tabIndex != 0,
+                  child: LayoutBuilder(
                     builder: (_,c){
                       return SmartRefresher(
                         header: ClassicHeader(
@@ -148,7 +150,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                                   child: Text("点击这里返回上一页!"),
                                 ),
                                 color: Colors.red,
-                                height: 680.0,
+                                height: 1180.0,
                               ),
                             )
                           ],
@@ -166,51 +168,52 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                         },
                       );
                     },
-                ),
-              ),
-              Offstage(
-                offstage: _tabIndex != 1,
-                child: SmartRefresher(
-                  child: CustomScrollView(
-                    slivers: <Widget>[
-                      SliverToBoxAdapter(
-                        child: Container(
-                          child: RaisedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text("点击这里返回上一页!"),
-                          ),
-                          color: Colors.red,
-                          height: 680.0,
-                        ),
-                      )
-                    ],
                   ),
-                  controller: _refreshController2,
-                  enableTwoLevel: true,
-                  onRefresh: () async {
-                    await Future.delayed(Duration(milliseconds: 2000));
-                    _refreshController2.refreshCompleted();
-                  },
-                  onTwoLevel: () {
-//                    _refreshController2.position.forcePixels( _refreshController2.position.pixels);
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(
-                            builder: (c) => Scaffold(
-                                  appBar: AppBar(),
-                                )))
-                        .whenComplete(() {
-                      _refreshController2.twoLevelComplete(
-                          needSpringAnimate: false);
-                    });
-                  },
                 ),
-              )
-            ],
-          ),
-        );
-      },
+                Offstage(
+                  offstage: _tabIndex != 1,
+                  child: SmartRefresher(
+                    child: CustomScrollView(
+                      slivers: <Widget>[
+                        SliverToBoxAdapter(
+                          child: Container(
+                            child: RaisedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("点击这里返回上一页!"),
+                            ),
+                            color: Colors.red,
+                            height: 680.0,
+                          ),
+                        )
+                      ],
+                    ),
+                    controller: _refreshController2,
+                    enableTwoLevel: true,
+                    onRefresh: () async {
+                      await Future.delayed(Duration(milliseconds: 2000));
+                      _refreshController2.refreshCompleted();
+                    },
+                    onTwoLevel: () {
+//                    _refreshController2.position.forcePixels( _refreshController2.position.pixels);
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                          builder: (c) => Scaffold(
+                            appBar: AppBar(),
+                          )))
+                          .whenComplete(() {
+                        _refreshController2.twoLevelComplete(
+                            needSpringAnimate: false);
+                      });
+                    },
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
