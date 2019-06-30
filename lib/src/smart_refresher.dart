@@ -21,8 +21,8 @@ enum RefreshStatus {
   refreshing,
   completed,
   failed,
-  canTwiceRefresh,
-  twiceRefreshing
+  canTwoLevel,
+  twoLeveling
 }
 
 enum LoadStatus { idle, loading, noMore, failed }
@@ -54,13 +54,13 @@ class SmartRefresher extends StatelessWidget {
   final bool enablePullUp;
 
   // controll whether open the second floor function
-  final bool enableTwiceRefresh;
+  final bool enableTwoLevel;
 
   //This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePullDown;
 
   // upper and downer callback when you drag out of the distance
-  final Function onRefresh, onLoading, onTwiceRefresh;
+  final Function onRefresh, onLoading, onTwoLevel;
 
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;
@@ -81,10 +81,10 @@ class SmartRefresher extends StatelessWidget {
       this.footer,
       this.enablePullDown: true,
       this.enablePullUp: false,
-      this.enableTwiceRefresh: false,
+      this.enableTwoLevel: false,
       this.onRefresh,
       this.onLoading,
-      this.onTwiceRefresh,
+      this.onTwoLevel,
       this.onOffsetChange,
       this.headerInsertIndex: 0})
       : assert(controller != null),
@@ -238,7 +238,7 @@ class RefreshController {
 
   bool get isRefresh => headerMode?.value == RefreshStatus.refreshing;
 
-  bool get isTwiceRefresh => headerMode?.value == RefreshStatus.twiceRefreshing;
+  bool get isTwoLevel=> headerMode?.value == RefreshStatus.twoLeveling;
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
@@ -284,13 +284,16 @@ class RefreshController {
     }
   }
 
-  void twiceRefreshCompleted({needSpringAnimate: true}) {
+  void twoLevelComplete({needSpringAnimate: true}) {
     headerMode?.value = RefreshStatus.idle;
-    if (needSpringAnimate) {
-      position.activity.delegate.goBallistic(0.0);
-    } else {
-      position.forcePixels(0.0);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      if (needSpringAnimate) {
+        position.activity.delegate.goBallistic(0.0);
+      } else {
+        position.jumpTo(0.0);
+      }
+    });
+
   }
 
   void refreshFailed() {

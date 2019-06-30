@@ -97,9 +97,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if (_position.activity.velocity < 0.0 ||
         _position.activity is DragScrollActivity ||
         _position.activity is DrivenScrollActivity) {
-      if (refresher.enableTwiceRefresh &&
+      if (refresher.enableTwoLevel &&
           offset >= configuration.twiceTriggerDistance) {
-        mode = RefreshStatus.canTwiceRefresh;
+        mode = RefreshStatus.canTwoLevel;
       } else if (offset >= configuration.headerTriggerDistance) {
         if (!configuration.skipCanRefresh) {
           mode = RefreshStatus.canRefresh;
@@ -115,13 +115,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         mode = RefreshStatus.idle;
       }
     } else if (RefreshStatus.canRefresh == mode ||
-        mode == RefreshStatus.canTwiceRefresh) {
+        mode == RefreshStatus.canTwoLevel) {
       floating = true;
       update();
       readyToRefresh().then((_) {
         if (!mounted) return;
-        mode = RefreshStatus.canTwiceRefresh == mode
-            ? RefreshStatus.twiceRefreshing
+        mode = RefreshStatus.canTwoLevel == mode
+            ? RefreshStatus.twoLeveling
             : RefreshStatus.refreshing;
       });
     }
@@ -162,13 +162,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       });
     } else if (mode == RefreshStatus.refreshing) {
       if (refresher.onRefresh != null) refresher.onRefresh();
-    } else if (mode == RefreshStatus.twiceRefreshing &&
-        refresher.enableTwiceRefresh) {
-      if (refresher.onTwiceRefresh != null) refresher.onTwiceRefresh();
+    } else if (mode == RefreshStatus.twoLeveling &&
+        refresher.enableTwoLevel) {
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _position.activity.delegate.goBallistic(0.0);
         _position.animateTo(0.0,
             duration: const Duration(milliseconds: 700), curve: Curves.linear);
+        if (refresher.onTwoLevel != null) refresher.onTwoLevel();
       });
     }
     onModeChange(mode);
@@ -200,7 +201,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         ),
         floating: floating,
         reverse: widget.reverse,
-        refreshIndicatorLayoutExtent: mode == RefreshStatus.twiceRefreshing
+        refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling
             ? _position.viewportDimension
             : widget.height,
         refreshStyle: widget.refreshStyle);

@@ -21,14 +21,14 @@ class ClassicHeader extends RefreshIndicator {
       refreshingText,
       completeText,
       failedText,
-      canTwiceRefreshText;
+      canTwoLevelText;
   final Widget releaseIcon,
       idleIcon,
       refreshingIcon,
       completeIcon,
       failedIcon,
-      canTwiceRefreshIcon,
-      twiceRefreshingView;
+      canTwoLevelIcon,
+      twoLevelView;
   final double spacing;
   final IconPosition iconPos;
 
@@ -43,9 +43,9 @@ class ClassicHeader extends RefreshIndicator {
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
     this.refreshingText: 'Refreshing...',
-    this.canTwiceRefreshIcon,
-    this.twiceRefreshingView: const Text(""),
-    this.canTwiceRefreshText: 'release to enter secondfloor',
+    this.canTwoLevelIcon,
+    this.twoLevelView,
+    this.canTwoLevelText: 'release to enter secondfloor',
     this.completeText: 'Refresh complete',
     this.failedText: 'Refresh failed',
     this.idleText: 'Pull down to refresh',
@@ -62,7 +62,6 @@ class ClassicHeader extends RefreshIndicator {
           completeDuration: completeDuration,
           height: height,
         );
-
 
   @override
   State createState() {
@@ -82,9 +81,9 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                     ? widget.failedText
                     : mode == RefreshStatus.refreshing
                         ? widget.refreshingText
-                        : mode == RefreshStatus.canTwiceRefresh
-                            ? widget.canTwiceRefreshText
-                            : widget.idleText,
+                        : mode == RefreshStatus.canTwoLevel
+                            ? widget.canTwoLevelText
+                            : mode==RefreshStatus.idle?widget.idleText:"",
         style: widget.textStyle);
   }
 
@@ -97,17 +96,20 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                 ? widget.completeIcon
                 : mode == RefreshStatus.failed
                     ? widget.failedIcon
-                    : mode == RefreshStatus.canTwiceRefresh
-                        ? widget.canTwiceRefreshIcon
-                        : widget.refreshingIcon ??
-                            SizedBox(
-                              width: 25.0,
-                              height: 25.0,
-                              child: defaultTargetPlatform == TargetPlatform.iOS
-                                  ? const CupertinoActivityIndicator()
-                                  : const CircularProgressIndicator(
-                                      strokeWidth: 2.0),
-                            );
+                    : mode == RefreshStatus.canTwoLevel
+                        ? widget.canTwoLevelIcon
+                        : mode == RefreshStatus.refreshing
+                            ? widget.refreshingIcon
+                            : widget.twoLevelView ??
+                                SizedBox(
+                                  width: 25.0,
+                                  height: 25.0,
+                                  child: defaultTargetPlatform ==
+                                          TargetPlatform.iOS
+                                      ? const CupertinoActivityIndicator()
+                                      : const CircularProgressIndicator(
+                                          strokeWidth: 2.0),
+                                );
     return icon ?? Container();
   }
 
@@ -134,20 +136,12 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
       children: children,
     );
     return widget.outerBuilder != null
-        ? widget.outerBuilder(Container(
-            width: widget.height,
-            height: widget.height,
-            child: Center(
-              child: container,
-            ),
-          ))
-        : Container(
-            width: widget.height,
-            height: widget.height,
-            child: Center(
-              child: container,
-            ),
-          );
+        ? widget.outerBuilder(Center(
+      child: container,
+    ))
+        : Center(
+      child: container,
+    );
   }
 }
 
@@ -186,7 +180,6 @@ class ClassicFooter extends LoadIndicator {
           key: key,
           onClick: onClick,
         );
-
 
   @override
   State<StatefulWidget> createState() {
