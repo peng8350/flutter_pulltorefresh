@@ -63,36 +63,6 @@ class ClassicHeader extends RefreshIndicator {
           height: height,
         );
 
-  const ClassicHeader.asSliver({
-    Key key,
-    @required OnRefresh onRefresh,
-    ValueNotifier<RefreshStatus> mode,
-    this.outerBuilder,
-    RefreshStyle refreshStyle: default_refreshStyle,
-    this.canTwiceRefreshIcon,
-    this.twiceRefreshingView,
-    this.canTwiceRefreshText: 'release to enter secondfloor',
-    double height: default_height,
-    Duration completeDuration: const Duration(milliseconds: 600),
-    this.textStyle: const TextStyle(color: const Color(0xff555555)),
-    this.releaseText: 'Refresh when release',
-    this.refreshingText: 'Refreshing...',
-    this.completeText: 'Refresh complete',
-    this.failedText: 'Refresh failed',
-    this.idleText: 'Pull down to refresh',
-    this.iconPos: IconPosition.left,
-    this.spacing: 15.0,
-    this.refreshingIcon,
-    this.failedIcon: const Icon(Icons.clear, color: Colors.grey),
-    this.completeIcon: const Icon(Icons.done, color: Colors.grey),
-    this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
-    this.releaseIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
-  }) : super(
-            key: key,
-            onRefresh: onRefresh,
-            completeDuration: completeDuration,
-            refreshStyle: refreshStyle,
-            height: height);
 
   @override
   State createState() {
@@ -217,28 +187,6 @@ class ClassicFooter extends LoadIndicator {
           onClick: onClick,
         );
 
-  const ClassicFooter.asSliver({
-    Key key,
-    @required OnLoading onLoading,
-    Function onClick,
-    this.outerBuilder,
-    this.textStyle: const TextStyle(color: const Color(0xff555555)),
-    this.loadingText: 'Loading...',
-    this.noDataText: 'No more data',
-    this.height: 60.0,
-    this.noMoreIcon,
-    this.idleText: 'Load More..',
-    this.iconPos: IconPosition.left,
-    this.failedText: 'Load Failed,Click Retry!',
-    this.failedIcon: const Icon(Icons.error, color: Colors.grey),
-    this.spacing: 15.0,
-    this.loadingIcon,
-    this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
-  }) : super(
-          key: key,
-          onLoading: onLoading,
-          onClick: onClick,
-        );
 
   @override
   State<StatefulWidget> createState() {

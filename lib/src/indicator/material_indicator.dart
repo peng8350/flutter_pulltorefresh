@@ -36,23 +36,6 @@ class MaterialClassicHeader extends RefreshIndicator {
           reverse: reverse,
         );
 
-  const MaterialClassicHeader.asSliver({
-    Key key,
-    @required OnRefresh onRefresh,
-    ValueNotifier<RefreshStatus> mode,
-    this.semanticsLabel,
-    this.semanticsValue,
-    this.color,
-    bool reverse: false,
-    this.distance: 50.0,
-    this.backgroundColor,
-  }) : super(
-          key: key,
-          onRefresh: onRefresh,
-          reverse: reverse,
-          refreshStyle: RefreshStyle.Front,
-          height: 100.0,
-        );
 
   @override
   State<StatefulWidget> createState() {
@@ -190,24 +173,6 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
             semanticsValue: semanticsValue,
             semanticsLabel: semanticsLabel);
 
-  const WaterDropMaterialHeader.asSliver({
-    Key key,
-    @required OnRefresh onRefresh,
-    String semanticsLabel,
-    double distance: 120.0,
-    bool reverse: false,
-    String semanticsValue,
-    Color color: Colors.white,
-    Color backgroundColor: Colors.blueAccent,
-  }) : super.asSliver(
-            key: key,
-            onRefresh: onRefresh,
-            color: color,
-            distance: distance,
-            reverse: reverse,
-            backgroundColor: backgroundColor,
-            semanticsValue: semanticsValue,
-            semanticsLabel: semanticsLabel);
 
   @override
   State<StatefulWidget> createState() {

@@ -67,26 +67,6 @@ class CupertinoScreenState extends State<CupertinoScreen> {
         child: Stack(
           children: <Widget>[
             Offstage(
-              offstage: _segIndex != 0,
-              child: RefreshConfiguration(
-                child: CustomScrollView(
-
-                  slivers: <Widget>[
-                    MaterialClassicHeader.asSliver(
-                      onRefresh: () async {
-                        await Future.delayed(Duration(milliseconds: 400));
-                        return true;
-                      },
-                    ),
-                    SliverList(
-                      delegate: SliverChildListDelegate(widgets),
-                    ),
-                    ClassicFooter()
-                  ],
-                ),
-              ),
-            ),
-            Offstage(
               offstage: _segIndex != 1,
               child: SmartRefresher(
                 child: ListView(children: widgets),

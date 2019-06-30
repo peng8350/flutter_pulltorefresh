@@ -10,9 +10,6 @@ import 'dart:math' as math;
 import '../smart_refresher.dart';
 import 'slivers.dart';
 
-typedef OnRefresh = Future<bool> Function();
-typedef OnLoading = Future<int> Function();
-
 const int default_completeDuration = 500;
 
 const double default_height = 60.0;
@@ -39,15 +36,12 @@ abstract class RefreshIndicator extends StatefulWidget {
 
   final double height;
 
-  final OnRefresh onRefresh;
-
   final bool reverse;
 
   final Duration completeDuration;
 
   const RefreshIndicator(
       {Key key,
-      this.onRefresh,
       this.reverse: false,
       this.height: default_height,
       this.completeDuration:
@@ -70,10 +64,7 @@ abstract class RefreshIndicator extends StatefulWidget {
 abstract class LoadIndicator extends StatefulWidget {
   final Function onClick;
 
-  final OnLoading onLoading;
-
-  const LoadIndicator({Key key, this.onLoading, this.onClick})
-      : super(key: key);
+  const LoadIndicator({Key key, this.onClick}) : super(key: key);
 }
 
 abstract class RefreshIndicatorState<T extends RefreshIndicator>
@@ -123,7 +114,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       } else {
         mode = RefreshStatus.idle;
       }
-    } else if (RefreshStatus.canRefresh == mode||mode==RefreshStatus.canTwiceRefresh) {
+    } else if (RefreshStatus.canRefresh == mode ||
+        mode == RefreshStatus.canTwiceRefresh) {
       floating = true;
       update();
       readyToRefresh().then((_) {
@@ -169,24 +161,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         }
       });
     } else if (mode == RefreshStatus.refreshing) {
-      if (refresher == null) {
-        // think about to remove asSliver,If it is not necessary
-        widget.onRefresh().then((bool result) {
-          if (result) {
-            mode = RefreshStatus.completed;
-          } else {
-            mode = RefreshStatus.failed;
-          }
-        });
-      } else {
-        if (refresher.onRefresh != null) refresher.onRefresh();
-      }
+      if (refresher.onRefresh != null) refresher.onRefresh();
     } else if (mode == RefreshStatus.twiceRefreshing &&
         refresher.enableTwiceRefresh) {
       if (refresher.onTwiceRefresh != null) refresher.onTwiceRefresh();
-      WidgetsBinding.instance.addPostFrameCallback((_){
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         _position.activity.delegate.goBallistic(0.0);
-        _position.animateTo(0.0, duration: const Duration(milliseconds: 700), curve: Curves.linear);
+        _position.animateTo(0.0,
+            duration: const Duration(milliseconds: 700), curve: Curves.linear);
       });
     }
     onModeChange(mode);
@@ -218,7 +200,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         ),
         floating: floating,
         reverse: widget.reverse,
-        refreshIndicatorLayoutExtent: mode==RefreshStatus.twiceRefreshing?_position.viewportDimension:widget.height,
+        refreshIndicatorLayoutExtent: mode == RefreshStatus.twiceRefreshing
+            ? _position.viewportDimension
+            : widget.height,
         refreshStyle: widget.refreshStyle);
   }
 }
@@ -249,18 +233,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     }
     update();
     if (mode == LoadStatus.loading) {
-      if (refresher?.onLoading != null) {
+      if (refresher.onLoading != null) {
         refresher.onLoading();
-      } else if (widget.onLoading != null) {
-        widget.onLoading().then((result) {
-          if (result == 0) {
-            mode = LoadStatus.idle;
-          } else if (result == 1) {
-            mode = LoadStatus.failed;
-          } else {
-            mode = LoadStatus.noMore;
-          }
-        });
       }
     }
     onModeChange(mode);
@@ -368,8 +342,8 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
     if (overscrollPast < 0.0) {
       return;
     }
-    if (refresher?.onOffsetChange != null) {
-      refresher?.onOffsetChange(V == RefreshStatus, overscrollPast);
+    if (refresher.onOffsetChange != null) {
+      refresher.onOffsetChange(V == RefreshStatus, overscrollPast);
     }
     _dispatchModeByOffset(overscrollPast);
   }
@@ -383,20 +357,10 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   void _updateListener() {
     configuration = RefreshConfiguration.of(context);
-    assert(configuration != null,
-        "when use asSliver ,please wrap scrollView in RefreshConfiguration!");
     refresher = SmartRefresher.of(context);
-    ValueNotifier<V> newMode;
-    if (refresher == null) {
-      newMode = _mode ??
-          (V == RefreshStatus
-              ? ValueNotifier<RefreshStatus>(RefreshStatus.idle)
-              : ValueNotifier<LoadStatus>(LoadStatus.idle));
-    } else {
-      newMode = V == RefreshStatus
-          ? refresher.controller.headerMode
-          : refresher.controller.footerMode;
-    }
+    ValueNotifier<V> newMode = V == RefreshStatus
+        ? refresher.controller.headerMode
+        : refresher.controller.footerMode;
     final ScrollPosition newPosition = Scrollable.of(context).position;
     if (newMode != _mode) {
       _mode?.removeListener(_handleModeChange);
@@ -446,7 +410,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   }
 
   void _onPositionUpdated(ScrollPosition newPosition) {
-    refresher?.onPositionUpdated(newPosition);
+    refresher.onPositionUpdated(newPosition);
   }
 
   void _handleModeChange();

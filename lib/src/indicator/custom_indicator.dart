@@ -26,21 +26,6 @@ class CustomHeader extends RefreshIndicator {
             refreshStyle: refreshStyle,
             height: height);
 
-  const CustomHeader.asSliver({
-    Key key,
-    @required this.builder,
-    @required OnRefresh onRefresh,
-    ValueNotifier<RefreshStatus> mode,
-    double height: default_height,
-    Duration completeDuration: const Duration(milliseconds: 600),
-    RefreshStyle refreshStyle: RefreshStyle.Follow,
-  }) : super(
-            key: key,
-            onRefresh: onRefresh,
-            completeDuration: completeDuration,
-            refreshStyle: refreshStyle,
-            height: height);
-
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -64,13 +49,6 @@ class CustomFooter extends LoadIndicator {
     @required this.builder,
     Function onClick,
   }) : super(key: key, onClick: onClick);
-
-  const CustomFooter.asSliver({
-    Key key,
-    @required this.builder,
-    @required OnLoading onLoading,
-    Function onClick,
-  }) : super(key: key, onLoading: onLoading, onClick: onClick);
 
   @override
   State<StatefulWidget> createState() {

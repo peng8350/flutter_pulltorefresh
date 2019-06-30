@@ -44,25 +44,6 @@ class WaterDropHeader extends RefreshIndicator {
             completeDuration: completeDuration,
             refreshStyle: RefreshStyle.UnFollow);
 
-  const WaterDropHeader.asSliver({
-    Key key,
-    @required OnRefresh onRefresh,
-    this.refresh,
-    this.complete,
-    this.failed,
-    Duration completeDuration: const Duration(milliseconds: 600),
-    this.reverse: false,
-    this.waterDropColor: Colors.grey,
-    this.idleIcon: const Icon(
-      Icons.autorenew,
-      size: 15,
-      color: Colors.white,
-    ),
-  }) : super(
-            key: key,
-            onRefresh: onRefresh,
-            completeDuration: completeDuration,
-            refreshStyle: RefreshStyle.UnFollow);
 
   @override
   State<StatefulWidget> createState() {

@@ -9,11 +9,6 @@ import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 
 class RunningHeader extends RefreshIndicator {
-  RunningHeader.asSliver({@required OnRefresh onRefresh})
-      : super(
-            refreshStyle: RefreshStyle.Follow,
-            height: 80.0,
-            onRefresh: onRefresh);
 
   @override
   State<StatefulWidget> createState() {
