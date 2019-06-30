@@ -40,7 +40,7 @@ class Test3State extends State<Test3>
             child: Text("请求加载数据"))
       ],
     ));
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < 3; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
@@ -125,7 +125,8 @@ class Test3State extends State<Test3>
 //      });
 //    });
     _getDatas();
-    _refreshController = RefreshController(initialRefresh: true);
+    _refreshController = RefreshController(initialRefresh: true,initialLoadStatus: LoadStatus.noMore,initialRefreshStatus: RefreshStatus.refreshing);
+
     super.initState();
   }
 
@@ -147,9 +148,6 @@ class Test3State extends State<Test3>
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Container(
-          height: 100.0,
-        ),
         Expanded(
           child: SmartRefresher(
             enablePullUp: _enablePullDown,
@@ -162,8 +160,7 @@ class Test3State extends State<Test3>
             footer: ClassicFooter(
               iconPos: IconPosition.top,
               height: 60.0,
-            )
-            ,
+            ),
             onRefresh: ()  async{
               print("onRefresh");
               await Future.delayed(const Duration(milliseconds: 4000));
@@ -180,6 +177,7 @@ class Test3State extends State<Test3>
             },
             child: ListView.builder(
               itemExtent: 100.0,
+              physics: ClampingScrollPhysics(),
               itemBuilder: (c,i) => data[i],
               itemCount: data.length,
             ),

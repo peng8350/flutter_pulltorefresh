@@ -39,13 +39,20 @@ class _BasicExampleState extends State<BasicExample>
     _tabController.addListener((){
 
     });
+
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
   }
 
 
   void _onRefresh(RefreshController controller,List<String> data) async {
     //monitor fetch data from network
-    await Future.delayed(Duration(milliseconds: 5000));
+    await Future.delayed(Duration(milliseconds: 1000));
 
     if (data.length == 0) {
       for (int i = 0; i < 10; i++) {

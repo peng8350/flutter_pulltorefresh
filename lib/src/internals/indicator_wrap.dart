@@ -317,6 +317,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     // TODO: implement build
     return SliverLoading(
         hideWhenNotFull: configuration.hideFooterWhenNotFull,
+        mode: mode,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints cons) {
             _isHide = cons.biggest.height == 0.0;
@@ -416,9 +417,6 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
     if (V == RefreshStatus) {
       SmartRefresher.of(context)?.controller?.headerMode?.value =
           RefreshStatus.idle;
-    } else {
-      SmartRefresher.of(context)?.controller?.footerMode?.value =
-          LoadStatus.idle;
     }
     super.initState();
   }

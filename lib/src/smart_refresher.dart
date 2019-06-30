@@ -222,8 +222,9 @@ class SmartRefresher extends StatelessWidget {
 }
 
 class RefreshController {
-  ValueNotifier<RefreshStatus> headerMode = ValueNotifier(RefreshStatus.idle);
-  ValueNotifier<LoadStatus> footerMode = ValueNotifier(LoadStatus.idle);
+  ValueNotifier<RefreshStatus> headerMode;
+
+  ValueNotifier<LoadStatus> footerMode;
 
   ScrollPosition position;
   double _triggerDistance;
@@ -237,11 +238,16 @@ class RefreshController {
 
   bool get isRefresh => headerMode?.value == RefreshStatus.refreshing;
 
-  bool get isTwiceRefresh => headerMode?.value ==RefreshStatus.twiceRefreshing;
+  bool get isTwiceRefresh => headerMode?.value == RefreshStatus.twiceRefreshing;
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
-  RefreshController({bool initialRefresh: false}) {
+  RefreshController(
+      {bool initialRefresh: false,
+      RefreshStatus initialRefreshStatus,
+      LoadStatus initialLoadStatus}) {
+    this.headerMode = ValueNotifier(initialRefreshStatus ?? RefreshStatus.idle);
+    this.footerMode = ValueNotifier(initialLoadStatus ?? LoadStatus.idle);
     if (initialRefresh) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         requestRefresh();
@@ -278,12 +284,11 @@ class RefreshController {
     }
   }
 
-  void twiceRefreshCompleted({needSpringAnimate:true}) {
+  void twiceRefreshCompleted({needSpringAnimate: true}) {
     headerMode?.value = RefreshStatus.idle;
-    if(needSpringAnimate) {
+    if (needSpringAnimate) {
       position.activity.delegate.goBallistic(0.0);
-    }
-    else{
+    } else {
       position.forcePixels(0.0);
     }
   }
