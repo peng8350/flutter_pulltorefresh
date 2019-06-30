@@ -22,7 +22,9 @@ enum RefreshStatus {
   completed,
   failed,
   canTwoLevel,
-  twoLeveling
+  twoLevelOpening,
+  twoLeveling,
+  twoLevelClosing
 }
 
 enum LoadStatus { idle, loading, noMore, failed }
@@ -285,14 +287,12 @@ class RefreshController {
     }
   }
 
-  void twoLevelComplete({needSpringAnimate: true}) {
-    headerMode?.value = RefreshStatus.idle;
+  void twoLevelComplete({Duration duration:const Duration(milliseconds: 500),Curve curve:Curves.linear}) {
+    headerMode?.value = RefreshStatus.twoLevelClosing;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (needSpringAnimate) {
-        position.activity.delegate.goBallistic(0.0);
-      } else {
-        position.jumpTo(0.0);
-      }
+        position.animateTo(0.0, duration: duration, curve: curve).whenComplete((){
+          headerMode.value = RefreshStatus.idle;
+        });
     });
   }
 

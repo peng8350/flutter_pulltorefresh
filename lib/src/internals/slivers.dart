@@ -167,6 +167,7 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
         constraints.asBoxConstraints(maxExtent: refreshIndicatorLayoutExtent),
         parentUsesSize: true,
       );
+    print(overscrolledExtent + layoutExtent);
     if (active) {
       final double needPaintExtent = Math.min(
           Math.max(

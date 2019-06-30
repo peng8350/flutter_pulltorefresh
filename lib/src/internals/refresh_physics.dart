@@ -55,10 +55,7 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) {
     // TODO: implement shouldAcceptUserOffset
-    if (headerMode.value == RefreshStatus.twoLeveling &&
-        !enableScrollWhenTwoLevel) {
-      return false;
-    }
+    print("should");
     return true;
   }
 
@@ -88,14 +85,12 @@ class RefreshPhysics extends ScrollPhysics {
     if ((offset > 0 && !enablePullDown) || (offset < 0 && !enablePullUp)) {
       return parent.applyPhysicsToUserOffset(position, offset);
     }
-    if (position.outOfRange) {
-      assert(offset != 0.0);
-      assert(position.minScrollExtent <= position.maxScrollExtent);
+    if (position.outOfRange||headerMode.value==RefreshStatus.twoLeveling) {
 
       final double overscrollPastStart =
           math.max(position.minScrollExtent - position.pixels, 0.0);
       final double overscrollPastEnd =
-          math.max(position.pixels - position.maxScrollExtent, 0.0);
+          math.max(position.pixels - 0.0, 0.0);
       final double overscrollPast =
           math.max(overscrollPastStart, overscrollPastEnd);
       final bool easing = (overscrollPastStart > 0.0 && offset < 0.0) ||

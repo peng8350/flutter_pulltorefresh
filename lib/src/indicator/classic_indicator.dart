@@ -98,8 +98,8 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                     ? widget.failedIcon
                     : mode == RefreshStatus.canTwoLevel
                         ? widget.canTwoLevelIcon
-                        : mode == RefreshStatus.refreshing
-                            ? widget.refreshingIcon
+                        : mode == RefreshStatus.canTwoLevel
+                            ? widget.canTwoLevelIcon
                             : widget.twoLevelView ??
                                 SizedBox(
                                   width: 25.0,
@@ -135,12 +135,10 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
       alignment: WrapAlignment.center,
       children: children,
     );
-    return widget.outerBuilder != null
-        ? widget.outerBuilder(Center(
-      child: container,
-    ))
-        : Center(
-      child: container,
+    return Center(
+      child:  widget.outerBuilder != null
+          ? widget.outerBuilder(container)
+          : container,
     );
   }
 }

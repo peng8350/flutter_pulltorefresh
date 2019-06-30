@@ -91,6 +91,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   // handle the  state change between canRefresh and idle canRefresh  before refreshing
   void _dispatchModeByOffset(double offset) {
     if (floating) return;
+    if(RefreshStatus.twoLevelOpening==mode||mode==RefreshStatus.twoLevelClosing){
+      return;
+    }
     // Sometimes different devices return velocity differently, so it's impossible to judge from velocity whether the user
     // has invoked animateTo (0.0) or the user is dragging the view.Sometimes animateTo (0.0) does not return velocity = 0.0
     // velocity < 0.0 may be spring up,>0.0 spring down
@@ -114,16 +117,19 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       } else {
         mode = RefreshStatus.idle;
       }
-    } else if (RefreshStatus.canRefresh == mode ||
-        mode == RefreshStatus.canTwoLevel) {
+    } else if (RefreshStatus.canRefresh == mode) {
       floating = true;
       update();
       readyToRefresh().then((_) {
         if (!mounted) return;
-        mode = RefreshStatus.canTwoLevel == mode
-            ? RefreshStatus.twoLeveling
-            : RefreshStatus.refreshing;
+        mode = RefreshStatus.refreshing;
       });
+    } else if (mode == RefreshStatus.canTwoLevel) {
+      floating = true;
+      update();
+      if (!mounted) return;
+
+      mode = RefreshStatus.twoLevelOpening;
     }
   }
 
@@ -162,15 +168,23 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       });
     } else if (mode == RefreshStatus.refreshing) {
       if (refresher.onRefresh != null) refresher.onRefresh();
-    } else if (mode == RefreshStatus.twoLeveling &&
+    } else if (mode == RefreshStatus.twoLevelOpening &&
         refresher.enableTwoLevel) {
-
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _position.activity.delegate.goBallistic(0.0);
-        _position.animateTo(0.0,
-            duration: const Duration(milliseconds: 700), curve: Curves.linear);
+        _position.activity.resetActivity();
+        _position
+            .animateTo(0.0,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.linear)
+            .whenComplete(() {
+          mode = RefreshStatus.twoLeveling;
+        });
         if (refresher.onTwoLevel != null) refresher.onTwoLevel();
       });
+    }
+    else if(mode==RefreshStatus.twoLevelClosing){
+      floating = false;
+      update();
     }
     onModeChange(mode);
   }
@@ -201,7 +215,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         ),
         floating: floating,
         reverse: widget.reverse,
-        refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling
+        refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||
+                mode == RefreshStatus.twoLevelOpening ||
+                mode == RefreshStatus.twoLevelClosing
             ? _position.viewportDimension
             : widget.height,
         refreshStyle: widget.refreshStyle);

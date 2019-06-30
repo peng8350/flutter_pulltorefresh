@@ -45,8 +45,6 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
       enableScrollWhenTwoLevel: true,
       child: LayoutBuilder(
         builder: (q, c) {
-          double height = c.biggest.height;
-          double width = c.biggest.width;
           return Scaffold(
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: _tabIndex,
@@ -66,42 +64,39 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                 Offstage(
                   offstage: _tabIndex != 0,
                   child: LayoutBuilder(
-                    builder: (_,c){
-                      return SmartRefresher(
-                        header: ClassicHeader(
-                          refreshStyle: RefreshStyle.Behind,
-                          textStyle: TextStyle(color: Colors.white),
-                          outerBuilder: (child) {
-                            if(_refreshController1.headerStatus!=RefreshStatus.twoLeveling)
-                              return Container(
-                                height:c.biggest.height,
-                                child: Container(
-                                  height: 60.0,
-                                  child: child,
-                                ),
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                          "images/secondfloor.jpg",
-                                        ),
-                                        fit: BoxFit.cover)),
-                                alignment: Alignment.bottomCenter,
-                              );
-                            else
-                              return child;
-                          },
-                          twoLevelView: Container(
-                            height: c.biggest.height,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                      "images/secondfloor.jpg",
-                                    ),
-                                    fit: BoxFit.cover)),
-                            child: Stack(
-                              children: <Widget>[
-                                Container(
-                                  child: Center(
+                    builder: (_, c) {
+                      return NotificationListener(
+                        child: SmartRefresher(
+                          header: ClassicHeader(
+                            refreshStyle: RefreshStyle.Behind,
+                            textStyle: TextStyle(color: Colors.white),
+                            outerBuilder: (child) {
+                                return Container(
+                                  height: c.biggest.height,
+                                  child: _refreshController1.headerStatus !=
+                                      RefreshStatus.twoLeveling &&
+                                      _refreshController1.headerStatus !=
+                                          RefreshStatus.twoLevelOpening &&
+                                      _refreshController1.headerStatus !=
+                                          RefreshStatus.twoLevelClosing?Container(
+                                    height: 60.0,
+                                    child: child,
+                                  ):child,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                            "images/secondfloor.jpg",
+                                          ),
+                                          fit: BoxFit.cover)),
+                                  alignment: Alignment.bottomCenter,
+                                );
+                            },
+                            twoLevelView: Container(
+                              height: c.biggest
+                              .height,
+                              child: Stack(
+                                children: <Widget>[
+                                  Center(
                                     child: Wrap(
                                       children: <Widget>[
                                         RaisedButton(
@@ -117,54 +112,64 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                                       ],
                                     ),
                                   ),
-                                  height: double.infinity,
-                                ),
-                                Align(
-                                  alignment: Alignment.topCenter,
-                                  child: AppBar(
-                                    backgroundColor: Colors.transparent,
-                                    elevation: 0.0,
-                                    leading: GestureDetector(
-                                      child: Icon(
-                                        Icons.arrow_back_ios,
-                                        color: Colors.white,
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: AppBar(
+                                      backgroundColor: Colors.transparent,
+                                      elevation: 0.0,
+                                      leading: GestureDetector(
+                                        child: Icon(
+                                          Icons.arrow_back_ios,
+                                          color: Colors.white,
+                                        ),
+                                        onTap: () {
+                                          _refreshController1
+                                              .twoLevelComplete();
+                                        },
                                       ),
-                                      onTap: () {
-                                        _refreshController1.twoLevelComplete(needSpringAnimate: false);
-                                      },
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        child: CustomScrollView(
-                          slivers: <Widget>[
-                            SliverToBoxAdapter(
-                              child: Container(
-                                child: RaisedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("点击这里返回上一页!"),
+                          child: CustomScrollView(
+                            slivers: <Widget>[
+                              SliverToBoxAdapter(
+                                child: Container(
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text("点击这里返回上一页!"),
+                                  ),
+                                  color: Colors.red,
+                                  height: 1180.0,
                                 ),
-                                color: Colors.red,
-                                height: 1180.0,
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
+                          controller: _refreshController1,
+                          enableTwoLevel: true,
+                          onRefresh: () async {
+                            await Future.delayed(Duration(milliseconds: 2000));
+                            _refreshController1.refreshCompleted();
+                          },
+                          onTwoLevel: () {},
                         ),
-                        controller: _refreshController1,
-                        enableTwoLevel: true,
-                        onRefresh: () async {
-                          await Future.delayed(Duration(milliseconds: 2000));
-                          _refreshController1.refreshCompleted();
-                        },
-                        onTwoLevel: () {
-//                    _refreshController1.position.hold((){
-//
-//        });
+                        onNotification: (n) {
+                          if (n is ScrollUpdateNotification) {
+                            if (n.dragDetails == null) {
+                              if (n.metrics.pixels > 50.0 &&
+                                  _refreshController1.isTwoLevel)
+                                _refreshController1.twoLevelComplete();
+                            }
+                          } else if (n is ScrollEndNotification) {
+                            if (n.metrics.pixels > 50.0 &&
+                                _refreshController1.isTwoLevel)
+                              _refreshController1.twoLevelComplete();
+                          }
+                          return false;
                         },
                       );
                     },
@@ -199,12 +204,11 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
 //                    _refreshController2.position.forcePixels( _refreshController2.position.pixels);
                       Navigator.of(context)
                           .push(MaterialPageRoute(
-                          builder: (c) => Scaffold(
-                            appBar: AppBar(),
-                          )))
+                              builder: (c) => Scaffold(
+                                    appBar: AppBar(),
+                                  )))
                           .whenComplete(() {
-                        _refreshController2.twoLevelComplete(
-                            needSpringAnimate: false);
+                        _refreshController2.twoLevelComplete();
                       });
                     },
                   ),
