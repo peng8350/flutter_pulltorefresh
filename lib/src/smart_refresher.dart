@@ -167,18 +167,6 @@ class SmartRefresher extends StatelessWidget {
 
   ScrollPhysics _getScrollPhysics(
       RefreshConfiguration conf, ScrollPhysics physics) {
-    print(RefreshPhysics(
-        enablePullUp: enablePullUp,
-        enablePullDown: enablePullDown,
-        footerMode: controller.footerMode,
-        enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? false,
-        headerMode: controller.headerMode,
-        clamping: physics is ClampingScrollPhysics ||
-            (physics is AlwaysScrollableScrollPhysics &&
-                defaultTargetPlatform != TargetPlatform.iOS),
-        maxOverScrollExtent: conf?.maxOverScrollExtent,
-        maxUnderScrollExtent: conf?.maxUnderScrollExtent)
-        .applyTo(physics));
     return RefreshPhysics(
             enablePullUp: enablePullUp,
             enablePullDown: enablePullDown,

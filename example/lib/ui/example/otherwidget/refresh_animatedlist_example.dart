@@ -5,9 +5,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../../other/refresh_animatedlist.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
-
+import '../../../other/refresh_animatedlist.dart';
 class AnimatedListExample extends StatefulWidget {
   @override
   _AnimatedListExampleState createState() => new _AnimatedListExampleState();

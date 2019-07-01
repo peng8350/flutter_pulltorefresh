@@ -4,17 +4,18 @@
  * Time:  2019-06-24 17:21
  */
 import 'package:flutter/material.dart';
-import 'empty_view.dart';
-import 'hidefooter_bycontent.dart';
-import 'refesh_expansiopn_panel_list.dart';
-import 'horizontal+reverse.dart';
-import 'Nested.dart';
-import 'refresh_animatedlist.dart';
-import 'custom_header.dart';
-import 'basic.dart';
-import 'refresh_pageView.dart';
-import 'link_header_example.dart';
-import 'twolevel_refresh.dart';
+import 'package:example/ui/example/useStage/empty_view.dart';
+import 'package:example/ui/example/useStage/hidefooter_bycontent.dart';
+import 'package:example/ui/example/otherwidget/refesh_expansiopn_panel_list_example.dart';
+import 'package:example/ui/example/useStage/horizontal+reverse.dart';
+import 'package:example/ui/example/useStage/Nested.dart';
+import 'package:example/ui/example/otherwidget/refresh_animatedlist_example.dart';
+import 'package:example/ui/example/useStage/custom_header.dart';
+import 'package:example/ui/example/useStage/basic.dart';
+import 'package:example/ui/example/otherwidget/refresh_pageView_example.dart';
+import 'package:example/ui/example/useStage/link_header_example.dart';
+import 'package:example/ui/example/useStage/twolevel_refresh.dart';
+import 'otherwidget/refresh_recordable_listview_example.dart';
 
 class ExamplePage extends StatefulWidget {
   @override
@@ -160,7 +161,10 @@ class _ExamplePageState extends State<ExamplePage>
           title: "ExpansionPanelList配合使用",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return RefreshExpansionPanelList();
+              return Scaffold(
+                appBar: AppBar(),
+                body: RefreshExpansionPanelList(),
+              );
             }));
           }),
       ExampleItem(
@@ -169,6 +173,16 @@ class _ExamplePageState extends State<ExamplePage>
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
                 body: PageViewExample(),
+                appBar: AppBar(),
+              );
+            }));
+          }),
+      ExampleItem(
+          title: "RecordableListView",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return Scaffold(
+                body: ReorderableListDemo(),
                 appBar: AppBar(),
               );
             }));
