@@ -232,7 +232,7 @@ class RefreshController {
   ScrollPosition position;
   double _triggerDistance;
   @Deprecated(
-      'use position instead,jumpTo and animateTo will lead to refresh together with mutiple ScrollPositions which depending on the same ScrollController')
+      'advice set ScrollController to child,use it directly will cause bug when call jumpTo() and animateTo()')
   ScrollController scrollController;
 
   RefreshStatus get headerStatus => headerMode?.value;
@@ -287,13 +287,17 @@ class RefreshController {
     }
   }
 
-  void twoLevelComplete({Duration duration:const Duration(milliseconds: 500),Curve curve:Curves.linear}) {
+  void twoLevelComplete(
+      {Duration duration: const Duration(milliseconds: 500),
+      Curve curve: Curves.linear}) {
     headerMode?.value = RefreshStatus.twoLevelClosing;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-        position.activity.resetActivity();
-        position.animateTo(0.0, duration: duration, curve: curve).whenComplete((){
-          headerMode.value = RefreshStatus.idle;
-        });
+      position.activity.resetActivity();
+      position
+          .animateTo(0.0, duration: duration, curve: curve)
+          .whenComplete(() {
+        headerMode.value = RefreshStatus.idle;
+      });
     });
   }
 

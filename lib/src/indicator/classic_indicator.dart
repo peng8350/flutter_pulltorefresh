@@ -81,9 +81,9 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                     ? widget.failedText
                     : mode == RefreshStatus.refreshing
                         ? widget.refreshingText
-                        : mode == RefreshStatus.canTwoLevel
-                            ? widget.canTwoLevelText
-                            : mode == RefreshStatus.idle ? widget.idleText : "",
+                        : mode == RefreshStatus.idle
+                            ? widget.idleText
+                            : widget.canTwoLevelText,
         style: widget.textStyle);
   }
 
@@ -100,16 +100,17 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                         ? widget.canTwoLevelIcon
                         : mode == RefreshStatus.canTwoLevel
                             ? widget.canTwoLevelIcon
-                            : widget.twoLevelView ??
-                                SizedBox(
-                                  width: 25.0,
-                                  height: 25.0,
-                                  child: defaultTargetPlatform ==
-                                          TargetPlatform.iOS
-                                      ? const CupertinoActivityIndicator()
-                                      : const CircularProgressIndicator(
-                                          strokeWidth: 2.0),
-                                );
+                            : mode == RefreshStatus.refreshing
+                                ? SizedBox(
+                                    width: 25.0,
+                                    height: 25.0,
+                                    child: defaultTargetPlatform ==
+                                            TargetPlatform.iOS
+                                        ? const CupertinoActivityIndicator()
+                                        : const CircularProgressIndicator(
+                                            strokeWidth: 2.0),
+                                  )
+                                : widget.twoLevelView;
     return icon ?? Container();
   }
 

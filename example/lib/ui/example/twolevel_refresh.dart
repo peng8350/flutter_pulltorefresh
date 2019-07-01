@@ -17,7 +17,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
    important point:
    1. open enableTwiceRefresh bool ,default is false
    2. _refreshController.twiceRefreshComplete() can closing the two level
-   3. Using RefreshStyle.Behind implements two level ,the effect is better
 */
 class TwoLevelExample extends StatefulWidget {
   @override
