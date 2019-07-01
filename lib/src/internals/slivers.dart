@@ -50,9 +50,15 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   @override
   void updateRenderObject(
       BuildContext context, covariant _RenderSliverRefresh renderObject) {
+    final bool needUpdate =
+        SmartRefresher.of(context).controller.headerMode.value ==
+                RefreshStatus.twoLeveling ||
+            SmartRefresher.of(context).controller.headerMode.value ==
+                RefreshStatus.twoLevelClosing;
     renderObject
       ..refreshIndicatorLayoutExtent = refreshIndicatorLayoutExtent
       ..hasLayoutExtent = floating
+      ..updateFlag = (needUpdate ? 0.01 : 0)
       ..reverse = reverse
       ..paintOffsetY = paintOffsetY;
   }
@@ -81,6 +87,10 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   double get refreshIndicatorLayoutExtent => _refreshIndicatorExtent;
   double _refreshIndicatorExtent;
   double paintOffsetY;
+  // need to trigger shouldAceppty user offset ,else it will not limit scroll when enter twolevel or exit
+  // also it will crash if you call applyNewDimession when the state change
+  // I don't know why flutter limit it, no choice
+  double updateFlag = 0.0;
   bool reverse;
 
   set refreshIndicatorLayoutExtent(double value) {
@@ -181,14 +191,11 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
       switch (refreshStyle) {
         case RefreshStyle.Follow:
           geometry = SliverGeometry(
-            scrollExtent: layoutExtent,
-            paintOrigin: -boxExtent -
-                constraints.scrollOffset +
-                layoutExtent,
+            scrollExtent: layoutExtent+updateFlag,
+            paintOrigin: -boxExtent - constraints.scrollOffset + layoutExtent,
             paintExtent: needPaintExtent,
             hitTestExtent: needPaintExtent,
-            hasVisualOverflow:
-                overscrolledExtent < boxExtent,
+            hasVisualOverflow: overscrolledExtent < boxExtent,
             maxPaintExtent: needPaintExtent,
             layoutExtent: Math.min(needPaintExtent,
                 Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
@@ -197,7 +204,7 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
           break;
         case RefreshStyle.Behind:
           geometry = SliverGeometry(
-            scrollExtent: layoutExtent,
+            scrollExtent: layoutExtent+updateFlag,
             paintOrigin: -overscrolledExtent - constraints.scrollOffset,
             paintExtent: needPaintExtent,
             maxPaintExtent: needPaintExtent,
@@ -207,15 +214,12 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
           break;
         case RefreshStyle.UnFollow:
           geometry = SliverGeometry(
-            scrollExtent: layoutExtent,
+            scrollExtent: layoutExtent+updateFlag,
             paintOrigin: Math.min(
                 -overscrolledExtent - constraints.scrollOffset,
-                -boxExtent -
-                    constraints.scrollOffset +
-                    layoutExtent),
+                -boxExtent - constraints.scrollOffset + layoutExtent),
             paintExtent: needPaintExtent,
-            hasVisualOverflow:
-                overscrolledExtent < boxExtent,
+            hasVisualOverflow: overscrolledExtent < boxExtent,
             maxPaintExtent: needPaintExtent,
             layoutExtent: Math.min(needPaintExtent,
                 Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
@@ -224,6 +228,7 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
           break;
         case RefreshStyle.Front:
           geometry = SliverGeometry(
+            scrollExtent: updateFlag,
             paintOrigin: reverse ? boxExtent : 0.0,
             visible: true,
             hitTestExtent: needPaintExtent,

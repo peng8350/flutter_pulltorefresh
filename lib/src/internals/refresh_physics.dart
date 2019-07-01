@@ -55,6 +55,12 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) {
     // TODO: implement shouldAcceptUserOffset
+    if(headerMode.value==RefreshStatus.twoLeveling&&!enableScrollWhenTwoLevel){
+      return false;
+    }
+    else if(headerMode.value==RefreshStatus.twoLevelOpening||RefreshStatus.twoLevelClosing==headerMode.value){
+      return false;
+    }
     return true;
   }
 

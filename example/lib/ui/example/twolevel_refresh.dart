@@ -186,14 +186,17 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                       _refreshController2.refreshCompleted();
                     },
                     onTwoLevel: () {
-//                    _refreshController2.position.forcePixels( _refreshController2.position.pixels);
+                      _refreshController2.position.activity.resetActivity();
+                    _refreshController2.position.hold((){
+
+                    });
                       Navigator.of(context)
                           .push(MaterialPageRoute(
                               builder: (c) => Scaffold(
                                     appBar: AppBar(),
                                   )))
                           .whenComplete(() {
-                        _refreshController2.twoLevelComplete();
+                        _refreshController2.twoLevelComplete(duration: Duration(microseconds: 1));
                       });
                     },
                   ),
