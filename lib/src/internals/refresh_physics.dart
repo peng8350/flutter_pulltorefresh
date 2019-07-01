@@ -30,7 +30,7 @@ class RefreshPhysics extends ScrollPhysics {
       this.headerMode,
       this.footerMode,
       this.enablePullUp,
-      this.enableScrollWhenTwoLevel:false,
+      this.enableScrollWhenTwoLevel: false,
       this.enablePullDown,
       double maxOverScrollExtent})
       : maxOverScrollExtent = maxOverScrollExtent ?? double.infinity,
@@ -81,15 +81,21 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
     // TODO: implement applyPhysicsToUserOffset
-    if ((offset > 0 && !enablePullDown) || (offset < 0 && !enablePullUp)) {
-      return parent.applyPhysicsToUserOffset(position, offset);
+    if(headerMode.value==RefreshStatus.twoLeveling){
+      if(offset > 0.0){
+        return parent.applyPhysicsToUserOffset(position, offset);
+      }
     }
-    if (position.outOfRange||headerMode.value==RefreshStatus.twoLeveling) {
-
+    else {
+      if ((offset > 0.0 && !enablePullDown) ||
+          (offset < 0 && !enablePullUp)) {
+        return parent.applyPhysicsToUserOffset(position, offset);
+      }
+    }
+    if (position.outOfRange || headerMode.value == RefreshStatus.twoLeveling) {
       final double overscrollPastStart =
           math.max(position.minScrollExtent - position.pixels, 0.0);
-      final double overscrollPastEnd =
-          math.max(position.pixels - 0.0, 0.0);
+      final double overscrollPastEnd = math.max(position.pixels -(headerMode.value == RefreshStatus.twoLeveling?0.0:position.maxScrollExtent), 0.0);
       final double overscrollPast =
           math.max(overscrollPastStart, overscrollPastEnd);
       final bool easing = (overscrollPastStart > 0.0 && offset < 0.0) ||
@@ -103,6 +109,8 @@ class RefreshPhysics extends ScrollPhysics {
       final double direction = offset.sign;
       return direction * _applyFriction(overscrollPast, offset.abs(), friction);
     }
+
+
     return super.applyPhysicsToUserOffset(position, offset);
   }
 
@@ -125,9 +133,16 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     // TODO: implement applyBoundaryConditions
-    if ((position.pixels - value > 0 && !enablePullDown) ||
-        (position.pixels - value < 0 && !enablePullUp)) {
-      return parent.applyBoundaryConditions(position, value);
+    if(headerMode.value==RefreshStatus.twoLeveling){
+      if(position.pixels - value > 0.0){
+        return parent.applyBoundaryConditions(position, value);
+      }
+    }
+    else {
+      if ((position.pixels - value > 0.0 && !enablePullDown) ||
+          (position.pixels - value < 0 && !enablePullUp)) {
+        return parent.applyBoundaryConditions(position, value);
+      }
     }
     final double topBoundary = position.minScrollExtent - maxOverScrollExtent;
     final double bottomBoundary =
@@ -165,19 +180,28 @@ class RefreshPhysics extends ScrollPhysics {
   Simulation createBallisticSimulation(
       ScrollMetrics position, double velocity) {
     // TODO: implement createBallisticSimulation
-    if ((velocity < 0.0 && !enablePullDown) ||
-        (velocity > 0 && !enablePullUp)) {
-      return parent.createBallisticSimulation(position, velocity);
+    if(headerMode.value==RefreshStatus.twoLeveling){
+      if(velocity < 0.0){
+        return parent.createBallisticSimulation(position, velocity);
+      }
     }
-    if (position.outOfRange) {
+    else {
+      if ((velocity < 0.0 && !enablePullDown) ||
+          (velocity > 0 && !enablePullUp)) {
+        return parent.createBallisticSimulation(position, velocity);
+      }
+    }
+    if ((position.pixels>0 &&headerMode.value == RefreshStatus.twoLeveling)||position.outOfRange) {
       return BouncingScrollSimulation(
         spring: spring,
         position: position.pixels,
         // -1.0 avoid stop springing back ,and release gesture
-        velocity: -1.0,
+        velocity: velocity,
         // TODO(abarth): We should move this constant closer to the drag end.
         leadingExtent: position.minScrollExtent,
-        trailingExtent: position.maxScrollExtent,
+        trailingExtent: headerMode.value == RefreshStatus.twoLeveling
+            ? 0.0
+            : position.maxScrollExtent,
         tolerance: tolerance,
       );
     }

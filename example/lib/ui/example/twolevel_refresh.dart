@@ -64,113 +64,97 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                   offstage: _tabIndex != 0,
                   child: LayoutBuilder(
                     builder: (_, c) {
-                      return NotificationListener(
-                        child: SmartRefresher(
-                          header: ClassicHeader(
-                            textStyle: TextStyle(color: Colors.white),
-                            outerBuilder: (child) {
-                              return Container(
-                                height: c.biggest.height,
-                                child: _refreshController1.headerStatus !=
-                                            RefreshStatus.twoLeveling &&
-                                        _refreshController1.headerStatus !=
-                                            RefreshStatus.twoLevelOpening &&
-                                        _refreshController1.headerStatus !=
-                                            RefreshStatus.twoLevelClosing
-                                    ? Container(
-                                        height: 60.0,
-                                        alignment: Alignment.center,
-                                        child: child,
-                                      )
-                                    : child,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                          "images/secondfloor.jpg",
-                                        ),
-                                        fit: BoxFit.cover)),
-                                alignment: Alignment.bottomCenter,
-                              );
-                            },
-                            twoLevelView: Container(
+                      return SmartRefresher(
+                        header: ClassicHeader(
+                          textStyle: TextStyle(color: Colors.white),
+                          outerBuilder: (child) {
+                            return Container(
                               height: c.biggest.height,
-                              child: Stack(
-                                children: <Widget>[
-                                  Center(
-                                    child: Wrap(
-                                      children: <Widget>[
-                                        RaisedButton(
-                                          color: Colors.greenAccent,
-                                          onPressed: () {},
-                                          child: Text("登陆"),
-                                        ),
-                                        RaisedButton(
-                                          color: Colors.purpleAccent,
-                                          child: Text('注册'),
-                                          onPressed: () {},
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: AppBar(
-                                      backgroundColor: Colors.transparent,
-                                      elevation: 0.0,
-                                      leading: GestureDetector(
-                                        child: Icon(
-                                          Icons.arrow_back_ios,
-                                          color: Colors.white,
-                                        ),
-                                        onTap: () {
-                                          _refreshController1
-                                              .twoLevelComplete();
-                                        },
+                              child: _refreshController1.headerStatus !=
+                                  RefreshStatus.twoLeveling &&
+                                  _refreshController1.headerStatus !=
+                                      RefreshStatus.twoLevelOpening &&
+                                  _refreshController1.headerStatus !=
+                                      RefreshStatus.twoLevelClosing
+                                  ? Container(
+                                height: 60.0,
+                                alignment: Alignment.center,
+                                child: child,
+                              )
+                                  : child,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                        "images/secondfloor.jpg",
                                       ),
-                                    ),
+                                      fit: BoxFit.cover)),
+                              alignment: Alignment.bottomCenter,
+                            );
+                          },
+                          twoLevelView: Container(
+                            height: c.biggest.height,
+                            child: Stack(
+                              children: <Widget>[
+                                Center(
+                                  child: Wrap(
+                                    children: <Widget>[
+                                      RaisedButton(
+                                        color: Colors.greenAccent,
+                                        onPressed: () {
+                                        },
+                                        child: Text("登陆"),
+                                      ),
+                                      RaisedButton(
+                                        color: Colors.purpleAccent,
+                                        child: Text('注册'),
+                                        onPressed: () {
+                                        },
+                                      )
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                                Container(
+                                  height: 60.0,
+                                  child: GestureDetector(
+                                    child: Icon(
+                                      Icons.arrow_back_ios,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {
+                                      _refreshController1
+                                          .twoLevelComplete();
+                                    },
+                                  ),
+                                  alignment: Alignment.bottomLeft,
+                                ),
+                              ],
                             ),
                           ),
-                          child: CustomScrollView(
-                            slivers: <Widget>[
-                              SliverToBoxAdapter(
-                                child: Container(
-                                  child: RaisedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text("点击这里返回上一页!"),
-                                  ),
-                                  color: Colors.red,
-                                  height: 1180.0,
-                                ),
-                              )
-                            ],
-                          ),
-                          controller: _refreshController1,
-                          enableTwoLevel: true,
-                          onRefresh: () async {
-                            await Future.delayed(Duration(milliseconds: 2000));
-                            _refreshController1.refreshCompleted();
-                          },
-                          onTwoLevel: () {},
                         ),
-                        onNotification: (n) {
-                          if (n is ScrollUpdateNotification) {
-                            if (n.dragDetails == null) {
-                              if (n.metrics.pixels > 50.0 &&
-                                  _refreshController1.isTwoLevel)
-                                _refreshController1.twoLevelComplete();
-                            }
-                          } else if (n is ScrollEndNotification) {
-                            if (n.metrics.pixels > 50.0 &&
-                                _refreshController1.isTwoLevel)
-                              _refreshController1.twoLevelComplete();
-                          }
-                          return false;
+                        child: CustomScrollView(
+                          physics: ClampingScrollPhysics(),
+                          slivers: <Widget>[
+                            SliverToBoxAdapter(
+                              child: Container(
+                                child: RaisedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text("点击这里返回上一页!"),
+                                ),
+                                color: Colors.red,
+                                height: 1180.0,
+                              ),
+                            )
+                          ],
+                        ),
+                        controller: _refreshController1,
+                        enableTwoLevel: true,
+                        onRefresh: () async {
+                          await Future.delayed(Duration(milliseconds: 2000));
+                          _refreshController1.refreshCompleted();
                         },
+                        onTwoLevel: () {},
                       );
                     },
                   ),
@@ -179,6 +163,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                   offstage: _tabIndex != 1,
                   child: SmartRefresher(
                     child: CustomScrollView(
+                      physics: ClampingScrollPhysics(),
                       slivers: <Widget>[
                         SliverToBoxAdapter(
                           child: Container(

@@ -77,7 +77,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   }
 
   double _calculateScrollOffset() {
-    return (floating ? widget.height : 0.0) - _position?.pixels;
+    return (floating
+            ? (mode == RefreshStatus.twoLeveling ||
+                    mode == RefreshStatus.twoLevelOpening ||
+                    mode == RefreshStatus.twoLevelClosing
+                ? _position.viewportDimension
+                : widget.height)
+            : 0.0) -
+        _position?.pixels;
   }
 
   @override
@@ -90,8 +97,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   // handle the  state change between canRefresh and idle canRefresh  before refreshing
   void _dispatchModeByOffset(double offset) {
+    if(mode==RefreshStatus.twoLeveling){
+      if(_position.pixels>configuration.closeTwoLevelDistance&&_position.activity is BallisticScrollActivity){
+        refresher.controller.twoLevelComplete();
+      }
+    }
     if (floating) return;
-    if(RefreshStatus.twoLevelOpening==mode||mode==RefreshStatus.twoLevelClosing){
+    if (RefreshStatus.twoLevelOpening == mode ||
+        mode == RefreshStatus.twoLevelClosing) {
       return;
     }
     // Sometimes different devices return velocity differently, so it's impossible to judge from velocity whether the user
@@ -181,8 +194,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         });
         if (refresher.onTwoLevel != null) refresher.onTwoLevel();
       });
-    }
-    else if(mode==RefreshStatus.twoLevelClosing){
+    } else if (mode == RefreshStatus.twoLevelClosing) {
       floating = false;
       update();
     }

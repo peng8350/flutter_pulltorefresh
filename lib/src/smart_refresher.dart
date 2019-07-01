@@ -168,16 +168,17 @@ class SmartRefresher extends StatelessWidget {
   ScrollPhysics _getScrollPhysics(
       RefreshConfiguration conf, ScrollPhysics physics) {
     return RefreshPhysics(
-        enablePullUp: enablePullUp,
-        enablePullDown: enablePullDown,
-        footerMode: controller.footerMode,
-        enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? false,
-        headerMode: controller.headerMode,
-        clamping: physics is ClampingScrollPhysics ||
-            (physics is AlwaysScrollableScrollPhysics &&
-                defaultTargetPlatform != TargetPlatform.iOS),
-        maxOverScrollExtent: conf?.maxOverScrollExtent,
-        maxUnderScrollExtent: conf?.maxUnderScrollExtent);
+            enablePullUp: enablePullUp,
+            enablePullDown: enablePullDown,
+            footerMode: controller.footerMode,
+            enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? false,
+            headerMode: controller.headerMode,
+            clamping: physics is ClampingScrollPhysics ||
+                (physics is AlwaysScrollableScrollPhysics &&
+                    defaultTargetPlatform != TargetPlatform.iOS),
+            maxOverScrollExtent: conf?.maxOverScrollExtent,
+            maxUnderScrollExtent: conf?.maxUnderScrollExtent)
+        .applyTo(physics);
   }
 
   // build the customScrollView
@@ -356,6 +357,7 @@ class RefreshConfiguration extends InheritedWidget {
   final Widget child;
   final double headerTriggerDistance;
   final double twiceTriggerDistance;
+  final double closeTwoLevelDistance;
   final double footerTriggerDistance;
   final double maxOverScrollExtent;
   final double maxUnderScrollExtent;
@@ -367,6 +369,7 @@ class RefreshConfiguration extends InheritedWidget {
     this.enableScrollWhenTwoLevel: false,
     this.headerOffset: 0.0,
     this.twiceTriggerDistance: 150.0,
+    this.closeTwoLevelDistance: 80.0,
     this.clickLoadingWhenIdle: false,
     this.skipCanRefresh: false,
     this.autoLoad: true,

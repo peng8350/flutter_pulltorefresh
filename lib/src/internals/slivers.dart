@@ -185,8 +185,8 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
             paintOrigin: -boxExtent -
                 constraints.scrollOffset +
                 layoutExtent,
-            hitTestExtent: 500.0,
             paintExtent: needPaintExtent,
+            hitTestExtent: needPaintExtent,
             hasVisualOverflow:
                 overscrolledExtent < boxExtent,
             maxPaintExtent: needPaintExtent,
@@ -200,7 +200,6 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
             scrollExtent: layoutExtent,
             paintOrigin: -overscrolledExtent - constraints.scrollOffset,
             paintExtent: needPaintExtent,
-            hitTestExtent: needPaintExtent,
             maxPaintExtent: needPaintExtent,
             layoutExtent: Math.min(needPaintExtent,
                 Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
@@ -227,10 +226,12 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
           geometry = SliverGeometry(
             paintOrigin: reverse ? boxExtent : 0.0,
             visible: true,
+            hitTestExtent: needPaintExtent,
             hasVisualOverflow: true,
           );
           break;
       }
+      setChildParentData(child, constraints, geometry);
     } else {
       geometry = SliverGeometry.zero;
     }
