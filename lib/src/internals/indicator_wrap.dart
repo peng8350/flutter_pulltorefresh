@@ -99,6 +99,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   void _dispatchModeByOffset(double offset) {
     if(mode==RefreshStatus.twoLeveling){
       if(_position.pixels>configuration.closeTwoLevelDistance&&_position.activity is BallisticScrollActivity){
+
         refresher.controller.twoLevelComplete();
       }
     }
@@ -230,7 +231,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||
                 mode == RefreshStatus.twoLevelOpening ||
                 mode == RefreshStatus.twoLevelClosing
-            ? _position.viewportDimension
+            ? _position.viewportDimension-0.01
             : widget.height,
         refreshStyle: widget.refreshStyle);
   }

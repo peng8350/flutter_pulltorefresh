@@ -163,13 +163,13 @@ class Test3State extends State<Test3>
             ),
             onRefresh: ()  async{
               print("onRefresh");
-              await Future.delayed(const Duration(milliseconds: 4000));
+              await Future.delayed(const Duration(milliseconds: 1000));
               data.add(Container(
                 child: Card(),
                 height: 100.0,
               ));
               if (mounted) setState(() {});
-              _refreshController.refreshFailed();
+              _refreshController.refreshToIdle();
 //        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
 ////          data.add(Card());
 //

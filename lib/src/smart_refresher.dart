@@ -306,6 +306,10 @@ class RefreshController {
     headerMode?.value = RefreshStatus.failed;
   }
 
+  void refreshToIdle(){
+    headerMode?.value = RefreshStatus.idle;
+  }
+
   void loadComplete() {
     // change state after ui update,else it will have a bug:twice loading
     WidgetsBinding.instance.addPostFrameCallback((_) {
