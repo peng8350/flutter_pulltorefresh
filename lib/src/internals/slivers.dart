@@ -88,7 +88,6 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
     assert(value >= 0.0);
     if (value == _refreshIndicatorExtent) return;
     _refreshIndicatorExtent = value;
-    markNeedsLayout();
   }
 
   // The child box will be laid out and painted in the available space either
@@ -164,10 +163,10 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
       );
     } else
       child.layout(
-        constraints.asBoxConstraints(maxExtent: refreshIndicatorLayoutExtent),
+        constraints.asBoxConstraints(),
         parentUsesSize: true,
       );
-    print(overscrolledExtent + layoutExtent);
+    refreshIndicatorLayoutExtent = child.size.height;
     if (active) {
       final double needPaintExtent = Math.min(
           Math.max(

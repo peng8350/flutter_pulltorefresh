@@ -68,32 +68,33 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                       return NotificationListener(
                         child: SmartRefresher(
                           header: ClassicHeader(
-                            refreshStyle: RefreshStyle.Behind,
                             textStyle: TextStyle(color: Colors.white),
                             outerBuilder: (child) {
-                                return Container(
-                                  height: c.biggest.height,
-                                  child: _refreshController1.headerStatus !=
-                                      RefreshStatus.twoLeveling &&
-                                      _refreshController1.headerStatus !=
-                                          RefreshStatus.twoLevelOpening &&
-                                      _refreshController1.headerStatus !=
-                                          RefreshStatus.twoLevelClosing?Container(
-                                    height: 60.0,
-                                    child: child,
-                                  ):child,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: AssetImage(
-                                            "images/secondfloor.jpg",
-                                          ),
-                                          fit: BoxFit.cover)),
-                                  alignment: Alignment.bottomCenter,
-                                );
+                              return Container(
+                                height: c.biggest.height,
+                                child: _refreshController1.headerStatus !=
+                                            RefreshStatus.twoLeveling &&
+                                        _refreshController1.headerStatus !=
+                                            RefreshStatus.twoLevelOpening &&
+                                        _refreshController1.headerStatus !=
+                                            RefreshStatus.twoLevelClosing
+                                    ? Container(
+                                        height: 60.0,
+                                        alignment: Alignment.center,
+                                        child: child,
+                                      )
+                                    : child,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                          "images/secondfloor.jpg",
+                                        ),
+                                        fit: BoxFit.cover)),
+                                alignment: Alignment.bottomCenter,
+                              );
                             },
                             twoLevelView: Container(
-                              height: c.biggest
-                              .height,
+                              height: c.biggest.height,
                               child: Stack(
                                 children: <Widget>[
                                   Center(

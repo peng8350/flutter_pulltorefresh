@@ -159,12 +159,6 @@ class Test3State extends State<Test3>
             ),
             footer: ClassicFooter(
               iconPos: IconPosition.top,
-              outerBuilder: (child){
-                return Container(
-                  decoration: BoxDecoration(color: Colors.redAccent),
-                  child: child,
-                );
-              },
               height: 60.0,
             ),
             onRefresh: ()  async{

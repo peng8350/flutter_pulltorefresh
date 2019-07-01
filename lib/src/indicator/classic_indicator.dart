@@ -83,7 +83,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                         ? widget.refreshingText
                         : mode == RefreshStatus.canTwoLevel
                             ? widget.canTwoLevelText
-                            : mode==RefreshStatus.idle?widget.idleText:"",
+                            : mode == RefreshStatus.idle ? widget.idleText : "",
         style: widget.textStyle);
   }
 
@@ -135,11 +135,12 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
       alignment: WrapAlignment.center,
       children: children,
     );
-    return Center(
-      child:  widget.outerBuilder != null
-          ? widget.outerBuilder(container)
-          : container,
-    );
+    return widget.outerBuilder != null
+        ? widget.outerBuilder(container)
+        : Container(
+            child: Center(child: container),
+            height: 60.0,
+          );
   }
 }
 
@@ -239,16 +240,9 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
       children: children,
     );
     return widget.outerBuilder != null
-        ? widget.outerBuilder(Container(
-            width: widget.height,
-            height: widget.height,
-            child: Center(
-              child: container,
-            ),
-          ))
+        ? widget.outerBuilder(container)
         : Container(
-            width: widget.height,
-            height: widget.height,
+            height: 60.0,
             child: Center(
               child: container,
             ),

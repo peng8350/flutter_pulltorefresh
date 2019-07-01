@@ -290,6 +290,7 @@ class RefreshController {
   void twoLevelComplete({Duration duration:const Duration(milliseconds: 500),Curve curve:Curves.linear}) {
     headerMode?.value = RefreshStatus.twoLevelClosing;
     WidgetsBinding.instance.addPostFrameCallback((_) {
+        position.activity.resetActivity();
         position.animateTo(0.0, duration: duration, curve: curve).whenComplete((){
           headerMode.value = RefreshStatus.idle;
         });
