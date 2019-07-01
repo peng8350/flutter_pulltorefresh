@@ -196,6 +196,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                           .push(MaterialPageRoute(
                               builder: (c) => Scaffold(
                                     appBar: AppBar(),
+                                      body: Text("二楼刷新"),
                                   )))
                           .whenComplete(() {
                         _refreshController2.twoLevelComplete(duration: Duration(microseconds: 1));

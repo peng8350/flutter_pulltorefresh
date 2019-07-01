@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'empty_view.dart';
 import 'hidefooter_bycontent.dart';
+import 'refesh_expansiopn_panel_list.dart';
 import 'horizontal+reverse.dart';
 import 'Nested.dart';
 import 'refresh_animatedlist.dart';
@@ -15,11 +16,62 @@ import 'refresh_pageView.dart';
 import 'link_header_example.dart';
 import 'twolevel_refresh.dart';
 
-class ExamplePage extends StatelessWidget {
+class ExamplePage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _ExamplePageState();
+  }
+}
+
+class ExampleItem extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _ExampleItemState();
+  }
+
+  final Function onClick;
+
+  final String title;
+
+  ExampleItem({this.title, this.onClick});
+}
+
+class _ExampleItemState extends State<ExampleItem> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    final List<ExampleItem> items = [
+    return InkWell(
+      onTap: widget.onClick,
+      child: Container(
+        height: 100.0,
+        child: Card(
+          child: Center(
+            child: Text(widget.title),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ExamplePageState extends State<ExamplePage>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+
+    final List<ExampleItem> items1 = [
       ExampleItem(
           title: "Basic",
           onClick: () {
@@ -27,16 +79,7 @@ class ExamplePage extends StatelessWidget {
               return BasicExample();
             }));
           }),
-      ExampleItem(
-          title: "pageView+SmartRefresher",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                body: PageViewExample(),
-                appBar: AppBar(),
-              );
-            }));
-          }),
+
       ExampleItem(
           title: "手动隐藏footer",
           onClick: () {
@@ -92,16 +135,6 @@ class ExamplePage extends StatelessWidget {
             }));
           }),
       ExampleItem(
-          title: "animatedlist结合refresher",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                body: AnimatedListExample(),
-                appBar: AppBar(),
-              );
-            }));
-          }),
-      ExampleItem(
           title: "简单自定义头部指示器",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -112,38 +145,63 @@ class ExamplePage extends StatelessWidget {
             }));
           }),
     ];
-    return ListView(
-      children: items,
-      itemExtent: 100.0,
-    );
-  }
-}
+    final List<ExampleItem> items2 = [
+      ExampleItem(
+          title: "animatedlist结合refresher",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return Scaffold(
+                body: AnimatedListExample(),
+                appBar: AppBar(),
+              );
+            }));
+          }),
+      ExampleItem(
+          title: "ExpansionPanelList配合使用",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return RefreshExpansionPanelList();
+            }));
+          }),
+      ExampleItem(
+          title: "pageView共用SmartRefresher",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return Scaffold(
+                body: PageViewExample(),
+                appBar: AppBar(),
+              );
+            }));
+          }),
+    ];
 
-class ExampleItem extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _ExampleItemState();
-  }
-
-  final Function onClick;
-
-  final String title;
-
-  ExampleItem({this.title, this.onClick});
-}
-
-class _ExampleItemState extends State<ExampleItem> {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return InkWell(
-      onTap: widget.onClick,
-      child: Card(
-        child: Center(
-          child: Text(widget.title),
+    return Column(
+      children: <Widget>[
+        Container(
+          child: TabBar(
+            controller: _tabController,
+            tabs: <Widget>[
+              Tab(
+                text: "使用场景",
+              ),
+              Tab(
+                text: "配合一些特殊组件",
+              )
+            ],
+          ),
+          height: 50.0,
+          color: Colors.greenAccent,
         ),
-      ),
+        Expanded(
+          child: TabBarView(
+            children: <Widget>[
+              ListView(children: items1),
+              ListView(children: items2)
+            ],
+            controller: _tabController,
+          ),
+        )
+      ],
     );
   }
 }
