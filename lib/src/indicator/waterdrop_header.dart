@@ -41,6 +41,7 @@ class WaterDropHeader extends RefreshIndicator {
     ),
   }) : super(
             key: key,
+            height:80.0,
             completeDuration: completeDuration,
             refreshStyle: RefreshStyle.UnFollow);
 
@@ -172,7 +173,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
           opacity: _dismissCtl);
     }
     return Container(
-      height: 60.0,
+      height: 80.0,
       child: Center(
         child: child,
       ),

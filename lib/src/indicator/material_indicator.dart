@@ -258,24 +258,26 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
-
-    return Stack(
-      children: <Widget>[
-        CustomPaint(
-          painter: _BezierPainter(
-              listener: _bezierController, color: widget.backgroundColor),
-          child: Container(),
-        ),
-        CustomPaint(
-          child: super.buildContent(context, mode),
-          painter: _showWater
-              ? _WaterPainter(
-                  ratio: widget.distance / widget.height,
-                  color: widget.backgroundColor,
-                  listener: _positionFactor)
-              : null,
-        )
-      ],
+    return Container(
+      child: Stack(
+        children: <Widget>[
+          CustomPaint(
+            painter: _BezierPainter(
+                listener: _bezierController, color: widget.backgroundColor),
+            child: Container(),
+          ),
+          CustomPaint(
+            child: super.buildContent(context, mode),
+            painter: _showWater
+                ? _WaterPainter(
+                ratio: widget.distance / widget.height,
+                color: widget.backgroundColor,
+                listener: _positionFactor)
+                : null,
+          )
+        ],
+      ),
+      height: 100.0,
     );
   }
 }

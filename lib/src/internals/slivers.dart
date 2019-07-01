@@ -174,7 +174,10 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
         constraints.asBoxConstraints(),
         parentUsesSize: true,
       );
-    final double boxExtent = child.size.height;
+    final double boxExtent = (constraints.axisDirection == AxisDirection.up ||
+        constraints.axisDirection == AxisDirection.down)
+        ? child.size.height
+        : child.size.width;;
     if (active) {
       final double needPaintExtent = Math.min(
           Math.max(
@@ -231,7 +234,6 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
             scrollExtent: updateFlag,
             paintOrigin: reverse ? boxExtent : 0.0,
             visible: true,
-            hitTestExtent: needPaintExtent,
             hasVisualOverflow: true,
           );
           break;

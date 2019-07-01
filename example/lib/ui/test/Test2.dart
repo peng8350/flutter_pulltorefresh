@@ -23,18 +23,19 @@ class _Test2State extends State<Test2>
   void _fetch() {
     HTTP
         .get(
-            'http://image.baidu.com/channel/listjson?pn=$indexPage&rn=30&tag1=%E6%98%8E%E6%98%9F&tag2=%E5%85%A8%E9%83%A8&ie=utf8')
+            'http://gank.io/api/data/福利/10/$indexPage')
         .then((HTTP.Response response) {
       Map map = json.decode(response.body);
-      return map["data"];
+      return map["results"];
     }).then((array) {
       for (var item in array) {
-        data.add(item["image_url"]);
+        data.add(item["url"]);
       }
       if (mounted) setState(() {});
       _controller.loadComplete();
       indexPage++;
     }).catchError((_) {
+      print("error");
       _controller.loadComplete();
     });
   }
@@ -129,11 +130,14 @@ class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
     if (widget.url == null) return Container();
-    return RepaintBoundary(
-      child: Image.network(
-        widget.url,
-        fit: BoxFit.cover,
+    return Container(
+      child: FadeInImage(
+        placeholder: AssetImage("images/empty.png"),
+        image: NetworkImage(
+          widget.url,
+        ),
       ),
+
     );
   }
 
