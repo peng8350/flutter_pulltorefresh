@@ -70,7 +70,6 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
                     await Future.delayed(Duration(milliseconds: 3000));
                     _refreshController.refreshCompleted();
                   },
-                  headerInsertIndex: 1,
                   child: CustomScrollView(
                     controller: _scrollController,
                     slivers: <Widget>[

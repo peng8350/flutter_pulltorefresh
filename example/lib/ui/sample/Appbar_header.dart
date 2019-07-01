@@ -58,7 +58,6 @@ class _AppBarHeaderState extends State<AppBarHeader> {
     return Container(
       color: Colors.white,
       child: SmartRefresher(
-        headerInsertIndex: 0,
         enablePullDown: true,
         enablePullUp: true,
         child: CustomScrollView(

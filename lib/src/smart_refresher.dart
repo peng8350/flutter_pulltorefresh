@@ -70,11 +70,6 @@ class SmartRefresher extends StatelessWidget {
   //controll inner state
   final RefreshController controller;
 
-  // advice not to use this ,I find it has a bug when header not in first sliver,
-  // I will consider to remove this if header only work in first sliver in future version
-  // may be NestedScrollView can solution,but NestedScrollView conflict with overScroll effect too
-  final int headerInsertIndex;
-
   SmartRefresher(
       {Key key,
       @required this.controller,
@@ -87,8 +82,8 @@ class SmartRefresher extends StatelessWidget {
       this.onRefresh,
       this.onLoading,
       this.onTwoLevel,
-      this.onOffsetChange,
-      this.headerInsertIndex: 0})
+      this.onOffsetChange
+      })
       : assert(controller != null),
         super(key: key);
 
@@ -146,7 +141,7 @@ class SmartRefresher extends StatelessWidget {
     }
     if (enablePullDown) {
       slivers.insert(
-          headerInsertIndex,
+          0,
           header ??
               (configuration?.headerBuilder != null
                   ? configuration?.headerBuilder()

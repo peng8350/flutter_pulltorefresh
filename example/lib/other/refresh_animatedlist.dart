@@ -23,7 +23,6 @@ class RefreshAnimatedList extends AnimatedList {
     this.onRefresh,
     this.onLoading,
     this.onOffsetChange,
-    this.headerInsertIndex: 0,
     ScrollController scrollController,
     bool primary,
     ScrollPhysics physics,
@@ -58,7 +57,6 @@ class RefreshAnimatedList extends AnimatedList {
 
   final RefreshController refreshController;
 
-  final int headerInsertIndex;
 
   @override
   AnimatedListState createState() {
@@ -79,7 +77,6 @@ class _RefreshAnimatedListState extends AnimatedListState {
       child: super.build(context),
       footer: widget1.footer,
       header: widget1.header,
-      headerInsertIndex: widget1.headerInsertIndex,
       onOffsetChange: widget1.onOffsetChange,
       onLoading: widget1.onLoading,
       onRefresh: widget1.onRefresh,

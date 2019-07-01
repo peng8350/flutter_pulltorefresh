@@ -62,7 +62,6 @@ class RefreshReorderableListView extends StatefulWidget {
 
   final RefreshController refreshController;
 
-  final int headerInsertIndex;
 
   /// Creates a reorderable list.
   RefreshReorderableListView({
@@ -80,7 +79,6 @@ class RefreshReorderableListView extends StatefulWidget {
     this.onRefresh,
     this.onLoading,
     this.onOffsetChange,
-    this.headerInsertIndex: 0,
   })  : assert(scrollDirection != null),
         assert(onReorder != null),
         assert(children != null),
@@ -167,7 +165,6 @@ class _ReorderableListViewState extends State<RefreshReorderableListView> {
           enablePullUp: widget.enablePullUp,
           refreshFooter: widget.refreshFooter,
           refreshHeader: widget.refreshHeader,
-          headerInsertIndex: widget.headerInsertIndex,
           onOffsetChange: widget.onOffsetChange,
           onLoading: widget.onLoading,
           onRefresh: widget.onRefresh,
@@ -202,7 +199,6 @@ class _ReorderableListContent extends StatefulWidget {
     this.onRefresh,
     this.onLoading,
     this.onOffsetChange,
-    this.headerInsertIndex: 0,
   });
 
   final RefreshIndicator refreshHeader;
@@ -219,7 +215,6 @@ class _ReorderableListContent extends StatefulWidget {
 
   final RefreshController refreshController;
 
-  final int headerInsertIndex;
 
 
   final Widget header;
@@ -657,7 +652,6 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
         enablePullUp: widget.enablePullUp,
         footer: widget.refreshFooter,
         header: widget.refreshHeader,
-        headerInsertIndex: widget.headerInsertIndex,
         onOffsetChange: widget.onOffsetChange,
         onLoading: widget.onLoading,
         onRefresh: widget.onRefresh,
