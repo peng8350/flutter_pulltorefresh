@@ -74,7 +74,7 @@ class _ExamplePageState extends State<ExamplePage>
 
     final List<ExampleItem> items1 = [
       ExampleItem(
-          title: "Basic",
+          title: "基础用法",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return BasicExample();

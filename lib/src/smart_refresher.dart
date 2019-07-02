@@ -82,8 +82,7 @@ class SmartRefresher extends StatelessWidget {
       this.onRefresh,
       this.onLoading,
       this.onTwoLevel,
-      this.onOffsetChange
-      })
+      this.onOffsetChange})
       : assert(controller != null),
         super(key: key);
 
@@ -166,7 +165,7 @@ class SmartRefresher extends StatelessWidget {
             enablePullUp: enablePullUp,
             enablePullDown: enablePullDown,
             footerMode: controller.footerMode,
-            enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? false,
+            enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? true,
             headerMode: controller.headerMode,
             clamping: physics is ClampingScrollPhysics ||
                 (physics is AlwaysScrollableScrollPhysics &&
@@ -182,7 +181,7 @@ class SmartRefresher extends StatelessWidget {
     Widget body;
     if (childView is ScrollView) {
       body = CustomScrollView(
-        physics: _getScrollPhysics(conf, childView.physics),
+        physics: _getScrollPhysics(conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
         controller: controller.scrollController,
         cacheExtent: childView.cacheExtent,
         key: childView.key,
@@ -365,7 +364,7 @@ class RefreshConfiguration extends InheritedWidget {
     @required this.child,
     this.headerBuilder,
     this.footerBuilder,
-    this.enableScrollWhenTwoLevel: false,
+    this.enableScrollWhenTwoLevel: true,
     this.headerOffset: 0.0,
     this.twiceTriggerDistance: 150.0,
     this.closeTwoLevelDistance: 80.0,
@@ -395,4 +394,3 @@ class RefreshConfiguration extends InheritedWidget {
         oldWidget.maxOverScrollExtent != maxOverScrollExtent;
   }
 }
-

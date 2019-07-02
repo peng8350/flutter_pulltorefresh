@@ -29,7 +29,8 @@ class TwoLevelExample extends StatefulWidget {
 }
 
 class _TwoLevelExampleState extends State<TwoLevelExample> {
-  RefreshController _refreshController1 = RefreshController();
+  RefreshController _refreshController1 =
+      RefreshController(initialRefreshStatus: RefreshStatus.twoLeveling);
   RefreshController _refreshController2 = RefreshController();
   int _tabIndex = 0;
 
@@ -73,16 +74,16 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                             return Container(
                               height: c.biggest.height,
                               child: _refreshController1.headerStatus !=
-                                  RefreshStatus.twoLeveling &&
-                                  _refreshController1.headerStatus !=
-                                      RefreshStatus.twoLevelOpening &&
-                                  _refreshController1.headerStatus !=
-                                      RefreshStatus.twoLevelClosing
+                                          RefreshStatus.twoLeveling &&
+                                      _refreshController1.headerStatus !=
+                                          RefreshStatus.twoLevelOpening &&
+                                      _refreshController1.headerStatus !=
+                                          RefreshStatus.twoLevelClosing
                                   ? Container(
-                                height: 60.0,
-                                alignment: Alignment.center,
-                                child: child,
-                              )
+                                      height: 60.0,
+                                      alignment: Alignment.center,
+                                      child: child,
+                                    )
                                   : child,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
@@ -102,16 +103,9 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                                     children: <Widget>[
                                       RaisedButton(
                                         color: Colors.greenAccent,
-                                        onPressed: () {
-                                        },
+                                        onPressed: () {},
                                         child: Text("登陆"),
                                       ),
-                                      RaisedButton(
-                                        color: Colors.purpleAccent,
-                                        child: Text('注册'),
-                                        onPressed: () {
-                                        },
-                                      )
                                     ],
                                   ),
                                 ),
@@ -123,8 +117,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                                       color: Colors.white,
                                     ),
                                     onTap: () {
-                                      _refreshController1
-                                          .twoLevelComplete();
+                                      _refreshController1.twoLevelComplete();
                                     },
                                   ),
                                   alignment: Alignment.bottomLeft,
@@ -138,20 +131,27 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                           slivers: <Widget>[
                             SliverToBoxAdapter(
                               child: Container(
-                                child: RaisedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("点击这里返回上一页!"),
+                                child: Scaffold(
+                                  appBar: AppBar(),
+                                  body: Column(
+                                    children: <Widget>[
+                                      RaisedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("点击这里返回上一页!"),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                color: Colors.red,
-                                height: 1180.0,
+                                height: 500.0,
                               ),
                             )
                           ],
                         ),
                         controller: _refreshController1,
                         enableTwoLevel: true,
+                        enablePullDown: true,
                         onRefresh: () async {
                           await Future.delayed(Duration(milliseconds: 2000));
                           _refreshController1.refreshCompleted();
@@ -164,6 +164,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                 Offstage(
                   offstage: _tabIndex != 1,
                   child: SmartRefresher(
+                    header: ClassicHeader(),
                     child: CustomScrollView(
                       physics: ClampingScrollPhysics(),
                       slivers: <Widget>[
@@ -189,17 +190,16 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                     },
                     onTwoLevel: () {
                       _refreshController2.position.activity.resetActivity();
-                    _refreshController2.position.hold((){
-
-                    });
+                      _refreshController2.position.hold(() {});
                       Navigator.of(context)
                           .push(MaterialPageRoute(
                               builder: (c) => Scaffold(
                                     appBar: AppBar(),
-                                      body: Text("二楼刷新"),
+                                    body: Text("二楼刷新"),
                                   )))
                           .whenComplete(() {
-                        _refreshController2.twoLevelComplete(duration: Duration(microseconds: 1));
+                        _refreshController2.twoLevelComplete(
+                            duration: Duration(microseconds: 1));
                       });
                     },
                   ),

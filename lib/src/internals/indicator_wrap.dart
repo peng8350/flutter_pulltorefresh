@@ -16,20 +16,6 @@ const double default_height = 60.0;
 
 const RefreshStyle default_refreshStyle = RefreshStyle.Follow;
 
-/*
- header generate template
-    const xxxx({
-    Key key,
-    RefreshStyle refreshStyle: default_refreshStyle,
-    double height: default_height,
-    Duration completeDuration:const Duration(milliseconds: 600),
-    }) : super(
-    key: key,
-    refreshStyle: refreshStyle,
-    completeDuration:completeDuration,
-    height: height,
-   );
-*/
 
 abstract class RefreshIndicator extends StatefulWidget {
   final RefreshStyle refreshStyle;
@@ -50,16 +36,6 @@ abstract class RefreshIndicator extends StatefulWidget {
       : super(key: key);
 }
 
-/*
- footer generate template
- const xxxx({
-    Key key,
-    Function onClick,
-  }) : super(
-            key: key,
-            onClick: onClick)
-
-*/
 
 abstract class LoadIndicator extends StatefulWidget {
   final Function onClick;
@@ -99,7 +75,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   void _dispatchModeByOffset(double offset) {
     if(mode==RefreshStatus.twoLeveling){
       if(_position.pixels>configuration.closeTwoLevelDistance&&_position.activity is BallisticScrollActivity){
-
         refresher.controller.twoLevelComplete();
       }
     }
@@ -182,8 +157,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       });
     } else if (mode == RefreshStatus.refreshing) {
       if (refresher.onRefresh != null) refresher.onRefresh();
-    } else if (mode == RefreshStatus.twoLevelOpening &&
-        refresher.enableTwoLevel) {
+    } else if (mode == RefreshStatus.twoLevelOpening) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _position.activity.resetActivity();
         _position
@@ -327,7 +301,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             _isHide = cons.biggest.height == 0.0;
             return GestureDetector(
               onTap: () {
-                if (configuration.clickLoadingWhenIdle ||
+                if ((mode==LoadStatus.idle&&configuration.clickLoadingWhenIdle) ||
                     _mode.value == LoadStatus.failed) {
                   mode = LoadStatus.loading;
                 }

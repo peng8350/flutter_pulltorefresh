@@ -111,7 +111,7 @@ class NestedRefreshState extends State<NestedRefresh> {
               child: ListView.builder(
                 itemExtent: 100.0,
                 itemCount: data.length,
-                itemBuilder: (context, index) => Item(),
+                itemBuilder: (context, index) => Item(title: "data",),
               )),
         ));
   }

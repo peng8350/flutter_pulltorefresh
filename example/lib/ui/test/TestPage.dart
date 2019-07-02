@@ -118,7 +118,7 @@ class _TestPageState extends State<TestPage>
       Test1(key: example1Key),
       Test2(),
       Test3(key: example3Key),
-      AnimatedListSample()
+      Test4()
     ];
     super.initState();
   }

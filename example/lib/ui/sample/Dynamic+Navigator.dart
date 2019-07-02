@@ -5,6 +5,7 @@
  */
 
 import 'package:flutter/material.dart' hide RefreshIndicator,RefreshIndicatorState;
+import 'package:flutter/material.dart' as prefix0;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../Item.dart';
 
@@ -25,7 +26,7 @@ class _DynamicState extends State<Dynamic> {
   bool _enablePullUp = true;
   RefreshController _refreshController;
   ScrollPhysics _physics = BouncingScrollPhysics();
-  RefreshIndicator _header = ClassicHeader();
+  RefreshIndicator _header;
 
   void _init() {
     items = [];
@@ -65,7 +66,20 @@ class _DynamicState extends State<Dynamic> {
           value: false,
           groupValue: _header is MaterialClassicHeader,
           onChanged: (i) {
-            _header = ClassicHeader();
+            _header = ClassicHeader(
+              outerBuilder: (child)
+              {
+                return GestureDetector(
+                  child: child,
+                  onTap: (){
+                    print("tap");
+                    if(_refreshController.headerStatus==RefreshStatus.twoLeveling){
+                      _refreshController.twoLevelComplete();
+                    }
+                  },
+                );
+              },
+            );
             setState(() {});
           },
         )
@@ -180,19 +194,27 @@ class _DynamicState extends State<Dynamic> {
   @override
   Widget build(BuildContext context) {
     _init();
-    return SmartRefresher(
-        child: ListView.builder(
-          itemBuilder: (c, i) => items[i],
-          itemExtent: 100.0,
-          itemCount: items.length,
-          physics: _physics,
-        ),
-        onRefresh: _onRefresh,
-        onLoading: _onLoading,
-        header: _header,
-        enablePullDown: _enablePullDown,
-        enablePullUp: _enablePullUp,
-        controller: _refreshController);
+    return RefreshConfiguration(
+      child: SmartRefresher(
+          child: ListView.builder(
+            itemBuilder: (c, i) => items[i],
+            itemExtent: 100.0,
+            itemCount: items.length,
+            physics: _physics,
+          ),
+          enableTwoLevel: true,
+          onRefresh: _onRefresh,
+          onTwoLevel: (){
+
+
+          },
+          onLoading: _onLoading,
+          header: _header,
+          enablePullDown: _enablePullDown,
+          enablePullUp: _enablePullUp,
+          controller: _refreshController),
+      enableScrollWhenTwoLevel: false,
+    );
   }
 
   @override

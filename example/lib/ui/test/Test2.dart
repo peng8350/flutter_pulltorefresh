@@ -106,7 +106,6 @@ class _Test2State extends State<Test2>
       child: GridView.builder(
         gridDelegate:
             SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        physics: ClampingScrollPhysics(),
         itemCount: data.length,
         itemBuilder: buildImage,
       ),
