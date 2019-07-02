@@ -88,7 +88,7 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 
 ## 截图
 ### 例子
-|Style| [基础用法](example/lib/ui/example/useStage/basic.dart) | [header放在其他位置]((example/lib/ui/example/useStage/link_header_example.dart)) |
+|Style| [基础用法](example/lib/ui/example/useStage/basic.dart) | [header放在其他位置]((example/lib/ui/example/useStage/link_header_example.dart) |
 |:---:|:---:|:---:|
 |art| ![](arts/example1.gif) | ![](arts/example2.gif) |
 
@@ -96,11 +96,11 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 |:---:|:---:|:---:|
 |art| ![](arts/example3.gif) | ![](arts/example4.gif) |
 
-|Style| [兼容其他特殊组件](example/lib/ui/example/otherwidget) |  [空白视图]((example/lib/ui/example/useStage/empty_view.dart)) |
+|Style| [兼容其他特殊组件](example/lib/ui/example/otherwidget) |  [空白视图]((example/lib/ui/example/useStage/empty_view.dart) |
 |:---:|:---:|:---:|
 |art| ![](arts/example5.gif) | ![](arts/example6.gif) |
 
-|Style| [简单自定义刷新指示器(使用SpinKit)]((example/lib/ui/example/useStage/custom_header.dart))|
+|Style| [简单自定义刷新指示器(使用SpinKit)]((example/lib/ui/example/useStage/custom_header.dart)|
 |:---:|:---:|
 |art| ![](arts/example7.gif) |
 

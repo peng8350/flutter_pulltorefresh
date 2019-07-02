@@ -49,6 +49,9 @@
 ```
 
 # RefreshConfiguration
+
+| Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
+|---------|--------------------------|:-----:|:-----:|:-----:|
 | child | you know,no need to explain  | ? extends RefreshIndicator  | ClassicHeader | 必要|
 | headerBuilder | the header indicator builder  | () =>  ? extends RefreshIndicator | null | 可选 |
 | footerBuilder      | the footer indicator builder   | () =>  ? extends LoadIndicator  |   null |  可选 |

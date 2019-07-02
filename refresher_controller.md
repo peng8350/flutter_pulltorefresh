@@ -49,6 +49,7 @@
 ```
 
 # RefreshConfiguration
+
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | child | 不用解析你明白  | Widget  | null | 必要|
