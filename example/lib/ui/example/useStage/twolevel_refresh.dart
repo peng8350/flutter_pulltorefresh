@@ -70,6 +70,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                       return SmartRefresher(
                         header: ClassicHeader(
                           textStyle: TextStyle(color: Colors.white),
+                          height: 80.0,
                           outerBuilder: (child) {
                             return Container(
                               height: c.biggest.height,

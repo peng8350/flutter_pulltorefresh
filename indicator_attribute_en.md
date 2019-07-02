@@ -1,13 +1,13 @@
 # Indicator properties
 
 ## Common header attributes (not every indicator, but most have these attributes)
-* double  height: It refers to the height occupied by the indicator. This attribute has different meanings for different indicator styles.
-  This property does not constrain the layout size, and sublayout can overflow the range of this value.
+* double  height: 1.4.7 updated,it mean the visual height of indicator
 * refreshStyle: Styles used to define header refresh indicators,There is four style:Front,Behind,Follow,UnFollow
 * completeDuration: stop time when state in success or fail
 
 ## common Footer attributes
-* bool autoLoad: Whether to turn on the function of automatic loading at a certain distance
+* () => {} onClick：click footer indicator callback
+
 
 
 ## ClassicHeader,ClassicFooter(Not Support Behind)

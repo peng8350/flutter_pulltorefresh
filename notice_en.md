@@ -10,12 +10,6 @@
 * SingleChildScrollView is not extends ScrollView,remember not to use this in child attribute,Doing so is just nesting ScrollView in ScrollView
 * When you want to add background to ScrollView, remember not to wrap Container for ListView or GridView at the child node, wrap Container outside Smart Refresher
 
-## Front RefreshStyle
-* This style is somewhat different from the implementation mechanism of Behind,Follow,UnFollow,Follow Implementation of Modification Based on ClampScrollPhysics
-,Behind, Follow, UnFollow are three resilient sliding engines based on iOS。Front works for Android a little more.
-* 1.4.5 Remake FrontStyle,this can be ignored. After using Front style, the initial offset of the list is 100.0, which will bounce back between 0 and 100. So when calculating the offset of scrollController,
- you need to subtract the height of the indicator (100), which is the real offset in the list.Similarly, when you scroll to the top, animateTo (100.0), not animateTo (0.0).
-* only support place in first sliver
 
 ## Behind RefreshStyle
 * In fact, the realization of this style is realized by the dynamic change of height. Try to use Align attributes more in the periphery, and there will be different sliding effects.
@@ -27,7 +21,6 @@ you will find that Icon will be suspended in the attempt area for reasons I have
   The case of layoutExtent. So if your internal slivers have this kind of sliver, my internal judgment is not legitimate, you need to judge manually. Set hideWhenNotFull to false, and then use Boolean values to determine.
 
 ## NestedScrollView(Not advice to use unless necessary)
-* RefreshStyle. Front is temporarily incompatible due to design problems. Try using CustomScrollView to see if it can be implemented.
 * ScrollController need to be placed in NestedScrollView,there is not work just placed in "child"。
 * How to get the inner scrollController? by using refreshController.scrollController get the inner
 
