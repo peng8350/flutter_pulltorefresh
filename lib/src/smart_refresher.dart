@@ -342,14 +342,11 @@ class RefreshController {
 class RefreshConfiguration extends InheritedWidget {
   final IndicatorBuilder headerBuilder;
   final IndicatorBuilder footerBuilder;
-
   // If need to refreshing now when reaching triggerDistance
   final bool skipCanRefresh;
-
   // when listView data small(not enough one page) , it should be hide
   final bool hideFooterWhenNotFull;
   final double headerOffset;
-  final bool clickLoadingWhenIdle;
   final bool autoLoad;
   final bool enableScrollWhenTwoLevel;
   final Widget child;
@@ -368,7 +365,6 @@ class RefreshConfiguration extends InheritedWidget {
     this.headerOffset: 0.0,
     this.twiceTriggerDistance: 150.0,
     this.closeTwoLevelDistance: 80.0,
-    this.clickLoadingWhenIdle: false,
     this.skipCanRefresh: false,
     this.autoLoad: true,
     this.maxOverScrollExtent,
@@ -388,7 +384,6 @@ class RefreshConfiguration extends InheritedWidget {
         skipCanRefresh != oldWidget.skipCanRefresh ||
         hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||
         headerOffset != oldWidget.headerOffset ||
-        clickLoadingWhenIdle != oldWidget.clickLoadingWhenIdle ||
         oldWidget.runtimeType != runtimeType ||
         maxUnderScrollExtent != oldWidget.maxUnderScrollExtent ||
         oldWidget.maxOverScrollExtent != maxOverScrollExtent;

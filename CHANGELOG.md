@@ -201,26 +201,26 @@ new Feature:
 * Add linkHeader to link other place header
 
 SmartRefresher:
-* Remove headerInsertIndex
+* Remove headerInsertIndex(only first sliver)
 * Fix ignore padding attr when child is BoxScrollView
 * add enableTwoLevel,onTwoLevel attr
 
 RefreshConfiguration:
-1. add enableScrollWhenTwoLevel,closeTwoLevelDistance for twoLevel setting
+* add enableScrollWhenTwoLevel,closeTwoLevelDistance for twoLevel setting
 
 RefreshController:
 * Add refreshToidle, twoLevelComplete new api
 * Add initalRefreshStatus,initalLoadStatus new parameter setting default value
 
 ClassicalIndicator:
-1. remove decoration
-2. add outerBuilder replace decoration
-3. add other attr for twoLevel
+* remove decoration
+* add outerBuilder replace decoration
+* add other attr for twoLevel
 
 Bug Fix:
-1. Fix clicking footer trigger loading when no more state
-2. footer indicator shouldn't hide when state in noMore,failed and not full in one page
+* Fix clicking footer trigger loading when no more state
+* footer indicator shouldn't hide when state in noMore,failed and not full in one page
 
 other:
-1. Remove asSliver usage in all indicators(no need to use,not support first sliver)
-2. make indicator auto fit boxSize,just like SliverToBoxAdapter
+* Remove asSliver usage in all indicators(no need to use,only support first sliver)
+* make indicator auto fit boxSize,just like SliverToBoxAdapter

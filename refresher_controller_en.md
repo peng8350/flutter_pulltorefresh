@@ -8,10 +8,12 @@
 | header | refresh indicator  | ? extends RefreshIndicator  | ClassicHeader | optional|
 | footer | load indicator     | ? extends LoadIndicator | ClassicFooter | optional |
 | enablePullDown | switch of pulldownrefresh     | boolean | true | optional |
+| enableTwoLevel |   whether to open the function of twoLevel for header | boolean | false | 可选 |
 | enablePullUp |   switch of pullupload | boolean | false | optional |
 | onRefresh | callback when refreshing  | () => Void | null | optional |
 | onLoading | callback when loading   | () => Void | null | optional |
 | onOffsetChange | callBack the Visible range of indicator  | (bool,double) => Void | null | optional |
+| onTwoLevel | callback when second floor is opening   | () => Void | null | 可选 |
 
 
 # RefreshController Api
@@ -26,26 +28,38 @@
           {Duration duration: const Duration(milliseconds: 300),
           Curve curve: Curves.linear}) ;
       // Top Indicator Refresh Success
-      void refreshCompleted();
+      void refreshCompleted({});
       // Top Indicator Refresh Failed
       void refreshFailed();
       // Bottom Indicator Loading Completed
+      // set to idle, and hide back
+      void refreshToIdle();
+       // close second floor
+       void twoLevelComplete(
+             {Duration duration: const Duration(milliseconds: 500),
+             Curve curve: Curves.linear};
       void loadComplete();
       // The bottom indicator enters a state without more data
       void loadNoData();
       // Refresh the bottom indicator status to idle
+      // footer load failed
+      void loadFailed()
       void resetNoData();
-      // Internal exposure of ScrollController is required for a very special situation, such as NestedScrollView, which can be used to obtain innerScrollController.
-      ScrollController scrollController;
 
 ```
 
 # RefreshConfiguration
-* headerBuilder: Header construction indicator, to return RefreshIndicator type, under the subtree SmartRefresher refers to it by default without header attr
-* footerBuilder: The tail constructed indicator returns the LoadIndicator type, which SmartRefresher under the subtree refers to by default without footer
-* double headerTriggerDistance: trigger refresh distance
-* double footerTriggerDistance: trigger loading distance
-* skipCanRefresh: Skip the canRefresh state and go directly to refresh state
-* bool hideWhenNotFull:Whether to automatically hide the bottom indicator when the page is less than one page, default to true
-* () => {} onClick：Click on the callback method of the indicator to manually load data or reset the status of no data
-* autoLoad:Whether to turn on the function of automatic loading at a certain distance
+| child | you know,no need to explain  | ? extends RefreshIndicator  | ClassicHeader | 必要|
+| headerBuilder | the header indicator builder  | () =>  ? extends RefreshIndicator | null | 可选 |
+| footerBuilder      | the footer indicator builder   | () =>  ? extends LoadIndicator  |   null |  可选 |
+| headerTriggerDistance | overScroll distance of  trigger refresh     | double | 80.0 | 可选 |
+| footerTriggerDistance |   the extentAfter distance of  trigger loading  | double | 15.0 | 可选 |
+| skipCanRefresh | if skip canRefresh state,enter refreshing state directly  | () => Void | null | 可选 |
+| hideWhenNotFull | whether to hide footer when scrollview not enough one page   | bool | true | 可选 |
+| autoLoad | Autoload more, if false, sliding bottom will not trigger, but provide more click loading methods  | bool | true | 可选 |
+| headerOffset | Head indicator layout deviation Y coordinates, mostly for FrontStyle  | bool | 0.0 | 可选 |
+| enableScrollWhenTwoLevel | whether enable scroll when into twoLevel   | bool | true | 可选 |
+| twiceTriggerDistance | the overScroll distance of trigger twoLevel  | double | 150.0 | 可选 |
+| closeTwoLevelDistance | Close the bottom crossing distance on the second floor, premise:enableScrollWhenTwoLevel is true  | double | 80.0 | 可选 |
+| maxOverScrollExtent | max overScroll distance   | double | inf | 可选 |
+| maxUnderScrollExtent | max underScroll distance  | double | inf | 可选 |

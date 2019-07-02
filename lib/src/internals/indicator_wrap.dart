@@ -301,7 +301,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             _isHide = cons.biggest.height == 0.0;
             return GestureDetector(
               onTap: () {
-                if ((mode==LoadStatus.idle&&configuration.clickLoadingWhenIdle) ||
+                if ((mode==LoadStatus.idle&&!configuration.autoLoad) ||
                     _mode.value == LoadStatus.failed) {
                   mode = LoadStatus.loading;
                 }

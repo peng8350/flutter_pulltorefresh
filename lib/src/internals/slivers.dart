@@ -152,7 +152,6 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
     if(_updateFlag){
       Scrollable.of(context).position.applyNewDimensions();
       _updateFlag = false;
-      print(SmartRefresher.of(context).controller.headerMode.value);
     }
     // The new layout extent this sliver should now have.
     final double layoutExtent =

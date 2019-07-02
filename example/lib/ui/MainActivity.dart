@@ -99,7 +99,6 @@ class _MainActivityState extends State<MainActivity>
             physics: NeverScrollableScrollPhysics(),
           ),
           enableScrollWhenTwoLevel: true,
-          clickLoadingWhenIdle: true,
           autoLoad: true,
           hideFooterWhenNotFull: true,
         ),
