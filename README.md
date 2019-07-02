@@ -82,6 +82,7 @@ In addition, if you have almost the same header and tail indicators for each pag
 , which reduces the repeatability of constructing headers and footers for each new page.
 At the same time, you can also set some global properties, such as whether to turn on automatic loading, refresh the trigger distance, whether to automatically hide the tail indicator should not meet a page.
 the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/MainActivity.dart) in my demo
+
 ```
 
     RefreshConfiguration(
@@ -97,10 +98,11 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
 
 finally,[here](https://github.com/peng8350/flutter_pulltorefresh/tree/master/example/lib/ui/example) is the examples,you can find more details in this
 
+
 ## ScreenShots
 
 ### Examples
-|Style| [ basic usage ](example/lib/ui/example/useStage/basic.dart) | [header in other place]((example/lib/ui/example/useStage/link_header_example.dart) |
+|Style| [ basic usage ](example/lib/ui/example/useStage/basic.dart) | [header in other place](example/lib/ui/example/useStage/link_header_example.dart) |
 |:---:|:---:|:---:|
 |art| ![](arts/example1.gif) | ![](arts/example2.gif) |
 
@@ -108,13 +110,14 @@ finally,[here](https://github.com/peng8350/flutter_pulltorefresh/tree/master/exa
 |:---:|:---:|:---:|
 |art| ![](arts/example3.gif) | ![](arts/example4.gif) |
 
-|Style| [ use with other widgets](example/lib/ui/example/otherwidget) |  [ empty View]((example/lib/ui/example/useStage/empty_view.dart) |
+|Style| [ use with other widgets](example/lib/ui/example/otherwidget) |  [ empty View](example/lib/ui/example/useStage/empty_view.dart) |
 |:---:|:---:|:---:|
 |art| ![](arts/example5.gif) | ![](arts/example6.gif) |
 
-|Style| [ simple custom header(使用SpinKit)]((example/lib/ui/example/useStage/custom_header.dart)|
+|Style| [ simple custom header(使用SpinKit)](example/lib/ui/example/useStage/custom_header.dart)|
 |:---:|:---:|
 |art| ![](arts/example7.gif) |
+
 
 ### Indicator
 
@@ -165,9 +168,10 @@ So it should be compatible with most of the libraries that need to be used betwe
 [SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout)
 
 ## LICENSE
- 
+
+
 ```
- 
+
 MIT License
 
 Copyright (c) 2018 Jpeng
@@ -190,5 +194,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
- 
+
  ```
