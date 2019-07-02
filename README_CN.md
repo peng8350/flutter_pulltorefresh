@@ -11,35 +11,18 @@
 * 支持Android和iOS默认滑动引擎,可限制越界距离
 * 支持水平和垂直刷新,同时支持翻转列表(四个方向)
 * 提供多种刷新指示器风格:跟随,不跟随,位于背部,位于前部
+* 提供二楼刷新,可实现类似淘宝二楼,微信二楼,携程二楼
+* 允许关联指示器存放在Viewport外部,即朋友圈刷新效果
 
-## 指示器截图
-### 四种指示器风格
-|Style| 跟随经典指示器|不跟随经典指示器|
-|:---:|:---:|:---:|
-|art| ![](example/images/classical_follow.gif) | ![](example/images/classical_unfollow.gif) |
-
-|Style|背部指示器|前面悬浮指示器|
-|:---:|:---:|:---:|
-|art| ![](arts/screen1.gif) | ![](example/images/material_classic.gif) |
-
-### 各种指示器
-
-|Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) |
-|:---:|:---:|:---:|
-|art| ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) |
-
-|Style| [MaterialClassicHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) |
-|:---:|:---:|:---:|
-|art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
-
-## 我该怎么用?
+## 用法
 提示:<br>
 1.因1.3.0对内部进行了很大的变动,1.3.0~1.3.9版本不建议使用,Bug较多,1.4.0开始稳定<br>
 2.确保flutter版本大于等于1.2.1
+
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.6
+     pull_to_refresh: ^1.4.7
 
 ```
 
@@ -102,6 +85,35 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 ```
 
 最后,[这里](https://github.com/peng8350/flutter_pulltorefresh/tree/master/example/lib/ui/example)提供了各种例子实现你所需要的功能
+
+## 截图
+### 例子
+|Style| [基础用法](example/lib/ui/example/useStage/basic.dart) | [header放在其他位置]((example/lib/ui/example/useStage/link_header_example.dart)) |
+|:---:|:---:|:---:|
+|art| ![](arts/example1.gif) | ![](arts/example2.gif) |
+
+|Style| [水平+翻转刷新](example/lib/ui/example/useStage/horizontal+reverse.dart) | [二楼刷新](example/lib/ui/example/useStage/twolevel_refresh.dart) |
+|:---:|:---:|:---:|
+|art| ![](arts/example3.gif) | ![](arts/example4.gif) |
+
+|Style| [兼容其他特殊组件](example/lib/ui/example/otherwidget) |  [空白视图]((example/lib/ui/example/useStage/empty_view.dart)) |
+|:---:|:---:|:---:|
+|art| ![](arts/example5.gif) | ![](arts/example6.gif) |
+
+|Style| [简单自定义刷新指示器(使用SpinKit)]((example/lib/ui/example/useStage/custom_header.dart))|
+|:---:|:---:|
+|art| ![](arts/example7.gif) |
+
+### 各种指示器
+
+|Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) |
+|:---:|:---:|:---:|
+|art| ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) |
+
+|Style| [MaterialClassicHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) |
+|:---:|:---:|:---:|
+|art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
+
 
 
 ## 更多

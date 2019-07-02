@@ -12,33 +12,10 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 * Support Android and iOS default ScrollPhysics,the overScroll distance can be controlled
 * horizontal and vertical refresh,support reverse ScrollView also(four direction)
 * provide more refreshStyle: Behind,Follow,UnFollow,Front
+* Support twoLevel refresh,implments just like TaoBao twoLevel,Wechat TwoLevel
+* enable link indicator which placing other place,just like Wechat FriendCircle refresh effect
 
-
-## ScreenShots
-
-### Four RefreshStyle
-|Style| Follow | UnFollow |
-|:---:|:---:|:---:|
-|art| ![](example/images/classical_follow.gif) | ![](example/images/classical_unfollow.gif) |
-
-|Style| Behind | Front |
-|:---:|:---:|:---:|
-|art| ![](arts/screen1.gif) | ![](example/images/material_classic.gif) |
-
-### Indicator
-
-|Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) |
-|:---:|:---:|:---:|
-|art| ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) |
-
-|Style| [MaterialClassicHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) |
-|:---:|:---:|:---:|
-|art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
-
-
-
-
-## How to use?
+## Usage
 
 tips:<br>
 1.Because 1.3.0 has made great changes to the internal, version 1.3.0-1.3.9 is not recommended to use,there has a lot of Bug , 1.4.0 began to stabilize.<br>
@@ -47,7 +24,7 @@ tips:<br>
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.6
+     pull_to_refresh: ^1.4.7
 
 ```
 
@@ -119,6 +96,40 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
 ```
 
 finally,[here](https://github.com/peng8350/flutter_pulltorefresh/tree/master/example/lib/ui/example) is the examples,you can find more details in this
+
+## ScreenShots
+
+### Examples
+|Style| [ basic usage ](example/lib/ui/example/useStage/basic.dart) | [header in other place]((example/lib/ui/example/useStage/link_header_example.dart)) |
+|:---:|:---:|:---:|
+|art| ![](arts/example1.gif) | ![](arts/example2.gif) |
+
+|Style| [ reverse + horizontal](example/lib/ui/example/useStage/horizontal+reverse.dart) | [twoLevel refresh](example/lib/ui/example/useStage/twolevel_refresh.dart) |
+|:---:|:---:|:---:|
+|art| ![](arts/example3.gif) | ![](arts/example4.gif) |
+
+|Style| [ use with other widgets](example/lib/ui/example/otherwidget) |  [ empty View]((example/lib/ui/example/useStage/empty_view.dart)) |
+|:---:|:---:|:---:|
+|art| ![](arts/example5.gif) | ![](arts/example6.gif) |
+
+|Style| [ simple custom header(使用SpinKit)]((example/lib/ui/example/useStage/custom_header.dart))|
+|:---:|:---:|
+|art| ![](arts/example7.gif) |
+
+### Indicator
+
+|Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) |
+|:---:|:---:|:---:|
+|art| ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) |
+
+|Style| [MaterialClassicHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) |
+|:---:|:---:|:---:|
+|art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
+
+
+
+
+
 
 ## More
 - [SmartRefresher,RefreshController](refresher_controller_en.md)
