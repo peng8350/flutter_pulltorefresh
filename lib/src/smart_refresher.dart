@@ -167,6 +167,8 @@ class SmartRefresher extends StatelessWidget {
             footerMode: controller.footerMode,
             enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? true,
             headerMode: controller.headerMode,
+            enableScrollWhenRefreshCompleted:
+                conf?.enableScrollWhenRefreshCompleted ?? true,
             clamping: physics is ClampingScrollPhysics ||
                 (physics is AlwaysScrollableScrollPhysics &&
                     defaultTargetPlatform != TargetPlatform.iOS),
@@ -181,7 +183,8 @@ class SmartRefresher extends StatelessWidget {
     Widget body;
     if (childView is ScrollView) {
       body = CustomScrollView(
-        physics: _getScrollPhysics(conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
+        physics: _getScrollPhysics(
+            conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
         controller: controller.scrollController,
         cacheExtent: childView.cacheExtent,
         key: childView.key,
@@ -342,13 +345,16 @@ class RefreshController {
 class RefreshConfiguration extends InheritedWidget {
   final IndicatorBuilder headerBuilder;
   final IndicatorBuilder footerBuilder;
+
   // If need to refreshing now when reaching triggerDistance
   final bool skipCanRefresh;
+
   // when listView data small(not enough one page) , it should be hide
   final bool hideFooterWhenNotFull;
   final double headerOffset;
   final bool autoLoad;
   final bool enableScrollWhenTwoLevel;
+  final bool enableScrollWhenRefreshCompleted;
   final bool enableBallisticRefresh;
   final Widget child;
   final double headerTriggerDistance;
@@ -363,7 +369,8 @@ class RefreshConfiguration extends InheritedWidget {
     this.headerBuilder,
     this.footerBuilder,
     this.enableScrollWhenTwoLevel: true,
-    this.enableBallisticRefresh:false,
+    this.enableBallisticRefresh: false,
+    this.enableScrollWhenRefreshCompleted: true,
     this.headerOffset: 0.0,
     this.twiceTriggerDistance: 150.0,
     this.closeTwoLevelDistance: 80.0,
@@ -386,7 +393,14 @@ class RefreshConfiguration extends InheritedWidget {
         skipCanRefresh != oldWidget.skipCanRefresh ||
         hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||
         headerOffset != oldWidget.headerOffset ||
-        oldWidget.runtimeType != runtimeType ||
+        enableScrollWhenRefreshCompleted !=
+            oldWidget.enableScrollWhenRefreshCompleted ||
+        enableBallisticRefresh != oldWidget.enableBallisticRefresh ||
+        enableScrollWhenTwoLevel != oldWidget.enableScrollWhenTwoLevel ||
+        closeTwoLevelDistance != oldWidget.closeTwoLevelDistance ||
+        footerTriggerDistance != oldWidget.footerTriggerDistance ||
+        headerTriggerDistance != oldWidget.headerTriggerDistance ||
+        twiceTriggerDistance != oldWidget.twiceTriggerDistance ||
         maxUnderScrollExtent != oldWidget.maxUnderScrollExtent ||
         oldWidget.maxOverScrollExtent != maxOverScrollExtent;
   }

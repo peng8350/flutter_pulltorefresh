@@ -88,13 +88,17 @@ class _Test2State extends State<Test2>
     super.initState();
     _scrollController = ScrollController(keepScrollOffset: true);
     _controller = RefreshController();
-
     _fetch();
   }
 
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return SmartRefresher(
       enablePullDown: true,
       enablePullUp: true,

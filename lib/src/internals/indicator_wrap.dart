@@ -5,6 +5,7 @@
  */
 
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 import '../smart_refresher.dart';
@@ -76,13 +77,19 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if(mode==RefreshStatus.twoLeveling){
       if(_position.pixels>configuration.closeTwoLevelDistance&&_position.activity is BallisticScrollActivity){
         refresher.controller.twoLevelComplete();
+        return;
       }
     }
-    if (floating) return;
     if (RefreshStatus.twoLevelOpening == mode ||
         mode == RefreshStatus.twoLevelClosing) {
       return;
     }
+    if (floating) return;
+    // no matter what activity is done, when offset ==0.0 and !floating,it should be set to idle for setting ifCanDrag
+    if(offset==0.0){
+      mode = RefreshStatus.idle;
+    }
+
     // Sometimes different devices return velocity differently, so it's impossible to judge from velocity whether the user
     // has invoked animateTo (0.0) or the user is dragging the view.Sometimes animateTo (0.0) does not return velocity = 0.0
     // velocity < 0.0 may be spring up,>0.0 spring down
@@ -96,6 +103,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         if (!configuration.skipCanRefresh) {
           mode = RefreshStatus.canRefresh;
         } else {
+
           floating = true;
           update();
           readyToRefresh().then((_) {
@@ -107,6 +115,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         mode = RefreshStatus.idle;
       }
     } else if (RefreshStatus.canRefresh == mode) {
+      // refreshing
       floating = true;
       update();
       readyToRefresh().then((_) {
@@ -114,6 +123,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         mode = RefreshStatus.refreshing;
       });
     } else if (mode == RefreshStatus.canTwoLevel) {
+      // enter twoLevel
       floating = true;
       update();
       if (!mounted) return;
