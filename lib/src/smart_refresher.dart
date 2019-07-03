@@ -349,6 +349,7 @@ class RefreshConfiguration extends InheritedWidget {
   final double headerOffset;
   final bool autoLoad;
   final bool enableScrollWhenTwoLevel;
+  final bool enableBallisticRefresh;
   final Widget child;
   final double headerTriggerDistance;
   final double twiceTriggerDistance;
@@ -362,6 +363,7 @@ class RefreshConfiguration extends InheritedWidget {
     this.headerBuilder,
     this.footerBuilder,
     this.enableScrollWhenTwoLevel: true,
+    this.enableBallisticRefresh:false,
     this.headerOffset: 0.0,
     this.twiceTriggerDistance: 150.0,
     this.closeTwoLevelDistance: 80.0,

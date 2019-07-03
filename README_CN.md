@@ -117,7 +117,7 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 
 
 ## 更多
-- [SmartRefresher,RefreshController](refresher_controller.md)
+- [属性文档](refresher_controller.md)
 - [自定义指示器](custom_indicator.md)
 - [指示器内部属性介绍](indicator_attribute.md)
 - [更新日志](CHANGELOG.md)

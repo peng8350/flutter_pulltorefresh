@@ -86,7 +86,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     // Sometimes different devices return velocity differently, so it's impossible to judge from velocity whether the user
     // has invoked animateTo (0.0) or the user is dragging the view.Sometimes animateTo (0.0) does not return velocity = 0.0
     // velocity < 0.0 may be spring up,>0.0 spring down
-    if (_position.activity.velocity < 0.0 ||
+    if ((configuration.enableBallisticRefresh&&_position.activity.velocity < 0.0) ||
         _position.activity is DragScrollActivity ||
         _position.activity is DrivenScrollActivity) {
       if (refresher.enableTwoLevel &&
