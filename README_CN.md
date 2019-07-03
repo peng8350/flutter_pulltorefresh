@@ -100,9 +100,9 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 |:---:|:---:|:---:|
 |art| ![](arts/example5.gif) | ![](arts/example6.gif) |
 
-|Style| [简单自定义刷新指示器(使用SpinKit)](example/lib/ui/example/useStage/custom_header.dart)|
-|:---:|:---:|
-|art| ![](arts/example7.gif) |
+|Style| [简单自定义刷新指示器(使用SpinKit)](example/lib/ui/example/useStage/custom_header.dart)| [dragableScrollSheet+LoadMore](example/lib/ui/example/otherwidget/draggable_bottomsheet_loadmore.dart)|
+|:---:|:---:|:---:|
+|art| ![](arts/example7.gif) | ![](arts/example8.gif) |
 
 ### 各种指示器
 

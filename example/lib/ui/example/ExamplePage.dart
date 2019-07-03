@@ -16,6 +16,7 @@ import 'package:example/ui/example/otherwidget/refresh_pageView_example.dart';
 import 'package:example/ui/example/useStage/link_header_example.dart';
 import 'package:example/ui/example/useStage/twolevel_refresh.dart';
 import 'otherwidget/refresh_recordable_listview_example.dart';
+import 'otherwidget/draggable_bottomsheet_loadmore.dart';
 
 class ExamplePage extends StatefulWidget {
   @override
@@ -164,6 +165,16 @@ class _ExamplePageState extends State<ExamplePage>
               return Scaffold(
                 appBar: AppBar(),
                 body: RefreshExpansionPanelList(),
+              );
+            }));
+          }),
+      ExampleItem(
+          title: "loadmore+draggablesheet",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return Scaffold(
+                appBar: AppBar(),
+                body: DraggableLoadingBottomSheet(),
               );
             }));
           }),

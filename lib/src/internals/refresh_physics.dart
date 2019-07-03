@@ -202,7 +202,7 @@ class RefreshPhysics extends ScrollPhysics {
         spring: spring,
         position: position.pixels,
         // -1.0 avoid stop springing back ,and release gesture
-        velocity: velocity,
+        velocity: -1.0,
         // TODO(abarth): We should move this constant closer to the drag end.
         leadingExtent: position.minScrollExtent,
         trailingExtent: headerMode.value == RefreshStatus.twoLeveling

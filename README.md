@@ -114,9 +114,9 @@ finally,[here](https://github.com/peng8350/flutter_pulltorefresh/tree/master/exa
 |:---:|:---:|:---:|
 |art| ![](arts/example5.gif) | ![](arts/example6.gif) |
 
-|Style| [ simple custom header(使用SpinKit)](example/lib/ui/example/useStage/custom_header.dart)|
+|Style| [ simple custom header(使用SpinKit)](example/lib/ui/example/useStage/custom_header.dart)| [dragableScrollSheet+LoadMore](example/lib/ui/example/otherwidget/draggable_bottomsheet_loadmore.dart)|
 |:---:|:---:|
-|art| ![](arts/example7.gif) |
+|art| ![](arts/example7.gif) | ![](arts/example8.gif) |
 
 
 ### Indicator
