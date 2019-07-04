@@ -13,7 +13,6 @@ import 'slivers.dart';
 
 const int default_completeDuration = 500;
 
-const double default_height = 60.0;
 
 const RefreshStyle default_refreshStyle = RefreshStyle.Follow;
 
@@ -29,7 +28,7 @@ abstract class RefreshIndicator extends StatefulWidget {
   const RefreshIndicator(
       {Key key,
       this.reverse: false,
-      this.height: default_height,
+      this.height: 60.0,
       this.completeDuration:
           const Duration(milliseconds: default_completeDuration),
       this.refreshStyle: default_refreshStyle})
@@ -38,14 +37,14 @@ abstract class RefreshIndicator extends StatefulWidget {
 
 abstract class LoadIndicator extends StatefulWidget {
   final LoadStyle loadStyle;
-  final double visualExtent;
+  final double height;
   final Function onClick;
 
   const LoadIndicator(
       {Key key,
       this.onClick,
       this.loadStyle: LoadStyle.ShowWhenLoading,
-      this.visualExtent: 60.0})
+      this.height: 60.0})
       : super(key: key);
 }
 
@@ -328,7 +327,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     // TODO: implement build
     return SliverLoading(
         hideWhenNotFull: configuration.hideFooterWhenNotFull,
-        layoutExtent: floating ? widget.visualExtent : 0.0,
+        layoutExtent: floating ? widget.height : 0.0,
         mode: mode,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints cons) {

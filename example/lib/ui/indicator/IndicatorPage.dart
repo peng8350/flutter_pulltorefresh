@@ -105,10 +105,19 @@ class _IndicatorPageState extends State<IndicatorPage> {
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (BuildContext context) => IndicatorActivity(
-                      reverse: false,
                       title: "底部指示器(经常显示)",
                       footer: ClassicFooter(
+                        height: 80.0,
                         loadStyle: LoadStyle.ShowAlways,
+                        outerBuilder: (c){
+                          return Container(
+                            child: Center(child: c,),
+                            height: 80.0,
+                            decoration: BoxDecoration(
+                              color: Colors.redAccent
+                            ),
+                          );
+                        },
                       ),
                     )));
           },

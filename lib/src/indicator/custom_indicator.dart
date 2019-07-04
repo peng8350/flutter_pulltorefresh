@@ -17,7 +17,7 @@ class CustomHeader extends RefreshIndicator {
   const CustomHeader({
     Key key,
     @required this.builder,
-    double height: default_height,
+    double height: 60.0,
     Duration completeDuration: const Duration(milliseconds: 600),
     RefreshStyle refreshStyle: RefreshStyle.Follow,
   }) : super(
@@ -46,10 +46,11 @@ class CustomFooter extends LoadIndicator {
 
   const CustomFooter({
     Key key,
+    double height: 60.0,
     LoadStyle loadStyle,
     @required this.builder,
     Function onClick,
-  }) : super(key: key, onClick: onClick,loadStyle:loadStyle);
+  }) : super(key: key, onClick: onClick, loadStyle: loadStyle, height: height);
 
   @override
   State<StatefulWidget> createState() {

@@ -279,7 +279,6 @@ class SliverLoading extends SingleChildRenderObjectWidget {
 
   @override
   _RenderSliverLoading createRenderObject(BuildContext context) {
-    print(layoutExtent);
     return _RenderSliverLoading(
         hideWhenNotFull: hideWhenNotFull,
         mode: mode,
@@ -320,12 +319,6 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   }
 
   get layoutExtent => _layoutExtent;
-
-  // This keeps track of the previously applied scroll offsets to the scrollable
-  // so that when [refreshIndicatorLayoutExtent] or [hasLayoutExtent] changes,
-  // the appropriate delta can be applied to keep everything in the same place
-  // visually.
-  final double layoutExtentOffsetCompensation = 0.0;
 
   bool _computeIfFull(SliverConstraints cons) {
     final RenderViewport viewport = parent;

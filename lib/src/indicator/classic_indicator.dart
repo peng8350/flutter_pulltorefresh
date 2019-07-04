@@ -37,7 +37,7 @@ class ClassicHeader extends RefreshIndicator {
   const ClassicHeader({
     Key key,
     RefreshStyle refreshStyle: default_refreshStyle,
-    double height: default_height,
+    double height: 60.0,
     Duration completeDuration: const Duration(milliseconds: 600),
     this.outerBuilder,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
@@ -152,8 +152,6 @@ class ClassicFooter extends LoadIndicator {
 
   final Widget idleIcon, loadingIcon, noMoreIcon, failedIcon;
 
-  final double height;
-
   final double spacing;
 
   final IconPosition iconPos;
@@ -164,11 +162,11 @@ class ClassicFooter extends LoadIndicator {
     Key key,
     Function onClick,
     LoadStyle loadStyle,
+    double height: 60.0,
     this.outerBuilder,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.loadingText: 'Loading...',
     this.noDataText: 'No more data',
-    this.height: 60.0,
     this.noMoreIcon,
     this.idleText: 'Load More..',
     this.failedText: 'Load Failed,Click Retry!',
@@ -180,6 +178,7 @@ class ClassicFooter extends LoadIndicator {
   }) : super(
     key: key,
     loadStyle:loadStyle,
+    height:height,
     onClick: onClick,
   );
 
