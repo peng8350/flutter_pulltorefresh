@@ -234,7 +234,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   bool _checkIfCanLoading() {
-    return _position.extentAfter <= configuration.footerTriggerDistance &&
+    return _position.maxScrollExtent-_position.pixels <= configuration.footerTriggerDistance &&
         configuration.autoLoad &&
         _enableLoadingAgain &&
         _position.extentBefore > 0.0 &&

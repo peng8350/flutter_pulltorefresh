@@ -100,6 +100,7 @@ class _MainActivityState extends State<MainActivity>
           ),
           enableScrollWhenTwoLevel: true,
           autoLoad: true,
+          footerTriggerDistance: -15.0,
           enableScrollWhenRefreshCompleted: false,
           hideFooterWhenNotFull: true,
         ),
