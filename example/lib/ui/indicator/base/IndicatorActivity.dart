@@ -77,10 +77,8 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: LayoutBuilder(builder: (BuildContext context, b) {
-        final double totalHeight = items.length * 100.0;
-        final double lIstHeight = b.biggest.height;
-        return SmartRefresher(
+      body: RefreshConfiguration(
+        child: SmartRefresher(
             child: ListView.builder(
               itemBuilder: (c, i) => items[i],
               itemExtent: 100.0,
@@ -93,9 +91,12 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
             header: widget.header,
             footer: widget.footer,
             enablePullDown: true,
-            enablePullUp: totalHeight > lIstHeight,
-            controller: _refreshController);
-      }),
+            enablePullUp: true,
+            controller: _refreshController),
+        enableLoadingWhenFailed: true,
+        hideFooterWhenNotFull: false,
+        footerTriggerDistance: -15.0,
+      ),
     );
   }
 
@@ -112,11 +113,11 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
     print("onLoading");
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
       int index = items.length;
-      if (mounted) setState(() {});
-      items.add(Item(
-        title: "Data$index",
-      ));
-      ;
+//      if (mounted) setState(() {});
+//      items.add(Item(
+//        title: "Data$index",
+//      ));
+//      ;
       _refreshController.loadComplete();
     });
   }

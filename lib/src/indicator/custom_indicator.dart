@@ -46,9 +46,10 @@ class CustomFooter extends LoadIndicator {
 
   const CustomFooter({
     Key key,
+    LoadStyle loadStyle,
     @required this.builder,
     Function onClick,
-  }) : super(key: key, onClick: onClick);
+  }) : super(key: key, onClick: onClick,loadStyle:loadStyle);
 
   @override
   State<StatefulWidget> createState() {

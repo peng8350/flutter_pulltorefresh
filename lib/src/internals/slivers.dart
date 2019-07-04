@@ -50,12 +50,15 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   @override
   void updateRenderObject(
       BuildContext context, covariant _RenderSliverRefresh renderObject) {
-    final RefreshStatus mode = SmartRefresher.of(context).controller.headerMode.value;
+    final RefreshStatus mode =
+        SmartRefresher.of(context).controller.headerMode.value;
     renderObject
       ..refreshIndicatorLayoutExtent = refreshIndicatorLayoutExtent
       ..hasLayoutExtent = floating
       ..context = context
-      ..updateFlag = mode==RefreshStatus.twoLevelOpening||mode==RefreshStatus.twoLeveling||mode==RefreshStatus.idle
+      ..updateFlag = mode == RefreshStatus.twoLevelOpening ||
+          mode == RefreshStatus.twoLeveling ||
+          mode == RefreshStatus.idle
       ..reverse = reverse
       ..paintOffsetY = paintOffsetY;
   }
@@ -85,6 +88,7 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   double get refreshIndicatorLayoutExtent => _refreshIndicatorExtent;
   double _refreshIndicatorExtent;
   double paintOffsetY;
+
   // need to trigger shouldAceppty user offset ,else it will not limit scroll when enter twolevel or exit
   // also it will crash if you call applyNewDimession when the state change
   // I don't know why flutter limit it, no choice
@@ -149,7 +153,7 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
 
   @override
   void performLayout() {
-    if(_updateFlag){
+    if (_updateFlag) {
       Scrollable.of(context).position.applyNewDimensions();
       _updateFlag = false;
     }
@@ -182,9 +186,10 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
         parentUsesSize: true,
       );
     final double boxExtent = (constraints.axisDirection == AxisDirection.up ||
-        constraints.axisDirection == AxisDirection.down)
+            constraints.axisDirection == AxisDirection.down)
         ? child.size.height
-        : child.size.width;;
+        : child.size.width;
+    ;
     if (active) {
       final double needPaintExtent = Math.min(
           Math.max(
@@ -262,17 +267,23 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
 class SliverLoading extends SingleChildRenderObjectWidget {
   final bool hideWhenNotFull;
   final LoadStatus mode;
+  final double layoutExtent;
 
   SliverLoading({
     Key key,
     this.mode,
+    this.layoutExtent,
     this.hideWhenNotFull,
     Widget child,
   }) : super(key: key, child: child);
 
   @override
   _RenderSliverLoading createRenderObject(BuildContext context) {
-    return _RenderSliverLoading(hideWhenNotFull: hideWhenNotFull, mode: mode);
+    print(layoutExtent);
+    return _RenderSliverLoading(
+        hideWhenNotFull: hideWhenNotFull,
+        mode: mode,
+        layoutExtent: layoutExtent);
   }
 
   @override
@@ -280,6 +291,7 @@ class SliverLoading extends SingleChildRenderObjectWidget {
       BuildContext context, covariant _RenderSliverLoading renderObject) {
     renderObject
       ..mode = mode
+      ..layoutExtent = layoutExtent
       ..hideWhenNotFull = hideWhenNotFull;
   }
 }
@@ -288,14 +300,26 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   _RenderSliverLoading({
     RenderBox child,
     this.mode,
+    double layoutExtent,
     this.hideWhenNotFull,
   }) {
+    this.layoutExtent = layoutExtent;
     this.child = child;
   }
 
   bool hideWhenNotFull;
 
   LoadStatus mode;
+
+  double _layoutExtent;
+
+  set layoutExtent(extent) {
+    if (extent == _layoutExtent) return;
+    _layoutExtent = extent;
+    markNeedsLayout();
+  }
+
+  get layoutExtent => _layoutExtent;
 
   // This keeps track of the previously applied scroll offsets to the scrollable
   // so that when [refreshIndicatorLayoutExtent] or [hasLayoutExtent] changes,
@@ -350,7 +374,7 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     assert(paintedChildSize >= 0.0);
     if (active) {
       geometry = SliverGeometry(
-        scrollExtent: childExtent,
+        scrollExtent: layoutExtent,
         paintExtent: paintedChildSize,
         cacheExtent: cacheExtent,
         maxPaintExtent: childExtent,

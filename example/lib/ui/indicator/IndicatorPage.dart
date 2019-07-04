@@ -10,6 +10,7 @@ import 'base/IndicatorActivity.dart';
 
 class IndicatorPage extends StatefulWidget {
   IndicatorPage({Key key, this.title}) : super(key: key);
+
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -26,16 +27,14 @@ class IndicatorPage extends StatefulWidget {
 }
 
 class _IndicatorPageState extends State<IndicatorPage> {
-
-  List<Widget> items ;
+  List<Widget> items;
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.5),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, childAspectRatio: 0.5),
       itemCount: items.length,
-
       itemBuilder: (BuildContext context, int index) => items[index],
     );
   }
@@ -50,32 +49,94 @@ class _IndicatorPageState extends State<IndicatorPage> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     items = [
-
-      IndicatorItem(title: "经典指示器(跟随)",onClick: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
-            IndicatorActivity(title:"经典指示器(跟随)" ,header: ClassicHeader(refreshStyle: RefreshStyle.Follow),)
-        ));
-      },imgRes: "images/classical_follow.gif"),
-      IndicatorItem(title: "经典指示器(不跟随)",onClick: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
-            IndicatorActivity(title:"经典指示器(不跟随)" ,header: ClassicHeader(refreshStyle: RefreshStyle.UnFollow),)
-        ));
-      },imgRes: "images/classical_unfollow.gif"),
-      IndicatorItem(title: "QQ头部指示器",onClick: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
-            IndicatorActivity(reverse: false,title:"QQ头部指示器" ,header: WaterDropHeader())
-        ));
-      },imgRes: "images/warterdrop.gif"),
-      IndicatorItem(title: "经典Material指示器",onClick: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
-            IndicatorActivity(reverse: false,title:"官方Material指示器" ,header: MaterialClassicHeader())
-        ));
-      },imgRes: "images/material_classic.gif"),
-      IndicatorItem(title: "水滴坠落Material指示器",onClick: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
-            IndicatorActivity(reverse: false,title:"水滴坠落Material指示器" ,header: WaterDropMaterialHeader())
-        ));
-      },imgRes: "images/material_waterdrop.gif"),
+      IndicatorItem(
+          title: "经典指示器(跟随)",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => IndicatorActivity(
+                      title: "经典指示器(跟随)",
+                      header: ClassicHeader(refreshStyle: RefreshStyle.Follow),
+                    )));
+          },
+          imgRes: "images/classical_follow.gif"),
+      IndicatorItem(
+          title: "经典指示器(不跟随)",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => IndicatorActivity(
+                      title: "经典指示器(不跟随)",
+                      header:
+                          ClassicHeader(refreshStyle: RefreshStyle.UnFollow),
+                    )));
+          },
+          imgRes: "images/classical_unfollow.gif"),
+      IndicatorItem(
+          title: "QQ头部指示器",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => IndicatorActivity(
+                    reverse: false,
+                    title: "QQ头部指示器",
+                    header: WaterDropHeader())));
+          },
+          imgRes: "images/warterdrop.gif"),
+      IndicatorItem(
+          title: "经典Material指示器",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => IndicatorActivity(
+                    reverse: false,
+                    title: "官方Material指示器",
+                    header: MaterialClassicHeader())));
+          },
+          imgRes: "images/material_classic.gif"),
+      IndicatorItem(
+          title: "水滴坠落Material指示器",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => IndicatorActivity(
+                    reverse: false,
+                    title: "水滴坠落Material指示器",
+                    header: WaterDropMaterialHeader())));
+          },
+          imgRes: "images/material_waterdrop.gif"),
+      IndicatorItem(
+          title: "底部指示器(经常显示)",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => IndicatorActivity(
+                      reverse: false,
+                      title: "底部指示器(经常显示)",
+                      footer: ClassicFooter(
+                        loadStyle: LoadStyle.ShowAlways,
+                      ),
+                    )));
+          },
+          imgRes: "images/material_waterdrop.gif"),
+      IndicatorItem(
+          title: "底部指示器(经常隐藏)",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => IndicatorActivity(
+                    reverse: false,
+                    title: "底部指示器(经常隐藏)",
+                    footer: ClassicFooter(
+                      loadStyle: LoadStyle.HideAlways,
+                    ))));
+          },
+          imgRes: "images/material_waterdrop.gif"),
+      IndicatorItem(
+          title: "底部指示器(只有加载中才显示)",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => IndicatorActivity(
+                    reverse: false,
+                    title: "底部指示器(只有加载中才显示)",
+                    footer: ClassicFooter(
+                      loadStyle: LoadStyle.ShowWhenLoading,
+                    ))));
+          },
+          imgRes: "images/material_waterdrop.gif"),
     ];
     super.didChangeDependencies();
   }
@@ -107,7 +168,11 @@ class _IndicatorItemState extends State<IndicatorItem> {
         child: Column(
           children: <Widget>[
             Center(
-              child: Image.asset(widget.imgRes,fit: BoxFit.cover,width: 180.0,),
+              child: Image.asset(
+                widget.imgRes,
+                fit: BoxFit.cover,
+                width: 180.0,
+              ),
             ),
             Center(
               child: Text(widget.title),

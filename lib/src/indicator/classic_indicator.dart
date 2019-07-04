@@ -163,6 +163,7 @@ class ClassicFooter extends LoadIndicator {
   const ClassicFooter({
     Key key,
     Function onClick,
+    LoadStyle loadStyle,
     this.outerBuilder,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.loadingText: 'Loading...',
@@ -178,6 +179,7 @@ class ClassicFooter extends LoadIndicator {
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
   }) : super(
     key: key,
+    loadStyle:loadStyle,
     onClick: onClick,
   );
 

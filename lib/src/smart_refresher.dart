@@ -31,6 +31,10 @@ enum LoadStatus { idle, loading, noMore, failed }
 
 enum RefreshStyle { Follow, UnFollow, Behind, Front }
 
+enum LoadStyle{
+  ShowAlways,HideAlways,ShowWhenLoading
+}
+
 const double default_refresh_triggerDistance = 80.0;
 
 const double default_load_triggerDistance = 15.0;
@@ -343,6 +347,7 @@ class RefreshController {
     use to global setting indicator
  */
 class RefreshConfiguration extends InheritedWidget {
+  final Widget child;
   final IndicatorBuilder headerBuilder;
   final IndicatorBuilder footerBuilder;
 
@@ -356,7 +361,7 @@ class RefreshConfiguration extends InheritedWidget {
   final bool enableScrollWhenTwoLevel;
   final bool enableScrollWhenRefreshCompleted;
   final bool enableBallisticRefresh;
-  final Widget child;
+  final bool enableLoadingWhenFailed;
   final double headerTriggerDistance;
   final double twiceTriggerDistance;
   final double closeTwoLevelDistance;
@@ -372,6 +377,7 @@ class RefreshConfiguration extends InheritedWidget {
     this.enableBallisticRefresh: false,
     this.enableScrollWhenRefreshCompleted: true,
     this.headerOffset: 0.0,
+    this.enableLoadingWhenFailed:false,
     this.twiceTriggerDistance: 150.0,
     this.closeTwoLevelDistance: 80.0,
     this.skipCanRefresh: false,
