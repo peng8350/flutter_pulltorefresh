@@ -31,9 +31,7 @@ enum LoadStatus { idle, loading, noMore, failed }
 
 enum RefreshStyle { Follow, UnFollow, Behind, Front }
 
-enum LoadStyle{
-  ShowAlways,HideAlways,ShowWhenLoading
-}
+enum LoadStyle { ShowAlways, HideAlways, ShowWhenLoading }
 
 const double default_refresh_triggerDistance = 80.0;
 
@@ -49,7 +47,7 @@ final LoadIndicator defaultFooter = ClassicFooter();
 /*
     This is the most important component that provides drop-down refresh and up loading.
  */
-class SmartRefresher extends StatelessWidget {
+class SmartRefresher extends StatefulWidget {
   //indicate your listView
   final Widget child;
 
@@ -90,33 +88,30 @@ class SmartRefresher extends StatelessWidget {
       : assert(controller != null),
         super(key: key);
 
+  static SmartRefresher of(BuildContext context) {
+    return context.ancestorWidgetOfExactType(SmartRefresher);
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _SmartRefresherState();
+  }
+}
+
+class _SmartRefresherState extends State<SmartRefresher> {
   void _updateController(
       BuildContext context, RefreshConfiguration configuration) {
-    if (child != null &&
-        child is ScrollView &&
-        (child as ScrollView).controller != null) {
-      controller.scrollController = (child as ScrollView).controller;
+    if (widget.child != null &&
+        widget.child is ScrollView &&
+        (widget.child as ScrollView).controller != null) {
+      widget.controller.scrollController =
+          (widget.child as ScrollView).controller;
     } else {
-      controller.scrollController = PrimaryScrollController.of(context);
+      widget.controller.scrollController = PrimaryScrollController.of(context);
     }
-    controller._triggerDistance =
+    widget.controller._triggerDistance =
         -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
-  }
-
-  void onPositionUpdated(ScrollPosition newPosition) {
-    assert(newPosition != null);
-    controller?.position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
-    controller.position = newPosition;
-    controller.position.isScrollingNotifier.addListener(_listenScrollEnd);
-  }
-
-  // when bounce out of edge and stopped by overScroll or underScroll, it should be SpringBack to 0.0
-  // but ScrollPhysics didn't provide one way to spring back when outOfEdge(stopped by applyBouncingCondition return != 0.0)
-  // so for making it spring back, it should be trigger goBallistic make it spring back
-  void _listenScrollEnd() {
-    if (controller.position.outOfRange) {
-      controller.position.activity.applyNewDimensions();
-    }
   }
 
   //build slivers from child Widget
@@ -142,18 +137,18 @@ class SmartRefresher extends StatelessWidget {
         )
       ];
     }
-    if (enablePullDown) {
+    if (widget.enablePullDown) {
       slivers.insert(
           0,
-          header ??
+          widget.header ??
               (configuration?.headerBuilder != null
                   ? configuration?.headerBuilder()
                   : null) ??
               defaultHeader);
     }
     //insert header or footer
-    if (enablePullUp) {
-      slivers.add(footer ??
+    if (widget.enablePullUp) {
+      slivers.add(widget.footer ??
           (configuration?.footerBuilder != null
               ? configuration?.footerBuilder()
               : null) ??
@@ -166,11 +161,11 @@ class SmartRefresher extends StatelessWidget {
   ScrollPhysics _getScrollPhysics(
       RefreshConfiguration conf, ScrollPhysics physics) {
     return RefreshPhysics(
-            enablePullUp: enablePullUp,
-            enablePullDown: enablePullDown,
-            footerMode: controller.footerMode,
+            enablePullUp: widget.enablePullUp,
+            enablePullDown: widget.enablePullDown,
+            footerMode: widget.controller.footerMode,
             enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? true,
-            headerMode: controller.headerMode,
+            headerMode: widget.controller.headerMode,
             enableScrollWhenRefreshCompleted:
                 conf?.enableScrollWhenRefreshCompleted ?? true,
             clamping: physics is ClampingScrollPhysics ||
@@ -189,7 +184,7 @@ class SmartRefresher extends StatelessWidget {
       body = CustomScrollView(
         physics: _getScrollPhysics(
             conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
-        controller: controller.scrollController,
+        controller: widget.controller.scrollController,
         cacheExtent: childView.cacheExtent,
         key: childView.key,
         scrollDirection: childView.scrollDirection,
@@ -201,7 +196,7 @@ class SmartRefresher extends StatelessWidget {
     } else {
       body = CustomScrollView(
         physics: _getScrollPhysics(conf, AlwaysScrollableScrollPhysics()),
-        controller: controller.scrollController,
+        controller: widget.controller.scrollController,
         slivers: slivers,
       );
     }
@@ -209,20 +204,28 @@ class SmartRefresher extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    if (widget.controller.initialRefresh) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.controller.requestRefresh();
+      });
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final RefreshConfiguration configuration = RefreshConfiguration.of(context);
     _updateController(context, configuration);
-    List<Widget> slivers = _buildSliversByChild(context, child, configuration);
-    Widget body = _buildBodyBySlivers(child, slivers, configuration);
+    List<Widget> slivers =
+        _buildSliversByChild(context, widget.child, configuration);
+    Widget body = _buildBodyBySlivers(widget.child, slivers, configuration);
     if (configuration != null) {
       return body;
     } else {
       return RefreshConfiguration(child: body);
     }
-  }
-
-  static SmartRefresher of(BuildContext context) {
-    return context.ancestorWidgetOfExactType(SmartRefresher);
   }
 }
 
@@ -247,16 +250,29 @@ class RefreshController {
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
+  final bool initialRefresh;
+
   RefreshController(
-      {bool initialRefresh: false,
+      {this.initialRefresh: false,
       RefreshStatus initialRefreshStatus,
       LoadStatus initialLoadStatus}) {
     this.headerMode = ValueNotifier(initialRefreshStatus ?? RefreshStatus.idle);
     this.footerMode = ValueNotifier(initialLoadStatus ?? LoadStatus.idle);
-    if (initialRefresh) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        requestRefresh();
-      });
+  }
+
+  void onPositionUpdated(ScrollPosition newPosition) {
+    assert(newPosition != null);
+    position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
+    position = newPosition;
+    position.isScrollingNotifier.addListener(_listenScrollEnd);
+  }
+
+  // when bounce out of edge and stopped by overScroll or underScroll, it should be SpringBack to 0.0
+  // but ScrollPhysics didn't provide one way to spring back when outOfEdge(stopped by applyBouncingCondition return != 0.0)
+  // so for making it spring back, it should be trigger goBallistic make it spring back
+  void _listenScrollEnd() {
+    if (position.outOfRange) {
+      position.activity.applyNewDimensions();
     }
   }
 
@@ -377,7 +393,7 @@ class RefreshConfiguration extends InheritedWidget {
     this.enableBallisticRefresh: false,
     this.enableScrollWhenRefreshCompleted: true,
     this.headerOffset: 0.0,
-    this.enableLoadingWhenFailed:false,
+    this.enableLoadingWhenFailed: false,
     this.twiceTriggerDistance: 150.0,
     this.closeTwoLevelDistance: 80.0,
     this.skipCanRefresh: false,

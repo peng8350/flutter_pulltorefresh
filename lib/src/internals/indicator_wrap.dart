@@ -453,7 +453,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   }
 
   void _onPositionUpdated(ScrollPosition newPosition) {
-    refresher.onPositionUpdated(newPosition);
+    refresher.controller.onPositionUpdated(newPosition);
   }
 
   void _handleModeChange();
