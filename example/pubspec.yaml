@@ -45,6 +45,13 @@ flutter:
     - images/qqbg.jpg
     - images/custom_1.jpg
     - images/custom_2.gif
+    - images/loadstyle1.gif
+    - images/loadstyle2.gif
+    - images/loadstyle3.gif
+    - images/refreshstyle1.gif
+    - images/refreshstyle2.gif
+    - images/refreshstyle3.gif
+    - images/refreshstyle4.gif
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

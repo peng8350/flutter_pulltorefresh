@@ -11,7 +11,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 * provide some most common indicators
 * Support Android and iOS default ScrollPhysics,the overScroll distance can be controlled
 * horizontal and vertical refresh,support reverse ScrollView also(four direction)
-* provide more refreshStyle: Behind,Follow,UnFollow,Front
+* provide more refreshStyle: Behind,Follow,UnFollow,Front,provide more loadmore style
 * Support twoLevel refresh,implments just like TaoBao twoLevel,Wechat TwoLevel
 * enable link indicator which placing other place,just like Wechat FriendCircle refresh effect
 
@@ -24,7 +24,7 @@ tips:<br>
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.7
+     pull_to_refresh: ^1.4.8
 
 ```
 
@@ -118,6 +118,10 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
 
 
 ### Indicator
+
+|Style| RefreshStyle | LoadStyle |
+|:---:|:---:|:---:|
+|art| ![](example/images/refreshstyle1.gif)<br>![](example/images/refreshstyle2.gif)<br>![](example/images/refreshstyle3.gif)<br>![](example/images/refreshstyle4.gif) | ![](example/images/loadstyle1.gif)<br>![](example/images/loadstyle2.gif)<br>![](example/images/loadstyle3.gif) |
 
 |Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) |
 |:---:|:---:|:---:|

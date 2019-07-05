@@ -7,13 +7,12 @@
 * child只支持ListView,GridView,CustomView,不知道还没有,总之就是继承ScrollView的都可以。当你想放一个单一的非滚动视图的话,利用ListView即可。
 * 当你想要关闭掉下拉和上拉的功能,可利用enablePullUp和enablePullDown这两个属性
 * 当child不是继承ScrollView时,要注意盒子约束,在SmartRefresher下高度是unbounded
-* SingleChildScrollView它不是继承ScrollView,千万别在child节点使用它,这样做只是ScrollView里嵌套ScrollView,建议使用ListView包装单一孩子,应该是没什么区别的
+* 不支持SingleChildScrollView,使用ListView替代即可
 * 当想在ScrollView增加背景时,记住别在child节点给ListView或者GridView包装Container,请在SmartRefresher外部包装Container
 
 
 ## Behind刷新样式
 * 这种样式的实现事实上就是采用高度的动态变化来实现的,试试外围多利用Align属性,会有不同的滑动效果。
-* 暂时已经发现这种样式不支持Icon这个widget,也就是ClassicHeader,是不支持的,使用这个指示器,你会发现Icon会悬浮在试图区上,原因我还是未查出来。
 
 ## 底部指示器
 * 对于不满足一页隐藏的问题,虽然内部采取通过precedingScrollExtent来判断前面有多少个距离,但是这种方法也是不可取的,有一种情况就是某一个sliver只占用scrollExtent而不占用

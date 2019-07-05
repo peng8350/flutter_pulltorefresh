@@ -2,15 +2,17 @@
 
 ## Common header attributes (not every indicator, but most have these attributes)
 * double  height: 1.4.7 updated,it mean the visual height of indicator
-* refreshStyle: Styles used to define header refresh indicators,There is four style:Front,Behind,Follow,UnFollow
+* refreshStyle: Styles used to define header refresh indicators,There is four style:Front,Behind,Follow(default),UnFollow
 * completeDuration: stop time when state in success or fail
 
 ## common Footer attributes
+* double  height: 1.4.7 updated,it mean the visual height of indicator
 * () => {} onClick：click footer indicator callback
-
+* loadStyle:Styles used to define footer load indicators,There is four style:ShowWhenLoading,ShowAlways(default),hideAlways
 
 
 ## ClassicHeader,ClassicFooter(Not Support Behind)
+* outerBuilder: use to give child extra feature,such as background,padding
 * String idleText:Text displayed when the indicator is idle
 * Widget idleIcon:Icon displayed when the indicator is idle
 * String  refreshingText:Text displayed when the indicator is refreshing
@@ -20,7 +22,6 @@
 * TextStyle textStyle: textStyle
 * IconPosition iconPos:IconPosition(Left,Top,Right,Bottom)
 * RefreshStyle refreshStyle,height,triggerDistance,autoLoad: the same Above
-* decoration:  use to setting bg
 
 
 ## WaterDropHeader

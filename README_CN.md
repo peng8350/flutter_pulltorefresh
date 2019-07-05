@@ -10,7 +10,7 @@
 * 提供多种比较常用的指示器
 * 支持Android和iOS默认滑动引擎,可限制越界距离
 * 支持水平和垂直刷新,同时支持翻转列表(四个方向)
-* 提供多种刷新指示器风格:跟随,不跟随,位于背部,位于前部
+* 提供多种刷新指示器风格:跟随,不跟随,位于背部,位于前部, 提供多种加载更多风格
 * 提供二楼刷新,可实现类似淘宝二楼,微信二楼,携程二楼
 * 允许关联指示器存放在Viewport外部,即朋友圈刷新效果
 
@@ -22,7 +22,7 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.7
+     pull_to_refresh: ^1.4.8
 
 ```
 
@@ -103,6 +103,10 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 |art| ![](arts/example7.gif) | ![](arts/example8.gif) |
 
 ### 各种指示器
+
+|Style| 下拉刷新风格 | 上拉加载风格 |
+|:---:|:---:|:---:|
+|art| ![](example/images/refreshstyle1.gif)<br>![](example/images/refreshstyle2.gif)<br>![](example/images/refreshstyle3.gif)<br>![](example/images/refreshstyle4.gif) | ![](example/images/loadstyle1.gif)<br>![](example/images/loadstyle2.gif)<br>![](example/images/loadstyle3.gif) |
 
 |Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) |
 |:---:|:---:|:---:|

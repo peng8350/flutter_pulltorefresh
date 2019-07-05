@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
+import 'package:flutter/material.dart' as prefix0;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/scheduler.dart';
 import '../../Item.dart';
@@ -77,21 +78,27 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body:SmartRefresher(
-          child: ListView.builder(
-            itemBuilder: (c, i) => items[i],
-            itemExtent: 100.0,
-            controller: _scrollController,
-            reverse: widget.reverse,
-            itemCount: items.length,
-          ),
-          onRefresh: _onRefresh,
-          onLoading: _onLoading,
-          header: widget.header,
-          footer: widget.footer,
-          enablePullDown: true,
-          enablePullUp: true,
-          controller: _refreshController),
+      body:Builder(
+        builder: (c){
+          return SmartRefresher(
+              child: ListView.builder(
+                itemBuilder: (c, i) => items[i],
+                itemExtent: 100.0,
+                controller: _scrollController,
+                reverse: widget.reverse,
+                itemCount: items.length,
+              ),
+              onRefresh: _onRefresh,
+              onLoading: (){
+                _onLoading(c);
+              },
+              header: widget.header,
+              footer: widget.footer,
+              enablePullDown: true,
+              enablePullUp: true,
+              controller: _refreshController);
+        },
+      ),
     );
   }
 
@@ -104,7 +111,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
     });
   }
 
-  _onLoading() {
+  _onLoading(BuildContext context) {
     print("onLoading");
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
       int index = items.length;

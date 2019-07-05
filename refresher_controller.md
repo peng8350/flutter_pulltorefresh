@@ -53,16 +53,30 @@
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | child | 不用解析你明白  | Widget  | null | 必要|
+
+刷新全局设置(header):
+
+| Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
+|---------|--------------------------|:-----:|:-----:|:-----:|
 | headerBuilder | 默认头部指示器全局构造器  | () =>  ? extends RefreshIndicator | null | 可选 |
-| footerBuilder      | 默认尾部指示器全局构造器   | () =>  ? extends LoadIndicator  |   null |  可选 |
 | headerTriggerDistance | 触发下拉刷新的越界距离     | double | 80.0 | 可选 |
-| footerTriggerDistance |   距离底部边缘触发加载更多的距离 | double | 15.0 | 可选 |
+| maxOverScrollExtent | 最大顶部越界距离   | double | inf | 可选 |
 | skipCanRefresh | 直接跳过canRefresh状态进入刷新   | () => Void | null | 可选 |
-| hideWhenNotFull | 当ScrollView不满一页时,是否要隐藏底部指示器   | bool | true | 可选 |
-| autoLoad | 自动加载更多,假如为false,滑动底部不会触发,但提供点击加载更多的方法  | bool | true | 可选 |
 | headerOffset | 头部指示器布局的偏差Y坐标,多用于FrontStyle,  | bool | 0.0 | 可选 |
 | enableScrollWhenTwoLevel | 当进入二楼时,是否允许上下滑动   | bool | true | 可选 |
 | twiceTriggerDistance | 触发进入二楼的越界距离   | double | 150.0 | 可选 |
 | closeTwoLevelDistance | 关闭二楼底部的底部越界距离,前提enableScrollWhenTwoLevel要为true  | double | 80.0 | 可选 |
-| maxOverScrollExtent | 最大顶部越界距离   | double | inf | 可选 |
+| enableBallisticRefresh | 是否可以通过惯性来触发刷新  | bool | false | 可选 |
+| enableScrollWhenRefreshCompleted |是否允许用户手势滑动当刷新完毕准备回弹回去时 | bool | true | 可选 |
+
+
+加载更多全局设置(footer):
+
+| Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
+|---------|--------------------------|:-----:|:-----:|:-----:|
+| hideWhenNotFull | 当ScrollView不满一页时,是否要隐藏底部指示器   | bool | true | 可选 |
+| autoLoad | 自动加载更多,假如为false,滑动底部不会触发,但提供点击加载更多的方法  | bool | true | 可选 |
+| footerTriggerDistance |   距离底部边缘触发加载更多的距离 | double | 15.0 | 可选 |
+| footerBuilder      | 默认尾部指示器全局构造器   | () =>  ? extends LoadIndicator  |   null |  可选 |
 | maxUnderScrollExtent | 最大底部越界距离  | double | inf | 可选 |
+| enableLoadingWhenFailed |  是否允许通过手势来触发加载更多当失败的状态  | bool | false| 可选 |

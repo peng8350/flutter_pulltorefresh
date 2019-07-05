@@ -109,19 +109,10 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       footer: ClassicFooter(
                         height: 80.0,
                         loadStyle: LoadStyle.ShowAlways,
-                        outerBuilder: (c){
-                          return Container(
-                            child: Center(child: c,),
-                            height: 80.0,
-                            decoration: BoxDecoration(
-                              color: Colors.redAccent
-                            ),
-                          );
-                        },
                       ),
                     )));
           },
-          imgRes: "images/material_waterdrop.gif"),
+          imgRes: "images/loadstyle1.gif"),
       IndicatorItem(
           title: "底部指示器(经常隐藏)",
           onClick: () {
@@ -138,7 +129,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
                   maxUnderScrollExtent: 100.0,
                 )));
           },
-          imgRes: "images/material_waterdrop.gif"),
+          imgRes: "images/loadstyle2.gif"),
       IndicatorItem(
           title: "底部指示器(只有加载中才显示)",
           onClick: () {
@@ -159,7 +150,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
                   footerTriggerDistance: -60.0,
                 )));
           },
-          imgRes: "images/material_waterdrop.gif"),
+          imgRes: "images/loadstyle3.gif"),
     ];
     super.didChangeDependencies();
   }

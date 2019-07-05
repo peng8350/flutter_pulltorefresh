@@ -53,16 +53,30 @@
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | child | you know,no need to explain  | ? extends RefreshIndicator  | ClassicHeader | 必要|
+
+Refresh(header):
+
+| Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
+|---------|--------------------------|:-----:|:-----:|:-----:|
 | headerBuilder | the header indicator builder  | () =>  ? extends RefreshIndicator | null | 可选 |
-| footerBuilder      | the footer indicator builder   | () =>  ? extends LoadIndicator  |   null |  可选 |
 | headerTriggerDistance | overScroll distance of  trigger refresh     | double | 80.0 | 可选 |
-| footerTriggerDistance |   the extentAfter distance of  trigger loading  | double | 15.0 | 可选 |
+| maxOverScrollExtent | max overScroll distance   | double | inf | 可选 |
 | skipCanRefresh | if skip canRefresh state,enter refreshing state directly  | () => Void | null | 可选 |
-| hideWhenNotFull | whether to hide footer when scrollview not enough one page   | bool | true | 可选 |
-| autoLoad | Autoload more, if false, sliding bottom will not trigger, but provide more click loading methods  | bool | true | 可选 |
 | headerOffset | Head indicator layout deviation Y coordinates, mostly for FrontStyle  | bool | 0.0 | 可选 |
 | enableScrollWhenTwoLevel | whether enable scroll when into twoLevel   | bool | true | 可选 |
 | twiceTriggerDistance | the overScroll distance of trigger twoLevel  | double | 150.0 | 可选 |
 | closeTwoLevelDistance | Close the bottom crossing distance on the second floor, premise:enableScrollWhenTwoLevel is true  | double | 80.0 | 可选 |
-| maxOverScrollExtent | max overScroll distance   | double | inf | 可选 |
+| enableBallisticRefresh | whether trigger refresh by iOS elasticity  | bool | false | 可选 |
+| enableScrollWhenRefreshCompleted | Whether the user is allowed to slide scrollable when the refresh is complete and ready to bounce back  | bool | true | 可选 |
+
+
+Load more(footer):
+
+| Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
+|---------|--------------------------|:-----:|:-----:|:-----:|
+| footerBuilder      | the footer indicator builder   | () =>  ? extends LoadIndicator  |   null |  可选 |
+| hideWhenNotFull | whether to hide footer when scrollview not enough one page   | bool | true | 可选 |
+| autoLoad | Autoload more, if false, sliding bottom will not trigger, but provide more click loading methods  | bool | true | 可选 |
 | maxUnderScrollExtent | max underScroll distance  | double | inf | 可选 |
+| footerTriggerDistance |   the extentAfter distance of  trigger loading  | double | 15.0 | 可选 |
+| enableLoadingWhenFailed |  whether allowed to use gesture pull-up trigger to load more  | bool | false| 可选 |

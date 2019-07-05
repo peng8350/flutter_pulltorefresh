@@ -224,3 +224,12 @@ Bug Fix:
 other:
 * Remove asSliver usage in all indicators(no need to use,only support first sliver)
 * make indicator auto fit boxSize,just like SliverToBoxAdapter
+
+## 1.4.8
+* provide three load more style:ShowAlways,HideAlways,ShowWhenLoading
+* add linkFooter
+* Fix Bug: requestRefresh() interupted when physics =Clamping && offset !=0
+* Fix Bug: When viewport not enough onepage ,pull up will change the state to loading,but not callback onLoading
+* revert change before:SmartRefresher change Stateless,Fix position may be null in some stiuations
+* add enableScrollWhenRefreshCompleted,enableBallisticRefresh,enableLoadingWhenFailed bool in RefreshConfiguration
+* enable footerTriggerdistance pass Negative

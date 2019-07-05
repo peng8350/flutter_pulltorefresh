@@ -7,7 +7,7 @@
 * child only support ListView,GridView,CustomView,This means that inheriting ScrollView is all right.When you want to put a single NON-SCROLLING view, use ListView.。
 * When you want to turn off drop-down and pull-up functions, you can use enablePullUp and enablePullDown attributes
 * When child does not inherit ScrollView, note that box constraints are unbounded in height under Smart Refresher
-* SingleChildScrollView is not extends ScrollView,remember not to use this in child attribute,Doing so is just nesting ScrollView in ScrollView
+* not support SingleChildView,use ListView replace it.
 * When you want to add background to ScrollView, remember not to wrap Container for ListView or GridView at the child node, wrap Container outside Smart Refresher
 
 
@@ -22,7 +22,6 @@ you will find that Icon will be suspended in the attempt area for reasons I have
 
 ## NestedScrollView(Not advice to use unless necessary)
 * ScrollController need to be placed in NestedScrollView,there is not work just placed in "child"。
-* How to get the inner scrollController? by using refreshController.scrollController get the inner
 
 ## CustomScrollView
 * For UnFollow refresh style, when you slivers first element with Sliver Appbar, Sliver Rheader, there will be a very strange phenomenon, do not know how to describe, that is,
