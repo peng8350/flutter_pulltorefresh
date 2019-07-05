@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+
 class Test4 extends StatefulWidget {
   Test4({Key key}) : super(key: key);
 
@@ -177,7 +178,6 @@ class Test4State extends State<Test4>
             },
             child: ListView.builder(
               itemExtent: 100.0,
-              physics: BouncingScrollPhysics(),
               itemBuilder: (c,i) => data[i],
               itemCount: data.length,
             ),

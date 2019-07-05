@@ -227,7 +227,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     with IndicatorStateMixin<T, LoadStatus>, LoadingProcessor {
   // use to update between one page and above one page
   bool _isHide = false;
-  bool _enableLoadingAgain = false;
+  bool _enableLoading = false;
 
   double _calculateScrollOffset() {
     final double overscrollPastEnd =
@@ -239,7 +239,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     return _position.maxScrollExtent - _position.pixels <=
                 configuration.footerTriggerDistance &&
             configuration.autoLoad &&
-            _enableLoadingAgain &&_position.activity is! DragScrollActivity&&
+            _enableLoading &&_position.activity is! DragScrollActivity&&
             _position.extentBefore > 0.0 &&
         ( (configuration.enableLoadingWhenFailed &&
                 mode == LoadStatus.failed) ||
@@ -260,7 +260,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       }
     } else {
       if(_position.activity is! DragScrollActivity)
-      _enableLoadingAgain = false;
+      _enableLoading = false;
       if (widget.loadStyle == LoadStyle.ShowWhenLoading) {
         floating = false;
       }
@@ -269,6 +269,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   void _dispatchModeByOffset(double offset) {
+    if (!mounted || _isHide) {
+      return;
+    }
     // avoid trigger more time when user dragging in the same direction
     if (_checkIfCanLoading()) {
         mode = LoadStatus.loading;
@@ -287,7 +290,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   void _listenScrollEnd() {
     if (!_position.isScrollingNotifier.value) {
       // when user release gesture from screen
-      if (_checkIfCanLoading()) {
+      if (!_isHide&&_checkIfCanLoading()) {
         if (_position.activity is IdleScrollActivity) {
           mode = LoadStatus.loading;
         }
@@ -296,7 +299,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     else{
       if (_position.activity is DragScrollActivity ||
           _position.activity is DrivenScrollActivity){
-        _enableLoadingAgain = true;
+        _enableLoading = true;
       }
     }
   }

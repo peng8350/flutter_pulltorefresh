@@ -126,12 +126,17 @@ class _IndicatorPageState extends State<IndicatorPage> {
           title: "底部指示器(经常隐藏)",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => IndicatorActivity(
-                    reverse: false,
-                    title: "底部指示器(经常隐藏)",
-                    footer: ClassicFooter(
-                      loadStyle: LoadStyle.HideAlways,
-                    ))));
+                builder: (BuildContext context) => RefreshConfiguration(
+                  child: IndicatorActivity(
+                      reverse: false,
+                      title: "底部指示器(经常隐藏)",
+                      footer: ClassicFooter(
+                        loadStyle: LoadStyle.HideAlways,
+                      )),
+                  footerTriggerDistance: -30.0,
+                  enableLoadingWhenFailed: true,
+                  maxUnderScrollExtent: 100.0,
+                )));
           },
           imgRes: "images/material_waterdrop.gif"),
       IndicatorItem(
@@ -139,12 +144,17 @@ class _IndicatorPageState extends State<IndicatorPage> {
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (BuildContext context) => RefreshConfiguration(
-                  child: IndicatorActivity(
-                      reverse: false,
-                      title: "底部指示器(只有加载中才显示)",
-                      footer: ClassicFooter(
-                        loadStyle: LoadStyle.ShowWhenLoading,
-                      )),
+                  child: RefreshConfiguration(
+                    child: IndicatorActivity(
+                        reverse: false,
+                        title: "底部指示器(只有加载中才显示)",
+                        footer: ClassicFooter(
+                          loadStyle: LoadStyle.ShowWhenLoading,
+                        )),
+                    enableLoadingWhenFailed: true,
+                    maxUnderScrollExtent: 100.0,
+                    footerTriggerDistance: -45.0,
+                  ),
                   enableLoadingWhenFailed: true,
                   footerTriggerDistance: -60.0,
                 )));
