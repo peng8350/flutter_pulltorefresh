@@ -161,7 +161,7 @@ class ClassicFooter extends LoadIndicator {
   const ClassicFooter({
     Key key,
     Function onClick,
-    LoadStyle loadStyle,
+    LoadStyle loadStyle:LoadStyle.ShowAlways,
     double height: 60.0,
     this.outerBuilder,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),

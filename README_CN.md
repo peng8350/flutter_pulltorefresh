@@ -84,8 +84,6 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 
 ```
 
-最后,[这里](https://github.com/peng8350/flutter_pulltorefresh/tree/master/example/lib/ui/example)提供了各种例子实现你所需要的功能
-
 ## 截图
 ### 例子
 |Style| [基础用法](example/lib/ui/example/useStage/basic.dart) | [header放在其他位置](example/lib/ui/example/useStage/link_header_example.dart) |

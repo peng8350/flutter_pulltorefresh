@@ -5,7 +5,6 @@
  */
 
 import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 import '../smart_refresher.dart';
@@ -43,7 +42,7 @@ abstract class LoadIndicator extends StatefulWidget {
   const LoadIndicator(
       {Key key,
       this.onClick,
-      this.loadStyle: LoadStyle.ShowWhenLoading,
+      this.loadStyle: LoadStyle.ShowAlways,
       this.height: 60.0})
       : super(key: key);
 }

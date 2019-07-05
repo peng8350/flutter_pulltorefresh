@@ -96,8 +96,6 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
 
 ```
 
-finally,[here](https://github.com/peng8350/flutter_pulltorefresh/tree/master/example/lib/ui/example) is the examples,you can find more details in this
-
 
 ## ScreenShots
 

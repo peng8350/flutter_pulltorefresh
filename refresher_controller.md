@@ -53,8 +53,8 @@
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | child | 不用解析你明白  | Widget  | null | 必要|
-| headerBuilder | 控制内部状态  | () =>  ? extends RefreshIndicator | null | 可选 |
-| footerBuilder      | 你的内容部件   | () =>  ? extends LoadIndicator  |   null |  可选 |
+| headerBuilder | 默认头部指示器全局构造器  | () =>  ? extends RefreshIndicator | null | 可选 |
+| footerBuilder      | 默认尾部指示器全局构造器   | () =>  ? extends LoadIndicator  |   null |  可选 |
 | headerTriggerDistance | 触发下拉刷新的越界距离     | double | 80.0 | 可选 |
 | footerTriggerDistance |   距离底部边缘触发加载更多的距离 | double | 15.0 | 可选 |
 | skipCanRefresh | 直接跳过canRefresh状态进入刷新   | () => Void | null | 可选 |

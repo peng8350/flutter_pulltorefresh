@@ -47,7 +47,7 @@ class CustomFooter extends LoadIndicator {
   const CustomFooter({
     Key key,
     double height: 60.0,
-    LoadStyle loadStyle,
+    LoadStyle loadStyle:LoadStyle.ShowAlways,
     @required this.builder,
     Function onClick,
   }) : super(key: key, onClick: onClick, loadStyle: loadStyle, height: height);
