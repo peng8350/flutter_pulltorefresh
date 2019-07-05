@@ -17,6 +17,8 @@ dependencies:
 
   residemenu: 1.3.5
 
+  fish_redux: ^0.2.2
+
   flutter_sticky_header: ^0.4.0
 
 dev_dependencies:

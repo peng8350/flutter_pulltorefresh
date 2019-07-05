@@ -8,6 +8,7 @@
   the basic usage
 */
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Item.dart';
@@ -130,6 +131,7 @@ class _BasicExampleState extends State<BasicExample>
   Widget buildCustom() {
     return CustomScrollView(
       slivers: <Widget>[
+        SliverToBoxAdapter(),
         SliverAppBar(
           title: Text("SliverAppBar"),
           expandedHeight: 100.0,

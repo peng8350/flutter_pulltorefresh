@@ -104,9 +104,12 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 
 ### 各种指示器
 
-|Style| 下拉刷新风格 | 上拉加载风格 |
-|:---:|:---:|:---:|
-|art| ![](example/images/refreshstyle1.gif)<br>![](example/images/refreshstyle2.gif)<br>![](example/images/refreshstyle3.gif)<br>![](example/images/refreshstyle4.gif) | ![](example/images/loadstyle1.gif)<br>![](example/images/loadstyle2.gif)<br>![](example/images/loadstyle3.gif) |
+| 下拉刷新风格 |   |上拉加载风格| |
+|:---:|:---:|:---:|:---:|
+| ![跟随](example/images/refreshstyle1.gif)| ![不跟随](example/images/refreshstyle2.gif)| ![永远显示](example/images/loadstyle1.gif) | ![永远隐藏](example/images/loadstyle2.gif)|
+| ![背部](example/images/refreshstyle3.gif)| ![前面悬浮](example/images/refreshstyle4.gif)| ![当加载中才显示,其它隐藏](example/images/loadstyle3.gif) | |
+
+
 
 |Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) |
 |:---:|:---:|:---:|
