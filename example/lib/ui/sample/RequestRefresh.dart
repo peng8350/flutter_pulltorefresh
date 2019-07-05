@@ -90,6 +90,9 @@ class _RequestRefreshState extends State<RequestRefresh> {
         onRefresh: _onRefresh,
         onLoading: _onLoading,
         header: _header,
+        footer: ClassicFooter(
+          loadStyle: LoadStyle.HideAlways,
+        ),
         enablePullDown: _enablePullDown,
         enablePullUp: _enablePullUp,
         controller: _refreshController);

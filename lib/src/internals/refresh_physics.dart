@@ -148,6 +148,10 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     // TODO: implement applyBoundaryConditions
+    // it should enable AnimateTo go anyWhere
+    if((position as ScrollPosition).activity is DrivenScrollActivity){
+      return 0.0;
+    }
     if (headerMode.value == RefreshStatus.twoLeveling) {
       if (position.pixels - value > 0.0) {
         return parent.applyBoundaryConditions(position, value);
