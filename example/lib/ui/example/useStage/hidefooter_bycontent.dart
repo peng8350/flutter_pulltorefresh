@@ -49,12 +49,14 @@ class HideFooterManualState extends State<HideFooterManual> {
                   enablePullUp: refresherHeight<100.0*strs.length,
                   //100.0 is itemExtent in SliverList
                   onLoading: () {
-//                    strs.add("new");
-//                    setState(() {});
-//                    _controller.loadComplete();
+                    strs.add("new");
+                    if(mounted)
+                    setState(() {});
+                    _controller.loadComplete();
                   },
                   onRefresh: () {
                     strs.add("new");
+                    if(mounted)
                     setState(() {});
                     _controller.refreshCompleted();
                   },

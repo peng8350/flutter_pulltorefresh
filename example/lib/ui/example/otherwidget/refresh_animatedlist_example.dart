@@ -37,6 +37,7 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
       item: _list[index],
       selected: _selectedItem == _list[index],
       onTap: () {
+        if(mounted)
         setState(() {
           _selectedItem = _selectedItem == _list[index] ? null : _list[index];
         });
@@ -70,6 +71,7 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
   void _remove() {
     if (_selectedItem != null) {
       _list.removeAt(_list.indexOf(_selectedItem));
+      if(mounted)
       setState(() {
         _selectedItem = null;
       });

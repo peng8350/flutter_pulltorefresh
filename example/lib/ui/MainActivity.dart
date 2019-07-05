@@ -98,6 +98,7 @@ class _MainActivityState extends State<MainActivity>
             children: views,
             physics: NeverScrollableScrollPhysics(),
           ),
+          maxUnderScrollExtent: 100.0,
           enableScrollWhenTwoLevel: true,
           autoLoad: true,
           maxOverScrollExtent: 80.0,

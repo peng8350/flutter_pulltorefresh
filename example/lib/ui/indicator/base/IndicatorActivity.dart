@@ -77,26 +77,21 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: RefreshConfiguration(
-        child: SmartRefresher(
-            child: ListView.builder(
-              itemBuilder: (c, i) => items[i],
-              itemExtent: 100.0,
-              controller: _scrollController,
-              reverse: widget.reverse,
-              itemCount: items.length,
-            ),
-            onRefresh: _onRefresh,
-            onLoading: _onLoading,
-            header: widget.header,
-            footer: widget.footer,
-            enablePullDown: true,
-            enablePullUp: true,
-            controller: _refreshController),
-        enableLoadingWhenFailed: true,
-        hideFooterWhenNotFull: false,
-        footerTriggerDistance: -15.0,
-      ),
+      body:SmartRefresher(
+          child: ListView.builder(
+            itemBuilder: (c, i) => items[i],
+            itemExtent: 100.0,
+            controller: _scrollController,
+            reverse: widget.reverse,
+            itemCount: items.length,
+          ),
+          onRefresh: _onRefresh,
+          onLoading: _onLoading,
+          header: widget.header,
+          footer: widget.footer,
+          enablePullDown: true,
+          enablePullUp: true,
+          controller: _refreshController),
     );
   }
 

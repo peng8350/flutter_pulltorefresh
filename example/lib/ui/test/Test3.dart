@@ -169,7 +169,7 @@ class Test3State extends State<Test3>
                 height: 100.0,
               ));
               if (mounted) setState(() {});
-              _refreshController.refreshToIdle();
+              _refreshController.refreshCompleted();
 //        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
 ////          data.add(Card());
 //

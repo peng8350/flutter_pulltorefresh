@@ -77,6 +77,7 @@ class _BasicExampleState extends State<BasicExample>
       }
 //      pageIndex++;
     }
+    if(mounted)
     setState(() {});
     controller.refreshCompleted();
 
@@ -94,6 +95,7 @@ class _BasicExampleState extends State<BasicExample>
       data.add("Item $i");
     }
 //    pageIndex++;
+    if(mounted)
     setState(() {});
     controller.loadComplete();
   }
@@ -183,6 +185,7 @@ class _BasicExampleState extends State<BasicExample>
             SmartRefresher(
               child: buildGrid(),
               controller: _refreshController2,
+              enableTwoLevel: true,
               enablePullUp: true,
               onRefresh: () {
                 _onRefresh(_refreshController2, data2);

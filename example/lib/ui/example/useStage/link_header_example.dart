@@ -35,6 +35,7 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
     _scrollController.addListener(() {
       final bool ifdismissAppbar = _scrollController.offset >= 136.0;
       if (dismissAppbar != ifdismissAppbar) {
+        if(mounted)
         setState(() {});
       }
       dismissAppbar = ifdismissAppbar;

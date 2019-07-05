@@ -55,10 +55,12 @@ class _ListDemoState extends State<ReorderableListDemo> {
   ].map<_ListItem>((String item) => _ListItem(item, false)).toList();
 
   void changeItemType(_ReorderableListType type) {
+    if(mounted)
     setState(() {
       _itemType = type;
     });
     // Rebuild the bottom sheet to reflect the selected list view.
+    if(mounted)
     _bottomSheet?.setState(() {
       // Trigger a rebuild.
     });
@@ -67,10 +69,12 @@ class _ListDemoState extends State<ReorderableListDemo> {
   }
 
   void changeReverse(bool newValue) {
+    if(mounted)
     setState(() {
       _reverse = newValue;
     });
     // Rebuild the bottom sheet to reflect the selected list view.
+    if(mounted)
     _bottomSheet?.setState(() {
       // Trigger a rebuild.
     });
@@ -79,6 +83,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
   }
 
   void _showConfigurationSheet() {
+    if(mounted)
     setState(() {
       _bottomSheet = scaffoldKey.currentState.showBottomSheet<void>((BuildContext bottomSheetContext) {
         return DecoratedBox(
@@ -144,6 +149,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
           isThreeLine: true,
           value: item.checkState ?? false,
           onChanged: (bool newValue) {
+            if(mounted)
             setState(() {
               item.checkState = newValue;
             });
@@ -170,6 +176,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
+    if(mounted)
     setState(() {
       if (newIndex > oldIndex) {
         newIndex -= 1;
@@ -191,6 +198,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
             icon: const Icon(Icons.sort_by_alpha),
             tooltip: 'Sort',
             onPressed: () {
+              if(mounted)
               setState(() {
                 _reverseSort = !_reverseSort;
                 _items.sort((_ListItem a, _ListItem b) => _reverseSort ? b.value.compareTo(a.value) : a.value.compareTo(b.value));

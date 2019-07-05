@@ -208,10 +208,22 @@ class _SmartRefresherState extends State<SmartRefresher> {
     // TODO: implement initState
     if (widget.controller.initialRefresh) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        /*
+           if mounted,it avoid one stiuation: when init done,then dispose the widget before build.
+           this   stiuation mostly TabBarView
+        */
+        if(mounted)
         widget.controller.requestRefresh();
       });
     }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    widget.controller._detachPosition();
+    super.dispose();
   }
 
   @override
@@ -265,6 +277,10 @@ class RefreshController {
     position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
     position = newPosition;
     position.isScrollingNotifier.addListener(_listenScrollEnd);
+  }
+
+  void _detachPosition(){
+    position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
   }
 
   // when bounce out of edge and stopped by overScroll or underScroll, it should be SpringBack to 0.0
@@ -424,6 +440,8 @@ class RefreshConfiguration extends InheritedWidget {
         headerTriggerDistance != oldWidget.headerTriggerDistance ||
         twiceTriggerDistance != oldWidget.twiceTriggerDistance ||
         maxUnderScrollExtent != oldWidget.maxUnderScrollExtent ||
-        oldWidget.maxOverScrollExtent != maxOverScrollExtent;
+        oldWidget.maxOverScrollExtent != maxOverScrollExtent ||
+        enableBallisticRefresh != oldWidget.enableBallisticRefresh||
+        enableLoadingWhenFailed !=oldWidget.enableLoadingWhenFailed;
   }
 }

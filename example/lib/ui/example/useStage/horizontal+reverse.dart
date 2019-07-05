@@ -144,6 +144,7 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
               header: WaterDropMaterialHeader(reverse: true,),
               onLoading: () async{
                  await Future.delayed(const Duration(milliseconds: 1000));
+                 if(mounted)
                  setState(() {
 
                  });

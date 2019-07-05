@@ -138,12 +138,16 @@ class _IndicatorPageState extends State<IndicatorPage> {
           title: "底部指示器(只有加载中才显示)",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => IndicatorActivity(
-                    reverse: false,
-                    title: "底部指示器(只有加载中才显示)",
-                    footer: ClassicFooter(
-                      loadStyle: LoadStyle.ShowWhenLoading,
-                    ))));
+                builder: (BuildContext context) => RefreshConfiguration(
+                  child: IndicatorActivity(
+                      reverse: false,
+                      title: "底部指示器(只有加载中才显示)",
+                      footer: ClassicFooter(
+                        loadStyle: LoadStyle.ShowWhenLoading,
+                      )),
+                  enableLoadingWhenFailed: true,
+                  footerTriggerDistance: -60.0,
+                )));
           },
           imgRes: "images/material_waterdrop.gif"),
     ];

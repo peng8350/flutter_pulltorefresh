@@ -52,6 +52,7 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
       enablePullDown: true,
       onRefresh: () async{
         await Future.delayed(const Duration(milliseconds: 2000));
+        if(mounted)
         setState(() {
           data.add("new");
         });
