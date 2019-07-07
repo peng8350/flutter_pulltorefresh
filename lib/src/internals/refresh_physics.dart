@@ -19,6 +19,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class RefreshPhysics extends ScrollPhysics {
   final double maxOverScrollExtent, maxUnderScrollExtent;
   final SpringDescription springDescription;
+  final double dragSpeedRatio;
   final bool enablePullDown, enablePullUp;
   final bool enableScrollWhenTwoLevel, enableScrollWhenRefreshCompleted;
   final ValueNotifier headerMode, footerMode;
@@ -30,8 +31,9 @@ class RefreshPhysics extends ScrollPhysics {
       this.clamping: false,
       double maxUnderScrollExtent,
       this.headerMode,
-        this.springDescription,
+      this.springDescription,
       this.footerMode,
+      this.dragSpeedRatio,
       this.enablePullUp,
       this.enableScrollWhenRefreshCompleted,
       this.enableScrollWhenTwoLevel: false,
@@ -49,6 +51,7 @@ class RefreshPhysics extends ScrollPhysics {
         clamping: clamping,
         springDescription: springDescription,
         enablePullDown: enablePullDown,
+        dragSpeedRatio: dragSpeedRatio,
         enablePullUp: enablePullUp,
         enableScrollWhenTwoLevel: enableScrollWhenTwoLevel,
         headerMode: headerMode,
@@ -127,7 +130,7 @@ class RefreshPhysics extends ScrollPhysics {
               (overscrollPast - offset.abs()) / position.viewportDimension)
           : frictionFactor(overscrollPast / position.viewportDimension);
       final double direction = offset.sign;
-      return direction * _applyFriction(overscrollPast, offset.abs(), friction);
+      return direction * _applyFriction(overscrollPast, offset.abs(), friction) * dragSpeedRatio ??1.0;
     }
 
     return super.applyPhysicsToUserOffset(position, offset);
@@ -153,7 +156,7 @@ class RefreshPhysics extends ScrollPhysics {
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     // TODO: implement applyBoundaryConditions
     // it should enable AnimateTo go anyWhere
-    if((position as ScrollPosition).activity is DrivenScrollActivity){
+    if ((position as ScrollPosition).activity is DrivenScrollActivity) {
       return 0.0;
     }
     if (headerMode.value == RefreshStatus.twoLeveling) {
@@ -219,7 +222,7 @@ class RefreshPhysics extends ScrollPhysics {
         spring: springDescription ?? spring,
         position: position.pixels,
         // -1.0 avoid stop springing back ,and release gesture
-        velocity: velocity*0.91,
+        velocity: velocity * 0.91,
         // TODO(abarth): We should move this constant closer to the drag end.
         leadingExtent: position.minScrollExtent,
         trailingExtent: headerMode.value == RefreshStatus.twoLeveling

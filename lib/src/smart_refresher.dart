@@ -166,6 +166,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     return RefreshPhysics(
             enablePullUp: widget.enablePullUp,
             enablePullDown: widget.enablePullDown,
+            dragSpeedRatio: conf?.dragSpeedRatio,
             springDescription: conf?.springDescription,
             footerMode: widget.controller.footerMode,
             enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? true,
@@ -413,6 +414,7 @@ class RefreshConfiguration extends InheritedWidget {
   final double twiceTriggerDistance;
   final double closeTwoLevelDistance;
   final double footerTriggerDistance;
+  final double dragSpeedRatio;
   final double maxOverScrollExtent;
   final double maxUnderScrollExtent;
 
@@ -420,6 +422,7 @@ class RefreshConfiguration extends InheritedWidget {
     @required this.child,
     this.headerBuilder,
     this.footerBuilder,
+    this.dragSpeedRatio:1.0,
     this.enableScrollWhenTwoLevel: true,
     this.enableBallisticRefresh: false,
     this.springDescription,
@@ -447,6 +450,8 @@ class RefreshConfiguration extends InheritedWidget {
         skipCanRefresh != oldWidget.skipCanRefresh ||
         hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||
         headerOffset != oldWidget.headerOffset ||
+        dragSpeedRatio!=oldWidget.dragSpeedRatio||
+        springDescription!=oldWidget.springDescription||
         enableScrollWhenRefreshCompleted !=
             oldWidget.enableScrollWhenRefreshCompleted ||
         enableBallisticRefresh != oldWidget.enableBallisticRefresh ||
