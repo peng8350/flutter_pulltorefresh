@@ -188,7 +188,6 @@ class _BasicExampleState extends State<BasicExample>
             SmartRefresher(
               child: buildGrid(),
               controller: _refreshController2,
-              enableTwoLevel: true,
               enablePullUp: true,
               header: MaterialClassicHeader(),
               onRefresh: () {

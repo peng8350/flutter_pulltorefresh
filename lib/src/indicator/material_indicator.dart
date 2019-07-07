@@ -23,6 +23,7 @@ class MaterialClassicHeader extends RefreshIndicator {
 
   const MaterialClassicHeader({
     Key key,
+    height: 80.0,
     this.semanticsLabel,
     this.semanticsValue,
     this.color,
@@ -32,7 +33,7 @@ class MaterialClassicHeader extends RefreshIndicator {
   }) : super(
           key: key,
           refreshStyle: RefreshStyle.Front,
-          height: 100.0,
+          height:height,
           reverse: reverse,
         );
 
@@ -75,7 +76,7 @@ class _MaterialClassicHeaderState
         upperBound: 1.0,
         duration: Duration(milliseconds: 300));
     _positionFactor = _positionController.drive(Tween<Offset>(
-        begin: Offset(0.0, -40.0 / widget.height), end: Offset(0.0, 1.0)));
+        begin: Offset(0.0, -1.0), end: Offset(0.0, widget.height/44.0)));
     super.initState();
   }
 
@@ -107,7 +108,7 @@ class _MaterialClassicHeaderState
     // TODO: implement onOffsetChange
     if (!floating) {
       _valueAni.value = offset / configuration.headerTriggerDistance;
-      _positionController.value = offset / widget.height;
+      _positionController.value = offset / configuration.headerTriggerDistance;
     }
   }
 
