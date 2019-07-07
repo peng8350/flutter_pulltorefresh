@@ -5,6 +5,7 @@
  */
 import 'package:example/ui/screen/ScreenPage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:residemenu/residemenu.dart';
 import 'example/ExamplePage.dart';
@@ -97,6 +98,11 @@ class _MainActivityState extends State<MainActivity>
             controller: _pageController,
             children: views,
             physics: NeverScrollableScrollPhysics(),
+          ),
+          springDescription: SpringDescription(
+            mass: 1.0,
+            stiffness: 300.0,
+            damping: 15.0
           ),
           maxUnderScrollExtent: 100.0,
           enableScrollWhenTwoLevel: true,

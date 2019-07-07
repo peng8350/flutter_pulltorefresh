@@ -4,6 +4,7 @@
     createTime:2018-05-02 14:39
  */
 
+import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
@@ -17,6 +18,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
  */
 class RefreshPhysics extends ScrollPhysics {
   final double maxOverScrollExtent, maxUnderScrollExtent;
+  final SpringDescription springDescription;
   final bool enablePullDown, enablePullUp;
   final bool enableScrollWhenTwoLevel, enableScrollWhenRefreshCompleted;
   final ValueNotifier headerMode, footerMode;
@@ -28,6 +30,7 @@ class RefreshPhysics extends ScrollPhysics {
       this.clamping: false,
       double maxUnderScrollExtent,
       this.headerMode,
+        this.springDescription,
       this.footerMode,
       this.enablePullUp,
       this.enableScrollWhenRefreshCompleted,
@@ -44,6 +47,7 @@ class RefreshPhysics extends ScrollPhysics {
     return RefreshPhysics(
         parent: buildParent(ancestor),
         clamping: clamping,
+        springDescription: springDescription,
         enablePullDown: enablePullDown,
         enablePullUp: enablePullUp,
         enableScrollWhenTwoLevel: enableScrollWhenTwoLevel,
@@ -212,7 +216,7 @@ class RefreshPhysics extends ScrollPhysics {
             headerMode.value == RefreshStatus.twoLeveling) ||
         position.outOfRange) {
       return BouncingScrollSimulation(
-        spring: spring,
+        spring: springDescription ?? spring,
         position: position.pixels,
         // -1.0 avoid stop springing back ,and release gesture
         velocity: velocity*0.91,
