@@ -41,7 +41,7 @@ class WaterDropHeader extends RefreshIndicator {
     ),
   }) : super(
             key: key,
-            height:80.0,
+            height:60.0,
             completeDuration: completeDuration,
             refreshStyle: RefreshStyle.UnFollow);
 
@@ -62,7 +62,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
     final double realOffset =
-        offset - 55.0; //55.0 mean circleHeight(30) + originH (25) in Painter
+        offset - 44.0; //55.0 mean circleHeight(24) + originH (20) in Painter
     // when readyTorefresh
     if (!_animationController.isAnimating)
       _animationController.value = realOffset;
@@ -148,7 +148,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                 RotatedBox(
                   child: CustomPaint(
                     child: Container(
-                      height: 80.0,
+                      height: 60.0,
                     ),
                     painter: _QqPainter(
                       color: widget.waterDropColor,
@@ -162,18 +162,18 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                       ? Alignment.bottomCenter
                       : Alignment.topCenter,
                   margin: widget.reverse
-                      ? EdgeInsets.only(bottom: 15.0)
-                      : EdgeInsets.only(top: 15.0),
+                      ? EdgeInsets.only(bottom: 12.0)
+                      : EdgeInsets.only(top: 12.0),
                   child: widget.idleIcon,
                 )
               ],
             ),
-            height: 80.0,
+            height: 60.0,
           ),
           opacity: _dismissCtl);
     }
     return Container(
-      height: 80.0,
+      height: 60.0,
       child: Center(
         child: child,
       ),
@@ -207,11 +207,11 @@ class _QqPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final double originH = 25.0;
+    final double originH = 20.0;
 
     final double middleW = size.width / 2;
 
-    final double circleSize = 15.0;
+    final double circleSize = 12.0;
 
     final double scaleRatio = 0.1;
 

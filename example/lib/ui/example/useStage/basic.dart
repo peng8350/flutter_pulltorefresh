@@ -177,6 +177,7 @@ class _BasicExampleState extends State<BasicExample>
               child: buildList(),
               controller: _refreshController1,
               enablePullUp: true,
+              header: WaterDropHeader(),
               onRefresh: () {
                 _onRefresh(_refreshController1, data1);
               },
@@ -189,6 +190,7 @@ class _BasicExampleState extends State<BasicExample>
               controller: _refreshController2,
               enableTwoLevel: true,
               enablePullUp: true,
+              header: MaterialClassicHeader(),
               onRefresh: () {
                 _onRefresh(_refreshController2, data2);
               },
