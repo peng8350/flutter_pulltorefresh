@@ -100,7 +100,7 @@ class _ShimmerHeaderState extends RefreshIndicatorState<ShimmerHeader>
 
 class ShimmerFooter extends LoadIndicator {
   final Color baseColor, highlightColor;
-  final Widget text;
+  final Widget text, failed, noMore;
   final Duration period;
   final ShimmerDirection direction;
   final Function outerBuilder;
@@ -111,6 +111,8 @@ class ShimmerFooter extends LoadIndicator {
       this.highlightColor = Colors.white,
       this.outerBuilder,
       double height: 80.0,
+      this.failed,
+      this.noMore,
       this.period = const Duration(milliseconds: 1000),
       this.direction = ShimmerDirection.ltr,
       LoadStyle loadStyle: LoadStyle.ShowAlways})
@@ -128,15 +130,19 @@ class _ShimmerFooterState extends LoadIndicatorState<ShimmerFooter> {
   Widget buildContent(BuildContext context, LoadStatus mode) {
     // TODO: implement buildContent
 
-    final Widget body = Shimmer.fromColors(
-      period: widget.period,
-      direction: widget.direction,
-      baseColor: widget.baseColor,
-      highlightColor: widget.highlightColor,
-      child: Center(
-        child: widget.text,
-      ),
-    );
+    final Widget body = mode == LoadStatus.failed
+        ? widget.failed
+        : mode == LoadStatus.noMore
+            ? widget.noMore
+            :mode==LoadStatus.idle?Center(child:widget.text): Shimmer.fromColors(
+                period: widget.period,
+                direction: widget.direction,
+                baseColor: widget.baseColor,
+                highlightColor: widget.highlightColor,
+                child: Center(
+                  child: widget.text,
+                ),
+              );
     return widget.outerBuilder != null
         ? widget.outerBuilder(body)
         : Container(
