@@ -213,7 +213,8 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
             hitTestExtent: needPaintExtent,
             hasVisualOverflow: overscrolledExtent < boxExtent,
             maxPaintExtent: needPaintExtent,
-            layoutExtent: layoutExtent,
+            layoutExtent: Math.min(needPaintExtent,
+                Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
           );
 
           break;

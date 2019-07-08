@@ -100,15 +100,13 @@ class _MainActivityState extends State<MainActivity>
             physics: NeverScrollableScrollPhysics(),
           ),
           springDescription: SpringDescription(
-            mass: 1.5,
-            stiffness: 300.0,
-            damping: 20.0
+            mass: 2.0,
+            stiffness: 200.0,
+            damping: 15.0
           ),
-          maxUnderScrollExtent: 100.0,
           dragSpeedRatio: 1.5,
           enableScrollWhenTwoLevel: true,
           autoLoad: true,
-          maxOverScrollExtent: 80.0,
           footerTriggerDistance: -45.0,
           enableScrollWhenRefreshCompleted: false,
           hideFooterWhenNotFull: true,

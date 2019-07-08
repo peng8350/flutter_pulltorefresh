@@ -31,11 +31,11 @@ class MaterialClassicHeader extends RefreshIndicator {
     this.distance: 50.0,
     this.backgroundColor,
   }) : super(
-          key: key,
-          refreshStyle: RefreshStyle.Front,
-          height:height,
-          reverse: reverse,
-        );
+    key: key,
+    refreshStyle: RefreshStyle.Front,
+    height:height,
+    reverse: reverse,
+  );
 
 
   @override
@@ -137,7 +137,7 @@ class _MaterialClassicHeaderState
   @override
   Future<void> readyToRefresh() {
     // TODO: implement readyToRefresh
-    return _positionController.animateTo(widget.distance / widget.height);
+    return _positionController.animateTo(1.0);
   }
 
   @override
@@ -160,19 +160,20 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
   const WaterDropMaterialHeader({
     Key key,
     String semanticsLabel,
-    double distance: 120.0,
+    double distance: 60.0,
     String semanticsValue,
     bool reverse: false,
     Color color: Colors.white,
     Color backgroundColor: Colors.blueAccent,
   }) : super(
-            key: key,
-            color: color,
-            distance: distance,
-            reverse: reverse,
-            backgroundColor: backgroundColor,
-            semanticsValue: semanticsValue,
-            semanticsLabel: semanticsLabel);
+      key: key,
+      height:80.0,
+      color: color,
+      distance: distance,
+      reverse: reverse,
+      backgroundColor: backgroundColor,
+      semanticsValue: semanticsValue,
+      semanticsLabel: semanticsLabel);
 
 
   @override
@@ -199,12 +200,12 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     _positionController = AnimationController(
         vsync: this,
         duration: Duration(milliseconds: 300),
-        upperBound: 2.0,
+        upperBound: 1.0,
         lowerBound: 0.0,
         value: 0.0);
     _positionFactor = _positionController.drive(Tween<Offset>(
-        begin: Offset(0.0, 0.0),
-        end: Offset(0.0, widget.distance / widget.height)));
+        begin: Offset(0.0, -0.5),
+        end: Offset(0.0, 1.5)));
   }
 
   @override
@@ -216,8 +217,8 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
         curve: Curves.bounceOut, duration: Duration(milliseconds: 550));
 
     return _positionController
-        .animateTo(1.0,
-            curve: Curves.bounceOut, duration: Duration(milliseconds: 550))
+        .animateTo(_positionController.upperBound,
+        curve: Curves.bounceOut, duration: Duration(milliseconds: 550))
         .then((_) {
       _showWater = false;
     });
@@ -248,11 +249,13 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
     offset = offset > 80.0 ? 80.0 : offset;
+
     if (!floating) {
-      _bezierController.value = (offset / widget.height) * 0.5;
-      _valueAni.value = offset / configuration.headerTriggerDistance;
+      _bezierController.value = (offset / configuration.headerTriggerDistance);
+      _valueAni.value = _bezierController.value;
       _positionController.value =
-          offset / widget.height * 0.3 / (widget.distance / widget.height);
+          _bezierController.value*0.3;
+      _scaleFactor.value = offset<40.0?0.0:(_bezierController.value-0.5)*2+0.5;
     }
   }
 
@@ -329,17 +332,23 @@ class _BezierPainter extends CustomPainter {
     // TODO: implement paint
     final double middleX = size.width / 2;
     final Paint paint = Paint();
-
     paint.color = color;
-    if (value < 1.0) {
+    if(value<0.5){
       final Path path = Path();
-      final double offsetY = 70.0 * value + 20.0;
       path.moveTo(0.0, 0.0);
       path.quadraticBezierTo(
-          middleX + 70.0 * value, 20.0 - 40.0 * value, middleX - 20.0, offsetY);
-      path.lineTo(middleX + 20.0, offsetY);
+          middleX,   70.0 * value, size.width, 0.0);
+      canvas.drawPath(path, paint);
+    }
+    else if (value <= 1.0) {
+      final Path path = Path();
+      final double offsetY = 60.0 * (value-0.5) + 20.0;
+      path.moveTo(0.0, 0.0);
       path.quadraticBezierTo(
-          middleX - 70.0 * value, 20.0 - 40.0 * value, size.width, 0.0);
+          middleX + 40.0 * (value-0.5), 40.0 - 40.0 * value, middleX - 10.0, offsetY);
+      path.lineTo(middleX + 10.0, offsetY);
+      path.quadraticBezierTo(
+          middleX - 40.0 * (value-0.5), 40.0 - 40.0 * value, size.width, 0.0);
       path.moveTo(size.width, 0.0);
       path.lineTo(0.0, 0.0);
       canvas.drawPath(path, paint);

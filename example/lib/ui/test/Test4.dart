@@ -178,6 +178,7 @@ class Test4State extends State<Test4>
             },
             child: ListView.builder(
               itemExtent: 100.0,
+              physics: ClampingScrollPhysics(),
               itemBuilder: (c,i) => data[i],
               itemCount: data.length,
             ),

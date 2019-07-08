@@ -97,7 +97,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
                 builder: (BuildContext context) => IndicatorActivity(
                     reverse: false,
                     title: "水滴坠落Material指示器",
-                    header: WaterDropMaterialHeader())));
+                    header: WaterDropMaterialHeader(distance: 60.0,))));
           },
           imgRes: "images/material_waterdrop.gif"),
       IndicatorItem(
