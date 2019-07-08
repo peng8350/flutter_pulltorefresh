@@ -3,6 +3,7 @@
  * Email: peng8350@gmail.com
  * Time:  2019-06-24 17:21
  */
+import 'package:example/ui/example/customindicator/shimmer_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:example/ui/example/useStage/empty_view.dart';
 import 'package:example/ui/example/useStage/hidefooter_bycontent.dart';
@@ -10,10 +11,10 @@ import 'package:example/ui/example/otherwidget/refesh_expansiopn_panel_list_exam
 import 'package:example/ui/example/useStage/horizontal+reverse.dart';
 import 'package:example/ui/example/useStage/Nested.dart';
 import 'package:example/ui/example/otherwidget/refresh_animatedlist_example.dart';
-import 'package:example/ui/example/useStage/custom_header.dart';
+import 'package:example/ui/example/customindicator/spinkit_header.dart';
 import 'package:example/ui/example/useStage/basic.dart';
 import 'package:example/ui/example/otherwidget/refresh_pageView_example.dart';
-import 'package:example/ui/example/useStage/link_header_example.dart';
+import 'package:example/ui/example/customindicator/link_header_example.dart';
 import 'package:example/ui/example/useStage/twolevel_refresh.dart';
 import 'otherwidget/refresh_recordable_listview_example.dart';
 import 'otherwidget/draggable_bottomsheet_loadmore.dart';
@@ -65,7 +66,7 @@ class _ExamplePageState extends State<ExamplePage>
   @override
   void initState() {
     // TODO: implement initState
-    _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
+    _tabController = TabController(initialIndex: 0, length: 3, vsync: this);
     super.initState();
   }
 
@@ -81,7 +82,6 @@ class _ExamplePageState extends State<ExamplePage>
               return BasicExample();
             }));
           }),
-
       ExampleItem(
           title: "手动隐藏footer",
           onClick: () {
@@ -90,13 +90,6 @@ class _ExamplePageState extends State<ExamplePage>
                 body: HideFooterManual(),
                 appBar: AppBar(),
               );
-            }));
-          }),
-      ExampleItem(
-          title: "LinkHeader例子",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return LinkHeaderExample();
             }));
           }),
       ExampleItem(
@@ -134,16 +127,6 @@ class _ExamplePageState extends State<ExamplePage>
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return TwoLevelExample();
-            }));
-          }),
-      ExampleItem(
-          title: "简单自定义头部指示器",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                body: CustomHeaderExample(),
-                appBar: AppBar(),
-              );
             }));
           }),
     ];
@@ -200,6 +183,36 @@ class _ExamplePageState extends State<ExamplePage>
           }),
     ];
 
+    final List<ExampleItem> items3 = [
+      ExampleItem(
+          title: "简单自定义头部指示器",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return Scaffold(
+                body: CustomHeaderExample(),
+                appBar: AppBar(),
+              );
+            }));
+          }),
+      ExampleItem(
+          title: "LinkHeader例子",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return LinkHeaderExample();
+            }));
+          }),
+      ExampleItem(
+          title: "Shimmer指示器例子",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return Scaffold(
+                appBar: AppBar(),
+                body: ShimmerIndicatorExample(),
+              );
+            }));
+          })
+    ];
+
     return Column(
       children: <Widget>[
         Container(
@@ -211,7 +224,10 @@ class _ExamplePageState extends State<ExamplePage>
               ),
               Tab(
                 text: "配合一些特殊组件",
-              )
+              ),
+              Tab(
+                text: "自定义指示器(非库内部提供)",
+              ),
             ],
           ),
           height: 50.0,
@@ -221,7 +237,8 @@ class _ExamplePageState extends State<ExamplePage>
           child: TabBarView(
             children: <Widget>[
               ListView(children: items1),
-              ListView(children: items2)
+              ListView(children: items2),
+              ListView(children: items3)
             ],
             controller: _tabController,
           ),

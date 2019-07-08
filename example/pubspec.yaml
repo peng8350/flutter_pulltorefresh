@@ -19,6 +19,8 @@ dependencies:
 
   fish_redux: ^0.2.2
 
+  shimmer: 1.0.0
+
   flutter_sticky_header: ^0.4.0
 
 dev_dependencies:
