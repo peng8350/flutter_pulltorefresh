@@ -86,7 +86,7 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 
 ## 截图
 ### 例子
-|Style| [基础用法](example/lib/ui/example/useStage/basic.dart) | [header放在其他位置](example/lib/ui/example/useStage/link_header_example.dart) |
+|Style| [基础用法](example/lib/ui/example/useStage/basic.dart) | [header放在其他位置](example/lib/ui/example/customindicator/link_header_example.dart) |
 |:---:|:---:|:---:|
 |art| ![](arts/example1.gif) | ![](arts/example2.gif) |
 
@@ -98,7 +98,7 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 |:---:|:---:|:---:|
 |art| ![](arts/example5.gif) | ![](arts/example6.gif) |
 
-|Style| [简单自定义刷新指示器(使用SpinKit)](example/lib/ui/example/useStage/custom_header.dart)| [dragableScrollSheet+LoadMore](example/lib/ui/example/otherwidget/draggable_bottomsheet_loadmore.dart)|
+|Style| [简单自定义刷新指示器(使用SpinKit)](example/lib/ui/example/customindicator/spinkit_header.dart)| [dragableScrollSheet+LoadMore](example/lib/ui/example/otherwidget/draggable_bottomsheet_loadmore.dart)|
 |:---:|:---:|:---:|
 |art| ![](arts/example7.gif) | ![](arts/example8.gif) |
 
@@ -119,6 +119,9 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 |:---:|:---:|:---:|
 |art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
 
+|Style| [ShimmerIndicator](example/lib/ui/example/customindicator/shimmer_indicator.dart) | |
+|:---:|:---:|:---:|
+|art| ![](example/images/shimmerindicator.gif) |  |
 
 
 ## 更多
