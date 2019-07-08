@@ -4,6 +4,7 @@
  * Time: 2019/5/2 下午5:09
  */
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as Math;
 import 'package:flutter/rendering.dart';
@@ -212,8 +213,7 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
             hitTestExtent: needPaintExtent,
             hasVisualOverflow: overscrolledExtent < boxExtent,
             maxPaintExtent: needPaintExtent,
-            layoutExtent: Math.min(needPaintExtent,
-                Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
+            layoutExtent: layoutExtent,
           );
 
           break;
@@ -223,8 +223,7 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
             paintOrigin: -overscrolledExtent - constraints.scrollOffset,
             paintExtent: needPaintExtent,
             maxPaintExtent: needPaintExtent,
-            layoutExtent: Math.min(needPaintExtent,
-                Math.max(layoutExtent - constraints.scrollOffset, 0.0)),
+            layoutExtent: Math.max(layoutExtent - constraints.scrollOffset, 0.0),
           );
           break;
         case RefreshStyle.UnFollow:
