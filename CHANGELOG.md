@@ -233,3 +233,10 @@ other:
 * revert change before:SmartRefresher change Stateless,Fix position may be null in some stiuations
 * add enableScrollWhenRefreshCompleted,enableBallisticRefresh,enableLoadingWhenFailed bool in RefreshConfiguration
 * enable footerTriggerdistance pass Negative
+
+## 1.4.9
+* Fix MaterialClassicHeader,WaterDropHeader some err
+* Optimze WaterdropMaterial
+* remove hit top in clamping physics
+* add springDescrition,dragSpeedRatio in RefreshConfiguration
+* fix BehindStyle layoutExtent error

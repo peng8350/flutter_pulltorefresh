@@ -193,12 +193,13 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   Simulation createBallisticSimulation(
       ScrollMetrics position, double velocity) {
+
     // TODO: implement createBallisticSimulation
     if (headerMode.value == RefreshStatus.twoLeveling) {
       if (velocity < 0.0) {
         return parent.createBallisticSimulation(position, velocity);
       }
-    } else {
+    } else if(!position.outOfRange){
       if ((velocity < 0.0 && !enablePullDown) ||
           (velocity > 0 && !enablePullUp)) {
         return parent.createBallisticSimulation(position, velocity);

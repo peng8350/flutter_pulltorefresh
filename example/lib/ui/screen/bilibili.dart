@@ -49,6 +49,7 @@ class _BiliBiliScreenState extends State<BiliBiliScreen>
               backgroundColor: Colors.green,
             ),
             child: CustomScrollView(
+              physics: ClampingScrollPhysics(),
               slivers: <Widget>[
                 SliverAppBar(
                   forceElevated: false,

@@ -22,7 +22,7 @@
 ```
 
    dependencies:
-     pull_to_refresh: ^1.4.8
+     pull_to_refresh: ^1.4.9
 
 ```
 
