@@ -39,9 +39,9 @@ class RefreshPhysics extends ScrollPhysics {
         this.enableScrollWhenTwoLevel: false,
         this.enablePullDown,
         double maxOverScrollExtent})
-      : maxOverScrollExtent = maxOverScrollExtent ?? double.infinity,
+      : maxOverScrollExtent = maxOverScrollExtent ?? (!clamping ? double.infinity : 150.0),
         maxUnderScrollExtent =
-            maxUnderScrollExtent ?? (!clamping ? double.infinity : 0.0),
+            maxUnderScrollExtent ?? (!clamping ? double.infinity : 120.0),
         super(parent: parent);
 
   @override
@@ -156,9 +156,6 @@ class RefreshPhysics extends ScrollPhysics {
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     // TODO: implement applyBoundaryConditions
     // it should enable AnimateTo go anyWhere
-    if ((position as ScrollPosition).activity is DrivenScrollActivity) {
-      return 0.0;
-    }
     if (headerMode.value == RefreshStatus.twoLeveling) {
       if (position.pixels - value > 0.0) {
         return parent.applyBoundaryConditions(position, value);
@@ -172,14 +169,6 @@ class RefreshPhysics extends ScrollPhysics {
     final double topBoundary = position.minScrollExtent - maxOverScrollExtent;
     final double bottomBoundary =
         position.maxScrollExtent + maxUnderScrollExtent;
-    if (clamping) {
-      if (value < position.minScrollExtent &&
-          position.minScrollExtent < position.pixels) // hit top edge
-        return value - position.minScrollExtent;
-      if (position.pixels < position.maxScrollExtent &&
-          position.maxScrollExtent < value) // hit bottom edge
-        return value - position.maxScrollExtent;
-    }
     if (maxOverScrollExtent != double.infinity &&
         value < position.pixels &&
         position.pixels <= topBoundary) // underscroll

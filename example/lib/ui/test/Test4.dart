@@ -154,9 +154,7 @@ class Test4State extends State<Test4>
             enablePullUp: _enablePullDown,
             enablePullDown: _enablePullUp,
             controller: _refreshController,
-            header: ClassicHeader(
-              iconPos: IconPosition.top,
-              height: 60.0,
+            header: MaterialClassicHeader(
             ),
             footer: ClassicFooter(
               iconPos: IconPosition.top,

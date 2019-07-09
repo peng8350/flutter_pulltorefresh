@@ -104,6 +104,7 @@ class _MainActivityState extends State<MainActivity>
             stiffness: 200.0,
             damping: 15.0
           ),
+          maxUnderScrollExtent: 0.0,
           dragSpeedRatio: 1.5,
           enableScrollWhenTwoLevel: true,
           autoLoad: true,
