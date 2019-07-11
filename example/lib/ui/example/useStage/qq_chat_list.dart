@@ -8,6 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../other/expanded_viewport.dart';
 
+/*
+   实现聊天列表+加载更多功能,类似于qq那种加载效果
+   聊天列表最大的难点就是在列表不满一屏时,要把它往上压。目前来说,flutter没有提供这类sliver能把剩余空间(上和下)给占有,类似于Expanded,
+   SliverFillRemaing并没有起作用。
+   ExpandedViewport是我自定义Viewport,用来解决当不满一屏时reverseListView要居于顶部的问题(只适用于少数情况),原理就是第一次
+   布局先探测一下他们的布局情况,第二次布局假如不满一屏,就在SliverExpanded后面的所有slivers调整主轴偏距。
+ */
 class QQChatList extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -19,6 +26,7 @@ class QQChatList extends StatefulWidget {
 const String myUrl = "https://avatars1.githubusercontent.com/u/19425362?s=400&u=1a30f9fdf71cc9a51e20729b2fa1410c710d0f2f&v=4";
 class _QQChatListState extends State<QQChatList> {
   RefreshController _refreshController = RefreshController();
+  ScrollController _scrollController = ScrollController();
   TextEditingController _textController = TextEditingController();
   List<_MessageItem> data = [_MessageItem(
     content: "你好...................asdasdasdasdasdasdasdasdasda",
@@ -26,10 +34,15 @@ class _QQChatListState extends State<QQChatList> {
     author: "我",
     url:myUrl,),
     _MessageItem(
-      content: "你好...........asdasdasdaasdasdasdasdasdasdasdasdasdsadasdasdasdasdasdasdasdcasdcascdascdascdascdasa",
-      isMe: true,
-      author: "我",
-      url: "https://avatars1.githubusercontent.com/u/19425362?s=400&u=1a30f9fdf71cc9a51e20729b2fa1410c710d0f2f&v=4",)
+      content: "eem.....................................................................",
+      isMe: false,
+      author: "对方",
+      url: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg",),
+    _MessageItem(
+      content: "吃饭了没有?????????????",
+      isMe: false,
+      author: "对方",
+      url: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg",)
   ];
 
   @override
@@ -43,6 +56,9 @@ class _QQChatListState extends State<QQChatList> {
     // TODO: implement build
     return CupertinoApp(
       home: RefreshConfiguration(
+        shouldFooterFollowWhenNotFull: (mode){
+          return true;
+        },
         child: CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
             middle: Text("XXXXX"),
@@ -70,7 +86,21 @@ class _QQChatListState extends State<QQChatList> {
                     enablePullDown: false,
                     onLoading: () async {
                       await Future.delayed(Duration(milliseconds: 1000));
-//                      data.add("aa");
+                      data.add(_MessageItem(
+                        content: "Xxxxxxxxxxxxxx",
+                        isMe: true,
+                        author: "我",
+                        url:myUrl,));
+                      data.add(_MessageItem(
+                      content: "...........",
+                      isMe: false,
+                      author: "对方",
+                      url: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg",));
+                      data.add(_MessageItem(
+                      content: "吃饭了没有?????????????",
+                      isMe: false,
+                      author: "对方",
+                      url: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg"));
                       setState(() {});
                       _refreshController.loadComplete();
                     },
@@ -92,6 +122,7 @@ class _QQChatListState extends State<QQChatList> {
                     ),
                     enablePullUp: true,
                     child: Scrollable(
+                      controller: _scrollController,
                       axisDirection: AxisDirection.up,
                       viewportBuilder: (context, offset) {
                         return ExpandedViewport(
@@ -126,6 +157,7 @@ class _QQChatListState extends State<QQChatList> {
                               setState(() {
 
                               });
+                              _scrollController.jumpTo(0.0);
                               _textController.clear();
                             },
                           ),
@@ -135,7 +167,9 @@ class _QQChatListState extends State<QQChatList> {
                       RaisedButton(
                         child: Text("发送"),
                         color: Colors.blueAccent,
+
                         onPressed: () {
+                          _scrollController.jumpTo(0.0);
                           data.insert(0,_MessageItem(content: _textController.text,author: "我",url: myUrl,isMe: true,));
                           setState(() {
 
@@ -150,7 +184,6 @@ class _QQChatListState extends State<QQChatList> {
             ),
           ),
         ),
-        hideFooterWhenNotFull: true,
       ),
     );
   }

@@ -355,6 +355,7 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       return;
     }
     bool active;
+
     if (hideWhenNotFull && mode == LoadStatus.idle) {
       active = _computeIfFull(constraints);
     } else {
@@ -366,7 +367,6 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       child.layout(constraints.asBoxConstraints(maxExtent: 0.0, minExtent: 0.0),
           parentUsesSize: true);
     }
-
     double childExtent = (constraints.axisDirection == AxisDirection.up ||
             constraints.axisDirection == AxisDirection.down)
         ? child.size.height
@@ -385,6 +385,7 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
           : constraints.axisDirection == AxisDirection.up
               ? child.size.height
               : 0.0;
+
       geometry = SliverGeometry(
         scrollExtent: layoutExtent,
         paintExtent: paintedChildSize,
