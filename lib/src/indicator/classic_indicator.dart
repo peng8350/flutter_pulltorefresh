@@ -57,11 +57,11 @@ class ClassicHeader extends RefreshIndicator {
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
     this.releaseIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
   }) : super(
-    key: key,
-    refreshStyle: refreshStyle,
-    completeDuration: completeDuration,
-    height: height,
-  );
+          key: key,
+          refreshStyle: refreshStyle,
+          completeDuration: completeDuration,
+          height: height,
+        );
 
   @override
   State createState() {
@@ -76,14 +76,14 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
         mode == RefreshStatus.canRefresh
             ? widget.releaseText
             : mode == RefreshStatus.completed
-            ? widget.completeText
-            : mode == RefreshStatus.failed
-            ? widget.failedText
-            : mode == RefreshStatus.refreshing
-            ? widget.refreshingText
-            : mode == RefreshStatus.idle
-            ? widget.idleText
-            : widget.canTwoLevelText,
+                ? widget.completeText
+                : mode == RefreshStatus.failed
+                    ? widget.failedText
+                    : mode == RefreshStatus.refreshing
+                        ? widget.refreshingText
+                        : mode == RefreshStatus.idle
+                            ? widget.idleText
+                            : widget.canTwoLevelText,
         style: widget.textStyle);
   }
 
@@ -91,26 +91,27 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
     Widget icon = mode == RefreshStatus.canRefresh
         ? widget.releaseIcon
         : mode == RefreshStatus.idle
-        ? widget.idleIcon
-        : mode == RefreshStatus.completed
-        ? widget.completeIcon
-        : mode == RefreshStatus.failed
-        ? widget.failedIcon
-        : mode == RefreshStatus.canTwoLevel
-        ? widget.canTwoLevelIcon
-        : mode == RefreshStatus.canTwoLevel
-        ? widget.canTwoLevelIcon
-        : mode == RefreshStatus.refreshing
-        ? SizedBox(
-      width: 25.0,
-      height: 25.0,
-      child: defaultTargetPlatform ==
-          TargetPlatform.iOS
-          ? const CupertinoActivityIndicator()
-          : const CircularProgressIndicator(
-          strokeWidth: 2.0),
-    )
-        : widget.twoLevelView;
+            ? widget.idleIcon
+            : mode == RefreshStatus.completed
+                ? widget.completeIcon
+                : mode == RefreshStatus.failed
+                    ? widget.failedIcon
+                    : mode == RefreshStatus.canTwoLevel
+                        ? widget.canTwoLevelIcon
+                        : mode == RefreshStatus.canTwoLevel
+                            ? widget.canTwoLevelIcon
+                            : mode == RefreshStatus.refreshing
+                                ? widget.refreshingIcon ??
+                                    SizedBox(
+                                      width: 25.0,
+                                      height: 25.0,
+                                      child: defaultTargetPlatform ==
+                                              TargetPlatform.iOS
+                                          ? const CupertinoActivityIndicator()
+                                          : const CircularProgressIndicator(
+                                              strokeWidth: 2.0),
+                                    )
+                                : widget.twoLevelView;
     return icon ?? Container();
   }
 
@@ -126,7 +127,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
           ? TextDirection.ltr
           : TextDirection.rtl,
       direction: widget.iconPos == IconPosition.bottom ||
-          widget.iconPos == IconPosition.top
+              widget.iconPos == IconPosition.top
           ? Axis.vertical
           : Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,
@@ -139,9 +140,9 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
     return widget.outerBuilder != null
         ? widget.outerBuilder(container)
         : Container(
-      child: Center(child: container),
-      height: 60.0,
-    );
+            child: Center(child: container),
+            height: 60.0,
+          );
   }
 }
 
@@ -161,7 +162,7 @@ class ClassicFooter extends LoadIndicator {
   const ClassicFooter({
     Key key,
     Function onClick,
-    LoadStyle loadStyle:LoadStyle.ShowAlways,
+    LoadStyle loadStyle: LoadStyle.ShowAlways,
     double height: 60.0,
     this.outerBuilder,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
@@ -176,11 +177,11 @@ class ClassicFooter extends LoadIndicator {
     this.loadingIcon,
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
   }) : super(
-    key: key,
-    loadStyle:loadStyle,
-    height:height,
-    onClick: onClick,
-  );
+          key: key,
+          loadStyle: loadStyle,
+          height: height,
+          onClick: onClick,
+        );
 
   @override
   State<StatefulWidget> createState() {
@@ -196,26 +197,26 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
         mode == LoadStatus.loading
             ? widget.loadingText
             : LoadStatus.noMore == mode
-            ? widget.noDataText
-            : LoadStatus.failed == mode
-            ? widget.failedText
-            : widget.idleText,
+                ? widget.noDataText
+                : LoadStatus.failed == mode
+                    ? widget.failedText
+                    : widget.idleText,
         style: widget.textStyle);
   }
 
   Widget _buildIcon(LoadStatus mode) {
     Widget icon = mode == LoadStatus.loading
         ? widget.loadingIcon ??
-        SizedBox(
-          width: 25.0,
-          height: 25.0,
-          child: defaultTargetPlatform == TargetPlatform.iOS
-              ? const CupertinoActivityIndicator()
-              : const CircularProgressIndicator(strokeWidth: 2.0),
-        )
+            SizedBox(
+              width: 25.0,
+              height: 25.0,
+              child: defaultTargetPlatform == TargetPlatform.iOS
+                  ? const CupertinoActivityIndicator()
+                  : const CircularProgressIndicator(strokeWidth: 2.0),
+            )
         : mode == LoadStatus.noMore
-        ? widget.noMoreIcon
-        : mode == LoadStatus.failed ? widget.failedIcon : widget.idleIcon;
+            ? widget.noMoreIcon
+            : mode == LoadStatus.failed ? widget.failedIcon : widget.idleIcon;
     return icon ?? Container();
   }
 
@@ -231,7 +232,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
           ? TextDirection.ltr
           : TextDirection.rtl,
       direction: widget.iconPos == IconPosition.bottom ||
-          widget.iconPos == IconPosition.top
+              widget.iconPos == IconPosition.top
           ? Axis.vertical
           : Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,
@@ -244,10 +245,10 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
     return widget.outerBuilder != null
         ? widget.outerBuilder(container)
         : Container(
-      height: 60.0,
-      child: Center(
-        child: container,
-      ),
-    );
+            height: 60.0,
+            child: Center(
+              child: container,
+            ),
+          );
   }
 }
