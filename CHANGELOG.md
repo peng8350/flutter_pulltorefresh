@@ -245,3 +245,4 @@ other:
 * add shouldFollowContentWhenNotFull 
 * add support to scrollable widget
 * Fix ignore reverse load more paintOrigin issue 
+* change hideFooterWhenNotfull default value to false

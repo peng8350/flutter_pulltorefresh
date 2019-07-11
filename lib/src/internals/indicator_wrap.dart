@@ -308,10 +308,17 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
     floating = widget.loadStyle == LoadStyle.ShowAlways;
-    super.initState();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(T oldWidget) {
+    // TODO: implement didUpdateWidget
+    floating = widget.loadStyle == LoadStyle.ShowAlways;
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

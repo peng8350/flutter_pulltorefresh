@@ -29,10 +29,13 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
   bool _enablePullUp = true;
   RefreshController _refreshController;
   ScrollPhysics _physics = BouncingScrollPhysics();
-  RefreshStyle _refreshStyle = RefreshStyle.Front;
+  RefreshStyle _refreshStyle = RefreshStyle.Follow;
   LoadStyle _loadStyle = LoadStyle.ShowAlways;
   Axis _direction = Axis.vertical;
   bool _reverse = true;
+  bool full = true;
+  bool _showFollow = false;
+
 
   void _init() {
     items = [];
@@ -102,27 +105,27 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
         )
       ],
     ));
-    items.add(Row(
-      children: <Widget>[
-        Text("滚动方向"),
-        Radio(
-          value: true,
-          groupValue: _direction ==Axis.vertical,
-          onChanged: (i) {
-            _direction =Axis.vertical;
-            setState(() {});
-          },
-        ),
-        Radio(
-          value: true,
-          groupValue: _direction ==Axis.horizontal,
-          onChanged: (i) {
-            _direction =Axis.horizontal;
-            setState(() {});
-          },
-        ),
-      ],
-    ));
+//    items.add(Row(
+//      children: <Widget>[
+//        Text("滚动方向"),
+//        Radio(
+//          value: true,
+//          groupValue: _direction ==Axis.vertical,
+//          onChanged: (i) {
+//            _direction =Axis.vertical;
+//            setState(() {});
+//          },
+//        ),
+//        Radio(
+//          value: true,
+//          groupValue: _direction ==Axis.horizontal,
+//          onChanged: (i) {
+//            _direction =Axis.horizontal;
+//            setState(() {});
+//          },
+//        ),
+//      ],
+//    ));
     items.add(Row(
       children: <Widget>[
         Text("翻转列表"),
@@ -144,7 +147,50 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
         ),
       ],
     ));
-    for (int i = 0; i < 7; i++) {
+
+    items.add(Row(
+      children: <Widget>[
+        Text("是否满一屏"),
+        Radio(
+          value: true,
+          groupValue: full,
+          onChanged: (i) {
+            full = true;
+            setState(() {});
+          },
+        ),
+        Radio(
+          value: true,
+          groupValue: !full,
+          onChanged: (i) {
+            full = false;
+            setState(() {});
+          },
+        ),
+      ],
+    ));
+    items.add(Row(
+      children: <Widget>[
+        Text("底部跟随内容"),
+        Radio(
+          value: true,
+          groupValue: _showFollow,
+          onChanged: (i) {
+            _showFollow = true;
+            setState(() {});
+          },
+        ),
+        Radio(
+          value: true,
+          groupValue: !_showFollow,
+          onChanged: (i) {
+            _showFollow = false;
+            setState(() {});
+          },
+        ),
+      ],
+    ));
+    for (int i = 0; i < (full?15:0); i++) {
       items.add(Item(
         title: "Data$i",
       ));
@@ -181,7 +227,7 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
       child: SmartRefresher(
           child: ListView.builder(
             itemBuilder: (c, i) => items[i],
-            itemExtent: 100.0,
+            itemExtent: 50.0,
             itemCount: items.length,
             physics: _physics,
             reverse: _reverse,
@@ -198,6 +244,9 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
           enablePullDown: _enablePullDown,
           enablePullUp: _enablePullUp,
           controller: _refreshController),
+      shouldFooterFollowWhenNotFull: (c){
+        return _showFollow;
+      },
     );
   }
 
