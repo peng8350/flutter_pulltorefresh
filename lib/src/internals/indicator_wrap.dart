@@ -12,7 +12,6 @@ import 'slivers.dart';
 
 const int default_completeDuration = 500;
 
-
 const RefreshStyle default_refreshStyle = RefreshStyle.Follow;
 
 abstract class RefreshIndicator extends StatefulWidget {
@@ -26,11 +25,11 @@ abstract class RefreshIndicator extends StatefulWidget {
 
   const RefreshIndicator(
       {Key key,
-        this.reverse: false,
-        this.height: 60.0,
-        this.completeDuration:
-        const Duration(milliseconds: default_completeDuration),
-        this.refreshStyle: default_refreshStyle})
+      this.reverse: false,
+      this.height: 60.0,
+      this.completeDuration:
+          const Duration(milliseconds: default_completeDuration),
+      this.refreshStyle: default_refreshStyle})
       : super(key: key);
 }
 
@@ -41,9 +40,9 @@ abstract class LoadIndicator extends StatefulWidget {
 
   const LoadIndicator(
       {Key key,
-        this.onClick,
-        this.loadStyle: LoadStyle.ShowAlways,
-        this.height: 60.0})
+      this.onClick,
+      this.loadStyle: LoadStyle.ShowAlways,
+      this.height: 60.0})
       : super(key: key);
 }
 
@@ -56,12 +55,12 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   double _calculateScrollOffset() {
     return (floating
-        ? (mode == RefreshStatus.twoLeveling ||
-        mode == RefreshStatus.twoLevelOpening ||
-        mode == RefreshStatus.twoLevelClosing
-        ? _position.viewportDimension
-        : widget.height)
-        : 0.0) -
+            ? (mode == RefreshStatus.twoLeveling ||
+                    mode == RefreshStatus.twoLevelOpening ||
+                    mode == RefreshStatus.twoLevelClosing
+                ? _position.viewportDimension
+                : widget.height)
+            : 0.0) -
         _position?.pixels;
   }
 
@@ -96,7 +95,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     // has invoked animateTo (0.0) or the user is dragging the view.Sometimes animateTo (0.0) does not return velocity = 0.0
     // velocity < 0.0 may be spring up,>0.0 spring down
     if ((configuration.enableBallisticRefresh &&
-        _position.activity.velocity < 0.0) ||
+            _position.activity.velocity < 0.0) ||
         _position.activity is DragScrollActivity ||
         _position.activity is DrivenScrollActivity) {
       if (refresher.enableTwoLevel &&
@@ -174,8 +173,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         _position.activity.resetActivity();
         _position
             .animateTo(0.0,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.linear)
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.linear)
             .whenComplete(() {
           mode = RefreshStatus.twoLeveling;
         });
@@ -215,8 +214,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         floating: floating,
         reverse: widget.reverse,
         refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||
-            mode == RefreshStatus.twoLevelOpening ||
-            mode == RefreshStatus.twoLevelClosing
+                mode == RefreshStatus.twoLevelOpening ||
+                mode == RefreshStatus.twoLevelClosing
             ? _position.viewportDimension - 0.01
             : widget.height,
         refreshStyle: widget.refreshStyle);
@@ -231,18 +230,18 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   double _calculateScrollOffset() {
     final double overscrollPastEnd =
-    math.max(_position.pixels - _position.maxScrollExtent, 0.0);
+        math.max(_position.pixels - _position.maxScrollExtent, 0.0);
     return overscrollPastEnd;
   }
 
   bool _checkIfCanLoading() {
     return _position.maxScrollExtent - _position.pixels <=
-        configuration.footerTriggerDistance &&
+            configuration.footerTriggerDistance &&
         configuration.autoLoad &&
-        _enableLoading &&_position.activity is! DragScrollActivity&&
+        _enableLoading &&
+        _position.activity is! DragScrollActivity &&
         _position.extentBefore > 0.0 &&
-        ( (configuration.enableLoadingWhenFailed &&
-            mode == LoadStatus.failed) ||
+        ((configuration.enableLoadingWhenFailed && mode == LoadStatus.failed) ||
             mode == LoadStatus.idle);
   }
 
@@ -259,8 +258,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         floating = true;
       }
     } else {
-      if(_position.activity is! DragScrollActivity)
-        _enableLoading = false;
+      if (_position.activity is! DragScrollActivity) _enableLoading = false;
       if (widget.loadStyle == LoadStyle.ShowWhenLoading) {
         floating = false;
       }
@@ -290,15 +288,14 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   void _listenScrollEnd() {
     if (!_position.isScrollingNotifier.value) {
       // when user release gesture from screen
-      if (!_isHide&&_checkIfCanLoading()) {
+      if (!_isHide && _checkIfCanLoading()) {
         if (_position.activity is IdleScrollActivity) {
           mode = LoadStatus.loading;
         }
       }
-    }
-    else{
+    } else {
       if (_position.activity is DragScrollActivity ||
-          _position.activity is DrivenScrollActivity){
+          _position.activity is DrivenScrollActivity) {
         _enableLoading = true;
       }
     }
@@ -329,7 +326,13 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     // TODO: implement build
     return SliverLoading(
         hideWhenNotFull: configuration.hideFooterWhenNotFull,
-        layoutExtent: floating ? widget.height : 0.0,
+        shouldFollowContent: configuration.shouldFooterFollowWhenNotFull != null
+            ? configuration.shouldFooterFollowWhenNotFull(mode)
+            : false,
+        layoutExtent:
+            floating
+                ? widget.height
+                : 0.0,
         mode: mode,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints cons) {

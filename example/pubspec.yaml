@@ -15,7 +15,7 @@ dependencies:
 
   flutter_spinkit: 2.1.0
 
-  residemenu: 1.3.5
+  residemenu: 1.3.6
 
   fish_redux: ^0.2.2
 

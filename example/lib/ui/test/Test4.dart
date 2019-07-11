@@ -80,14 +80,6 @@ class Test4State extends State<Test4>
   @override
   void initState() {
     // TODO: implement initState
-    _controller = new ScrollController();
-    _controller.addListener((){
-//      print("qwe");
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      print(PrimaryScrollController.of(context));
-      print(_controller);
-    });
     // for test #68 true-> false ->true
 //    Future.delayed(Duration(milliseconds: 3000), () {
 //      _enablePullDown = false;
@@ -134,7 +126,7 @@ class Test4State extends State<Test4>
 //      });
 //    });
     _getDatas();
-    _refreshController = RefreshController(initialRefresh: true,initialLoadStatus: LoadStatus.noMore,initialRefreshStatus: RefreshStatus.refreshing);
+    _refreshController = RefreshController(initialRefresh: false);
 
     super.initState();
   }
@@ -157,66 +149,49 @@ class Test4State extends State<Test4>
 
   @override
   Widget build(BuildContext context) {
-    return SmartRefresher(
-      child: Scrollable(
-        controller: _controller,
-        axisDirection: AxisDirection.right,
+    return RefreshConfiguration(
+      child: SmartRefresher(
+        enablePullUp: true,
+        enablePullDown: false,
+        footer: ClassicFooter(
+          loadStyle: LoadStyle.ShowWhenLoading,
+        ),
+        child: Scrollable(
+          controller: _controller,
+          physics:AlwaysScrollableScrollPhysics(),
+          viewportBuilder: (context,offset){
+            return ExpandedViewport(
 
-        viewportBuilder: (context,offset){
-          return Viewport(
-            slivers: <Widget>[SliverToBoxAdapter(
-              child: Text("aaaa"),
-            ),
-              SliverToBoxAdapter(
-                child: Text("bbbb"),
+              slivers: <Widget>[SliverToBoxAdapter(
+                child: Text("aaaa"),
               ),
-              SliverToBoxAdapter(
-                child: Container(
-                  height: 100.0,
-                  color: Colors.redAccent,
+                SliverToBoxAdapter(
+                  child: Text("bbbb"),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: Container(
-                  height: 100.0,
-                  color: Colors.redAccent,
+                SliverToBoxAdapter(
+                  child: Container(
+                    height: 100.0,
+                    color: Colors.redAccent,
+                  ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: Container(
-                  width: 100.0,
-                  color: Colors.redAccent,
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Container(
-                  width: 100.0,
-                  color: Colors.redAccent,
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Container(
-                  width: 100.0,
-                  color: Colors.redAccent,
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Container(
-                  width: 100.0,
-                  color: Colors.redAccent,
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Text("ccc"),
-              )
-            ],
-            offset: offset,
-            axisDirection: AxisDirection.right,
-          );
+                SliverExpanded() ,
+              ],
+              offset: offset,
+            );
+          },
+
+        ),
+        onRefresh: () async{
+          await Future.delayed(Duration(milliseconds: 1000));
+          _refreshController.refreshCompleted();
         },
-
+        onLoading: () async{
+          await Future.delayed(Duration(milliseconds: 1000));
+          _refreshController.loadComplete();
+        },
+        controller: _refreshController,
       ),
-      controller: _refreshController,
+      hideFooterWhenNotFull: false,
     );
   }
 

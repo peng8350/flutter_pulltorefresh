@@ -96,7 +96,6 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   bool _updateFlag = false;
   bool reverse;
 
-
   set refreshIndicatorLayoutExtent(double value) {
     assert(value != null);
     assert(value >= 0.0);
@@ -123,7 +122,6 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   // the appropriate delta can be applied to keep everything in the same place
   // visually.
   double layoutExtentOffsetCompensation = 0.0;
-
 
   @override
   void performResize() {
@@ -232,7 +230,8 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
             paintOrigin: -overscrolledExtent - constraints.scrollOffset,
             paintExtent: needPaintExtent,
             maxPaintExtent: needPaintExtent,
-            layoutExtent: Math.max(layoutExtent - constraints.scrollOffset, 0.0),
+            layoutExtent:
+                Math.max(layoutExtent - constraints.scrollOffset, 0.0),
           );
           break;
         case RefreshStyle.UnFollow:
@@ -276,10 +275,12 @@ class SliverLoading extends SingleChildRenderObjectWidget {
   final bool hideWhenNotFull;
   final LoadStatus mode;
   final double layoutExtent;
+  final bool shouldFollowContent;
 
   SliverLoading({
     Key key,
     this.mode,
+    this.shouldFollowContent,
     this.layoutExtent,
     this.hideWhenNotFull,
     Widget child,
@@ -290,6 +291,7 @@ class SliverLoading extends SingleChildRenderObjectWidget {
     return _RenderSliverLoading(
         hideWhenNotFull: hideWhenNotFull,
         mode: mode,
+        shouldFollowContent: shouldFollowContent,
         layoutExtent: layoutExtent);
   }
 
@@ -299,6 +301,7 @@ class SliverLoading extends SingleChildRenderObjectWidget {
     renderObject
       ..mode = mode
       ..layoutExtent = layoutExtent
+      ..shouldFollowContent = shouldFollowContent
       ..hideWhenNotFull = hideWhenNotFull;
   }
 }
@@ -308,12 +311,14 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     RenderBox child,
     this.mode,
     double layoutExtent,
+    this.shouldFollowContent,
     this.hideWhenNotFull,
   }) {
     this.layoutExtent = layoutExtent;
     this.child = child;
   }
 
+  bool shouldFollowContent;
   bool hideWhenNotFull;
 
   LoadStatus mode;
@@ -377,6 +382,10 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       geometry = SliverGeometry(
         scrollExtent: layoutExtent,
         paintExtent: paintedChildSize,
+        paintOrigin: !shouldFollowContent? Math.max(
+            constraints.viewportMainAxisExtent -
+                constraints.precedingScrollExtent,
+            0.0):0.0,
         cacheExtent: cacheExtent,
         maxPaintExtent: childExtent,
         hitTestExtent: paintedChildSize,

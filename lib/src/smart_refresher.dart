@@ -14,6 +14,8 @@ import 'indicator/material_indicator.dart';
 
 typedef void OnOffsetChange(bool up, double offset);
 
+typedef bool ShouldFollowContent(LoadStatus status);
+
 typedef IndicatorBuilder = Widget Function();
 
 enum RefreshStatus {
@@ -453,7 +455,7 @@ class RefreshConfiguration extends InheritedWidget {
 
   // If need to refreshing now when reaching triggerDistance
   final bool skipCanRefresh;
-
+  final ShouldFollowContent shouldFooterFollowWhenNotFull;
   // when listView data small(not enough one page) , it should be hide
   final bool hideFooterWhenNotFull;
   final double headerOffset;
@@ -475,6 +477,7 @@ class RefreshConfiguration extends InheritedWidget {
     this.headerBuilder,
     this.footerBuilder,
     this.dragSpeedRatio:1.0,
+    this.shouldFooterFollowWhenNotFull,
     this.enableScrollWhenTwoLevel: true,
     this.enableBallisticRefresh: false,
     this.springDescription,
@@ -489,7 +492,7 @@ class RefreshConfiguration extends InheritedWidget {
     this.maxUnderScrollExtent,
     this.headerTriggerDistance: default_refresh_triggerDistance,
     this.footerTriggerDistance: default_load_triggerDistance,
-    this.hideFooterWhenNotFull: true,
+    this.hideFooterWhenNotFull: false,
   });
 
   static RefreshConfiguration of(BuildContext context) {

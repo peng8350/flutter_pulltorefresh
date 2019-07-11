@@ -104,13 +104,18 @@ class _MainActivityState extends State<MainActivity>
             stiffness: 200.0,
             damping: 15.0
           ),
-          maxUnderScrollExtent: 0.0,
           dragSpeedRatio: 1.5,
           enableScrollWhenTwoLevel: true,
           autoLoad: true,
           footerTriggerDistance: -45.0,
+          shouldFooterFollowWhenNotFull: (mode){
+            if(mode==LoadStatus.noMore){
+              return true;
+            }
+            return false;
+          },
           enableScrollWhenRefreshCompleted: false,
-          hideFooterWhenNotFull: true,
+          hideFooterWhenNotFull: false,
         ),
       ),
       decoration: BoxDecoration(color: Colors.purple),

@@ -124,7 +124,7 @@ class Test3State extends State<Test3>
 //      });
 //    });
     _getDatas();
-    _refreshController = RefreshController(initialRefresh: true,initialLoadStatus: LoadStatus.noMore,initialRefreshStatus: RefreshStatus.refreshing);
+    _refreshController = RefreshController(initialRefresh: true,initialRefreshStatus: RefreshStatus.refreshing);
 
     super.initState();
   }
@@ -161,6 +161,10 @@ class Test3State extends State<Test3>
             footer: ClassicFooter(
               iconPos: IconPosition.top,
               height: 60.0,
+              loadStyle: LoadStyle.ShowAlways,
+              onClick: (){
+                print("cliclk");
+              },
             ),
             onRefresh: ()  async{
               print("onRefresh");
@@ -178,16 +182,15 @@ class Test3State extends State<Test3>
             },
             child: ListView.builder(
               itemExtent: 100.0,
-              physics: ClampingScrollPhysics(),
               itemBuilder: (c,i) => data[i],
               itemCount: data.length,
             ),
             onLoading: () {
               print("onload");
               Future.delayed(const Duration(milliseconds: 2000)).then((val) {
-                data.add(Card());
+//                data.add(Card());
                 if (mounted) setState(() {});
-                _refreshController.loadComplete();
+                _refreshController.loadNoData();
               });
             },
           ),
