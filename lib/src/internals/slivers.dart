@@ -379,13 +379,21 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     assert(paintedChildSize.isFinite);
     assert(paintedChildSize >= 0.0);
     if (active) {
+      // consider reverse loading and HideAlways==loadStyle
+      final paintOrigin = constraints.crossAxisDirection == AxisDirection.left
+          ? child.size.width
+          : constraints.axisDirection == AxisDirection.up
+              ? child.size.height
+              : 0.0;
       geometry = SliverGeometry(
         scrollExtent: layoutExtent,
         paintExtent: paintedChildSize,
-        paintOrigin: !shouldFollowContent? Math.max(
-            constraints.viewportMainAxisExtent -
-                constraints.precedingScrollExtent,
-            0.0):0.0,
+        paintOrigin: !shouldFollowContent
+            ? Math.max(
+                constraints.viewportMainAxisExtent -
+                    constraints.precedingScrollExtent,
+            paintOrigin - layoutExtent)
+            : paintOrigin - layoutExtent,
         cacheExtent: cacheExtent,
         maxPaintExtent: childExtent,
         hitTestExtent: paintedChildSize,

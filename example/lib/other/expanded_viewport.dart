@@ -88,16 +88,8 @@ class _RenderExpandedViewport extends RenderViewport {
     double count = 0;
     BehindExtent = totalLayoutExtent-FrontExtent;
     if(expand!=null&&size.height>totalLayoutExtent) {
-      do {
-        assert(offset.pixels != null);
-        double correction = _attemptLayout(expand, size.height, size.width,
-            offset.pixels -FrontExtent-(size.height-totalLayoutExtent));;
-        if (correction != 0.0) {
-          offset.correctBy(correction);
-        } else {
-        }
-        count += 1;
-      } while (count < 10);
+      _attemptLayout(expand, size.height, size.width,
+          offset.pixels -FrontExtent-(size.height-totalLayoutExtent));
 
     }
 

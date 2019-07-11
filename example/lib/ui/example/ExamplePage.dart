@@ -16,6 +16,7 @@ import 'package:example/ui/example/useStage/basic.dart';
 import 'package:example/ui/example/otherwidget/refresh_pageView_example.dart';
 import 'package:example/ui/example/customindicator/link_header_example.dart';
 import 'package:example/ui/example/useStage/twolevel_refresh.dart';
+import 'useStage/qq_chat_list.dart';
 import 'otherwidget/refresh_recordable_listview_example.dart';
 import 'otherwidget/draggable_bottomsheet_loadmore.dart';
 
@@ -110,6 +111,13 @@ class _ExamplePageState extends State<ExamplePage>
                 body: NestedRefresh(),
                 appBar: AppBar(),
               );
+            }));
+          }),
+      ExampleItem(
+          title: "模仿qq聊天",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return QQChatList();
             }));
           }),
       ExampleItem(
