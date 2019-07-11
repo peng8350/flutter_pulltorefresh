@@ -78,7 +78,6 @@ class Test3State extends State<Test3>
   @override
   void initState() {
     // TODO: implement initState
-
     // for test #68 true-> false ->true
 //    Future.delayed(Duration(milliseconds: 3000), () {
 //      _enablePullDown = false;
@@ -137,6 +136,8 @@ class Test3State extends State<Test3>
       alignment: Alignment.topCenter,
     );
   }
+
+  ScrollController _controller = ScrollController();
 
   @override
   void dispose() {

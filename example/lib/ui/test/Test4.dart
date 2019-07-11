@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../other/expanded_viewport.dart';
@@ -79,7 +80,14 @@ class Test4State extends State<Test4>
   @override
   void initState() {
     // TODO: implement initState
-
+    _controller = new ScrollController();
+    _controller.addListener((){
+//      print("qwe");
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      print(PrimaryScrollController.of(context));
+      print(_controller);
+    });
     // for test #68 true-> false ->true
 //    Future.delayed(Duration(milliseconds: 3000), () {
 //      _enablePullDown = false;
@@ -145,34 +153,73 @@ class Test4State extends State<Test4>
     super.dispose();
   }
 
+  ScrollController _controller;
+
   @override
   Widget build(BuildContext context) {
-    return Scrollable(
-      viewportBuilder: (context,offset){
-        return ExpandedViewport(
-          slivers: <Widget>[SliverToBoxAdapter(
-            child: Text("aaaa"),
-          ),
-            SliverExpanded(),
-            SliverToBoxAdapter(
-            child: Text("bbbb"),
-          ),
-            SliverToBoxAdapter(
-              child: Container(
-                height: 100.0,
-                color: Colors.redAccent,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Text("ccc"),
-            )
-          ],
-          offset: offset,
-        );
-      },
+    return SmartRefresher(
+      child: Scrollable(
+        controller: _controller,
+        axisDirection: AxisDirection.right,
 
+        viewportBuilder: (context,offset){
+          return Viewport(
+            slivers: <Widget>[SliverToBoxAdapter(
+              child: Text("aaaa"),
+            ),
+              SliverToBoxAdapter(
+                child: Text("bbbb"),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  height: 100.0,
+                  color: Colors.redAccent,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  height: 100.0,
+                  color: Colors.redAccent,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  width: 100.0,
+                  color: Colors.redAccent,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  width: 100.0,
+                  color: Colors.redAccent,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  width: 100.0,
+                  color: Colors.redAccent,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  width: 100.0,
+                  color: Colors.redAccent,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Text("ccc"),
+              )
+            ],
+            offset: offset,
+            axisDirection: AxisDirection.right,
+          );
+        },
+
+      ),
+      controller: _refreshController,
     );
   }
+
 
 
   @override

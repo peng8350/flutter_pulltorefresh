@@ -67,6 +67,7 @@ class _RenderExpandedViewport extends RenderViewport {
     RenderSliver expandSliver ;
     double totalLayoutExtent = 0.0;
     RenderSliver p = firstChild;
+    final double reverseDirectionRemainingPaintExtent = (size.height - offset.pixels).clamp(0.0, size.height);
     while(p!=null){
       if(p is _RenderExpanded){
         expandSliver = p;
@@ -76,13 +77,14 @@ class _RenderExpandedViewport extends RenderViewport {
     }
 
     if(expandSliver!=null&&totalLayoutExtent<size.height) {
-      double cha = size.height-totalLayoutExtent;
+      double cha = reverseDirectionRemainingPaintExtent;
       p = lastChild;
       while (p != expandSliver) {
-        totalLayoutExtent-=p.geometry.layoutExtent;
-        updateChildLayoutOffset(p,totalLayoutExtent+cha, expandSliver.constraints.growthDirection);
+        updateChildLayoutOffset(p,paintOffsetOf(p).dy
+            +cha, expandSliver.constraints.growthDirection);
         p = childBefore(p);
       }
+
 
     }
 

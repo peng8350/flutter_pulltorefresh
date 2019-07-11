@@ -133,7 +133,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
       } else {
         slivers = List.from(child.buildSlivers(context), growable: true);
       }
-    } else {
+    } else if(child is! Scrollable) {
       slivers = [
         SliverToBoxAdapter(
           child: child ?? Container(),
@@ -141,7 +141,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
       ];
     }
     if (widget.enablePullDown) {
-      slivers.insert(
+      slivers?.insert(
           0,
           widget.header ??
               (configuration?.headerBuilder != null
@@ -151,7 +151,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     }
     //insert header or footer
     if (widget.enablePullUp) {
-      slivers.add(widget.footer ??
+      slivers?.add(widget.footer ??
           (configuration?.footerBuilder != null
               ? configuration?.footerBuilder()
               : null) ??
@@ -181,6 +181,20 @@ class _SmartRefresherState extends State<SmartRefresher> {
         .applyTo(physics);
   }
 
+//  final Scrollable scrollable = Scrollable(
+//    dragStartBehavior: dragStartBehavior,
+//    axisDirection: axisDirection,
+//    controller: scrollController,
+//    physics: physics,
+//    semanticChildCount: semanticChildCount,
+//    viewportBuilder: (BuildContext context, ViewportOffset offset) {
+//      return buildViewport(context, offset, axisDirection, slivers);
+//    },
+//  );
+//  return primary && scrollController != null
+//  ? PrimaryScrollController.none(child: scrollable)
+//      : scrollable;
+
   // build the customScrollView
   Widget _buildBodyBySlivers(
       Widget childView, List<Widget> slivers, RefreshConfiguration conf) {
@@ -198,7 +212,45 @@ class _SmartRefresherState extends State<SmartRefresher> {
         dragStartBehavior: childView.dragStartBehavior,
         reverse: childView.reverse,
       );
-    } else {
+    }
+    else if(childView is Scrollable){
+      body = Scrollable(
+        physics: _getScrollPhysics(
+            conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
+        controller: childView.controller,
+        axisDirection: childView.axisDirection,
+        semanticChildCount: childView.semanticChildCount,
+        dragStartBehavior: childView.dragStartBehavior,
+        viewportBuilder: (context,offset){
+          Viewport viewport = childView.viewportBuilder(context,offset);
+          if (widget.enablePullDown) {
+            viewport.children.insert(
+                0,
+                widget.header ??
+                    (conf?.headerBuilder != null
+                        ? conf?.headerBuilder()
+                        : null) ??
+                    defaultHeader);
+          }
+          //insert header or footer
+          if (widget.enablePullUp) {
+            viewport.children.add(widget.footer ??
+                (conf?.footerBuilder != null
+                    ? conf?.footerBuilder()
+                    : null) ??
+                defaultFooter);
+          };
+          return viewport;
+        },
+      );
+//      if(childView.controller!=null){
+//        body = PrimaryScrollController(
+//          child: body,
+//          controller: childView.controller,
+//        );
+//      }
+    }
+    else {
       body = CustomScrollView(
         physics: _getScrollPhysics(conf, AlwaysScrollableScrollPhysics()),
         controller: widget.controller.scrollController,
