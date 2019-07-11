@@ -240,3 +240,8 @@ other:
 * remove hit top in clamping physics
 * add springDescrition,dragSpeedRatio in RefreshConfiguration
 * fix BehindStyle layoutExtent error
+
+## 1.5.0 (unpublish)
+* add shouldFollowContentWhenNotFull 
+* add support to scrollable widget
+* Fix ignore reverse load more paintOrigin issue 

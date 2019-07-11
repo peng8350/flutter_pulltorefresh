@@ -3,6 +3,7 @@
  * Email: peng8350@gmail.com
  * Time: 2019/5/7 下午12:07
  */
+import 'package:example/ui/sample/style_with_direction.dart';
 import 'package:flutter/material.dart';
 import 'BigData.dart';
 import 'Appbar_header.dart';
@@ -33,7 +34,8 @@ class _SamplePage extends State<SamplePage> {
       AppBarHeader(),
       InnerList(),
       Dynamic(),
-      RequestRefresh()
+      RequestRefresh(),
+      StyleWithDirection()
     ];
     super.initState();
   }
