@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
+import '../../other/expanded_viewport.dart';
 
 class Test4 extends StatefulWidget {
   Test4({Key key}) : super(key: key);
@@ -147,52 +147,33 @@ class Test4State extends State<Test4>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: SmartRefresher(
-            enablePullUp: _enablePullDown,
-            enablePullDown: _enablePullUp,
-            controller: _refreshController,
-            header: MaterialClassicHeader(
-            ),
-            footer: ClassicFooter(
-              iconPos: IconPosition.top,
-              height: 60.0,
-            ),
-            onRefresh: ()  async{
-              print("onRefresh");
-              await Future.delayed(const Duration(milliseconds: 1000));
-              data.add(Container(
-                child: Card(),
-                height: 100.0,
-              ));
-              if (mounted) setState(() {});
-              _refreshController.refreshToIdle();
-//        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
-////          data.add(Card());
-//
-//        });
-            },
-            child: ListView.builder(
-              itemExtent: 100.0,
-              physics: ClampingScrollPhysics(),
-              itemBuilder: (c,i) => data[i],
-              itemCount: data.length,
-            ),
-            onLoading: () {
-              print("onload");
-              Future.delayed(const Duration(milliseconds: 2000)).then((val) {
-                data.add(Card());
-                if (mounted) setState(() {});
-                _refreshController.loadComplete();
-              });
-            },
+    return Scrollable(
+      viewportBuilder: (context,offset){
+        return ExpandedViewport(
+          slivers: <Widget>[SliverToBoxAdapter(
+            child: Text("aaaa"),
           ),
-        )
-      ],
+            SliverExpanded(),
+            SliverToBoxAdapter(
+            child: Text("bbbb"),
+          ),
+            SliverToBoxAdapter(
+              child: Container(
+                height: 100.0,
+                color: Colors.redAccent,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Text("ccc"),
+            )
+          ],
+          offset: offset,
+        );
+      },
+
     );
   }
+
 
   @override
   // TODO: implement wantKeepAlive

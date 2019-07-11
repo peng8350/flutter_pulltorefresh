@@ -96,6 +96,7 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   bool _updateFlag = false;
   bool reverse;
 
+
   set refreshIndicatorLayoutExtent(double value) {
     assert(value != null);
     assert(value >= 0.0);
@@ -122,6 +123,13 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   // the appropriate delta can be applied to keep everything in the same place
   // visually.
   double layoutExtentOffsetCompensation = 0.0;
+
+
+  @override
+  void performResize() {
+    // TODO: implement performResize
+    super.performResize();
+  }
 
   @override
   // TODO: implement centerOffsetAdjustment
