@@ -41,10 +41,9 @@ class WaterDropHeader extends RefreshIndicator {
     ),
   }) : super(
             key: key,
-            height:60.0,
+            height: 60.0,
             completeDuration: completeDuration,
             refreshStyle: RefreshStyle.UnFollow);
-
 
   @override
   State<StatefulWidget> createState() {

@@ -198,7 +198,7 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
             constraints.axisDirection == AxisDirection.down)
         ? child.size.height
         : child.size.width;
-    ;
+
     if (active) {
       final double needPaintExtent = Math.min(
           Math.max(
@@ -358,17 +358,19 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   5. not full 6. full
    */
   double computePaintOrigin(double boxExtent, bool reverse) {
-    if (_computeIfFull(constraints)||shouldFollowContent) {
+    if (_computeIfFull(constraints) || shouldFollowContent) {
       if (reverse) {
-        return boxExtent-layoutExtent;
+        return boxExtent - layoutExtent;
       }
       return 0.0;
     } else {
       if (reverse) {
         return Math.max(
-            constraints.viewportMainAxisExtent -
-                constraints.precedingScrollExtent,
-            0.0)+boxExtent-layoutExtent;
+                constraints.viewportMainAxisExtent -
+                    constraints.precedingScrollExtent,
+                0.0) +
+            boxExtent -
+            layoutExtent;
       } else {
         return Math.max(
             constraints.viewportMainAxisExtent -

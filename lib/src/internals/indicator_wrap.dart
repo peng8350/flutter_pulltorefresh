@@ -76,7 +76,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   void _dispatchModeByOffset(double offset) {
     if (mode == RefreshStatus.twoLeveling) {
       if (_position.pixels > configuration.closeTwoLevelDistance &&
-          _position.activity is BallisticScrollActivity) {
+          activity is BallisticScrollActivity) {
         refresher.controller.twoLevelComplete();
         return;
       }
@@ -99,9 +99,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     // has invoked animateTo (0.0) or the user is dragging the view.Sometimes animateTo (0.0) does not return velocity = 0.0
     // velocity < 0.0 may be spring up,>0.0 spring down
     if ((configuration.enableBallisticRefresh &&
-            _position.activity.velocity < 0.0) ||
-        _position.activity is DragScrollActivity ||
-        _position.activity is DrivenScrollActivity) {
+        activity.velocity < 0.0) ||
+        activity is DragScrollActivity ||
+        activity is DrivenScrollActivity) {
       if (refresher.enableTwoLevel &&
           offset >= configuration.twiceTriggerDistance) {
         mode = RefreshStatus.canTwoLevel;
@@ -166,7 +166,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           if (!_inVisual()) {
             mode = RefreshStatus.idle;
           } else {
-            _position.activity.delegate.goBallistic(0.0);
+            activity.delegate.goBallistic(0.0);
           }
         }
       });
@@ -174,7 +174,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (refresher.onRefresh != null) refresher.onRefresh();
     } else if (mode == RefreshStatus.twoLevelOpening) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _position.activity.resetActivity();
+        activity.resetActivity();
         _position
             .animateTo(0.0,
                 duration: const Duration(milliseconds: 500),
@@ -233,9 +233,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   bool _enableLoading = false;
 
   double _calculateScrollOffset() {
-    final double overscrollPastEnd =
+    final double overScrollPastEnd =
         math.max(_position.pixels - _position.maxScrollExtent, 0.0);
-    return overscrollPastEnd;
+    return overScrollPastEnd;
   }
 
   bool _checkIfCanLoading() {
@@ -243,7 +243,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             configuration.footerTriggerDistance &&
         configuration.autoLoad &&
         _enableLoading &&
-        _position.activity is! DragScrollActivity &&
+        activity is! DragScrollActivity &&
         _position.extentBefore > 0.0 &&
         ((configuration.enableLoadingWhenFailed && mode == LoadStatus.failed) ||
             mode == LoadStatus.idle);
@@ -262,7 +262,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         floating = true;
       }
     } else {
-      if (_position.activity is! DragScrollActivity) _enableLoading = false;
+      if (activity is! DragScrollActivity) _enableLoading = false;
       if (widget.loadStyle == LoadStyle.ShowWhenLoading) {
         floating = false;
       }
@@ -293,13 +293,13 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     if (!_position.isScrollingNotifier.value) {
       // when user release gesture from screen
       if (!_isHide && _checkIfCanLoading()) {
-        if (_position.activity is IdleScrollActivity) {
+        if (activity is IdleScrollActivity) {
           mode = LoadStatus.loading;
         }
       }
     } else {
-      if (_position.activity is DragScrollActivity ||
-          _position.activity is DrivenScrollActivity) {
+      if (activity is DragScrollActivity ||
+          activity is DrivenScrollActivity) {
         _enableLoading = true;
       }
     }
@@ -382,6 +382,8 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   get mode => _mode?.value;
 
   ValueNotifier<V> _mode;
+
+  ScrollActivity get activity => _position.activity;
 
   /*
     it doesn't support get the ScrollController as the listener, because it will cause "multiple scrollview use one ScollController"

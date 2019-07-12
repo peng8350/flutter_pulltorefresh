@@ -103,21 +103,6 @@ class SmartRefresher extends StatefulWidget {
 }
 
 class _SmartRefresherState extends State<SmartRefresher> {
-  void _updateController(
-      BuildContext context, RefreshConfiguration configuration) {
-    if (widget.child != null &&
-        widget.child is ScrollView &&
-        (widget.child as ScrollView).controller != null) {
-      widget.controller.scrollController =
-          (widget.child as ScrollView).controller;
-    } else {
-      widget.controller.scrollController = PrimaryScrollController.of(context);
-    }
-    widget.controller._headerTriggerDistance =
-        -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
-    widget.controller._footerTriggerDistance =
-        configuration?.footerTriggerDistance ?? 15.0;
-  }
 
   //build slivers from child Widget
   List<Widget> _buildSliversByChild(
@@ -183,19 +168,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
         .applyTo(physics);
   }
 
-//  final Scrollable scrollable = Scrollable(
-//    dragStartBehavior: dragStartBehavior,
-//    axisDirection: axisDirection,
-//    controller: scrollController,
-//    physics: physics,
-//    semanticChildCount: semanticChildCount,
-//    viewportBuilder: (BuildContext context, ViewportOffset offset) {
-//      return buildViewport(context, offset, axisDirection, slivers);
-//    },
-//  );
-//  return primary && scrollController != null
-//  ? PrimaryScrollController.none(child: scrollable)
-//      : scrollable;
 
   // build the customScrollView
   Widget _buildBodyBySlivers(
@@ -205,7 +177,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
       body = CustomScrollView(
         physics: _getScrollPhysics(
             conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
-        controller: widget.controller.scrollController,
+        controller: widget.controller.scrollController= childView.controller ?? PrimaryScrollController.of(context),
         cacheExtent: childView.cacheExtent,
         key: childView.key,
         scrollDirection: childView.scrollDirection,
@@ -241,16 +213,10 @@ class _SmartRefresherState extends State<SmartRefresher> {
                     ? conf?.footerBuilder()
                     : null) ??
                 defaultFooter);
-          };
+          }
           return viewport;
         },
       );
-//      if(childView.controller!=null){
-//        body = PrimaryScrollController(
-//          child: body,
-//          controller: childView.controller,
-//        );
-//      }
     }
     else {
       body = CustomScrollView(
@@ -287,7 +253,10 @@ class _SmartRefresherState extends State<SmartRefresher> {
   @override
   Widget build(BuildContext context) {
     final RefreshConfiguration configuration = RefreshConfiguration.of(context);
-    _updateController(context, configuration);
+    widget.controller._headerTriggerDistance =
+    -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
+    widget.controller._footerTriggerDistance =
+        configuration?.footerTriggerDistance ?? 15.0;
     List<Widget> slivers =
         _buildSliversByChild(context, widget.child, configuration);
     Widget body = _buildBodyBySlivers(widget.child, slivers, configuration);
@@ -395,7 +364,6 @@ class RefreshController {
       Curve curve: Curves.linear}) {
     headerMode?.value = RefreshStatus.twoLevelClosing;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      position.activity.resetActivity();
       position
           .animateTo(0.0, duration: duration, curve: curve)
           .whenComplete(() {

@@ -146,6 +146,15 @@ class Test3State extends State<Test3>
   }
 
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      print(_refreshController.scrollController);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
