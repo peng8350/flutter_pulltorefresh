@@ -93,6 +93,7 @@ class PageViewExampleState extends State<PageViewExample>
           enablePullUp: _enablePullDown,
           enablePullDown: _enablePullUp,
           controller: _refreshController,
+          header: MaterialClassicHeader(),
           onRefresh: ()  async{
             print("onRefresh");
             await Future.delayed(const Duration(milliseconds: 4000));

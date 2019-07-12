@@ -62,6 +62,7 @@ class NestedRefreshState extends State<NestedRefresh> {
           SliverAppBar(
             backgroundColor: Colors.greenAccent,
             expandedHeight: 200.0,
+
             leading: Container(),
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(

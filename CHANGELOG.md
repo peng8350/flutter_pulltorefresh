@@ -247,3 +247,4 @@ other:
 * Fix ignore reverse load more paintOrigin issue 
 * change hideFooterWhenNotfull default value to false
 * update header default releaseIcon and footer idle default Icon
+* Fix a Big Bug in FrontStyle:When overScroll(pixels <0.0),it shouldn't be disabled gesture

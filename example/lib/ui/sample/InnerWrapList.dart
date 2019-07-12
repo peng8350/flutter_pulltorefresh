@@ -82,6 +82,7 @@ class _InnerListState extends State<InnerList> {
       final double totalHeight = items.length * 100.0;
       final double lIstHeight = b.biggest.height;
       return SmartRefresher(
+        header: MaterialClassicHeader(),
           child: ListView.builder(
             itemBuilder: (c, i) => items[i],
             itemExtent: 100.0,
