@@ -55,7 +55,7 @@ class ClassicHeader extends RefreshIndicator {
     this.failedIcon: const Icon(Icons.error, color: Colors.grey),
     this.completeIcon: const Icon(Icons.done, color: Colors.grey),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
-    this.releaseIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
+    this.releaseIcon = const Icon(Icons.refresh, color: Colors.grey),
   }) : super(
           key: key,
           refreshStyle: refreshStyle,
@@ -175,7 +175,7 @@ class ClassicFooter extends LoadIndicator {
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
     this.loadingIcon,
-    this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
+    this.idleIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
   }) : super(
           key: key,
           loadStyle: loadStyle,

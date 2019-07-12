@@ -166,7 +166,10 @@ class Test4State extends State<Test4>
                 child: Text("aaaa"),
               ),
                 SliverToBoxAdapter(
-                  child: Text("bbbb"),
+                  child: Container(
+                    height: 100.0,
+                    color: Colors.redAccent,
+                  ),
                 ),
                 SliverToBoxAdapter(
                   child: Container(
@@ -174,7 +177,6 @@ class Test4State extends State<Test4>
                     color: Colors.redAccent,
                   ),
                 ),
-                SliverExpanded() ,
               ],
               offset: offset,
             );

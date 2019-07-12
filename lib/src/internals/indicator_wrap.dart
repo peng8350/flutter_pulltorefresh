@@ -36,7 +36,7 @@ abstract class RefreshIndicator extends StatefulWidget {
 abstract class LoadIndicator extends StatefulWidget {
   final LoadStyle loadStyle;
   final double height;
-  final Function onClick;
+  final VoidCallback onClick;
 
   const LoadIndicator(
       {Key key,

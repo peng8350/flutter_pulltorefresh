@@ -38,8 +38,42 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
 
 
   void _init() {
-    items = [];
-    items.add(Row(
+    items= [];
+    for (int i = 0; i < (full?15:0); i++) {
+      items.add(Item(
+        title: "Data$i",
+      ));
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    _refreshController = RefreshController();
+    super.initState();
+  }
+
+  _onLoading() {
+
+    Future.delayed(Duration(milliseconds: 1000)).whenComplete((){
+      _refreshController.loadComplete();
+    });
+  }
+
+  _onRefresh() {
+    items.add(Item(
+      title: "Data",
+    ));
+    if (mounted) setState(() {});
+    _refreshController.refreshCompleted();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _init();
+    List<Widget> items2 = [];
+    items2.add(Row(
       children: <Widget>[
         Text("加载风格"),
         Radio(
@@ -68,7 +102,7 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
         )
       ],
     ));
-    items.add(Row(
+    items2.add(Row(
       children: <Widget>[
         Text("刷新风格"),
         Radio(
@@ -105,28 +139,28 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
         )
       ],
     ));
-//    items.add(Row(
-//      children: <Widget>[
-//        Text("滚动方向"),
-//        Radio(
-//          value: true,
-//          groupValue: _direction ==Axis.vertical,
-//          onChanged: (i) {
-//            _direction =Axis.vertical;
-//            setState(() {});
-//          },
-//        ),
-//        Radio(
-//          value: true,
-//          groupValue: _direction ==Axis.horizontal,
-//          onChanged: (i) {
-//            _direction =Axis.horizontal;
-//            setState(() {});
-//          },
-//        ),
-//      ],
-//    ));
-    items.add(Row(
+    items2.add(Row(
+      children: <Widget>[
+        Text("滚动方向"),
+        Radio(
+          value: true,
+          groupValue: _direction ==Axis.vertical,
+          onChanged: (i) {
+            _direction =Axis.vertical;
+            setState(() {});
+          },
+        ),
+        Radio(
+          value: true,
+          groupValue: _direction ==Axis.horizontal,
+          onChanged: (i) {
+            _direction =Axis.horizontal;
+            setState(() {});
+          },
+        ),
+      ],
+    ));
+    items2.add(Row(
       children: <Widget>[
         Text("翻转列表"),
         Radio(
@@ -148,7 +182,7 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
       ],
     ));
 
-    items.add(Row(
+    items2.add(Row(
       children: <Widget>[
         Text("是否满一屏"),
         Radio(
@@ -169,7 +203,7 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
         ),
       ],
     ));
-    items.add(Row(
+    items2.add(Row(
       children: <Widget>[
         Text("底部跟随内容"),
         Radio(
@@ -190,63 +224,42 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
         ),
       ],
     ));
-    for (int i = 0; i < (full?15:0); i++) {
-      items.add(Item(
-        title: "Data$i",
-      ));
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    _refreshController = RefreshController();
-    super.initState();
-  }
-
-  _onLoading() {
-
-    Future.delayed(Duration(milliseconds: 1000)).whenComplete((){
-      _refreshController.loadComplete();
-    });
-  }
-
-  _onRefresh() {
-    items.add(Item(
-      title: "Data",
-    ));
-    if (mounted) setState(() {});
-    _refreshController.refreshCompleted();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _init();
-    return RefreshConfiguration(
-      child: SmartRefresher(
-          child: ListView.builder(
-            itemBuilder: (c, i) => items[i],
-            itemExtent: 50.0,
-            itemCount: items.length,
-            physics: _physics,
-            reverse: _reverse,
-            scrollDirection: _direction,
+    return Column(
+      children: <Widget>[
+        items2[0],
+        items2[1],
+        items2[2],
+        items2[3],
+        items2[4],
+        items2[5],
+        Expanded(
+          child: RefreshConfiguration(
+            child: SmartRefresher(
+                child: ListView.builder(
+                  itemBuilder: (c, i) => items[i],
+                  itemExtent: 50.0,
+                  itemCount: items.length,
+                  physics: _physics,
+                  reverse: _reverse,
+                  scrollDirection: _direction,
+                ),
+                onRefresh: _onRefresh,
+                onLoading: _onLoading,
+                header: ClassicHeader(
+                  refreshStyle: _refreshStyle,
+                ),
+                footer: ClassicFooter(
+                  loadStyle: _loadStyle,
+                ),
+                enablePullDown: _enablePullDown,
+                enablePullUp: _enablePullUp,
+                controller: _refreshController),
+            shouldFooterFollowWhenNotFull: (c){
+              return _showFollow;
+            },
           ),
-          onRefresh: _onRefresh,
-          onLoading: _onLoading,
-          header: ClassicHeader(
-            refreshStyle: _refreshStyle,
-          ),
-          footer: ClassicFooter(
-            loadStyle: _loadStyle,
-          ),
-          enablePullDown: _enablePullDown,
-          enablePullUp: _enablePullUp,
-          controller: _refreshController),
-      shouldFooterFollowWhenNotFull: (c){
-        return _showFollow;
-      },
+        )
+      ],
     );
   }
 

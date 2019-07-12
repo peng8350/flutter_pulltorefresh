@@ -424,8 +424,8 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
         cacheExtent: cacheExtent,
         maxPaintExtent: childExtent,
         hitTestExtent: paintedChildSize,
-        hasVisualOverflow: childExtent > constraints.remainingPaintExtent ||
-            constraints.scrollOffset > 0.0,
+        visible: true,
+        hasVisualOverflow: true,
       );
       setChildParentData(child, constraints, geometry);
     } else {

@@ -67,7 +67,7 @@ class SmartRefresher extends StatefulWidget {
   final bool enablePullDown;
 
   // upper and downer callback when you drag out of the distance
-  final Function onRefresh, onLoading, onTwoLevel;
+  final VoidCallback onRefresh, onLoading, onTwoLevel;
 
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;

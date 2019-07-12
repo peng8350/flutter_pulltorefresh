@@ -246,3 +246,4 @@ other:
 * add support to scrollable widget
 * Fix ignore reverse load more paintOrigin issue 
 * change hideFooterWhenNotfull default value to false
+* update header default releaseIcon and footer idle default Icon
