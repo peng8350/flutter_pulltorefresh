@@ -15,15 +15,15 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../Item.dart';
 
-class StyleWithDirection extends StatefulWidget{
+class StyleWithDirection extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return StyleWithDirectionState();
   }
-
 }
-class StyleWithDirectionState extends State<StyleWithDirection>{
+
+class StyleWithDirectionState extends State<StyleWithDirection> {
   List<Widget> items = [];
   bool _enablePullDown = true;
   bool _enablePullUp = true;
@@ -36,10 +36,9 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
   bool full = true;
   bool _showFollow = false;
 
-
   void _init() {
-    items= [];
-    for (int i = 0; i < (full?15:0); i++) {
+    items = [];
+    for (int i = 0; i < (full ? 15 : 0); i++) {
       items.add(Item(
         title: "Data$i",
       ));
@@ -55,8 +54,7 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
   }
 
   _onLoading() {
-
-    Future.delayed(Duration(milliseconds: 1000)).whenComplete((){
+    Future.delayed(Duration(milliseconds: 1000)).whenComplete(() {
       _refreshController.loadComplete();
     });
   }
@@ -78,25 +76,25 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
         Text("加载风格"),
         Radio(
           value: true,
-          groupValue: _loadStyle ==LoadStyle.ShowAlways,
+          groupValue: _loadStyle == LoadStyle.ShowAlways,
           onChanged: (i) {
-            _loadStyle =LoadStyle.ShowAlways;
+            _loadStyle = LoadStyle.ShowAlways;
             setState(() {});
           },
         ),
         Radio(
           value: true,
-          groupValue: _loadStyle ==LoadStyle.HideAlways,
+          groupValue: _loadStyle == LoadStyle.HideAlways,
           onChanged: (i) {
-            _loadStyle =LoadStyle.HideAlways;
+            _loadStyle = LoadStyle.HideAlways;
             setState(() {});
           },
         ),
         Radio(
           value: true,
-          groupValue: _loadStyle ==LoadStyle.ShowWhenLoading,
+          groupValue: _loadStyle == LoadStyle.ShowWhenLoading,
           onChanged: (i) {
-            _loadStyle =LoadStyle.ShowWhenLoading;
+            _loadStyle = LoadStyle.ShowWhenLoading;
             setState(() {});
           },
         )
@@ -107,7 +105,7 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
         Text("刷新风格"),
         Radio(
           value: true,
-          groupValue: _refreshStyle ==RefreshStyle.Follow,
+          groupValue: _refreshStyle == RefreshStyle.Follow,
           onChanged: (i) {
             _refreshStyle = RefreshStyle.Follow;
             setState(() {});
@@ -115,7 +113,7 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
         ),
         Radio(
           value: true,
-          groupValue: _refreshStyle ==RefreshStyle.UnFollow,
+          groupValue: _refreshStyle == RefreshStyle.UnFollow,
           onChanged: (i) {
             _refreshStyle = RefreshStyle.UnFollow;
             setState(() {});
@@ -123,7 +121,7 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
         ),
         Radio(
           value: true,
-          groupValue: _refreshStyle ==RefreshStyle.Behind,
+          groupValue: _refreshStyle == RefreshStyle.Behind,
           onChanged: (i) {
             _refreshStyle = RefreshStyle.Behind;
             setState(() {});
@@ -131,7 +129,7 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
         ),
         Radio(
           value: true,
-          groupValue: _refreshStyle ==RefreshStyle.Front,
+          groupValue: _refreshStyle == RefreshStyle.Front,
           onChanged: (i) {
             _refreshStyle = RefreshStyle.Front;
             setState(() {});
@@ -144,17 +142,17 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
         Text("滚动方向"),
         Radio(
           value: true,
-          groupValue: _direction ==Axis.vertical,
+          groupValue: _direction == Axis.vertical,
           onChanged: (i) {
-            _direction =Axis.vertical;
+            _direction = Axis.vertical;
             setState(() {});
           },
         ),
         Radio(
           value: true,
-          groupValue: _direction ==Axis.horizontal,
+          groupValue: _direction == Axis.horizontal,
           onChanged: (i) {
-            _direction =Axis.horizontal;
+            _direction = Axis.horizontal;
             setState(() {});
           },
         ),
@@ -254,7 +252,7 @@ class StyleWithDirectionState extends State<StyleWithDirection>{
                 enablePullDown: _enablePullDown,
                 enablePullUp: _enablePullUp,
                 controller: _refreshController),
-            shouldFooterFollowWhenNotFull: (c){
+            shouldFooterFollowWhenNotFull: (c) {
               return _showFollow;
             },
           ),

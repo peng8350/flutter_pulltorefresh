@@ -10,9 +10,9 @@ class SpinKitFadingCircle extends StatefulWidget {
     this.animationController,
     this.duration = const Duration(milliseconds: 1200),
   })  : assert(
-  !(itemBuilder is IndexedWidgetBuilder && color is Color) &&
-      !(itemBuilder == null && color == null),
-  'You should specify either a itemBuilder or a color'),
+            !(itemBuilder is IndexedWidgetBuilder && color is Color) &&
+                !(itemBuilder == null && color == null),
+            'You should specify either a itemBuilder or a color'),
         assert(size != null),
         super(key: key);
 
@@ -28,7 +28,6 @@ class SpinKitFadingCircle extends StatefulWidget {
 
 class _SpinKitFadingCircleState extends State<SpinKitFadingCircle>
     with SingleTickerProviderStateMixin {
-
   @override
   void initState() {
     super.initState();
@@ -95,10 +94,10 @@ class _SpinKitFadingCircleState extends State<SpinKitFadingCircle>
     return widget.itemBuilder != null
         ? widget.itemBuilder(context, index)
         : DecoratedBox(
-      decoration: BoxDecoration(
-        color: widget.color,
-        shape: BoxShape.circle,
-      ),
-    );
+            decoration: BoxDecoration(
+              color: widget.color,
+              shape: BoxShape.circle,
+            ),
+          );
   }
 }

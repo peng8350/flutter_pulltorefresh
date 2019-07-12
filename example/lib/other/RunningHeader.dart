@@ -9,7 +9,6 @@ import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 
 class RunningHeader extends RefreshIndicator {
-
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -45,8 +44,8 @@ class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
   @override
   void resetValue() {
     // TODO: implement handleModeChange
-      _scaleAnimation.value = 0.0;
-      _offsetController.value = 0.0;
+    _scaleAnimation.value = 0.0;
+    _offsetController.value = 0.0;
   }
 
   @override

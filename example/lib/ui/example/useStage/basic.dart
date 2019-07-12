@@ -39,7 +39,7 @@ class _BasicExampleState extends State<BasicExample>
   RefreshController _refreshController3 =
       RefreshController(initialRefresh: true);
   RefreshController _refreshController4 =
-  RefreshController(initialRefresh: true);
+      RefreshController(initialRefresh: true);
 
 //  int pageIndex = 0;
   List<String> data1 = [], data2 = [], data3 = [];
@@ -78,8 +78,7 @@ class _BasicExampleState extends State<BasicExample>
       }
 //      pageIndex++;
     }
-    if(mounted)
-    setState(() {});
+    if (mounted) setState(() {});
     controller.refreshCompleted();
 
     /*
@@ -96,8 +95,7 @@ class _BasicExampleState extends State<BasicExample>
       data.add("Item $i");
     }
 //    pageIndex++;
-    if(mounted)
-    setState(() {});
+    if (mounted) setState(() {});
     controller.loadComplete();
   }
 

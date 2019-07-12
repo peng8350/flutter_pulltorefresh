@@ -9,20 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-
-class RefreshExpansionPanelList extends StatefulWidget{
+class RefreshExpansionPanelList extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return RefreshExpansionPanelListState();
   }
-
 }
 
-class RefreshExpansionPanelListState extends State<RefreshExpansionPanelList>{
-
+class RefreshExpansionPanelListState extends State<RefreshExpansionPanelList> {
   List<Item> _data = generateItems(10);
-  RefreshController _controller=RefreshController();
+  RefreshController _controller = RefreshController();
   @override
   Widget build(BuildContext context) {
     return SmartRefresher(
@@ -37,10 +34,10 @@ class RefreshExpansionPanelListState extends State<RefreshExpansionPanelList>{
   Widget _buildPanel() {
     return ExpansionPanelList(
       expansionCallback: (int index, bool isExpanded) {
-        if(mounted)
-        setState(() {
-          _data[index].isExpanded = !isExpanded;
-        });
+        if (mounted)
+          setState(() {
+            _data[index].isExpanded = !isExpanded;
+          });
       },
       children: _data.map<ExpansionPanel>((Item item) {
         return ExpansionPanel(
@@ -54,17 +51,16 @@ class RefreshExpansionPanelListState extends State<RefreshExpansionPanelList>{
               subtitle: Text('To delete this panel, tap the trash can icon'),
               trailing: Icon(Icons.delete),
               onTap: () {
-                if(mounted)
-                setState(() {
-                  _data.removeWhere((currentItem) => item == currentItem);
-                });
+                if (mounted)
+                  setState(() {
+                    _data.removeWhere((currentItem) => item == currentItem);
+                  });
               }),
           isExpanded: item.isExpanded,
         );
       }).toList(),
     );
   }
-
 }
 
 List<Item> generateItems(int numberOfItems) {

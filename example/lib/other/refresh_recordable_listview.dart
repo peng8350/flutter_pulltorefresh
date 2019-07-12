@@ -62,7 +62,6 @@ class RefreshReorderableListView extends StatefulWidget {
 
   final RefreshController refreshController;
 
-
   /// Creates a reorderable list.
   RefreshReorderableListView({
     this.header,
@@ -86,8 +85,6 @@ class RefreshReorderableListView extends StatefulWidget {
           children.every((Widget w) => w.key != null),
           'All children of this widget must have a key.',
         );
-
-
 
   /// A non-reorderable header widget to show before the list.
   ///
@@ -214,8 +211,6 @@ class _ReorderableListContent extends StatefulWidget {
   final Function onOffsetChange;
 
   final RefreshController refreshController;
-
-
 
   final Widget header;
   final List<Widget> children;

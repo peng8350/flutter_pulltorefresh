@@ -103,7 +103,6 @@ class SmartRefresher extends StatefulWidget {
 }
 
 class _SmartRefresherState extends State<SmartRefresher> {
-
   //build slivers from child Widget
   List<Widget> _buildSliversByChild(
       BuildContext context, Widget child, RefreshConfiguration configuration) {
@@ -120,7 +119,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
       } else {
         slivers = List.from(child.buildSlivers(context), growable: true);
       }
-    } else if(child is! Scrollable) {
+    } else if (child is! Scrollable) {
       slivers = [
         SliverToBoxAdapter(
           child: child ?? Container(),
@@ -168,7 +167,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
         .applyTo(physics);
   }
 
-
   // build the customScrollView
   Widget _buildBodyBySlivers(
       Widget childView, List<Widget> slivers, RefreshConfiguration conf) {
@@ -177,7 +175,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
       body = CustomScrollView(
         physics: _getScrollPhysics(
             conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
-        controller: widget.controller.scrollController= childView.controller ?? PrimaryScrollController.of(context),
+        controller: widget.controller.scrollController =
+            childView.controller ?? PrimaryScrollController.of(context),
         cacheExtent: childView.cacheExtent,
         key: childView.key,
         scrollDirection: childView.scrollDirection,
@@ -186,8 +185,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
         dragStartBehavior: childView.dragStartBehavior,
         reverse: childView.reverse,
       );
-    }
-    else if(childView is Scrollable){
+    } else if (childView is Scrollable) {
       body = Scrollable(
         physics: _getScrollPhysics(
             conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
@@ -195,8 +193,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
         axisDirection: childView.axisDirection,
         semanticChildCount: childView.semanticChildCount,
         dragStartBehavior: childView.dragStartBehavior,
-        viewportBuilder: (context,offset){
-          Viewport viewport = childView.viewportBuilder(context,offset);
+        viewportBuilder: (context, offset) {
+          Viewport viewport = childView.viewportBuilder(context, offset);
           if (widget.enablePullDown) {
             viewport.children.insert(
                 0,
@@ -209,19 +207,16 @@ class _SmartRefresherState extends State<SmartRefresher> {
           //insert header or footer
           if (widget.enablePullUp) {
             viewport.children.add(widget.footer ??
-                (conf?.footerBuilder != null
-                    ? conf?.footerBuilder()
-                    : null) ??
+                (conf?.footerBuilder != null ? conf?.footerBuilder() : null) ??
                 defaultFooter);
           }
           return viewport;
         },
       );
-    }
-    else {
+    } else {
       body = CustomScrollView(
         physics: _getScrollPhysics(conf, AlwaysScrollableScrollPhysics()),
-        controller: widget.controller.scrollController,
+        controller: PrimaryScrollController.of(context),
         slivers: slivers,
       );
     }
@@ -254,7 +249,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
   Widget build(BuildContext context) {
     final RefreshConfiguration configuration = RefreshConfiguration.of(context);
     widget.controller._headerTriggerDistance =
-    -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
+        -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
     widget.controller._footerTriggerDistance =
         configuration?.footerTriggerDistance ?? 15.0;
     List<Widget> slivers =
@@ -444,7 +439,7 @@ class RefreshConfiguration extends InheritedWidget {
     @required this.child,
     this.headerBuilder,
     this.footerBuilder,
-    this.dragSpeedRatio:1.0,
+    this.dragSpeedRatio: 1.0,
     this.shouldFooterFollowWhenNotFull,
     this.enableScrollWhenTwoLevel: true,
     this.enableBallisticRefresh: false,
@@ -473,8 +468,8 @@ class RefreshConfiguration extends InheritedWidget {
         skipCanRefresh != oldWidget.skipCanRefresh ||
         hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||
         headerOffset != oldWidget.headerOffset ||
-        dragSpeedRatio!=oldWidget.dragSpeedRatio||
-        springDescription!=oldWidget.springDescription||
+        dragSpeedRatio != oldWidget.dragSpeedRatio ||
+        springDescription != oldWidget.springDescription ||
         enableScrollWhenRefreshCompleted !=
             oldWidget.enableScrollWhenRefreshCompleted ||
         enableBallisticRefresh != oldWidget.enableBallisticRefresh ||

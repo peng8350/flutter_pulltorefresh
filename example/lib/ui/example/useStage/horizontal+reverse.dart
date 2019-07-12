@@ -127,7 +127,7 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
               enablePullDown: true,
               enablePullUp: true,
               controller: _controller2,
-              onRefresh: () async{
+              onRefresh: () async {
                 _controller2.refreshCompleted();
               },
               footer: ClassicFooter(
@@ -141,20 +141,21 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
                   );
                 },
               ),
-              header: WaterDropMaterialHeader(reverse: true,),
-              onLoading: () async{
-                 await Future.delayed(const Duration(milliseconds: 1000));
-                 if(mounted)
-                 setState(() {
-
-                 });
-                 _controller2.loadComplete();
+              header: WaterDropMaterialHeader(
+                reverse: true,
+              ),
+              onLoading: () async {
+                await Future.delayed(const Duration(milliseconds: 1000));
+                if (mounted) setState(() {});
+                _controller2.loadComplete();
               },
               child: ListView.builder(
                 reverse: true,
                 itemCount: data.length,
                 physics: ClampingScrollPhysics(),
-                itemBuilder: (c,i) =>Item(title: "data $i",),
+                itemBuilder: (c, i) => Item(
+                  title: "data $i",
+                ),
               ),
             ),
             height: 200.0,

@@ -10,7 +10,6 @@ class Test4 extends StatefulWidget {
 
   @override
   Test4State createState() => Test4State();
-
 }
 
 class Test4State extends State<Test4>
@@ -48,7 +47,7 @@ class Test4State extends State<Test4>
           color: Color.fromARGB(255, 250, 250, 250),
           child: Card(
             margin:
-            EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
             child: Center(
               child: Text('Data $i'),
             ),
@@ -158,13 +157,13 @@ class Test4State extends State<Test4>
         ),
         child: Scrollable(
           controller: _controller,
-          physics:AlwaysScrollableScrollPhysics(),
-          viewportBuilder: (context,offset){
+          physics: AlwaysScrollableScrollPhysics(),
+          viewportBuilder: (context, offset) {
             return ExpandedViewport(
-
-              slivers: <Widget>[SliverToBoxAdapter(
-                child: Text("aaaa"),
-              ),
+              slivers: <Widget>[
+                SliverToBoxAdapter(
+                  child: Text("aaaa"),
+                ),
                 SliverToBoxAdapter(
                   child: Container(
                     height: 100.0,
@@ -181,13 +180,12 @@ class Test4State extends State<Test4>
               offset: offset,
             );
           },
-
         ),
-        onRefresh: () async{
+        onRefresh: () async {
           await Future.delayed(Duration(milliseconds: 1000));
           _refreshController.refreshCompleted();
         },
-        onLoading: () async{
+        onLoading: () async {
           await Future.delayed(Duration(milliseconds: 1000));
           _refreshController.loadComplete();
         },
@@ -196,8 +194,6 @@ class Test4State extends State<Test4>
       hideFooterWhenNotFull: false,
     );
   }
-
-
 
   @override
   // TODO: implement wantKeepAlive

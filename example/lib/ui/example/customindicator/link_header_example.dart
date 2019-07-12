@@ -35,8 +35,7 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
     _scrollController.addListener(() {
       final bool ifdismissAppbar = _scrollController.offset >= 136.0;
       if (dismissAppbar != ifdismissAppbar) {
-        if(mounted)
-        setState(() {});
+        if (mounted) setState(() {});
       }
       dismissAppbar = ifdismissAppbar;
     });
@@ -96,16 +95,16 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
             ],
           ),
           Container(
-                  height: 64.0,
-                  child: AppBar(
-                    backgroundColor: dismissAppbar?Colors.blueAccent:Colors.transparent,
-                    elevation: dismissAppbar?1.0:0.0,
-                    title: SimpleLinkBar(
-                      key: linkKey,
-                    ),
-                  ),
-                )
-
+            height: 64.0,
+            child: AppBar(
+              backgroundColor:
+                  dismissAppbar ? Colors.blueAccent : Colors.transparent,
+              elevation: dismissAppbar ? 1.0 : 0.0,
+              title: SimpleLinkBar(
+                key: linkKey,
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -127,12 +126,12 @@ class _SimpleLinkBarState extends State<SimpleLinkBar>
   RefreshStatus _status = RefreshStatus.idle;
   AnimationController _animationController;
 
-
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -143,8 +142,7 @@ class _SimpleLinkBarState extends State<SimpleLinkBar>
   @override
   Future endRefresh() {
     // TODO: implement endRefresh
-    _animationController.animateTo(0.0,
-        duration: Duration(milliseconds: 300));
+    _animationController.animateTo(0.0, duration: Duration(milliseconds: 300));
     return Future.value();
   }
 

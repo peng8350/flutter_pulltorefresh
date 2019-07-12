@@ -41,8 +41,6 @@ class RefreshAnimatedList extends AnimatedList {
             controller: scrollController,
             scrollDirection: scrollDirection);
 
-
-
   final RefreshIndicator header;
 
   final LoadIndicator footer;
@@ -56,7 +54,6 @@ class RefreshAnimatedList extends AnimatedList {
   final OnOffsetChange onOffsetChange;
 
   final RefreshController refreshController;
-
 
   @override
   AnimatedListState createState() {

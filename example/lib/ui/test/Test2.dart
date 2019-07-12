@@ -11,16 +11,14 @@ class Test2 extends StatefulWidget {
   _Test2State createState() => _Test2State();
 }
 
-class _Test2State extends State<Test2>
-    with TickerProviderStateMixin  {
+class _Test2State extends State<Test2> with TickerProviderStateMixin {
   RefreshController _controller;
   int indexPage = 0;
   List<String> data = [];
 
   void _fetch() {
     HTTP
-        .get(
-            'http://gank.io/api/data/福利/10/$indexPage')
+        .get('http://gank.io/api/data/福利/10/$indexPage')
         .then((HTTP.Response response) {
       Map map = json.decode(response.body);
       return map["results"];
@@ -115,7 +113,6 @@ class _Test2State extends State<Test2>
       ),
     );
   }
-
 }
 
 class Item extends StatefulWidget {
@@ -138,7 +135,6 @@ class _ItemState extends State<Item> {
           widget.url,
         ),
       ),
-
     );
   }
 

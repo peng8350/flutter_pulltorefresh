@@ -78,7 +78,7 @@ class LinkFooter extends LoadIndicator {
       {Key key,
       @required this.linkKey,
       double height: 0.0,
-      LoadStyle loadStyle:LoadStyle.ShowAlways})
+      LoadStyle loadStyle: LoadStyle.ShowAlways})
       : super(height: height, loadStyle: loadStyle, key: key);
 
   @override
@@ -89,7 +89,6 @@ class LinkFooter extends LoadIndicator {
 }
 
 class _LinkFooterState extends LoadIndicatorState<LinkFooter> {
-
   @override
   void onModeChange(LoadStatus mode) {
     // TODO: implement onModeChange

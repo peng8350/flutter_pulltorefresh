@@ -77,11 +77,13 @@ class _AppBarHeaderState extends State<AppBarHeader> {
           ],
         ),
         controller: _refreshController,
-        onRefresh: () async{
+        onRefresh: () async {
           await Future.delayed(const Duration(milliseconds: 1000));
           _refreshController.refreshCompleted();
         },
-        header: ClassicHeader(key: centerKey,),
+        header: ClassicHeader(
+          key: centerKey,
+        ),
       ),
     );
   }

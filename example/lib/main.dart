@@ -32,8 +32,7 @@ class MyApp extends StatelessWidget {
           );
         },
         "indicator": (BuildContext context) {
-          return IndicatorActivity(
-          );
+          return IndicatorActivity();
         }
       },
     );

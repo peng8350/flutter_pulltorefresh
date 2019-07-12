@@ -31,7 +31,7 @@ class ShimmerHeader extends RefreshIndicator {
       double height: 80.0,
       this.period = const Duration(milliseconds: 1000),
       this.direction = ShimmerDirection.ltr})
-      : super(height: height,refreshStyle:RefreshStyle.Behind);
+      : super(height: height, refreshStyle: RefreshStyle.Behind);
 
   @override
   State<StatefulWidget> createState() {
@@ -88,10 +88,10 @@ class _ShimmerHeaderState extends RefreshIndicatorState<ShimmerHeader>
     return widget.outerBuilder != null
         ? widget.outerBuilder(body)
         : Container(
-      alignment: prefix0.Alignment.center,
-      child: body,
-      decoration: prefix0.BoxDecoration(color: Colors.black12),
-    );
+            alignment: prefix0.Alignment.center,
+            child: body,
+            decoration: prefix0.BoxDecoration(color: Colors.black12),
+          );
   }
 }
 
@@ -131,15 +131,17 @@ class _ShimmerFooterState extends LoadIndicatorState<ShimmerFooter> {
         ? widget.failed
         : mode == LoadStatus.noMore
             ? widget.noMore
-            :mode==LoadStatus.idle?Center(child:widget.text): Shimmer.fromColors(
-                period: widget.period,
-                direction: widget.direction,
-                baseColor: widget.baseColor,
-                highlightColor: widget.highlightColor,
-                child: Center(
-                  child: widget.text,
-                ),
-              );
+            : mode == LoadStatus.idle
+                ? Center(child: widget.text)
+                : Shimmer.fromColors(
+                    period: widget.period,
+                    direction: widget.direction,
+                    baseColor: widget.baseColor,
+                    highlightColor: widget.highlightColor,
+                    child: Center(
+                      child: widget.text,
+                    ),
+                  );
     return widget.outerBuilder != null
         ? widget.outerBuilder(body)
         : Container(

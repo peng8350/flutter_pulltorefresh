@@ -28,18 +28,19 @@ class RefreshPhysics extends ScrollPhysics {
   /// Creates scroll physics that bounce back from the edge.
   RefreshPhysics(
       {ScrollPhysics parent,
-        this.clamping: false,
-        double maxUnderScrollExtent,
-        this.headerMode,
-        this.springDescription,
-        this.footerMode,
-        this.dragSpeedRatio,
-        this.enablePullUp,
-        this.enableScrollWhenRefreshCompleted,
-        this.enableScrollWhenTwoLevel: false,
-        this.enablePullDown,
-        double maxOverScrollExtent})
-      : maxOverScrollExtent = maxOverScrollExtent ?? (!clamping ? double.infinity : 150.0),
+      this.clamping: false,
+      double maxUnderScrollExtent,
+      this.headerMode,
+      this.springDescription,
+      this.footerMode,
+      this.dragSpeedRatio,
+      this.enablePullUp,
+      this.enableScrollWhenRefreshCompleted,
+      this.enableScrollWhenTwoLevel: false,
+      this.enablePullDown,
+      double maxOverScrollExtent})
+      : maxOverScrollExtent =
+            maxOverScrollExtent ?? (!clamping ? double.infinity : 150.0),
         maxUnderScrollExtent =
             maxUnderScrollExtent ?? (!clamping ? double.infinity : 120.0),
         super(parent: parent);
@@ -68,7 +69,7 @@ class RefreshPhysics extends ScrollPhysics {
         !enableScrollWhenTwoLevel) {
       return false;
     } else if ((!enableScrollWhenRefreshCompleted &&
-        headerMode.value == RefreshStatus.failed) ||
+            headerMode.value == RefreshStatus.failed) ||
         (!enableScrollWhenRefreshCompleted &&
             headerMode.value == RefreshStatus.completed) ||
         headerMode.value == RefreshStatus.twoLevelOpening ||
@@ -112,7 +113,7 @@ class RefreshPhysics extends ScrollPhysics {
     }
     if (position.outOfRange || headerMode.value == RefreshStatus.twoLeveling) {
       final double overscrollPastStart =
-      math.max(position.minScrollExtent - position.pixels, 0.0);
+          math.max(position.minScrollExtent - position.pixels, 0.0);
       final double overscrollPastEnd = math.max(
           position.pixels -
               (headerMode.value == RefreshStatus.twoLeveling
@@ -120,17 +121,19 @@ class RefreshPhysics extends ScrollPhysics {
                   : position.maxScrollExtent),
           0.0);
       final double overscrollPast =
-      math.max(overscrollPastStart, overscrollPastEnd);
+          math.max(overscrollPastStart, overscrollPastEnd);
       final bool easing = (overscrollPastStart > 0.0 && offset < 0.0) ||
           (overscrollPastEnd > 0.0 && offset > 0.0);
 
       final double friction = easing
-      // Apply less resistance when easing the overscroll vs tensioning.
+          // Apply less resistance when easing the overscroll vs tensioning.
           ? frictionFactor(
-          (overscrollPast - offset.abs()) / position.viewportDimension)
+              (overscrollPast - offset.abs()) / position.viewportDimension)
           : frictionFactor(overscrollPast / position.viewportDimension);
       final double direction = offset.sign;
-      return direction * _applyFriction(overscrollPast, offset.abs(), friction) * (dragSpeedRatio ??1.0);
+      return direction *
+          _applyFriction(overscrollPast, offset.abs(), friction) *
+          (dragSpeedRatio ?? 1.0);
     }
 
     return super.applyPhysicsToUserOffset(position, offset);
@@ -193,20 +196,19 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   Simulation createBallisticSimulation(
       ScrollMetrics position, double velocity) {
-
     // TODO: implement createBallisticSimulation
     if (headerMode.value == RefreshStatus.twoLeveling) {
       if (velocity < 0.0) {
         return parent.createBallisticSimulation(position, velocity);
       }
-    } else if(!position.outOfRange){
+    } else if (!position.outOfRange) {
       if ((velocity < 0.0 && !enablePullDown) ||
           (velocity > 0 && !enablePullUp)) {
         return parent.createBallisticSimulation(position, velocity);
       }
     }
     if ((position.pixels > 0 &&
-        headerMode.value == RefreshStatus.twoLeveling) ||
+            headerMode.value == RefreshStatus.twoLeveling) ||
         position.outOfRange) {
       return BouncingScrollSimulation(
         spring: springDescription ?? spring,

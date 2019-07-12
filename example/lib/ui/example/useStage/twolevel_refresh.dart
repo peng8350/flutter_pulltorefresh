@@ -52,8 +52,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
               currentIndex: _tabIndex,
               onTap: (index) {
                 _tabIndex = index;
-                if(mounted)
-                setState(() {});
+                if (mounted) setState(() {});
               },
               items: [
                 BottomNavigationBarItem(

@@ -8,6 +8,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 /*
   this example will show you how to use PageView as child in SmartRefresher
   notice:You should give PageView BoxConstraints height
@@ -51,7 +52,7 @@ class PageViewExampleState extends State<PageViewExample>
           color: Color.fromARGB(255, 250, 250, 250),
           child: Card(
             margin:
-            EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
             child: Center(
               child: Text('Data $i'),
             ),
@@ -76,7 +77,6 @@ class PageViewExampleState extends State<PageViewExample>
     super.initState();
   }
 
-
   @override
   void dispose() {
     // TODO: implement dispose
@@ -87,14 +87,14 @@ class PageViewExampleState extends State<PageViewExample>
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (i,c){
+      builder: (i, c) {
         double height = c.biggest.height;
         return SmartRefresher(
           enablePullUp: _enablePullDown,
           enablePullDown: _enablePullUp,
           controller: _refreshController,
           header: MaterialClassicHeader(),
-          onRefresh: ()  async{
+          onRefresh: () async {
             print("onRefresh");
             await Future.delayed(const Duration(milliseconds: 4000));
             data.add(Container(
@@ -128,7 +128,5 @@ class PageViewExampleState extends State<PageViewExample>
         );
       },
     );
-
   }
-
 }

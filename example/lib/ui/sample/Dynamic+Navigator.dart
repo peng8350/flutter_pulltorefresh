@@ -4,7 +4,8 @@
  * Time:  2019-06-03 12:54
  */
 
-import 'package:flutter/material.dart' hide RefreshIndicator,RefreshIndicatorState;
+import 'package:flutter/material.dart'
+    hide RefreshIndicator, RefreshIndicatorState;
 import 'package:flutter/material.dart' as prefix0;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../Item.dart';
@@ -67,13 +68,13 @@ class _DynamicState extends State<Dynamic> {
           groupValue: _header is MaterialClassicHeader,
           onChanged: (i) {
             _header = ClassicHeader(
-              outerBuilder: (child)
-              {
+              outerBuilder: (child) {
                 return GestureDetector(
                   child: child,
-                  onTap: (){
+                  onTap: () {
                     print("tap");
-                    if(_refreshController.headerStatus==RefreshStatus.twoLeveling){
+                    if (_refreshController.headerStatus ==
+                        RefreshStatus.twoLeveling) {
                       _refreshController.twoLevelComplete();
                     }
                   },
@@ -177,8 +178,7 @@ class _DynamicState extends State<Dynamic> {
   }
 
   _onLoading() {
-
-    Future.delayed(Duration(milliseconds: 1000)).whenComplete((){
+    Future.delayed(Duration(milliseconds: 1000)).whenComplete(() {
       _refreshController.loadComplete();
     });
   }
@@ -204,10 +204,7 @@ class _DynamicState extends State<Dynamic> {
           ),
           enableTwoLevel: true,
           onRefresh: _onRefresh,
-          onTwoLevel: (){
-
-
-          },
+          onTwoLevel: () {},
           onLoading: _onLoading,
           header: _header,
           enablePullDown: _enablePullDown,

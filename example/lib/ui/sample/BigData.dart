@@ -52,6 +52,7 @@ class _DataSmallState extends State<DataSmall> {
           itemBuilder: (c, i) => items[i],
           itemExtent: 100.0,
           itemCount: items.length,
+          physics: ClampingScrollPhysics(),
         ),
         onRefresh: _onRefresh,
         onLoading: _onLoading,

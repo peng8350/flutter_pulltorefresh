@@ -23,26 +23,35 @@ class QQChatList extends StatefulWidget {
   }
 }
 
-const String myUrl = "https://avatars1.githubusercontent.com/u/19425362?s=400&u=1a30f9fdf71cc9a51e20729b2fa1410c710d0f2f&v=4";
+const String myUrl =
+    "https://avatars1.githubusercontent.com/u/19425362?s=400&u=1a30f9fdf71cc9a51e20729b2fa1410c710d0f2f&v=4";
+
 class _QQChatListState extends State<QQChatList> {
   RefreshController _refreshController = RefreshController();
   ScrollController _scrollController = ScrollController();
   TextEditingController _textController = TextEditingController();
-  List<_MessageItem> data = [_MessageItem(
-    content: "你好...................asdasdasdasdasdasdasdasdasda",
-    isMe: true,
-    author: "我",
-    url:myUrl,),
+  List<_MessageItem> data = [
     _MessageItem(
-      content: "eem.....................................................................",
+      content: "你好...................asdasdasdasdasdasdasdasdasda",
+      isMe: true,
+      author: "我",
+      url: myUrl,
+    ),
+    _MessageItem(
+      content:
+          "eem.....................................................................",
       isMe: false,
       author: "对方",
-      url: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg",),
+      url:
+          "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg",
+    ),
     _MessageItem(
       content: "吃饭了没有?????????????",
       isMe: false,
       author: "对方",
-      url: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg",)
+      url:
+          "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg",
+    )
   ];
 
   @override
@@ -56,7 +65,7 @@ class _QQChatListState extends State<QQChatList> {
     // TODO: implement build
     return CupertinoApp(
       home: RefreshConfiguration(
-        shouldFooterFollowWhenNotFull: (mode){
+        shouldFooterFollowWhenNotFull: (mode) {
           return true;
         },
         child: CupertinoPageScaffold(
@@ -90,24 +99,28 @@ class _QQChatListState extends State<QQChatList> {
                         content: "Xxxxxxxxxxxxxx",
                         isMe: true,
                         author: "我",
-                        url:myUrl,));
+                        url: myUrl,
+                      ));
                       data.add(_MessageItem(
-                      content: "...........",
-                      isMe: false,
-                      author: "对方",
-                      url: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg",));
+                        content: "...........",
+                        isMe: false,
+                        author: "对方",
+                        url:
+                            "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg",
+                      ));
                       data.add(_MessageItem(
-                      content: "吃饭了没有?????????????",
-                      isMe: false,
-                      author: "对方",
-                      url: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg"));
+                          content: "吃饭了没有?????????????",
+                          isMe: false,
+                          author: "对方",
+                          url:
+                              "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg"));
                       setState(() {});
                       _refreshController.loadComplete();
                     },
                     footer: CustomFooter(
                       loadStyle: LoadStyle.HideAlways,
                       builder: (context, mode) {
-                        if(mode==LoadStatus.loading) {
+                        if (mode == LoadStatus.loading) {
                           return Container(
                             height: 60.0,
                             child: Container(
@@ -116,8 +129,8 @@ class _QQChatListState extends State<QQChatList> {
                               child: CupertinoActivityIndicator(),
                             ),
                           );
-                        }
-                        else return Container();
+                        } else
+                          return Container();
                       },
                     ),
                     enablePullUp: true,
@@ -132,7 +145,7 @@ class _QQChatListState extends State<QQChatList> {
                             SliverExpanded(),
                             SliverList(
                               delegate: SliverChildBuilderDelegate(
-                                      (c, i) => data[i],
+                                  (c, i) => data[i],
                                   childCount: data.length),
                             )
                           ],
@@ -153,10 +166,15 @@ class _QQChatListState extends State<QQChatList> {
                             controller: _textController,
                             placeholder: "输入你想发送的信息",
                             onSubmitted: (s) {
-                              data.insert(0,_MessageItem(content: s,author: "我",url: myUrl,isMe: true,));
-                              setState(() {
-
-                              });
+                              data.insert(
+                                  0,
+                                  _MessageItem(
+                                    content: s,
+                                    author: "我",
+                                    url: myUrl,
+                                    isMe: true,
+                                  ));
+                              setState(() {});
                               _scrollController.jumpTo(0.0);
                               _textController.clear();
                             },
@@ -167,13 +185,17 @@ class _QQChatListState extends State<QQChatList> {
                       RaisedButton(
                         child: Text("发送"),
                         color: Colors.blueAccent,
-
                         onPressed: () {
                           _scrollController.jumpTo(0.0);
-                          data.insert(0,_MessageItem(content: _textController.text,author: "我",url: myUrl,isMe: true,));
-                          setState(() {
-
-                          });
+                          data.insert(
+                              0,
+                              _MessageItem(
+                                content: _textController.text,
+                                author: "我",
+                                url: myUrl,
+                                isMe: true,
+                              ));
+                          setState(() {});
                           _textController.clear();
                         },
                       )
@@ -219,7 +241,6 @@ class _MessageItem extends StatelessWidget {
                 alignment: isMe ? Alignment.topRight : Alignment.topLeft,
                 child: Text(
                   author,
-
                   style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
               ),

@@ -32,11 +32,17 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
     // If you don't need some attribute like physics,cacheExtent,just default
     // you can return emptyWidget directly,else return ListView
     //first way
-    return   Image.asset("images/empty.png",fit: BoxFit.cover,);
+    return Image.asset(
+      "images/empty.png",
+      fit: BoxFit.cover,
+    );
     // second way
     return ListView(
       children: [
-        Image.asset("images/empty.png",fit: BoxFit.cover,)
+        Image.asset(
+          "images/empty.png",
+          fit: BoxFit.cover,
+        )
       ],
       physics: BouncingScrollPhysics(),
       cacheExtent: 100.0,
@@ -50,19 +56,21 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
       controller: _refreshController,
       enablePullUp: true,
       enablePullDown: true,
-      onRefresh: () async{
+      onRefresh: () async {
         await Future.delayed(const Duration(milliseconds: 2000));
-        if(mounted)
-        setState(() {
-          data.add("new");
-        });
+        if (mounted)
+          setState(() {
+            data.add("new");
+          });
         _refreshController.refreshCompleted();
       },
-      child: data.length==0?buildEmpty():ListView.builder(
-        itemBuilder: (c, i) => Text(data[i]),
-        itemCount: data.length,
-        itemExtent: 100.0,
-      ),
+      child: data.length == 0
+          ? buildEmpty()
+          : ListView.builder(
+              itemBuilder: (c, i) => Text(data[i]),
+              itemCount: data.length,
+              itemExtent: 100.0,
+            ),
     );
   }
 }

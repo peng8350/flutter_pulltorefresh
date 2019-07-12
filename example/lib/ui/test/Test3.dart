@@ -8,7 +8,6 @@ class Test3 extends StatefulWidget {
 
   @override
   Test3State createState() => Test3State();
-
 }
 
 class Test3State extends State<Test3>
@@ -124,7 +123,8 @@ class Test3State extends State<Test3>
 //      });
 //    });
     _getDatas();
-    _refreshController = RefreshController(initialRefresh: true,initialRefreshStatus: RefreshStatus.refreshing);
+    _refreshController = RefreshController(
+        initialRefresh: true, initialRefreshStatus: RefreshStatus.refreshing);
 
     super.initState();
   }
@@ -149,7 +149,7 @@ class Test3State extends State<Test3>
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       print(_refreshController.scrollController);
     });
   }
@@ -171,11 +171,11 @@ class Test3State extends State<Test3>
               iconPos: IconPosition.top,
               height: 60.0,
               loadStyle: LoadStyle.ShowAlways,
-              onClick: (){
+              onClick: () {
                 print("cliclk");
               },
             ),
-            onRefresh: ()  async{
+            onRefresh: () async {
               print("onRefresh");
               await Future.delayed(const Duration(milliseconds: 1000));
               data.add(Container(
@@ -191,7 +191,7 @@ class Test3State extends State<Test3>
             },
             child: ListView.builder(
               itemExtent: 100.0,
-              itemBuilder: (c,i) => data[i],
+              itemBuilder: (c, i) => data[i],
               itemCount: data.length,
             ),
             onLoading: () {

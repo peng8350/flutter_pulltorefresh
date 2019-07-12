@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../other/refresh_animatedlist.dart';
+
 class AnimatedListExample extends StatefulWidget {
   @override
   _AnimatedListExampleState createState() => new _AnimatedListExampleState();
@@ -13,7 +14,7 @@ class AnimatedListExample extends StatefulWidget {
 
 class _AnimatedListExampleState extends State<AnimatedListExample> {
   final GlobalKey<AnimatedListState> _listKey =
-  new GlobalKey<AnimatedListState>();
+      new GlobalKey<AnimatedListState>();
   ListModel<int> _list;
   int _selectedItem;
   int _nextItem; // The next item inserted when the user presses the '+' button.
@@ -37,10 +38,10 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
       item: _list[index],
       selected: _selectedItem == _list[index],
       onTap: () {
-        if(mounted)
-        setState(() {
-          _selectedItem = _selectedItem == _list[index] ? null : _list[index];
-        });
+        if (mounted)
+          setState(() {
+            _selectedItem = _selectedItem == _list[index] ? null : _list[index];
+          });
       },
     );
   }
@@ -63,7 +64,7 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
   // Insert the "next item" into the list model.
   void _insert() {
     final int index =
-    _selectedItem == null ? _list.length : _list.indexOf(_selectedItem);
+        _selectedItem == null ? _list.length : _list.indexOf(_selectedItem);
     _list.insert(index, _nextItem++);
   }
 
@@ -71,10 +72,10 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
   void _remove() {
     if (_selectedItem != null) {
       _list.removeAt(_list.indexOf(_selectedItem));
-      if(mounted)
-      setState(() {
-        _selectedItem = null;
-      });
+      if (mounted)
+        setState(() {
+          _selectedItem = null;
+        });
     }
   }
 
@@ -99,7 +100,7 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
             ),
           ],
         ),
-        body:  RefreshAnimatedList(
+        body: RefreshAnimatedList(
           key: _listKey,
           initialItemCount: _list.length,
           itemBuilder: _buildItem,
@@ -144,9 +145,9 @@ class ListModel<E> {
     final E removedItem = _items.removeAt(index);
     if (removedItem != null) {
       _animatedList.removeItem(index,
-              (BuildContext context, Animation<double> animation) {
-            return removedItemBuilder(removedItem, context, animation);
-          });
+          (BuildContext context, Animation<double> animation) {
+        return removedItemBuilder(removedItem, context, animation);
+      });
     }
     return removedItem;
   }
@@ -165,10 +166,10 @@ class ListModel<E> {
 class CardItem extends StatelessWidget {
   const CardItem(
       {Key key,
-        @required this.animation,
-        this.onTap,
-        @required this.item,
-        this.selected: false})
+      @required this.animation,
+      this.onTap,
+      @required this.item,
+      this.selected: false})
       : assert(animation != null),
         assert(item != null && item >= 0),
         assert(selected != null),
@@ -206,6 +207,3 @@ class CardItem extends StatelessWidget {
     );
   }
 }
-
-
-

@@ -78,8 +78,8 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body:Builder(
-        builder: (c){
+      body: Builder(
+        builder: (c) {
           return SmartRefresher(
               child: ListView.builder(
                 itemBuilder: (c, i) => items[i],
@@ -89,7 +89,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
                 itemCount: items.length,
               ),
               onRefresh: _onRefresh,
-              onLoading: (){
+              onLoading: () {
                 _onLoading(c);
               },
               header: widget.header,

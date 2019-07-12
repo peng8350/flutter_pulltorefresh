@@ -92,14 +92,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     }
 
     // If FrontStyle overScroll,it shouldn't disable gesture in scrollable
-    if(_position.extentBefore==0.0&&widget.refreshStyle==RefreshStyle.Front) {
+    if (_position.extentBefore == 0.0 &&
+        widget.refreshStyle == RefreshStyle.Front) {
       _position.context.setIgnorePointer(false);
     }
     // Sometimes different devices return velocity differently, so it's impossible to judge from velocity whether the user
     // has invoked animateTo (0.0) or the user is dragging the view.Sometimes animateTo (0.0) does not return velocity = 0.0
     // velocity < 0.0 may be spring up,>0.0 spring down
-    if ((configuration.enableBallisticRefresh &&
-        activity.velocity < 0.0) ||
+    if ((configuration.enableBallisticRefresh && activity.velocity < 0.0) ||
         activity is DragScrollActivity ||
         activity is DrivenScrollActivity) {
       if (refresher.enableTwoLevel &&
@@ -298,8 +298,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         }
       }
     } else {
-      if (activity is DragScrollActivity ||
-          activity is DrivenScrollActivity) {
+      if (activity is DragScrollActivity || activity is DrivenScrollActivity) {
         _enableLoading = true;
       }
     }
@@ -340,10 +339,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         shouldFollowContent: configuration.shouldFooterFollowWhenNotFull != null
             ? configuration.shouldFooterFollowWhenNotFull(mode)
             : false,
-        layoutExtent:
-            floating
-                ? widget.height
-                : 0.0,
+        layoutExtent: floating ? widget.height : 0.0,
         mode: mode,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints cons) {

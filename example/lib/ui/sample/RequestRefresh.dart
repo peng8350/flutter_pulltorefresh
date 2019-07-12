@@ -68,7 +68,7 @@ class _RequestRefreshState extends State<RequestRefresh> {
   }
 
   _onLoading() {
-    Future.delayed(Duration(milliseconds: 1000)).whenComplete((){
+    Future.delayed(Duration(milliseconds: 1000)).whenComplete(() {
       _refreshController.loadComplete();
     });
   }

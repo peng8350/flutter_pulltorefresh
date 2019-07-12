@@ -53,7 +53,8 @@ class _MainActivityState extends State<MainActivity>
 
     super.initState();
     _tabController = TabController(length: 6, vsync: this);
-    _menuController = MenuController(vsync: this,direction: ScrollDirection.LEFT);
+    _menuController =
+        MenuController(vsync: this, direction: ScrollDirection.LEFT);
     _pageController = PageController(initialPage: 1);
     views = [
       IndicatorPage(title: "指示器界面"),
@@ -76,41 +77,47 @@ class _MainActivityState extends State<MainActivity>
           // the App.build method, and use it to set our appbar title.
           title: Text(_tabIndex == 0
               ? "指示器界面"
-              : _tabIndex == 1 ? "例子界面" : _tabIndex == 2 ? "测试界面" :_tabIndex==3?"样例界面":"App界面"),
-          leading: GestureDetector(child: Icon(Icons.menu),onTap: (){
-            _menuController.openMenu(true);
-          },),
+              : _tabIndex == 1
+                  ? "例子界面"
+                  : _tabIndex == 2
+                      ? "测试界面"
+                      : _tabIndex == 3 ? "样例界面" : "App界面"),
+          leading: GestureDetector(
+            child: Icon(Icons.menu),
+            onTap: () {
+              _menuController.openMenu(true);
+            },
+          ),
           backgroundColor: Colors.greenAccent,
-          bottom: _tabIndex==3?TabBar(isScrollable: true,
-            tabs: [
-              Tab(child: Text("超大数据量性能测试")),
-              Tab(child: Text("SliverAppbar+Sliverheader")),
-              Tab(child: Text("嵌套滚动视图")),
-              Tab(child: Text("动态变化指示器+Navigator")),
-              Tab(child: Text("主动刷新")),
-              Tab(child: Text("四个方向不同风格测试绘制")),
-            ],
-            controller: _tabController,
-          ):null,
+          bottom: _tabIndex == 3
+              ? TabBar(
+                  isScrollable: true,
+                  tabs: [
+                    Tab(child: Text("超大数据量性能测试")),
+                    Tab(child: Text("SliverAppbar+Sliverheader")),
+                    Tab(child: Text("嵌套滚动视图")),
+                    Tab(child: Text("动态变化指示器+Navigator")),
+                    Tab(child: Text("主动刷新")),
+                    Tab(child: Text("四个方向不同风格测试绘制")),
+                  ],
+                  controller: _tabController,
+                )
+              : null,
         ),
-        body:
-        RefreshConfiguration(
+        body: RefreshConfiguration(
           child: PageView(
             controller: _pageController,
             children: views,
             physics: NeverScrollableScrollPhysics(),
           ),
-          springDescription: SpringDescription(
-            mass: 2.0,
-            stiffness: 200.0,
-            damping: 15.0
-          ),
+          springDescription:
+              SpringDescription(mass: 2.0, stiffness: 200.0, damping: 15.0),
           dragSpeedRatio: 1.5,
           enableScrollWhenTwoLevel: true,
           autoLoad: true,
           footerTriggerDistance: -45.0,
-          shouldFooterFollowWhenNotFull: (mode){
-            if(mode==LoadStatus.noMore){
+          shouldFooterFollowWhenNotFull: (mode) {
+            if (mode == LoadStatus.noMore) {
               return true;
             }
             return false;
@@ -131,47 +138,47 @@ class _MainActivityState extends State<MainActivity>
         ),
         children: <Widget>[
           buildItem("各种指示器", Icon(Icons.apps, size: 18, color: Colors.grey),
-                  () {
-                setState(() {
-                  _tabIndex = 0;
-                });
-                _pageController.jumpToPage(0);
-                _menuController.closeMenu();
-              }),
-          buildItem("例子", Icon(Icons.insert_emoticon, size: 18, color: Colors.grey),
-                  () {
-                setState(() {
-                  _tabIndex = 1;
-                });
-                _pageController.jumpToPage(1);
-                _menuController.closeMenu();
-              }),
+              () {
+            setState(() {
+              _tabIndex = 0;
+            });
+            _pageController.jumpToPage(0);
+            _menuController.closeMenu();
+          }),
+          buildItem(
+              "例子", Icon(Icons.insert_emoticon, size: 18, color: Colors.grey),
+              () {
+            setState(() {
+              _tabIndex = 1;
+            });
+            _pageController.jumpToPage(1);
+            _menuController.closeMenu();
+          }),
           buildItem("测试",
               Icon(Icons.airplanemode_active, size: 18, color: Colors.grey),
-                  () {
-                setState(() {
-                  _tabIndex = 2;
-                });
-                _menuController.closeMenu();
-                _pageController.jumpToPage(2);
-              }),
+              () {
+            setState(() {
+              _tabIndex = 2;
+            });
+            _menuController.closeMenu();
+            _pageController.jumpToPage(2);
+          }),
           buildItem("样例", Icon(Icons.scanner, size: 18, color: Colors.grey),
-                  () {
-                setState(() {
-                  _tabIndex = 3;
-                });
-                _menuController.closeMenu();
-                _pageController.jumpToPage(3);
-              }),
-          buildItem(
-              "App界面", Icon(Icons.format_underlined, size: 18, color: Colors.grey),
-                  () {
-                setState(() {
-                  _tabIndex = 4;
-                });
-                _menuController.closeMenu();
-                _pageController.jumpToPage(4);
-              }),
+              () {
+            setState(() {
+              _tabIndex = 3;
+            });
+            _menuController.closeMenu();
+            _pageController.jumpToPage(3);
+          }),
+          buildItem("App界面",
+              Icon(Icons.format_underlined, size: 18, color: Colors.grey), () {
+            setState(() {
+              _tabIndex = 4;
+            });
+            _menuController.closeMenu();
+            _pageController.jumpToPage(4);
+          }),
         ],
       ),
     );
