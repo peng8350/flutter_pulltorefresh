@@ -63,8 +63,8 @@ Refresh(header):
 | headerBuilder | the header indicator builder  | () =>  ? extends RefreshIndicator | null | 可选 |
 | headerTriggerDistance | overScroll distance of  trigger refresh     | double | 80.0 | 可选 |
 | maxOverScrollExtent | max overScroll distance   | double | inf | 可选 |
-| skipCanRefresh | if skip canRefresh state,enter refreshing state directly  | () => Void | null | 可选 |
-| headerOffset | Head indicator layout deviation Y coordinates, mostly for FrontStyle  | bool | 0.0 | 可选 |
+| skipCanRefresh | if skip canRefresh state,enter refreshing state directly  | bool | false | 可选 |
+| headerOffset | Head indicator layout deviation Y coordinates, mostly for FrontStyle  | double | 0.0 | 可选 |
 | enableScrollWhenTwoLevel | whether enable scroll when into twoLevel   | bool | true | 可选 |
 | twiceTriggerDistance | the overScroll distance of trigger twoLevel  | double | 150.0 | 可选 |
 | closeTwoLevelDistance | Close the bottom crossing distance on the second floor, premise:enableScrollWhenTwoLevel is true  | double | 80.0 | 可选 |
@@ -82,4 +82,4 @@ Load more(footer):
 | maxUnderScrollExtent | max underScroll distance  | double | inf | 可选 |
 | footerTriggerDistance |   the extentAfter distance of  trigger loading  | double | 15.0 | 可选 |
 | enableLoadingWhenFailed |  whether allowed to use gesture pull-up trigger to load more  | bool | false| 可选 |
-| shouldFooterFollowWhenNotFull | When not full one page,If it should follow content for different status,premise: hideFooterWhenNotFull = false | (LoadStatus) => bool | true | 可选 |
+| shouldFooterFollowWhenNotFull | When not full one page,If it should follow content for different status,premise: hideFooterWhenNotFull = false | (LoadStatus) => bool | () => false | 可选 |

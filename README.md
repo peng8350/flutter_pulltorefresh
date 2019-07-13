@@ -36,11 +36,13 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
      pull_to_refresh: ^1.5.0
 
 ```
+
 ```dart
 
     import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 ```
+
 ```dart
 
     
@@ -147,7 +149,7 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
 |:---:|:---:|:---:|
 |art| ![](arts/example3.gif) | ![](arts/example4.gif) |
 
-|Style| [ use with other widgets](example/lib/ui/example/otherwidget) |  [ empty View](example/lib/ui/example/useStage/empty_view.dart) |
+|Style| [ use with other widgets](example/lib/ui/example/otherwidget) |  [chat list](example/lib/ui/example/useStage/qq_chat_list.dart) |
 |:---:|:---:|:---:|
 |art| ![](arts/example5.gif) | ![](arts/example6.gif) |
 
