@@ -5,7 +5,7 @@
 ## 第一种
 假设你要实现的指示器功能不是太过于复杂,可以使用CustomHeader或者CustomFooter,利用SmartRefresher里的onOffsetChange回调可完成一些简单的动画。
 
-```
+```dart
    Widget buildHeader(BuildContext context,RefreshStatus mode){
       return Center(
           child:Text(mode==RefreshStatus.idle?"下拉刷新":mode==RefreshStatus.refreshing?"刷新中...":
@@ -50,7 +50,7 @@
 首先,我准备了一张jpg和一个gif,jpg表示gif第一帧,当然如果你想控制gif,也是有办法的,一个gif够了
 定义一个类继承RefreshIndicator(注意material包重名)
 
-```
+```dart
 
 class RunningHeader extends RefreshIndicator {
   RunningHeader({@required OnRefresh onRefresh})
@@ -75,7 +75,7 @@ Follow更适合一点,所以就选Follow了。
 内部有一个onOffsetChange的回调方法,这个方法触发的时机是任何时候都会触发的,如果你不想在刷新过程中或者布局浮动的状态下触发,你可以利用floating这个属性,这个
 属性表示指示器是否占有一个高度的状态,假如占有一个高度,它就能被看到,假如没有,就滚回去隐藏掉了。
 
-```
+```dart
 
 class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
     with TickerProviderStateMixin {
@@ -106,7 +106,7 @@ class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
 第二步,那个刷新完成之后人跑过去的效果怎么弄?这点需要endRefresh这个方法,这个方法要返回一个Future。注意,这个方法调用,此时的状态是RefreshStatus.completed或者failed
 ,然后当这个方法执行完毕,此时,floating =false,header就会开始隐藏掉。
 
-```
+```dart
 
     @override
     Future<void> endRefresh() {
@@ -133,7 +133,7 @@ class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
 实现到这里,这个指示器基本就差不多完成了。但是,还有一步,就是你那些动画总得要还原到原来的位置吧,总不能还在那个位置停留。下次用户下拉刷新的时候就可能还是那个状态值。
 那这里,应该怎么做？内部没有特定方法,但是可以利用RefreshStatus的状态还原为idle后,接着再还原controller里的值,里面有暴露一个resetValue的方法
 
-```
+```dart
 
   @override
   void resetValue() {
@@ -148,7 +148,7 @@ class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
 
 RefreshIndicatorState里一些非常重要的可重写方法和属性
 
-```
+```dart
    /*
   		 代表指示器有没有布局的高度,假如占有高度,指示器将会展示在顶部,假如没有,指示器将会滚动回去隐藏掉。
     */

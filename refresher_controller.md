@@ -53,6 +53,8 @@
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | child | 不用解析你明白  | Widget  | null | 必要|
+| springDescription | 自定义弹性动画的配置,三个属性  | SpringDescription | default | 可选 |
+| dragSpeedRatio | 越界回弹时拖动的速度比例,公式:原始滑动引擎拖动速度*dragSpeedRatio  | double | 1.0 | 可选 |
 
 刷新全局设置(header):
 
@@ -74,9 +76,10 @@
 
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
+| footerBuilder      | 默认尾部指示器全局构造器   | () =>  ? extends LoadIndicator  |   null |  可选 |
 | hideWhenNotFull | 当ScrollView不满一页时,是否要隐藏底部指示器   | bool | true | 可选 |
 | autoLoad | 自动加载更多,假如为false,滑动底部不会触发,但提供点击加载更多的方法  | bool | true | 可选 |
-| footerTriggerDistance |   距离底部边缘触发加载更多的距离 | double | 15.0 | 可选 |
-| footerBuilder      | 默认尾部指示器全局构造器   | () =>  ? extends LoadIndicator  |   null |  可选 |
+| footerTriggerDistance |   距离底部边缘触发加载更多的距离,注意这个属性和header的不同,它可以为负数,负数代表越界 | double | 15.0 | 可选 |
 | maxUnderScrollExtent | 最大底部越界距离  | double | inf | 可选 |
-| enableLoadingWhenFailed |  是否允许通过手势来触发加载更多当失败的状态  | bool | false| 可选 |
+| enableLoadingWhenFailed |  是否允许通过手势来触发加载更多当失败的状态,为false就提供点击回调,true就可通过手势触发  | bool | false| 可选 |
+| shouldFooterFollowWhenNotFull | 当不满一个屏幕时,对于不同状态要不要跟随内容列表,前提hideFooterWhenNotFull = false | (LoadStatus) => bool | true | 可选 |

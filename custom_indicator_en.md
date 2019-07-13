@@ -4,7 +4,7 @@
 Assuming that the indicator function you want to implement is not too complex, you can use CustomHeader or CustomFooter, and use the onOffset Change
  callback in Smart Refresher to complete some simple animations.
 
-```
+```dart
    Widget buildHeader(BuildContext context,RefreshStatus mode){
       .....
    }
@@ -47,7 +47,7 @@ So, the question arises, how should we achieve such a function?
 First of all, I prepared a JPG and a gif. JPG represents the first frame of gif. Of course, if you want to control gif, there is a way. A GIF is enough.
 Define a class to inherit RefreshIndicator (note the material package rename)
 
-```
+```dart
 
 class RunningHeader extends RefreshIndicator {
   RunningHeader({@required OnRefresh onRefresh})
@@ -72,7 +72,7 @@ The first step is how to zoom in and out in the process of dragging gestures. Sc
 There's an onOffsetChange callback method inside, which triggers at any time. If you don't want to trigger during refresh or when the layout is floating, you can use the floating property, which is
 Attributes indicate whether the indicator occupies a high state. If it occupies a high state, it can be seen. If it does not, it rolls back and hides.
 
-```
+```dart
 
 class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
     with TickerProviderStateMixin {
@@ -103,7 +103,7 @@ class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
 The second step is what happens when the refresh is complete. This requires the endRefresh method, which returns to a Future. Note that this method call is in RefreshStatus. completed or failed state
 Then when this method is finished, floating = false, the header starts to hide.
 
-```
+```dart
 
     @override
     Future<void> endRefresh() {
@@ -130,7 +130,7 @@ Then when this method is finished, floating = false, the header starts to hide.
 So far, the indicator is almost complete. But one more step is that your animations have to be restored to their original position, and you can't stay there. The next time the user drops down and refreshes, it may still be that state value.
 So what should we do here? There is no specific method inside, but you can restore the status of RefreshStatus to idle, and then restore the value in the controller, which exposes a resetValue method.
 
-```
+```dart
 
   @override
   void resetValue() {
@@ -146,7 +146,7 @@ This header is not included in packages, because most people don't use it, just 
 
  the most important api in RefreshIndicatorState
 
-```
+```dart
    /*
   	Represents whether the indicator has a layout height. If it occupies a height, the indicator will be displayed at the top.
   	If not, the indicator will scroll back and hide.

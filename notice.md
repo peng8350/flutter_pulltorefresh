@@ -1,11 +1,12 @@
 # 注意地方
 
 ## RefreshController
-* 要注意记得dispose掉refreshController,否则当你刷新过程中,组件被销毁之后刷新刚好完毕，会报空指针的警告。
+* 要注意记得dispose掉refreshController,在某种比较特殊的情况可能会报错。
+* RefreshController只能对应一个SmartRefresher,不要尝试给把RefreshController赋予多个SmartRefresher,很常见应用场景就是TabBarView和PageView
 
 ## SmartRefresher
-* child只支持ListView,GridView,CustomView,不知道还没有,总之就是继承ScrollView的都可以。当你想放一个单一的非滚动视图的话,利用ListView即可。
 * 当你想要关闭掉下拉和上拉的功能,可利用enablePullUp和enablePullDown这两个属性
+* 不要把你想要追加指示器的ScrollView组件放到一个组件的子树下,由于实现机制,不是利用NotificationListener这类组件来实现的
 * 当child不是继承ScrollView时,要注意盒子约束,在SmartRefresher下高度是unbounded
 * 不支持SingleChildScrollView,使用ListView替代即可
 * 当想在ScrollView增加背景时,记住别在child节点给ListView或者GridView包装Container,请在SmartRefresher外部包装Container

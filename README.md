@@ -1,15 +1,28 @@
 # flutter_pulltorefresh
+<a href="https://pub.dev/packages/pull_to_refresh">
+  <img src="https://img.shields.io/pub/v/pull_to_refresh.svg"/>
+</a>
+<a href="https://flutter.dev/">
+  <img src="https://img.shields.io/badge/flutter-%3E%3D%201.2.1-green.svg"/>
+</a>
+<a href="https://opensource.org/licenses/MIT">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg"/>
+</a>
 
 ## Intro
 a widget provided to the flutter scroll component drop-down refresh and pull up load.support android and ios.
 If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter_pulltorefresh/blob/master/README_CN.md))
+
+[Download Demo(Android)](demo.apk):
+
+![qrCode](arts/qr_code.png)
 
 ## Features
 * pull up load and pull down refresh
 * It's almost fit for all Scroll witgets,like GridView,ListView...
 * provide global setting of default indicator and property
 * provide some most common indicators
-* Support Android and iOS default ScrollPhysics,the overScroll distance can be controlled
+* Support Android and iOS default ScrollPhysics,the overScroll distance can be controlled,custom spring animate,damping,speed.
 * horizontal and vertical refresh,support reverse ScrollView also(four direction)
 * provide more refreshStyle: Behind,Follow,UnFollow,Front,provide more loadmore style
 * Support twoLevel refresh,implments just like TaoBao twoLevel,Wechat TwoLevel
@@ -17,63 +30,90 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 
 ## Usage
 
-tips:<br>
-1.Because 1.3.0 has made great changes to the internal, version 1.3.0-1.3.9 is not recommended to use,there has a lot of Bug , 1.4.0 began to stabilize.<br>
-2.Make sure flutter sdk version >= 1.2.1
-
-```
+```yaml
 
    dependencies:
-     pull_to_refresh: ^1.4.9
+     pull_to_refresh: ^1.5.0
 
 ```
+```dart
+
+    import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 ```
+```dart
 
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+    
+  List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
 
-RefreshController _refreshController;
+  void _onRefresh() async{
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
 
-initState(){
+  void _onLoading() async{
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+    items.add((items.length+1).toString());
+    if(mounted)
+    setState(() {
 
-    super.initState();
-    // if you need refreshing when init,notice:initialRefresh is new  after 1.3.9
-    _refreshController = RefreshController(initialRefresh:true);
+    });
+    _refreshController.loadComplete();
+  }
 
-}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: WaterDropHeader(),
+        footer: CustomFooter(
+          builder: (BuildContext context,LoadStatus mode){
+            Widget body ;
+            if(mode==LoadStatus.idle){
+              body =  Text("pull up load");
+            }
+            else if(mode==LoadStatus.loading){
+              body =  CupertinoActivityIndicator();
+            }
+            else if(mode == LoadStatus.failed){
+              body = Text("Load Failed!Click retry!");
+            }
+            else{
+              body = Text("No more Data");
+            }
+            return Container(
+              height: 55.0,
+              child: Center(child:body),
+            );
+          },
+        ),
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        child: ListView.builder(
+          itemBuilder: (c, i) => Card(child: Center(child: Text(items[i]))),
+          itemExtent: 100.0,
+          itemCount: items.length,
+        ),
+      ),
+    );
+  }
 
-void _onRefresh(){
-
-   /*.  after the data return,
-        use _refreshController.refreshComplete() or refreshFailed() to end refreshing
-   */
-}
-
-void _onLoading(){
-   /*
-        use _refreshController.loadComplete() or loadNoData(),loadFailed() to end loading
-   */
-}
-
-build(){
-...
-SmartRefresher(
-      enablePullDown: true,
-      enablePullUp: true,
-      header: defaultTargetPlatform == TargetPlatform.iOS?WaterDropHeader():WaterDropMaterialHeader(),
-      controller: _refreshController,
-      onRefresh: _onRefresh,
-      onLoading: _onLoading,
-      child: "child",
-    )
-....
-}
-
-// don't forget to dispose refreshController
-void dispose(){
+  // don't forget to dispose refreshController
+  @override
+  void dispose() {
+    // TODO: implement dispose
     _refreshController.dispose();
     super.dispose();
-}
+  }
 
 ```
 
@@ -88,7 +128,6 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
     RefreshConfiguration(
         headerBuilder: () => WaterDropHeader(),
         footerBuilder:  () => ClassicFooter(),
-        clickLoadingWhenIdle: true,
          headerTriggerDistance: 80.0,
          hideFooterWhenNotFull: true,
         child: .....
@@ -146,28 +185,24 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
 - [Inner Attribute Of Indicators](indicator_attribute_en.md)
 - [Update Log](CHANGELOG.md)
 - [Notice](notice_en.md)
+- [FAQ](problems_en.md)
 
 
-
-
-## Frequent problems
-* <h3>IOS Status Bar Double-click Why ListView does not automatically scroll to the top?</h3>
-This problem is not my encapsulation error after testing. When the controller in ListView is replaced, this problem will occur, probably
-because of the processing operation in Scaffold.,please issue flutter。
-
-* <h3>Is Supporting NestedScrollView?</h3>
-It's not recommended to use NestedScrollView. Now I've found a problem (in conflict with Bouncing ScrollPhysics),
-which is similar in flutter issue (33367, 34316) and can only be solved by flutter. So it's better to use CustomScrollView to avoid using it, because there may be many unknown
- problems that I haven't found yet.
-
-* <h3>Why is it that after using Cuper Navigation Bar (and not just this case), part of the list header is obscured?</h3>
-Because I use CustomScrollView internally, and CustomScrollView doesn't inject padding like BoxScrollView does, so you need to inject padding or SafeArea yourself.
-
-* <h3>Compatibility?</h3>
-1.3.0 replaces a new method to implement the indicator. The internal indicator is implemented by monitoring scroll Controller position changes. There are no methods such as NotificationListener and GestureDector that may cause sliding gesture conflicts.
-So it should be compatible with most of the libraries that need to be used between gestures. However, some libraries may not be compatible and ScrollPhysics needs to be rewritten, which is clearly required for internal FrontStyle.
-
-
+## Exist Problems
+* about NestedScrollView, refreshing under SliverAppBar is temporarily impossible. 
+When you slide down and then slide up quickly, it will return back. The main reason is that
+ NestedScrollView does not consider the problem of cross-border elasticity under 
+ bouncingScrollPhysics. Relevant flutter issues: 34316, 33367, 29264. This problem 
+ can only wait for flutter to fix this.
+* SmartRefresher does not have refresh injection into ScrollView under the subtree, that is, if you put AnimatedList or RecordableListView in the child
+ is impossible. I have tried many ways to solve this problem and failed. Because of the 
+ principle of implementation, I have to append it to the head and tail of slivers. In fact, the problem is not that much of my
+Component issues, such as AnimatedList, can't be used with AnimatedList and GridView unless
+ I convert AnimatedList to SliverAnimatedList is the solution. At the moment,
+ I have a temporary solution to this problem, but it's a bit cumbersome to rewrite the code inside it and then outside ScrollView.
+Add SmartRefresher, see my two examples [Example 1](example/lib/other/refresh_animatedlist.dart)和[Example 2](example/lib/other/refresh_recordable_listview.dart)
+* As for the problem that active request refresh does not allow users to drag, it is specifically described that when active request refresh list scrolls upwards, the user's dragging gesture should be intercepted to prevent user drag from blocking the operation of request refresh.
+I know that setCanDrag in Scrollable State can prevent it, but this method does not mean that it can be called at any time, once the call timing is wrong, it will crash.
 
 ## Thanks
 

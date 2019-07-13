@@ -2,9 +2,10 @@
 
 ## RefreshController
 * Remember to dispose RefreshController in widget dispose callback,Otherwise, when you refresh, the component is destroyed and the refresh happens to be finished, the null pointer warning will be reported.
+* RefreshController can only correspond to one Smart Refresher. Don't try to assign RefreshController to multiple Smart Refreshers. The most common application scenarios are TabBarView and PageView.
 
 ## SmartRefresher
-* child only support ListView,GridView,CustomView,This means that inheriting ScrollView is all right.When you want to put a single NON-SCROLLING view, use ListView.。
+* Don't put the ScrollView component you want to add an indicator under a component's subtree. Because of the implementation mechanism, it's not implemented with components like NotificationListener.
 * When you want to turn off drop-down and pull-up functions, you can use enablePullUp and enablePullDown attributes
 * When child does not inherit ScrollView, note that box constraints are unbounded in height under Smart Refresher
 * not support SingleChildView,use ListView replace it.

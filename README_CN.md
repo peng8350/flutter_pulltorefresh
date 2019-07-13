@@ -1,68 +1,120 @@
 # flutter_pulltorefresh
+<a href="https://pub.dev/packages/pull_to_refresh">
+  <img src="https://img.shields.io/pub/v/pull_to_refresh.svg"/>
+</a>
+<a href="https://flutter.dev/">
+  <img src="https://img.shields.io/badge/flutter-%3E%3D%201.2.1-green.svg"/>
+</a>
+<a href="https://opensource.org/licenses/MIT">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg"/>
+</a>
 
 ## 介绍
-一个提供上拉加载和下拉刷新的组件,同时支持Android和Ios
+一个提供上拉加载和下拉刷新的组件,同时支持Android和Ios<br>
+
+[下载Demo(Android)](demo.apk):
+
+![二维码](arts/qr_code.png)
+
 
 ## 特性
 * 提供上拉加载和下拉刷新
 * 几乎适合所有部件
 * 提供全局设置默认指示器和属性
 * 提供多种比较常用的指示器
-* 支持Android和iOS默认滑动引擎,可限制越界距离
+* 支持Android和iOS默认滑动引擎,可限制越界距离,打造自定义弹性动画,速度,阻尼等。
 * 支持水平和垂直刷新,同时支持翻转列表(四个方向)
 * 提供多种刷新指示器风格:跟随,不跟随,位于背部,位于前部, 提供多种加载更多风格
 * 提供二楼刷新,可实现类似淘宝二楼,微信二楼,携程二楼
 * 允许关联指示器存放在Viewport外部,即朋友圈刷新效果
 
 ## 用法
-提示:<br>
-1.因1.3.0对内部进行了很大的变动,1.3.0~1.3.9版本不建议使用,Bug较多,1.4.0开始稳定<br>
-2.确保flutter版本大于等于1.2.1
 
-```
+```yaml
 
    dependencies:
-     pull_to_refresh: ^1.4.9
+     pull_to_refresh: ^1.5.0
 
 ```
 
+```dart
+
+    import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 ```
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+```dart
+    
+  List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
 
-RefreshController _refreshController= RefreshController(initialRefresh:true);;
+  void _onRefresh() async{
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
 
-void _onRefresh(){
-   /*.  after the data return,
-        use _refreshController.refreshComplete() or refreshFailed() to end refreshing
-   */
-}
+  void _onLoading() async{
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+    items.add((items.length+1).toString());
+    if(mounted)
+    setState(() {
 
-void _onLoading(){
-   /*
-        use _refreshController.loadComplete() or loadNoData(),loadFailed() to end loading
-   */
-}
+    });
+    _refreshController.loadComplete();
+  }
 
-build(){
-...
-SmartRefresher(
-      enablePullDown: true,
-      enablePullUp: true,
-      header: defaultTargetPlatform == TargetPlatform.iOS?WaterDropHeader():WaterDropMaterialHeader(),
-      controller: _refreshController,
-      onRefresh: _onRefresh,
-      onLoading: _onLoading,
-      child: "child",
-    )
-....
-}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: WaterDropHeader(),
+        footer: CustomFooter(
+          builder: (BuildContext context,LoadStatus mode){
+            Widget body ;
+            if(mode==LoadStatus.idle){
+              body =  Text("pull up load");
+            }
+            else if(mode==LoadStatus.loading){
+              body =  CupertinoActivityIndicator();
+            }
+            else if(mode == LoadStatus.failed){
+              body = Text("Load Failed!Click retry!");
+            }
+            else{
+              body = Text("No more Data");
+            }
+            return Container(
+              height: 55.0,
+              child: Center(child:body),
+            );
+          },
+        ),
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        child: ListView.builder(
+          itemBuilder: (c, i) => Card(child: Center(child: Text(items[i]))),
+          itemExtent: 100.0,
+          itemCount: items.length,
+        ),
+      ),
+    );
+  }
 
-// don't forget to dispose refreshController
-void dispose(){
+  // don't forget to dispose refreshController
+  @override
+  void dispose() {
+    // TODO: implement dispose
     _refreshController.dispose();
     super.dispose();
-}
+  }
 
 ```
 
@@ -72,16 +124,14 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 同时,你也可以设置一些全局的属性,比如是否开启自动加载,刷新触发距离,是否自动隐藏尾部指示器当不满足一页。[例子](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/MainActivity.dart)里有使用到这个
 
 ```
-
-    RefreshConfiguration(
+     RefreshConfiguration(
         headerBuilder: () => WaterDropHeader(),
         footerBuilder:  () => ClassicFooter(),
-        clickLoadingWhenIdle: true,
          headerTriggerDistance: 80.0,
          hideFooterWhenNotFull: true,
         child: .....
-    )
-
+    );
+    
 ```
 
 ## 截图
@@ -94,7 +144,7 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 |:---:|:---:|:---:|
 |art| ![](arts/example3.gif) | ![](arts/example4.gif) |
 
-|Style| [兼容其他特殊组件](example/lib/ui/example/otherwidget) |  [空白视图](example/lib/ui/example/useStage/empty_view.dart) |
+|Style| [兼容其他特殊组件](example/lib/ui/example/otherwidget) |  [聊天列表](example/lib/ui/example/useStage/qq_chat_list.dart) |
 |:---:|:---:|:---:|
 |art| ![](arts/example5.gif) | ![](arts/example6.gif) |
 
@@ -130,21 +180,18 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 - [指示器内部属性介绍](indicator_attribute.md)
 - [更新日志](CHANGELOG.md)
 - [注意地方](notice.md)
+- [常见问题](problems.md)
 
-## F.A.Q
-* <h3>IOS状态栏双击为什么ListView不自动滚动到顶部?</h3>
-这个问题经测试不是我封装的失误,当ListView里的controller被替换后,这个问题就会出现,原因大概是Scaffold里的处理操作,请issue flutter。
+## 暂时存在的问题
+* 关于配合NestedScrollView,在SliverAppBar下面做刷新的功能暂时是没办法实现的,当你下滑然后快速上滑,
+它会出现跳动,主要是NestedScrollView没有考虑到在BouncingScrollPhysics下的越界问题,相关flutter issue:
+34316,33367,29264,这个问题只能等待flutter修复。
+* SmartRefresher不具有向子树下的ScrollView注入刷新功能,也就是如果直接把AnimatedList,RecordableListView放在child结点是不行的,这个问题我尝试过很多个方法都失败了,由于实现原理,我必须得在slivers头部和尾部追加,事实上,这个问题也不大是我组件的问题,比如说AnimatedList,假如我要结合AnimatedList和GridView一起使用是没办法的,唯有把AnimatedList转换为SliverAnimatedList才能解决。目前呢,面对这种问题的话,我已经有临时的解决方案,但有点麻烦,要重写它内部的代码,然后在ScrollView外部
+增加SmartRefresher,详见我这两个例子[例子1](example/lib/other/erfresh_animatedlist.dart)和[例子2](example/lib/other/rerfresh_recordable_listview.dart)
+* 关于主动请求刷新不允许用户拖动问题,具体描述:当主动请求刷新列表往上滚动时,应该要拦截用户拖动的手势,防止用户拖动阻断了请求刷新的操作。
+这个问题目前我还没有很好的解决办法,我知道ScrollableState里setCanDrag可以阻止它,但是这个方法不是说随时都可以调用,一旦调用时机不对,就会奔溃。
 
-* <h3>NestedScrollView兼容性?</h3>
-不建议使用NestedScrollView,目前我已经发现了一个问题(与BouncingScrollPhysics冲突),这个问题在flutter issue里也有很多类似的(33367,34316),只能等待flutter解决这个问题,
-所以最好用CustomScrollView,避免使用它,因为可能还有很多未知的问题我还没有发现。
 
-* <h3>为什么使用CuperNavigationBar后(不只这一个情况),上面好像被遮住了一部分</h3>
-因为我内部就是采用CustomScrollView来实现的,而CustomScrollView它不像BoxScrollView会帮你注入padding,所以需要你自己注入padding或者使用SafeArea
-
-* <h3>兼容性方面?</h3>
-自1.3.0换了一套新的方法去实现指示器，内部指示器实现是通过监听scrollController位置变化来实现的，并没有使用到类如NotificationListener和GestureDector这类可能引起滑动手势冲突的方法，
-所以应该可以兼容大多需要利用到手势之间的库。但是，可能不兼容一些库需要改写ScrollPhysics，内部的FrontStyle就很明显需要用到这个。
 
 ## 感谢
 

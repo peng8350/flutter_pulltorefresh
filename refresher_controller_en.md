@@ -53,6 +53,8 @@
 | Attribute Name     |     Attribute Explain     | Parameter Type | Default Value  | requirement |
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | child | you know,no need to explain  | ? extends RefreshIndicator  | ClassicHeader | 必要|
+| springDescription | custom spring animate config  | SpringDescription | default | 可选 |
+| dragSpeedRatio | the speed ratio when dragging overscroll ,compute=origin physics dragging speed *dragSpeedRatio  | double | 1.0 | 可选 |
 
 Refresh(header):
 
@@ -80,3 +82,4 @@ Load more(footer):
 | maxUnderScrollExtent | max underScroll distance  | double | inf | 可选 |
 | footerTriggerDistance |   the extentAfter distance of  trigger loading  | double | 15.0 | 可选 |
 | enableLoadingWhenFailed |  whether allowed to use gesture pull-up trigger to load more  | bool | false| 可选 |
+| shouldFooterFollowWhenNotFull | When not full one page,If it should follow content for different status,premise: hideFooterWhenNotFull = false | (LoadStatus) => bool | true | 可选 |
