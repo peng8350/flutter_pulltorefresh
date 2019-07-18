@@ -107,10 +107,7 @@ class _ExamplePageState extends State<ExamplePage>
           title: "NestedScrollView下刷新",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                body: NestedRefresh(),
-                appBar: AppBar(),
-              );
+              return NestedRefresh();
             }));
           }),
       ExampleItem(
