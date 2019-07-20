@@ -9,21 +9,55 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'dataSource.dart';
+import 'test_indicator.dart';
 
-Widget buildRefresher(RefreshController controller){
+Widget buildRefresher(RefreshController controller,{int count:20}){
   return Directionality(
     textDirection: TextDirection.ltr,
-    child: SmartRefresher(
-      enablePullUp: true,
-      child: ListView.builder(
-        itemBuilder: (c,i) => Text(data[i]),
-        itemCount: 20,
-        itemExtent: 100,
+    child: Container(
+      width: 375.0,
+      height: 690.0,
+      child: SmartRefresher(
+        header: TestHeader(),
+        footer: TestFooter(),
+        enablePullUp: true,
+        child: ListView.builder(
+          itemBuilder: (c,i) => Text(data[i]),
+          itemCount: 0,
+          itemExtent: 100,
+        ),
+        controller: controller,
       ),
-      controller: controller,
     ),
 
   );
+}
+
+void testRequestFun(bool full){
+  testWidgets("requestRefresh(init),requestLoading function", (tester) async{
+
+    final RefreshController _refreshController = RefreshController(initialRefresh: true);
+
+    await tester.pumpWidget(buildRefresher(_refreshController,count: full?20:1));
+    //init Refresh
+    await tester.pumpAndSettle();
+    expect(_refreshController.headerStatus, RefreshStatus.refreshing);
+    _refreshController.refreshCompleted();
+    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    expect(_refreshController.headerStatus, RefreshStatus.idle);
+
+    _refreshController.position.jumpTo(200.0);
+    _refreshController.requestRefresh(duration: Duration(milliseconds: 500),curve: Curves.linear);
+    await tester.pumpAndSettle();
+    _refreshController.refreshCompleted();
+    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    expect(_refreshController.headerStatus, RefreshStatus.idle);
+
+
+    _refreshController.requestLoading();
+    await tester.pumpAndSettle();
+    expect(_refreshController.footerStatus, LoadStatus.loading);
+  });
 }
 
 void main(){
@@ -72,13 +106,16 @@ void main(){
     await tester.pump();
     expect(_refreshController.footerMode.value, LoadStatus.failed);
 
-
-
-    await tester.pump();
     _refreshController.footerMode.value = LoadStatus.loading;
     _refreshController.loadNoData();
     await tester.pump();
-    await tester.pump(Duration(milliseconds: 200));
     expect(_refreshController.footerMode.value, LoadStatus.noMore);
   });
+
+  testRequestFun(true);
+
+  testRequestFun(false);
+
+
+
 }
