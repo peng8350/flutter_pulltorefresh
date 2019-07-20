@@ -33,6 +33,7 @@ Widget buildRefresher(RefreshController controller,{int count:20}){
   );
 }
 
+// consider two situation, the one is Viewport full,second is Viewport not full
 void testRequestFun(bool full){
   testWidgets("requestRefresh(init),requestLoading function", (tester) async{
 
@@ -97,18 +98,18 @@ void main(){
 
     _refreshController.footerMode.value = LoadStatus.loading;
     _refreshController.loadComplete();
-    await tester.pump();
+    await tester.pump(Duration(milliseconds: 200));
     expect(_refreshController.footerMode.value, LoadStatus.idle);
 
 
     _refreshController.footerMode.value = LoadStatus.loading;
     _refreshController.loadFailed();
-    await tester.pump();
+    await tester.pump(Duration(milliseconds: 200));
     expect(_refreshController.footerMode.value, LoadStatus.failed);
 
     _refreshController.footerMode.value = LoadStatus.loading;
     _refreshController.loadNoData();
-    await tester.pump();
+    await tester.pump(Duration(milliseconds: 200));
     expect(_refreshController.footerMode.value, LoadStatus.noMore);
   });
 
