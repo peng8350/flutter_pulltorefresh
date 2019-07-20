@@ -254,6 +254,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       return;
     }
     update();
+
     if (mode == LoadStatus.loading) {
       if (refresher.onLoading != null) {
         refresher.onLoading();
