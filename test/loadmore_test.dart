@@ -111,4 +111,123 @@ void main(){
     }
 
   });
+
+  testWidgets("if the status is noMore,it shouldn't enable footer to loading", (tester) async{
+    final RefreshController _refreshController = RefreshController(
+        initialLoadStatus: LoadStatus.noMore);
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: SmartRefresher(
+        header: TestHeader(),
+        footer: TestFooter(),
+        enablePullUp: true,
+        enablePullDown: true,
+        child: ListView.builder(
+          itemBuilder: (c, i) =>
+              Center(
+                child: Text(data[i]),
+              ),
+          itemCount: 20,
+          itemExtent: 100,
+        ),
+        controller: _refreshController,
+      ),
+    ));
+    _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-216);
+    await tester.drag(find.byType(Scrollable), const Offset(0,-400.0));
+    await tester.pump();
+    expect(_refreshController.footerStatus, LoadStatus.noMore);
+    await tester.pump(Duration(milliseconds: 100));
+    expect(_refreshController.footerStatus, LoadStatus.noMore);
+
+    _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-500);
+    await tester.fling(find.byType(Scrollable), const Offset(0,-300.0),2200);
+    await tester.pump();
+    expect(_refreshController.footerStatus, LoadStatus.noMore);
+    while (tester.binding.transientCallbackCount > 0) {
+        expect(_refreshController.footerStatus, LoadStatus.noMore);
+      await tester.pump(const Duration(milliseconds: 20));
+    }
+  });
+
+  group("when footer in Viewport is not full with one page", (){
+    testWidgets("pull down shouldn't trigger load more", (tester) async{
+      final RefreshController _refreshController = RefreshController(
+          initialRefresh: true);
+      await tester.pumpWidget(Directionality(
+        textDirection: TextDirection.ltr,
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 3,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+      ));
+
+      await tester.drag(find.byType(Scrollable), const Offset(0,10.0));
+      await tester.pump();
+      await tester.pump(Duration(milliseconds: 20));
+      expect(_refreshController.footerStatus, LoadStatus.idle);
+      await tester.pumpAndSettle();
+      // quickly fling with ballstic
+      expect(_refreshController.position.pixels, 0.0);
+      await tester.fling(find.byType(Scrollable), const Offset(0,100.0),1000);
+      await tester.pump(Duration(milliseconds: 400));
+      expect(_refreshController.footerStatus, LoadStatus.idle);
+      await tester.pumpAndSettle();
+      expect(_refreshController.position.pixels, 0.0);
+      expect(_refreshController.footerStatus, LoadStatus.idle);
+
+
+    });
+
+    testWidgets("pull up can trigger load more", (tester) async{
+      final RefreshController _refreshController = RefreshController(
+          initialRefresh: true);
+      await tester.pumpWidget(Directionality(
+        textDirection: TextDirection.ltr,
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 3,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+      ));
+
+      await tester.drag(find.byType(Scrollable), const Offset(0,-10.0));
+      expect(_refreshController.footerStatus, LoadStatus.idle);
+      await tester.pump();
+      await tester.pump(Duration(milliseconds: 20));
+      expect(_refreshController.footerStatus, LoadStatus.loading);
+      await tester.pumpAndSettle();
+      // quickly fling with ballstic
+      expect(_refreshController.position.pixels, 0.0);
+      await tester.fling(find.byType(Scrollable), const Offset(0,-100.0),1000);
+      await tester.pump(Duration(milliseconds: 400));
+      expect(_refreshController.footerStatus, LoadStatus.loading);
+      await tester.pumpAndSettle();
+      expect(_refreshController.position.pixels, 0.0);
+      expect(_refreshController.footerStatus, LoadStatus.loading);
+
+    });
+
+  });
 }
