@@ -9,13 +9,74 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'dataSource.dart';
 import 'test_indicator.dart';
 
 
 
 void main() {
+
+  testWidgets("test child attribute ", (tester) async {
+    final RefreshController _refreshController = RefreshController();
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: SmartRefresher(
+        header: TestHeader(),
+        footer: TestFooter(),
+        enablePullUp: true,
+        enablePullDown: true,
+        child: null,
+        controller: _refreshController,
+      ),
+    ));
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: SmartRefresher(
+        header: TestHeader(),
+        footer: TestFooter(),
+        enablePullUp: true,
+        enablePullDown: true,
+        child: ListView.builder(itemBuilder: (c,i) => Card(),itemExtent: 100.0,itemCount: 20,),
+        controller: _refreshController,
+      ),
+    ));
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: SmartRefresher(
+        header: TestHeader(),
+        footer: TestFooter(),
+        enablePullUp: true,
+        enablePullDown: true,
+        child: CustomScrollView(
+          slivers: <Widget>[SliverToBoxAdapter(child: Text("asd"),),SliverToBoxAdapter(child: Text("asd"),),SliverToBoxAdapter(child: Text("asd"),),SliverToBoxAdapter(child: Text("asd"),)],
+        ),
+        controller: _refreshController,
+      ),
+    ));
+
+    //test scrollController
+    final List<String> log = [];
+    final ScrollController scrollController = ScrollController()..addListener((){
+      log.add("");
+    });
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: SmartRefresher(
+        header: TestHeader(),
+        footer: TestFooter(),
+        enablePullUp: true,
+        enablePullDown: true,
+        child: ListView.builder(itemBuilder: (c,i) => Card(),itemExtent: 100.0,itemCount: 20,controller: scrollController,),
+        controller: _refreshController,
+      ),
+    ));
+    await tester.drag(find.byType(Scrollable ), const Offset(0.0,-100.0));
+    await tester.pumpAndSettle();
+    expect(log.length, greaterThanOrEqualTo(1));
+
+  });
+
   testWidgets("param check ", (tester) async {
     final RefreshController _refreshController = RefreshController();
     await tester.pumpWidget(Directionality(
