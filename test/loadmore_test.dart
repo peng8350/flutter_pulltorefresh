@@ -230,4 +230,145 @@ void main(){
     });
 
   });
+
+  // may be happen #91
+  group("check if the loading more times stiuation exists", (){
+
+    testWidgets("loading->idle", (tester) async{
+      final RefreshController _refreshController = RefreshController(
+          initialRefresh: true);
+      int time = 0;
+      await tester.pumpWidget(Directionality(
+        textDirection: TextDirection.ltr,
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          onLoading: () {
+            _refreshController.loadComplete();
+            time++;
+          },
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 20,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+      ));
+
+      _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-100);
+      await tester.drag(find.byType(Scrollable), const Offset(0,-150.0));
+      expect(_refreshController.footerStatus,LoadStatus.idle);
+      while (tester.binding.transientCallbackCount > 0) {
+        await tester.pump(const Duration(milliseconds: 20));
+      }
+      expect(time, 1);
+
+      _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-100);
+      // quickly fling with ballstic,now test failed,may be this exist twice loading,return 2
+      await tester.fling(find.byType(Scrollable), const Offset(0,-80.0),1000);
+      await tester.pump();
+      expect(_refreshController.footerStatus,LoadStatus.idle);
+      while (tester.binding.transientCallbackCount > 0) {
+        await tester.pump(const Duration(milliseconds: 1));
+      }
+      expect(time, 1);
+
+    });
+
+
+    testWidgets("loading->failed", (tester) async{
+      final RefreshController _refreshController = RefreshController(
+          initialRefresh: true);
+      int time = 0;
+      await tester.pumpWidget(Directionality(
+        textDirection: TextDirection.ltr,
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          onLoading: () {
+            _refreshController.loadFailed();
+            time++;
+          },
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 20,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+      ));
+
+      _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-100);
+      await tester.drag(find.byType(Scrollable), const Offset(0,-150.0));
+      expect(_refreshController.footerStatus,LoadStatus.idle);
+      while (tester.binding.transientCallbackCount > 0) {
+        await tester.pump(const Duration(milliseconds: 20));
+      }
+      expect(time, 1);
+
+      _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-100);
+      await tester.fling(find.byType(Scrollable), const Offset(0,-80.0),1000);
+      while (tester.binding.transientCallbackCount > 0) {
+        await tester.pump(const Duration(milliseconds: 1));
+      }
+      expect(time, 1);
+
+    });
+
+    testWidgets("loading->noData", (tester) async{
+      final RefreshController _refreshController = RefreshController(
+          initialRefresh: true);
+      int time = 0;
+      await tester.pumpWidget(Directionality(
+        textDirection: TextDirection.ltr,
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          onLoading: () {
+            _refreshController.loadNoData();
+            time++;
+          },
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 20,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+      ));
+
+      _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-100);
+      await tester.drag(find.byType(Scrollable), const Offset(0,-150.0));
+      expect(_refreshController.footerStatus,LoadStatus.idle);
+      while (tester.binding.transientCallbackCount > 0) {
+        await tester.pump(const Duration(milliseconds: 20));
+      }
+      expect(time, 1);
+
+      _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-100);
+      await tester.fling(find.byType(Scrollable), const Offset(0,-80.0),1000);
+      while (tester.binding.transientCallbackCount > 0) {
+        await tester.pump(const Duration(milliseconds: 1));
+      }
+      expect(time, 1);
+
+    });
+
+  });
 }
