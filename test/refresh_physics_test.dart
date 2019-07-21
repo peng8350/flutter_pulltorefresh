@@ -43,7 +43,6 @@ void main(){
 
       await tester.fling(find.byType(Viewport), const Offset(0,100), 5200);
       while (tester.binding.transientCallbackCount > 0) {
-        print(_refreshController.position.pixels);
         expect(_refreshController.position.pixels, greaterThanOrEqualTo(-150.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
@@ -57,9 +56,86 @@ void main(){
       }
     });
 
+    testWidgets("verity if it will spring back when jumpto", (tester) async{
+      final RefreshController _refreshController = RefreshController();
+      await tester.pumpWidget(MaterialApp(
+        theme: ThemeData(
+            platform: TargetPlatform.android
+        ),
+        home: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 23,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+      ));
+
+     _refreshController.position.jumpTo(-100.0);
+      expect(_refreshController.position.pixels,-100.0);
+      while (tester.binding.transientCallbackCount > 0) {
+        print(_refreshController.position.pixels);
+        await tester.pump(const Duration(milliseconds: 20));
+      }
+      expect(_refreshController.position.pixels, 0.0);
+
+    });
+
+    testWidgets("When clamping,enablePullDown = false,it shouldn't overscroll", (tester) async{
+      final RefreshController _refreshController = RefreshController();
+      await tester.pumpWidget(MaterialApp(
+        theme: ThemeData(
+            platform: TargetPlatform.android
+        ),
+        home: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: false,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 23,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+      ));
+
+      await tester.fling(find.byType(Viewport), Offset(0,100.0), 1000);
+      while (tester.binding.transientCallbackCount > 0) {
+        expect(_refreshController.position.pixels, 0.0);
+        await tester.pump(const Duration(milliseconds: 20));
+      }
+      expect(_refreshController.position.pixels, 0.0);
+
+      // just little middle
+      _refreshController.position.jumpTo(200.0);
+      await tester.fling(find.byType(Viewport), Offset(0,100.0), 1000);
+      while (tester.binding.transientCallbackCount > 0) {
+        expect(_refreshController.position.pixels, greaterThanOrEqualTo(0.0));
+        await tester.pump(const Duration(milliseconds: 20));
+      }
+
+      // the most doubt stiuation,from bottomest fliping to top
+      _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent);
+      await tester.fling(find.byType(Viewport), Offset(0,1000.0), 5000);
+      while (tester.binding.transientCallbackCount > 0) {
+        expect(_refreshController.position.pixels, greaterThanOrEqualTo(0.0));
+        await tester.pump(const Duration(milliseconds: 20));
+      }
+
+    });
   });
 
-  group("in IOS BoucingScrollPhysics", (){
-
-  });
 }

@@ -15,14 +15,14 @@ import 'test_indicator.dart';
 
 
 
-Future<void> buildNotFullList(tester,bool reverse,Axis direction,LoadIndicator footer){
+Future<void> buildNotFullList(tester,bool reverse,Axis direction,{dynamic footer=const TestFooter(),dynamic header=const TestHeader()}){
   final RefreshController _refreshController = RefreshController();
     return tester.pumpWidget(MaterialApp(
       home: Container(
         height: 600,
         width: 800,
         child: SmartRefresher(
-          header: TestHeader(),
+          header: header,
           footer: footer,
           enablePullUp: true,
           enablePullDown: true,
@@ -54,33 +54,36 @@ void main(){
     ];
     for(CustomFooter footer in footer_data){
     // down
-    await buildNotFullList(tester,false,Axis.vertical,footer);
+    await buildNotFullList(tester,false,Axis.vertical,footer:footer);
 
     RenderSliverSingleBoxAdapter sliver = tester.renderObject(find.byType(SliverLoading));
     // behind the bottom ,if else ,it is render error
     expect(sliver.child.localToGlobal(Offset(0.0,0.0)),const Offset(0,600));
 
     // up
-    await buildNotFullList(tester,true,Axis.vertical,footer);
+    await buildNotFullList(tester,true,Axis.vertical,footer:footer);
 
     sliver = tester.renderObject(find.byType(SliverLoading));
     /// build failed in this ,may be I do some errors in this direction ,why -48.0?
     expect(sliver.child.localToGlobal(Offset(0.0,0.0)),const Offset(0,-60.0));
 
     // left
-    await buildNotFullList(tester,true,Axis.horizontal,footer);
+    await buildNotFullList(tester,true,Axis.horizontal,footer:footer);
 
     sliver = tester.renderObject(find.byType(SliverLoading));
     // behind the bottom ,if else ,it is render error
     expect(sliver.child.localToGlobal(Offset(0.0,0.0)),const Offset(-60.0,0));
 
     // right
-    await buildNotFullList(tester,false,Axis.horizontal,footer);
+    await buildNotFullList(tester,false,Axis.horizontal,footer:footer);
 
     sliver = tester.renderObject(find.byType(SliverLoading));
     // behind the bottom ,if else ,it is render error
+
     expect(sliver.child.localToGlobal(Offset(0.0,0.0)),const Offset(800.0,0));
+
   }
   });
+
 
 }
