@@ -5,20 +5,19 @@
  */
 
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_test/flutter_test.dart' as prefix0;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/widgets.dart';
-
 import 'dataSource.dart';
 import 'test_indicator.dart';
 
 
 
-void main(){
-
-  testWidgets("trigger refresh  function ", (tester) async{
-    final RefreshController _refreshController = RefreshController(initialRefresh: true);
+void main() {
+  testWidgets("param check ", (tester) async {
+    final RefreshController _refreshController = RefreshController();
     await tester.pumpWidget(Directionality(
       textDirection: TextDirection.ltr,
       child: SmartRefresher(
@@ -27,79 +26,136 @@ void main(){
         enablePullUp: true,
         enablePullDown: true,
         child: ListView.builder(
-          itemBuilder: (c,i) => Center(
-            child: Text(data[i]),
-          ),
+          itemBuilder: (c, i) =>
+              Center(
+                child: Text(data[i]),
+              ),
           itemCount: 20,
           itemExtent: 100,
         ),
         controller: _refreshController,
       ),
     ));
+    RenderViewport viewport = tester.renderObject(find.byType(Viewport));
+    expect(viewport.childCount,3);
 
-    // from 0.0 drop down, not enough tigger
-    await tester.drag(find.byType(Scrollable), Offset(0,50.0),touchSlopY:0.0 );
-    await tester.pump();
-    expect(_refreshController.headerStatus, RefreshStatus.idle);
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: SmartRefresher(
+        header: TestHeader(),
+        footer: TestFooter(),
+        enablePullUp: true,
+        enablePullDown: false,
+        child: ListView.builder(
+          itemBuilder: (c, i) =>
+              Center(
+                child: Text(data[i]),
+              ),
+          itemCount: 20,
+          itemExtent: 100,
+        ),
+        controller: _refreshController,
+      ),
+    ));
+    viewport = tester.renderObject(find.byType(Viewport));
+    expect(viewport.childCount,2);
+    expect(viewport.firstChild.runtimeType,RenderSliverFixedExtentList);
+    final List<dynamic> logs = [];
+    // check enablePullDown,enablePullUp
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: SmartRefresher(
+        header: TestHeader(),
+        footer: TestFooter(),
+        enablePullDown: true,
+        enablePullUp: true,
+        child: ListView.builder(
+          itemBuilder: (c, i) =>
+              Center(
+                child: Text(data[i]),
+              ),
+          itemCount: 20,
+          itemExtent: 100,
+        ),
+        onRefresh: (){
+
+          logs.add("refresh");
+        },
+        onLoading: (){
+
+          logs.add("loading");
+        },
+        controller: _refreshController,
+      ),
+    ));
+
+    // check onRefresh,onLoading
+    await tester.drag(find.byType(Scrollable), Offset(0,100.0),touchSlopY:0.0 );
+    await tester.pump(Duration(milliseconds: 20));
+    await tester.pump(Duration(milliseconds: 20));
+    expect(logs.length, 1);
+    expect(logs[0], "refresh");
+    logs.clear();
+    _refreshController.refreshCompleted();
     await tester.pumpAndSettle(Duration(milliseconds: 600));
 
-    // stick to check
+    await tester.drag(find.byType(Scrollable), Offset(0,-4000.0),touchSlopY:0.0 );
+    await tester.pump(Duration(milliseconds: 20)); //canRefresh
+    await tester.pump(Duration(milliseconds: 20)); //refreshing
+    expect(logs.length, 1);
+    expect(logs[0], "loading");
+    logs.clear();
+    _refreshController.loadComplete();
+
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: SmartRefresher(
+        header: TestHeader(),
+        footer: TestFooter(),
+        enablePullDown: true,
+        enablePullUp: true,
+        child: ListView.builder(
+          itemBuilder: (c, i) =>
+              Center(
+                child: Text(data[i]),
+              ),
+          itemCount: 20,
+          itemExtent: 100,
+        ),
+        onOffsetChange: (up,offset){
+          logs.add(offset);
+        },
+        controller: _refreshController,
+      ),
+    ));
+
+    // check onOffsetChange(top)
     _refreshController.position.jumpTo(0.0);
-    await tester.pump(Duration(milliseconds: 100));
-    await tester.drag(find.byType(Scrollable), Offset(0,79.999999999),touchSlopY:0.0 );
-    expect(_refreshController.headerStatus, RefreshStatus.idle);
-    await tester.pumpAndSettle(Duration(milliseconds: 600));
-
-    // from 0.0 drop down
-    await tester.drag(find.byType(Scrollable), Offset(0,80.0),touchSlopY:0.0 );
-    await tester.pump();
-    expect(_refreshController.headerStatus, RefreshStatus.canRefresh);
-    await tester.pumpAndSettle(Duration(milliseconds: 100));
-    expect(_refreshController.headerStatus, RefreshStatus.refreshing);
-    _refreshController.refreshCompleted();
-    await tester.pumpAndSettle(Duration(milliseconds: 600));
-
-    // from 100.0 drop down
-    _refreshController.position.jumpTo(100.0);
-    await tester.pump(Duration(milliseconds: 100));
-    await tester.drag(find.byType(Scrollable), Offset(0,180.0),touchSlopY:0.0 );
-    expect(_refreshController.headerStatus, RefreshStatus.canRefresh);
-    await tester.pumpAndSettle(Duration(milliseconds: 100));
-    expect(_refreshController.headerStatus, RefreshStatus.refreshing);
-    _refreshController.refreshCompleted();
-    await tester.pumpAndSettle(Duration(milliseconds: 600));
-
-    // when user flip with ballistic,it should not be tigger rrerfresh
-    _refreshController.position.jumpTo(400.0);
-    await tester.fling(find.byType(Viewport), Offset(0,100.0),2000.0);
-    while (tester.binding.transientCallbackCount > 0) {
-      await tester.pump(const Duration(milliseconds: 20));
+    double count = 1;
+    while(count<11){
+      await tester.drag(find.byType(Scrollable), Offset(0,20),touchSlopY:0.0 );
+      count++;
+      await tester.pump(Duration(milliseconds: 20));
     }
-    expect(_refreshController.headerStatus, RefreshStatus.idle);
-    await tester.pumpAndSettle(Duration(milliseconds: 600));
-
-    // when user flip with ballistic from 0.0,it should not be tigger rrerfresh also
-    _refreshController.position.jumpTo(0.0);
-    await tester.fling(find.byType(Viewport), Offset(0,100.0),2000.0);
-    while (tester.binding.transientCallbackCount > 0) {
-      await tester.pump(const Duration(milliseconds: 20));
+    for(double i in logs){
+      expect(i, greaterThanOrEqualTo(0));
     }
-    expect(_refreshController.headerStatus, RefreshStatus.idle);
-    await tester.pumpAndSettle(Duration(milliseconds: 600));
-
-    // consider about another situation,if user trriiger refresh, and then drag down(cannot see the header)
-    _refreshController.position.jumpTo(0.0);
-    await tester.drag(find.byType(Viewport), Offset(0,100.0),touchSlopY:0.0);
-    await tester.pump(); // refresh to canRefresh
-    expect(_refreshController.headerStatus, RefreshStatus.canRefresh);
-    await tester.pump(Duration(milliseconds: 100));
-    expect(_refreshController.headerStatus, RefreshStatus.refreshing);
-    await tester.drag(find.byType(Viewport), Offset(0,-90.0));
-    await tester.pumpAndSettle();
-    final double positionRecord = _refreshController.position.pixels;
-    _refreshController.refreshCompleted();
-    await tester.pumpAndSettle(Duration(milliseconds: 600));
-    expect(_refreshController.position.pixels==positionRecord-60.0, true);//60.0 is indicator  visual extent
-    expect(_refreshController.headerStatus, RefreshStatus.idle);
+    logs.clear();
+    // check onOffsetChange
+    _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent);
+    count = 1;
+    while(count<11){
+      await tester.drag(find.byType(Scrollable), Offset(0,-20),touchSlopY:0.0 );
+      count++;
+      await tester.pump(Duration(milliseconds: 20));
+    }
+    expect(logs.length , greaterThan(0));
+    for(double i in logs){
+      expect(i, greaterThanOrEqualTo(0));
+    }
+    logs.clear();
+    await tester.pump(Duration(milliseconds: 20));
   });
+
+
 }
