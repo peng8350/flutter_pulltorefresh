@@ -242,4 +242,50 @@ void main(){
     }
     );
   });
+
+  testWidgets(
+      "verity headerTriggerDistance", (tester) async {
+    final RefreshController _refreshController = RefreshController(
+        initialRefresh: true);
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: RefreshConfiguration(
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 20,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+        headerTriggerDistance: 100.0,
+      ),
+    ));
+
+    _refreshController.position.jumpTo(0.0);
+    await tester.pump(Duration(milliseconds: 100));
+    await tester.drag(
+        find.byType(Scrollable), Offset(0, 99.999999999), touchSlopY: 0.0);
+    await tester.pump();
+    expect(_refreshController.headerStatus, RefreshStatus.idle);
+    await tester.pumpAndSettle(Duration(milliseconds: 600));
+    expect(_refreshController.headerStatus, RefreshStatus.idle);
+
+    _refreshController.position.jumpTo(0.0);
+    await tester.pump(Duration(milliseconds: 100));
+    await tester.drag(
+        find.byType(Scrollable), Offset(0, 100.999999999), touchSlopY: 0.0);
+    await tester.pump();
+    expect(_refreshController.headerStatus, RefreshStatus.canRefresh);
+    await tester.pumpAndSettle(Duration(milliseconds: 600));
+    expect(_refreshController.headerStatus, RefreshStatus.refreshing);
+  });
 }
+

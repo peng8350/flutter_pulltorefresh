@@ -370,5 +370,117 @@ void main(){
 
     });
 
+
+  });
+
+  testWidgets("when autoLoad = false or enableLoadingWhenFailed = true", (tester) async{
+    final RefreshController _refreshController = RefreshController(
+    );
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: RefreshConfiguration(
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 20,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+        autoLoad: false,
+        enableLoadingWhenFailed: true,
+      ),
+    ));
+
+    _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent);
+    await tester.drag(find.byType(Scrollable), const Offset(0,-150.0));
+    expect(_refreshController.footerStatus, LoadStatus.idle);
+    await tester.pumpAndSettle(Duration(milliseconds: 500));
+    expect(_refreshController.footerStatus,LoadStatus.idle);
+
+    _refreshController.footerMode.value = LoadStatus.failed;
+    _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-30.0);
+    expect(_refreshController.position.pixels,_refreshController.position.maxScrollExtent-30.0);
+    await tester.drag(find.byType(Scrollable), const Offset(0,-100.0));
+    await tester.pump();
+    expect(_refreshController.footerStatus, LoadStatus.failed);
+    await tester.pump(Duration(milliseconds: 200));
+    expect(_refreshController.footerStatus,LoadStatus.failed);
+
+
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: RefreshConfiguration(
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 20,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+        autoLoad: true,
+        enableLoadingWhenFailed: true,
+      ),
+    ));
+
+    _refreshController.footerMode.value = LoadStatus.failed;
+    _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-30.0);
+    expect(_refreshController.position.pixels,_refreshController.position.maxScrollExtent-30.0);
+    await tester.drag(find.byType(Scrollable), const Offset(0,-100.0));
+    await tester.pump(Duration(milliseconds: 200));
+    expect(_refreshController.footerStatus,LoadStatus.loading);
+  });
+
+  testWidgets("verity footer triggerdistance", (tester) async{
+    final RefreshController _refreshController = RefreshController(
+    );
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: RefreshConfiguration(
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 20,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+        footerTriggerDistance: -30.0,
+      ),
+    ));
+
+    _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-30.0);
+    await tester.drag(find.byType(Scrollable), const Offset(0,-70.0));
+    await tester.pump();
+    await tester.pumpAndSettle(Duration(milliseconds: 2));
+    expect(_refreshController.footerStatus,LoadStatus.loading);
+
+    _refreshController.footerMode.value = LoadStatus.idle;
+    _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-30.0);
+    await tester.drag(find.byType(Scrollable), const Offset(0,-59.0));
+    await tester.pumpAndSettle();
+    expect(_refreshController.footerStatus,LoadStatus.idle);
   });
 }

@@ -110,6 +110,7 @@ class _MainActivityState extends State<MainActivity>
             children: views,
             physics: NeverScrollableScrollPhysics(),
           ),
+          enableLoadingWhenFailed: true,
           springDescription:
               SpringDescription(mass: 2.0, stiffness: 200.0, damping: 15.0),
           dragSpeedRatio: 1.5,

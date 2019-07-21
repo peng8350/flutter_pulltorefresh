@@ -27,7 +27,7 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
         data.add(item["url"]);
       }
       if (mounted) setState(() {});
-      _controller.loadComplete();
+      _controller.loadFailed();
       indexPage++;
     }).catchError((_) {
       print("error");
@@ -85,7 +85,7 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
     _scrollController = ScrollController(keepScrollOffset: true);
-    _controller = RefreshController();
+    _controller = RefreshController(initialLoadStatus: LoadStatus.failed);
     _fetch();
   }
 
