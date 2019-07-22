@@ -246,8 +246,9 @@ void main(){
           enablePullUp: true,
           enablePullDown: true,
           onLoading: () {
-            _refreshController.loadComplete();
             time++;
+            _refreshController.loadComplete();
+
           },
           child: ListView.builder(
             itemBuilder: (c, i) =>
@@ -269,13 +270,12 @@ void main(){
       }
       expect(time, 1);
 
+      time = 0;
       _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent-100);
-      // quickly fling with ballstic,now test failed,may be this exist twice loading,return 2
       await tester.fling(find.byType(Scrollable), const Offset(0,-80.0),1000);
-      await tester.pump();
       expect(_refreshController.footerStatus,LoadStatus.idle);
       while (tester.binding.transientCallbackCount > 0) {
-        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pump(const Duration(milliseconds: 100));
       }
       expect(time, 1);
 

@@ -83,7 +83,6 @@ void main(){
      _refreshController.position.jumpTo(-100.0);
       expect(_refreshController.position.pixels,-100.0);
       while (tester.binding.transientCallbackCount > 0) {
-        print(_refreshController.position.pixels);
         await tester.pump(const Duration(milliseconds: 20));
       }
       expect(_refreshController.position.pixels, 0.0);

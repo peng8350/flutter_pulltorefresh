@@ -39,7 +39,7 @@ class Test3State extends State<Test3>
             child: Text("请求加载数据"))
       ],
     ));
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 10; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
@@ -195,12 +195,8 @@ class Test3State extends State<Test3>
               itemCount: data.length,
             ),
             onLoading: () {
-              print("onload");
-              Future.delayed(const Duration(milliseconds: 2000)).then((val) {
-//                data.add(Card());
-                if (mounted) setState(() {});
-                _refreshController.loadNoData();
-              });
+              print("onLoading");
+              _refreshController.loadComplete();
             },
           ),
         )
