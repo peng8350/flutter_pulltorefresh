@@ -360,7 +360,7 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   double computePaintOrigin(double boxExtent, bool reverse) {
     if (_computeIfFull(constraints) || shouldFollowContent) {
       if (reverse) {
-        return boxExtent - layoutExtent;
+        return boxExtent-layoutExtent ;
       }
       return 0.0;
     } else {
@@ -369,8 +369,7 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
                 constraints.viewportMainAxisExtent -
                     constraints.precedingScrollExtent,
                 0.0) +
-            boxExtent -
-            layoutExtent;
+            boxExtent -layoutExtent  ;
       } else {
         return Math.max(
             constraints.viewportMainAxisExtent -
@@ -400,8 +399,7 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       child.layout(constraints.asBoxConstraints(maxExtent: 0.0, minExtent: 0.0),
           parentUsesSize: true);
     }
-    double childExtent = (constraints.axisDirection == AxisDirection.up ||
-            constraints.axisDirection == AxisDirection.down)
+    double childExtent = constraints.axis == Axis.vertical
         ? child.size.height
         : child.size.width;
     assert(childExtent != null);
@@ -418,11 +416,9 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
         paintExtent: paintedChildSize,
         // this need to fix later
         paintOrigin: computePaintOrigin(
-            constraints.axis == Axis.vertical
-                ? child.size.height
-                : child.size.width,
+            childExtent,
             constraints.axisDirection == AxisDirection.up ||
-                constraints.crossAxisDirection == AxisDirection.left),
+                constraints.axisDirection == AxisDirection.left),
         cacheExtent: cacheExtent,
         maxPaintExtent: childExtent,
         hitTestExtent: paintedChildSize,
