@@ -116,6 +116,8 @@ class _MainActivityState extends State<MainActivity>
           dragSpeedRatio: 1.5,
           enableScrollWhenTwoLevel: true,
           autoLoad: true,
+          maxOverScrollExtent: 50.0,
+          maxUnderScrollExtent: 100.0,
           footerTriggerDistance: -45.0,
           shouldFooterFollowWhenNotFull: (mode) {
             if (mode == LoadStatus.noMore) {

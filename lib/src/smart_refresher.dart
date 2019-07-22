@@ -103,6 +103,9 @@ class SmartRefresher extends StatefulWidget {
 }
 
 class _SmartRefresherState extends State<SmartRefresher> {
+  RefreshPhysics _physics;
+  bool _updatePhysics = false;
+
   //build slivers from child Widget
   List<Widget> _buildSliversByChild(
       BuildContext context, Widget child, RefreshConfiguration configuration) {
@@ -149,7 +152,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   ScrollPhysics _getScrollPhysics(
       RefreshConfiguration conf, ScrollPhysics physics) {
-    return RefreshPhysics(
+    return _physics= RefreshPhysics(
             enablePullUp: widget.enablePullUp,
             enablePullDown: widget.enablePullDown,
             dragSpeedRatio: conf?.dragSpeedRatio,
@@ -157,13 +160,15 @@ class _SmartRefresherState extends State<SmartRefresher> {
             footerMode: widget.controller.footerMode,
             enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? true,
             headerMode: widget.controller.headerMode,
+            updateFlag: _updatePhysics?0:1,
             enableScrollWhenRefreshCompleted:
                 conf?.enableScrollWhenRefreshCompleted ?? true,
-            clamping: physics is ClampingScrollPhysics ||
+            maxOverScrollExtent: conf?.maxOverScrollExtent ?? (physics is ClampingScrollPhysics ||
                 (physics is AlwaysScrollableScrollPhysics &&
-                    defaultTargetPlatform != TargetPlatform.iOS),
-            maxOverScrollExtent: conf?.maxOverScrollExtent,
-            maxUnderScrollExtent: conf?.maxUnderScrollExtent)
+                    defaultTargetPlatform != TargetPlatform.iOS)?150.0:double.infinity),
+            maxUnderScrollExtent: conf?.maxUnderScrollExtent ?? (physics is ClampingScrollPhysics ||
+                (physics is AlwaysScrollableScrollPhysics &&
+                    defaultTargetPlatform != TargetPlatform.iOS)?120.0:double.infinity))
         .applyTo(physics);
   }
 
@@ -221,6 +226,28 @@ class _SmartRefresherState extends State<SmartRefresher> {
       );
     }
     return body;
+  }
+
+  bool _ifNeedUpdatePhysics(){
+    RefreshConfiguration conf = RefreshConfiguration.of(context);
+    if(conf==null||_physics==null){
+      return false;
+    }
+
+    if(conf.maxOverScrollExtent!= _physics.maxOverScrollExtent|| _physics.maxUnderScrollExtent!=conf.maxUnderScrollExtent||_physics.dragSpeedRatio!=conf.dragSpeedRatio
+    ||widget.enablePullDown!=_physics.enablePullDown||widget.enablePullUp!=_physics.enablePullUp||_physics.enableScrollWhenTwoLevel!=conf.enableScrollWhenTwoLevel||_physics.enableScrollWhenRefreshCompleted!=conf.enableScrollWhenRefreshCompleted){
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  void didUpdateWidget(SmartRefresher oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    if(_ifNeedUpdatePhysics()){
+      _updatePhysics = !_updatePhysics;
+    }
   }
 
   @override

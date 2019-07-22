@@ -6,6 +6,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -180,6 +181,102 @@ void main(){
       expect(_refreshController.position.pixels-_refreshController.position.maxScrollExtent, lessThanOrEqualTo(300.0));
       await tester.pump(const Duration(milliseconds: 20));
     }
+
+  });
+
+  testWidgets("verity if refresh physics updated ", (tester) async{
+    final RefreshController refreshController = RefreshController();
+    await tester.pumpWidget(MaterialApp(
+      home: RefreshConfiguration(
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 23,
+            itemExtent: 100,
+          ),
+          controller: refreshController,
+        ),
+        maxOverScrollExtent: 200.0,
+        maxUnderScrollExtent: 300.0,
+      ),
+    ));
+    expect((refreshController.position.physics as RefreshPhysics).updateFlag,1);
+    await tester.pumpWidget(MaterialApp(
+      home: RefreshConfiguration(
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 23,
+            itemExtent: 100,
+          ),
+          controller: refreshController,
+        ),
+        maxOverScrollExtent: 150.0,
+        maxUnderScrollExtent: 300.0,
+      ),
+    ));
+    expect((refreshController.position.physics as RefreshPhysics).updateFlag,0);
+    expect((refreshController.position.physics as RefreshPhysics).maxOverScrollExtent,150);
+
+    await tester.pumpWidget(MaterialApp(
+      home: RefreshConfiguration(
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 23,
+            itemExtent: 100,
+          ),
+          controller: refreshController,
+        ),
+        maxOverScrollExtent: 200.0,
+        maxUnderScrollExtent: 300.0,
+      ),
+    ));
+    expect((refreshController.position.physics as RefreshPhysics).updateFlag,1);
+    await tester.pumpWidget(MaterialApp(
+      home: RefreshConfiguration(
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 23,
+            itemExtent: 100,
+          ),
+          controller: refreshController,
+        ),
+        maxOverScrollExtent: 200.0,
+        maxUnderScrollExtent: 300.0,
+      ),
+    ));
+    expect((refreshController.position.physics as RefreshPhysics).updateFlag,1);
+
 
   });
 

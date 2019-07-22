@@ -23,33 +23,29 @@ class RefreshPhysics extends ScrollPhysics {
   final bool enablePullDown, enablePullUp;
   final bool enableScrollWhenTwoLevel, enableScrollWhenRefreshCompleted;
   final ValueNotifier headerMode, footerMode;
-  final bool clamping;
+  final int updateFlag;
 
   /// Creates scroll physics that bounce back from the edge.
   RefreshPhysics(
       {ScrollPhysics parent,
-      this.clamping: false,
-      double maxUnderScrollExtent,
+        this.updateFlag,
+      this. maxUnderScrollExtent,
       this.headerMode,
       this.springDescription,
       this.footerMode,
       this.dragSpeedRatio,
       this.enablePullUp,
       this.enableScrollWhenRefreshCompleted,
-      this.enableScrollWhenTwoLevel: false,
+      this.enableScrollWhenTwoLevel,
       this.enablePullDown,
-      double maxOverScrollExtent})
-      : maxOverScrollExtent =
-            maxOverScrollExtent ?? (!clamping ? double.infinity : 150.0),
-        maxUnderScrollExtent =
-            maxUnderScrollExtent ?? (!clamping ? double.infinity : 120.0),
-        super(parent: parent);
+      this. maxOverScrollExtent})
+      :super(parent: parent);
 
   @override
   RefreshPhysics applyTo(ScrollPhysics ancestor) {
     return RefreshPhysics(
         parent: buildParent(ancestor),
-        clamping: clamping,
+        updateFlag:updateFlag ,
         springDescription: springDescription,
         enablePullDown: enablePullDown,
         dragSpeedRatio: dragSpeedRatio,
@@ -88,14 +84,12 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   // TODO: implement runtimeType
   Type get runtimeType {
-    if (enablePullDown && !enablePullUp) {
-      return Container;
-    } else if (!enablePullUp && !enablePullDown) {
-      return Stack;
-    } else if (enablePullUp && !enablePullDown) {
-      return Column;
-    } else {
+    if(updateFlag==0){
       return RefreshPhysics;
+
+    }
+    else{
+      return BouncingScrollPhysics;
     }
   }
 
