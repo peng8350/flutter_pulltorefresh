@@ -242,9 +242,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
   }
 
   @override
-  void didUpdateWidget(SmartRefresher oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
     if(_ifNeedUpdatePhysics()){
       _updatePhysics = !_updatePhysics;
     }

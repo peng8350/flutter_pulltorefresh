@@ -5,6 +5,7 @@
  */
 
 import 'package:flutter/physics.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
@@ -24,6 +25,7 @@ class RefreshPhysics extends ScrollPhysics {
   final bool enableScrollWhenTwoLevel, enableScrollWhenRefreshCompleted;
   final ValueNotifier headerMode, footerMode;
   final int updateFlag;
+  RenderViewport viewportRender;
 
   /// Creates scroll physics that bounce back from the edge.
   RefreshPhysics(
@@ -58,6 +60,20 @@ class RefreshPhysics extends ScrollPhysics {
         maxOverScrollExtent: maxOverScrollExtent);
   }
 
+  RenderViewport findViewport(BuildContext context) {
+    RenderViewport result;
+    context.visitChildElements((Element e) {
+      final RenderObject renderObject = e.findRenderObject();
+      if (renderObject.runtimeType == RenderViewport) {
+        assert(result == null);
+        result = renderObject;
+      } else {
+        result = findViewport(e);
+      }
+    });
+    return result;
+  }
+
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) {
     // TODO: implement shouldAcceptUserOffset
@@ -72,6 +88,8 @@ class RefreshPhysics extends ScrollPhysics {
         RefreshStatus.twoLevelClosing == headerMode.value) {
       return false;
     }
+
+    viewportRender = findViewport((position as ScrollPosition).context.storageContext);
     return true;
   }
 
@@ -163,9 +181,20 @@ class RefreshPhysics extends ScrollPhysics {
         return parent.applyBoundaryConditions(position, value);
       }
     }
-    final double topBoundary = position.minScrollExtent - maxOverScrollExtent;
+    double topExtra = 0.0;
+    double bottomExtra = 0.0;
+    if(enablePullDown){
+      final RenderSliverSingleBoxAdapter sliverHeader = viewportRender.firstChild;
+
+      topExtra = sliverHeader.geometry.scrollExtent!=0.0?0.0:(position.axis==Axis.vertical?sliverHeader.child.size.height:sliverHeader.child.size.width);
+    }
+    if(enablePullUp){
+      final RenderSliverSingleBoxAdapter sliverFooter = viewportRender.lastChild;
+      bottomExtra = sliverFooter.geometry.scrollExtent!=0.0?0.0:(position.axis==Axis.vertical?sliverFooter.child.size.height:sliverFooter.child.size.width);
+    }
+    final double topBoundary = position.minScrollExtent - maxOverScrollExtent-topExtra;
     final double bottomBoundary =
-        position.maxScrollExtent + maxUnderScrollExtent;
+        position.maxScrollExtent + maxUnderScrollExtent+bottomExtra;
     if (maxOverScrollExtent != double.infinity &&
         value < position.pixels &&
         position.pixels <= topBoundary) // underscroll

@@ -42,10 +42,9 @@ void main(){
           controller: _refreshController,
         ),
       ));
-
       await tester.fling(find.byType(Viewport), const Offset(0,100), 5200);
       while (tester.binding.transientCallbackCount > 0) {
-        expect(_refreshController.position.pixels, greaterThanOrEqualTo(-150.0));
+        expect(_refreshController.position.pixels, greaterThanOrEqualTo(-250.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
 
@@ -53,7 +52,7 @@ void main(){
       _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent);
       await tester.fling(find.byType(Viewport), const Offset(0,1000), 5200);
       while (tester.binding.transientCallbackCount > 0) {
-        expect(_refreshController.position.pixels, greaterThanOrEqualTo(-150.0));
+        expect(_refreshController.position.pixels, greaterThanOrEqualTo(-250.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
     });
