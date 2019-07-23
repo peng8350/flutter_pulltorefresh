@@ -652,7 +652,7 @@ class RefreshConfiguration extends InheritedWidget {
     this.enableScrollWhenTwoLevel: true,
     this.enableBallisticRefresh: false,
     this.springDescription,
-    this.enableScrollWhenRefreshCompleted: true,
+    this.enableScrollWhenRefreshCompleted: false,
     this.headerOffset: 0.0,
     this.enableLoadingWhenFailed: false,
     this.twiceTriggerDistance: 150.0,
