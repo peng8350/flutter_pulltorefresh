@@ -27,14 +27,12 @@ class MaterialClassicHeader extends RefreshIndicator {
     this.semanticsLabel,
     this.semanticsValue,
     this.color,
-    bool reverse: false,
     this.distance: 50.0,
     this.backgroundColor,
   }) : super(
           key: key,
           refreshStyle: RefreshStyle.Front,
           height: height,
-          reverse: reverse,
         );
 
   @override
@@ -169,7 +167,6 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
             height: 80.0,
             color: color,
             distance: distance,
-            reverse: reverse,
             backgroundColor: backgroundColor,
             semanticsValue: semanticsValue,
             semanticsLabel: semanticsLabel);

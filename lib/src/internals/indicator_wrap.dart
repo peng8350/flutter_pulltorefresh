@@ -22,13 +22,11 @@ abstract class RefreshIndicator extends StatefulWidget {
 
   final double height;
 
-  final bool reverse;
 
   final Duration completeDuration;
 
   const RefreshIndicator(
       {Key key,
-      this.reverse: false,
       this.height: 60.0,
       this.completeDuration:
           const Duration(milliseconds: default_completeDuration),
@@ -224,10 +222,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         paintOffsetY: configuration.headerOffset,
         child: RotatedBox(
           child: buildContent(context, mode),
-          quarterTurns: needReverseAll() && widget.reverse ? 10 : 0,
+          quarterTurns: Scrollable.of(context).axisDirection==AxisDirection.up ? 10 : 0,
         ),
         floating: floating,
-        reverse: widget.reverse,
         refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||
                 mode == RefreshStatus.twoLevelOpening ||
                 mode == RefreshStatus.twoLevelClosing

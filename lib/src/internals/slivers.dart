@@ -16,7 +16,6 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
     this.paintOffsetY,
     this.refreshIndicatorLayoutExtent = 0.0,
     this.floating = false,
-    this.reverse,
     Widget child,
     this.refreshStyle,
   })  : assert(refreshIndicatorLayoutExtent != null),
@@ -32,9 +31,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   // space either way but this instructs the _RenderCupertinoSliverRefresh
   // on whether to also occupy any layoutExtent space or not.
   final bool floating;
-
   final RefreshStyle refreshStyle;
-  final bool reverse;
   final double paintOffsetY;
 
   @override
@@ -42,7 +39,6 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
     return _RenderSliverRefresh(
       refreshIndicatorExtent: refreshIndicatorLayoutExtent,
       hasLayoutExtent: floating,
-      reverse: reverse,
       paintOffsetY: paintOffsetY,
       refreshStyle: refreshStyle,
     );
@@ -61,7 +57,6 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
       ..updateFlag = mode == RefreshStatus.twoLevelOpening ||
           mode == RefreshStatus.twoLeveling ||
           mode == RefreshStatus.idle
-      ..reverse = reverse
       ..paintOffsetY = paintOffsetY;
   }
 }
@@ -72,7 +67,6 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
       @required bool hasLayoutExtent,
       RenderBox child,
       this.paintOffsetY,
-      this.reverse,
       this.refreshStyle})
       : assert(refreshIndicatorExtent != null),
         assert(refreshIndicatorExtent >= 0.0),
@@ -94,7 +88,6 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   // also it will crash if you call applyNewDimession when the state change
   // I don't know why flutter limit it, no choice
   bool _updateFlag = false;
-  bool reverse;
 
   set refreshIndicatorLayoutExtent(double value) {
     assert(value != null);

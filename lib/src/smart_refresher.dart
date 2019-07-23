@@ -75,7 +75,7 @@ class SmartRefresher extends StatefulWidget {
   // This method will callback when the indicator changes from edge to edge.
   final OnOffsetChange onOffsetChange;
 
-  //controll inner state
+  // controll inner state
   final RefreshController controller;
 
   SmartRefresher(
@@ -447,7 +447,6 @@ class RefreshConfiguration extends InheritedWidget {
   final IndicatorBuilder headerBuilder;
   final IndicatorBuilder footerBuilder;
   final SpringDescription springDescription;
-
   // If need to refreshing now when reaching triggerDistance
   final bool skipCanRefresh;
   final ShouldFollowContent shouldFooterFollowWhenNotFull;
