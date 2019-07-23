@@ -17,6 +17,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
  2.Clamping
  3.Bouncing
  */
+// ignore: MUST_BE_IMMUTABLE
 class RefreshPhysics extends ScrollPhysics {
   final double maxOverScrollExtent, maxUnderScrollExtent;
   final SpringDescription springDescription;
@@ -43,6 +44,7 @@ class RefreshPhysics extends ScrollPhysics {
       this. maxOverScrollExtent})
       :super(parent: parent);
 
+
   @override
   RefreshPhysics applyTo(ScrollPhysics ancestor) {
     return RefreshPhysics(
@@ -64,7 +66,7 @@ class RefreshPhysics extends ScrollPhysics {
     RenderViewport result;
     context.visitChildElements((Element e) {
       final RenderObject renderObject = e.findRenderObject();
-      if (renderObject.runtimeType == RenderViewport) {
+      if (renderObject is RenderViewport) {
         assert(result == null);
         result = renderObject;
       } else {
@@ -80,16 +82,14 @@ class RefreshPhysics extends ScrollPhysics {
     if (headerMode.value == RefreshStatus.twoLeveling &&
         !enableScrollWhenTwoLevel) {
       return false;
-    } else if ((!enableScrollWhenRefreshCompleted &&
-            headerMode.value == RefreshStatus.failed) ||
-        (!enableScrollWhenRefreshCompleted &&
-            headerMode.value == RefreshStatus.completed) ||
+    } else if ((!enableScrollWhenRefreshCompleted &&position.pixels<0&&
+        (  headerMode.value == RefreshStatus.completed ||headerMode.value == RefreshStatus.failed)) ||
+
         headerMode.value == RefreshStatus.twoLevelOpening ||
         RefreshStatus.twoLevelClosing == headerMode.value) {
       return false;
     }
 
-    viewportRender = findViewport((position as ScrollPosition).context.storageContext);
     return true;
   }
 
@@ -171,6 +171,7 @@ class RefreshPhysics extends ScrollPhysics {
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     // TODO: implement applyBoundaryConditions
     // it should enable AnimateTo go anyWhere
+    viewportRender ??= findViewport((position as ScrollPosition).context.storageContext);
     if (headerMode.value == RefreshStatus.twoLeveling) {
       if (position.pixels - value > 0.0) {
         return parent.applyBoundaryConditions(position, value);

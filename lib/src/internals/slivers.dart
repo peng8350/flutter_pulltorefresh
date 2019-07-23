@@ -90,7 +90,6 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   double get refreshIndicatorLayoutExtent => _refreshIndicatorExtent;
   double _refreshIndicatorExtent;
   double paintOffsetY;
-
   // need to trigger shouldAceppty user offset ,else it will not limit scroll when enter twolevel or exit
   // also it will crash if you call applyNewDimession when the state change
   // I don't know why flutter limit it, no choice
@@ -162,6 +161,7 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   @override
   void performLayout() {
     if (_updateFlag) {
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
       Scrollable.of(context).position.applyNewDimensions();
       _updateFlag = false;
     }
