@@ -432,6 +432,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
           builder: (BuildContext context, BoxConstraints cons) {
             _isHide = cons.biggest.height == 0.0;
             return GestureDetector(
+              behavior: HitTestBehavior.opaque,
               onTap: () {
                 if ((mode == LoadStatus.idle && !configuration.autoLoad) ||
                     (!configuration.enableLoadingWhenFailed &&
