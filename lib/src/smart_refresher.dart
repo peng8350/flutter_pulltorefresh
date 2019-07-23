@@ -108,7 +108,6 @@ class SmartRefresher extends StatefulWidget {
 class _SmartRefresherState extends State<SmartRefresher> {
   RefreshPhysics _physics;
   bool _updatePhysics = false;
-  bool _ignore = false;
 
   //build slivers from child Widget
   List<Widget> _buildSliversByChild(
@@ -176,15 +175,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
         .applyTo(physics);
   }
 
-  void setIgnore(bool ignore){
-    if(_ignore !=ignore){
-      setState(() {
-
-      });
-      _ignore = ignore;
-    }
-  }
-
   // build the customScrollView
   Widget _buildBodyBySlivers(
       Widget childView, List<Widget> slivers, RefreshConfiguration conf) {
@@ -193,7 +183,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
       body = CustomScrollView(
         physics: _getScrollPhysics(
             conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
-        // ignore: INVALID_USE_OF_PROTECTED_MEMBE
+        // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
         controller: widget.controller.scrollController =
             childView.controller ?? PrimaryScrollController.of(context),
         cacheExtent: childView.cacheExtent,
@@ -293,14 +283,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
         -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
     widget.controller._footerTriggerDistance =
         configuration?.footerTriggerDistance ?? 15.0;
-    widget.controller.refresherState = this;
     List<Widget> slivers =
         _buildSliversByChild(context, widget.child, configuration);
     Widget body = _buildBodyBySlivers(widget.child, slivers, configuration);
-    body = IgnorePointer(
-      child: body,
-      ignoring: _ignore,
-    );
     if (configuration != null) {
       return body;
     } else {
@@ -331,7 +316,6 @@ class RefreshController {
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
-  _SmartRefresherState refresherState;
 
   final bool initialRefresh;
 
@@ -369,11 +353,8 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (isRefresh) return;
-    refresherState.setIgnore(true);
     position?.animateTo(_headerTriggerDistance,
-        duration: duration, curve: curve)?.then((_){
-      refresherState.setIgnore(false);
-    });
+        duration: duration, curve: curve);
   }
 
   void requestLoading(
