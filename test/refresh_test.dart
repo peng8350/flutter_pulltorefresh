@@ -287,5 +287,50 @@ void main(){
     await tester.pumpAndSettle(Duration(milliseconds: 600));
     expect(_refreshController.headerStatus, RefreshStatus.refreshing);
   });
+
+  testWidgets(
+      "without refresh function ,only twoLevel", (tester) async {
+    final RefreshController _refreshController = RefreshController(
+       );
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: RefreshConfiguration(
+        child: SmartRefresher(
+          header: ClassicHeader(
+
+          ),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: false,
+          enableTwoLevel: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) =>
+                Center(
+                  child: Text(data[i]),
+                ),
+            itemCount: 20,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+      ),
+    ));
+
+    await tester.drag(
+        find.byType(Scrollable), Offset(0, 155.999999999), touchSlopY: 0.0);
+    await tester.pump();
+    expect(_refreshController.position.pixels, -155.999999999);
+    expect(_refreshController.headerStatus, RefreshStatus.canTwoLevel);
+    await tester.pumpAndSettle();
+    expect(_refreshController.headerStatus, RefreshStatus.twoLeveling);
+    _refreshController.twoLevelComplete();
+    await tester.pumpAndSettle();
+    expect(_refreshController.headerStatus, RefreshStatus.idle);
+    await tester.drag(
+        find.byType(Scrollable), Offset(0, 100.999999999), touchSlopY: 0.0);
+    await tester.pumpAndSettle();
+    expect(_refreshController.headerStatus, RefreshStatus.idle);
+    expect(_refreshController.position.pixels, 0.0);
+  });
 }
 

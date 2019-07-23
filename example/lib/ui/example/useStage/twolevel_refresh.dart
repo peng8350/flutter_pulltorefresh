@@ -152,7 +152,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                         ),
                         controller: _refreshController1,
                         enableTwoLevel: true,
-                        enablePullDown: true,
+                        enablePullDown: false,
                         onRefresh: () async {
                           await Future.delayed(Duration(milliseconds: 2000));
                           _refreshController1.refreshCompleted();

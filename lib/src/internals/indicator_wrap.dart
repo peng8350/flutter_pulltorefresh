@@ -108,7 +108,11 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (refresher.enableTwoLevel &&
           offset >= configuration.twiceTriggerDistance) {
         mode = RefreshStatus.canTwoLevel;
-      } else if (offset >= configuration.headerTriggerDistance) {
+      }
+      else if(refresher.enableTwoLevel){
+        mode = RefreshStatus.idle;
+      }
+      if (refresher.enablePullDown&&offset >= configuration.headerTriggerDistance) {
         if (!configuration.skipCanRefresh) {
           mode = RefreshStatus.canRefresh;
         } else {
@@ -119,24 +123,28 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
             mode = RefreshStatus.refreshing;
           });
         }
-      } else {
+      } else if(refresher.enablePullDown){
         mode = RefreshStatus.idle;
       }
-    } else if (RefreshStatus.canRefresh == mode) {
-      // refreshing
-      floating = true;
-      update();
-      readyToRefresh().then((_) {
+    }
+    else if(activity is BallisticScrollActivity) {
+      if (RefreshStatus.canRefresh == mode) {
+        // refreshing
+        floating = true;
+        update();
+        readyToRefresh().then((_) {
+          if (!mounted) return;
+          mode = RefreshStatus.refreshing;
+        });
+      }
+      if (mode == RefreshStatus.canTwoLevel) {
+        // enter twoLevel
+        floating = true;
+        update();
         if (!mounted) return;
-        mode = RefreshStatus.refreshing;
-      });
-    } else if (mode == RefreshStatus.canTwoLevel) {
-      // enter twoLevel
-      floating = true;
-      update();
-      if (!mounted) return;
 
-      mode = RefreshStatus.twoLevelOpening;
+        mode = RefreshStatus.twoLevelOpening;
+      }
     }
   }
 

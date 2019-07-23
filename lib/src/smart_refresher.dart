@@ -133,7 +133,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
         )
       ];
     }
-    if (widget.enablePullDown) {
+    if (widget.enablePullDown||widget.enableTwoLevel) {
       slivers?.insert(
           0,
           widget.header ??
@@ -158,7 +158,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
       RefreshConfiguration conf, ScrollPhysics physics) {
     return _physics= RefreshPhysics(
             enablePullUp: widget.enablePullUp,
-            enablePullDown: widget.enablePullDown,
+            enablePullDown: widget.enablePullDown||widget.enableTwoLevel,
             dragSpeedRatio: conf?.dragSpeedRatio,
             springDescription: conf?.springDescription,
             footerMode: widget.controller.footerMode,
@@ -178,7 +178,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   void setIgnore(bool ignore){
     if(_ignore !=ignore){
-      print("Asd");
       setState(() {
 
       });
@@ -250,7 +249,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     }
 
     if(conf.maxOverScrollExtent!= _physics.maxOverScrollExtent|| _physics.maxUnderScrollExtent!=conf.maxUnderScrollExtent||_physics.dragSpeedRatio!=conf.dragSpeedRatio
-    ||widget.enablePullDown!=_physics.enablePullDown||widget.enablePullUp!=_physics.enablePullUp||_physics.enableScrollWhenTwoLevel!=conf.enableScrollWhenTwoLevel||_physics.enableScrollWhenRefreshCompleted!=conf.enableScrollWhenRefreshCompleted){
+    ||(widget.enablePullDown||widget.enableTwoLevel)!=_physics.enablePullDown||widget.enablePullUp!=_physics.enablePullUp||_physics.enableScrollWhenTwoLevel!=conf.enableScrollWhenTwoLevel||_physics.enableScrollWhenRefreshCompleted!=conf.enableScrollWhenRefreshCompleted){
       return true;
     }
     return false;
