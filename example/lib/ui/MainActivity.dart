@@ -11,7 +11,6 @@ import 'package:residemenu/residemenu.dart';
 import 'example/ExamplePage.dart';
 import 'test/TestPage.dart';
 import 'indicator/IndicatorPage.dart';
-import 'sample/SamplePage.dart';
 
 class MainActivity extends StatefulWidget {
   final String title;
@@ -60,7 +59,6 @@ class _MainActivityState extends State<MainActivity>
       IndicatorPage(title: "指示器界面"),
       ExamplePage(),
       TestPage(title: "测试界面"),
-      SamplePage(tabController: _tabController),
       ScreenPage(),
     ];
   }
@@ -165,14 +163,6 @@ class _MainActivityState extends State<MainActivity>
             });
             _menuController.closeMenu();
             _pageController.jumpToPage(2);
-          }),
-          buildItem("样例", Icon(Icons.scanner, size: 18, color: Colors.grey),
-              () {
-            setState(() {
-              _tabIndex = 3;
-            });
-            _menuController.closeMenu();
-            _pageController.jumpToPage(3);
           }),
           buildItem("App界面",
               Icon(Icons.format_underlined, size: 18, color: Colors.grey), () {

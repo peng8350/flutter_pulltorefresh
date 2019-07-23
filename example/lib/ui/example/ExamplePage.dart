@@ -5,6 +5,7 @@
  */
 import 'package:example/ui/example/customindicator/shimmer_indicator.dart';
 import 'package:flutter/material.dart';
+import 'otherwidget/refresh_staggered_and_sticky.dart';
 import 'package:example/ui/example/useStage/empty_view.dart';
 import 'package:example/ui/example/useStage/hidefooter_bycontent.dart';
 import 'package:example/ui/example/otherwidget/refesh_expansiopn_panel_list_example.dart';
@@ -163,6 +164,16 @@ class _ExamplePageState extends State<ExamplePage>
               return Scaffold(
                 appBar: AppBar(),
                 body: DraggableLoadingBottomSheet(),
+              );
+            }));
+          }),
+      ExampleItem(
+          title: "stickyHeader+StaggeredGridView",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return Scaffold(
+                appBar: AppBar(),
+                body: RefreshStaggeredAndSticky(),
               );
             }));
           }),
