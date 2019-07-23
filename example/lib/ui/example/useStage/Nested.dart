@@ -18,7 +18,8 @@ class NestedRefresh extends StatefulWidget {
   NestedRefreshState createState() => NestedRefreshState();
 }
 
-class NestedRefreshState extends State<NestedRefresh> with SingleTickerProviderStateMixin{
+class NestedRefreshState extends State<NestedRefresh>
+    with SingleTickerProviderStateMixin {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
   RefreshController _refreshController;
@@ -35,7 +36,6 @@ class NestedRefreshState extends State<NestedRefresh> with SingleTickerProviderS
       ));
     }
   }
-
 
   void enterRefresh() {
     _refreshController.requestRefresh();
@@ -56,58 +56,73 @@ class NestedRefreshState extends State<NestedRefresh> with SingleTickerProviderS
         length: 4,
         child: NestedScrollView(
             headerSliverBuilder: (c, s) => [
-              SliverAppBar(
-                expandedHeight: 206.0,
-                pinned: true,
-                floating: true,
-                flexibleSpace: FlexibleSpaceBar(
-                    centerTitle: true,
-                    background: Image.network(
-                      "https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0c21b1ac3066ae4d354a3b2e0064c8be&auto=format&fit=crop&w=500&q=60",
-                      fit: BoxFit.cover,
-                    )),
-                bottom: TabBar(
-                  tabs: <Widget>[Tab(child: Text("tab1"),),Tab(child: Text("tab2"),),Tab(child: Text("tab3"),),Tab(child: Text("tab4"),)],
-                ),
-              ),
-            ],
-            body:TabBarView(
-              children: <Widget>[RefreshListView(),RefreshListView(),RefreshListView(),RefreshListView()],
+                  SliverAppBar(
+                    expandedHeight: 206.0,
+                    pinned: true,
+                    floating: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                        centerTitle: true,
+                        background: Image.network(
+                          "https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0c21b1ac3066ae4d354a3b2e0064c8be&auto=format&fit=crop&w=500&q=60",
+                          fit: BoxFit.cover,
+                        )),
+                    bottom: TabBar(
+                      tabs: <Widget>[
+                        Tab(
+                          child: Text("tab1"),
+                        ),
+                        Tab(
+                          child: Text("tab2"),
+                        ),
+                        Tab(
+                          child: Text("tab3"),
+                        ),
+                        Tab(
+                          child: Text("tab4"),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+            body: TabBarView(
+              children: <Widget>[
+                RefreshListView(),
+                RefreshListView(),
+                RefreshListView(),
+                RefreshListView()
+              ],
             )),
       ),
     );
   }
 }
 
-class RefreshListView extends StatefulWidget{
-
+class RefreshListView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return _RefreshListViewState();
   }
 }
-class _RefreshListViewState extends State<RefreshListView>{
+
+class _RefreshListViewState extends State<RefreshListView> {
   List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
 
-  void _onRefresh() async{
+  void _onRefresh() async {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
 
-  void _onLoading() async{
+  void _onLoading() async {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use loadFailed(),if no data return,use LoadNodata()
-    items.add((items.length+1).toString());
-    if(mounted)
-      setState(() {
-
-      });
+    items.add((items.length + 1).toString());
+    if (mounted) setState(() {});
     _refreshController.loadComplete();
   }
 
@@ -118,23 +133,20 @@ class _RefreshListViewState extends State<RefreshListView>{
       enablePullUp: true,
       header: WaterDropHeader(),
       footer: CustomFooter(
-        builder: (BuildContext context,LoadStatus mode){
-          Widget body ;
-          if(mode==LoadStatus.idle){
-            body =  Text("pull up load");
-          }
-          else if(mode==LoadStatus.loading){
-            body =  CupertinoActivityIndicator();
-          }
-          else if(mode == LoadStatus.failed){
+        builder: (BuildContext context, LoadStatus mode) {
+          Widget body;
+          if (mode == LoadStatus.idle) {
+            body = Text("pull up load");
+          } else if (mode == LoadStatus.loading) {
+            body = CupertinoActivityIndicator();
+          } else if (mode == LoadStatus.failed) {
             body = Text("Load Failed!Click retry!");
-          }
-          else{
+          } else {
             body = Text("No more Data");
           }
           return Container(
             height: 55.0,
-            child: Center(child:body),
+            child: Center(child: body),
           );
         },
       ),

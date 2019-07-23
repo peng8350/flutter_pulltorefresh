@@ -18,12 +18,16 @@ const double _kDragSizeFactorLimit = 1.5;
 class MaterialClassicHeader extends RefreshIndicator {
   /// see flutter RefreshIndicator documents,the meaning same with that
   final String semanticsLabel;
+
   /// see flutter RefreshIndicator documents,the meaning same with that
   final String semanticsValue;
+
   /// see flutter RefreshIndicator documents,the meaning same with that
   final Color color;
+
   /// Distance from the top when refreshing
   final double distance;
+
   /// see flutter RefreshIndicator documents,the meaning same with that
   final Color backgroundColor;
 

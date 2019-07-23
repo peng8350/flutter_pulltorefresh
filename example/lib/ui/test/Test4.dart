@@ -170,12 +170,14 @@ class Test4State extends State<Test4>
                     color: Colors.redAccent,
                   ),
                 ),
+                SliverExpanded(),
                 SliverToBoxAdapter(
                   child: Container(
                     height: 100.0,
                     color: Colors.redAccent,
                   ),
                 ),
+
               ],
               offset: offset,
             );

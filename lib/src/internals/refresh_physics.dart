@@ -11,7 +11,6 @@ import 'dart:math' as math;
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-
 /// a scrollPhysics for config refresh scroll effect,enable viewport out of edge whatever physics it is
 ///
 /// in [ClampingScrollPhysics], it doesn't allow to flip out of edge,but in RefreshPhysics,it will allow to do that,
@@ -25,6 +24,7 @@ class RefreshPhysics extends ScrollPhysics {
   final bool enableScrollWhenTwoLevel, enableScrollWhenRefreshCompleted;
   final ValueNotifier headerMode, footerMode;
   final int updateFlag;
+
   /// find out the viewport when bouncing,for compute the layoutExtent in header and footer
   /// This does not have any impact on performance. it only  execute once
   RenderViewport viewportRender;
@@ -32,8 +32,8 @@ class RefreshPhysics extends ScrollPhysics {
   /// Creates scroll physics that bounce back from the edge.
   RefreshPhysics(
       {ScrollPhysics parent,
-        this.updateFlag,
-      this. maxUnderScrollExtent,
+      this.updateFlag,
+      this.maxUnderScrollExtent,
       this.headerMode,
       this.springDescription,
       this.footerMode,
@@ -42,15 +42,14 @@ class RefreshPhysics extends ScrollPhysics {
       this.enableScrollWhenRefreshCompleted,
       this.enableScrollWhenTwoLevel,
       this.enablePullDown,
-      this. maxOverScrollExtent})
-      :super(parent: parent);
-
+      this.maxOverScrollExtent})
+      : super(parent: parent);
 
   @override
   RefreshPhysics applyTo(ScrollPhysics ancestor) {
     return RefreshPhysics(
         parent: buildParent(ancestor),
-        updateFlag:updateFlag ,
+        updateFlag: updateFlag,
         springDescription: springDescription,
         enablePullDown: enablePullDown,
         dragSpeedRatio: dragSpeedRatio,
@@ -83,9 +82,10 @@ class RefreshPhysics extends ScrollPhysics {
     if (headerMode.value == RefreshStatus.twoLeveling &&
         !enableScrollWhenTwoLevel) {
       return false;
-    } else if ((!enableScrollWhenRefreshCompleted &&position.pixels<0&&
-        (  headerMode.value == RefreshStatus.completed ||headerMode.value == RefreshStatus.failed)) ||
-
+    } else if ((!enableScrollWhenRefreshCompleted &&
+            position.pixels < 0 &&
+            (headerMode.value == RefreshStatus.completed ||
+                headerMode.value == RefreshStatus.failed)) ||
         headerMode.value == RefreshStatus.twoLevelOpening ||
         RefreshStatus.twoLevelClosing == headerMode.value) {
       return false;
@@ -94,19 +94,16 @@ class RefreshPhysics extends ScrollPhysics {
     return true;
   }
 
-
   //  It seem that it was odd to do so,but I have no choose to do this for updating the state value(enablePullDown and enablePullUp),
-   // in Scrollable.dart _shouldUpdatePosition method,it use physics.runtimeType to check if the two physics is the same,this
-   // will lead to whether the newPhysics should replace oldPhysics,If flutter can provide a method such as "shouldUpdate",
-   // It can work perfectly.
+  // in Scrollable.dart _shouldUpdatePosition method,it use physics.runtimeType to check if the two physics is the same,this
+  // will lead to whether the newPhysics should replace oldPhysics,If flutter can provide a method such as "shouldUpdate",
+  // It can work perfectly.
   @override
   // TODO: implement runtimeType
   Type get runtimeType {
-    if(updateFlag==0){
+    if (updateFlag == 0) {
       return RefreshPhysics;
-
-    }
-    else{
+    } else {
       return BouncingScrollPhysics;
     }
   }
@@ -170,8 +167,8 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     // TODO: implement applyBoundaryConditions
-    // it should enable AnimateTo go anyWhere
-    viewportRender ??= findViewport((position as ScrollPosition).context.storageContext);
+    viewportRender ??=
+        findViewport((position as ScrollPosition).context.storageContext);
     if (headerMode.value == RefreshStatus.twoLeveling) {
       if (position.pixels - value > 0.0) {
         return parent.applyBoundaryConditions(position, value);
@@ -184,18 +181,29 @@ class RefreshPhysics extends ScrollPhysics {
     }
     double topExtra = 0.0;
     double bottomExtra = 0.0;
-    if(enablePullDown){
-      final RenderSliverSingleBoxAdapter sliverHeader = viewportRender.firstChild;
+    if (enablePullDown) {
+      final RenderSliverSingleBoxAdapter sliverHeader =
+          viewportRender.firstChild;
 
-      topExtra = sliverHeader.geometry.scrollExtent!=0.0?0.0:(position.axis==Axis.vertical?sliverHeader.child.size.height:sliverHeader.child.size.width);
+      topExtra = sliverHeader.geometry.scrollExtent != 0.0
+          ? 0.0
+          : (position.axis == Axis.vertical
+              ? sliverHeader.child.size.height
+              : sliverHeader.child.size.width);
     }
-    if(enablePullUp){
-      final RenderSliverSingleBoxAdapter sliverFooter = viewportRender.lastChild;
-      bottomExtra = sliverFooter.geometry.scrollExtent!=0.0?0.0:(position.axis==Axis.vertical?sliverFooter.child.size.height:sliverFooter.child.size.width);
+    if (enablePullUp) {
+      final RenderSliverSingleBoxAdapter sliverFooter =
+          viewportRender.lastChild;
+      bottomExtra = sliverFooter.geometry.scrollExtent != 0.0
+          ? 0.0
+          : (position.axis == Axis.vertical
+              ? sliverFooter.child.size.height
+              : sliverFooter.child.size.width);
     }
-    final double topBoundary = position.minScrollExtent - maxOverScrollExtent-topExtra;
+    final double topBoundary =
+        position.minScrollExtent - maxOverScrollExtent - topExtra;
     final double bottomBoundary =
-        position.maxScrollExtent + maxUnderScrollExtent+bottomExtra;
+        position.maxScrollExtent + maxUnderScrollExtent + bottomExtra;
     if (maxOverScrollExtent != double.infinity &&
         value < position.pixels &&
         position.pixels <= topBoundary) // underscroll

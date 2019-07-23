@@ -23,6 +23,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
         assert(refreshIndicatorLayoutExtent >= 0.0),
         assert(floating != null),
         super(key: key, child: child);
+
   /// The amount of space the indicator should occupy in the sliver in a
   /// resting state when in the refreshing mode.
   final double refreshIndicatorLayoutExtent;
@@ -31,8 +32,10 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   /// space either way but this instructs the _RenderSliverRefresh
   /// on whether to also occupy any layoutExtent space or not.
   final bool floating;
+
   /// header indicator display style
   final RefreshStyle refreshStyle;
+
   /// headerOffset	Head indicator layout deviation Y coordinates, mostly for FrontStyle
   final double paintOffsetY;
 
@@ -275,9 +278,11 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
 class SliverLoading extends SingleChildRenderObjectWidget {
   /// when not full one page,whether it should be hide and disable loading
   final bool hideWhenNotFull;
+
   /// load state
   final LoadStatus mode;
   final double layoutExtent;
+
   /// when not full one page,whether it should follow content
   final bool shouldFollowContent;
 
@@ -351,14 +356,13 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     return totalScrollExtent >= cons.viewportMainAxisExtent;
   }
 
-
-   //  many sitiuation: 1. reverse 2. not reverse
-   // 3. follow content 4. unfollow content
-   //5. not full 6. full
+  //  many sitiuation: 1. reverse 2. not reverse
+  // 3. follow content 4. unfollow content
+  //5. not full 6. full
   double computePaintOrigin(double boxExtent, bool reverse) {
     if (_computeIfFull(constraints) || shouldFollowContent) {
       if (reverse) {
-        return boxExtent-layoutExtent ;
+        return boxExtent - layoutExtent;
       }
       return 0.0;
     } else {
@@ -367,7 +371,8 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
                 constraints.viewportMainAxisExtent -
                     constraints.precedingScrollExtent,
                 0.0) +
-            boxExtent -layoutExtent  ;
+            boxExtent -
+            layoutExtent;
       } else {
         return Math.max(
             constraints.viewportMainAxisExtent -

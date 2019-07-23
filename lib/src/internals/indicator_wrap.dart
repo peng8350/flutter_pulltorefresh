@@ -4,7 +4,6 @@
     createTime:2018-05-14 15:39
  */
 
-
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
 import 'package:flutter/rendering.dart';
@@ -13,21 +12,21 @@ import 'dart:math' as math;
 import '../smart_refresher.dart';
 import 'slivers.dart';
 
-
 /// a widget  implements ios pull down refresh effect and Android material RefreshIndicator overScroll effect
 abstract class RefreshIndicator extends StatefulWidget {
   /// refresh display style
   final RefreshStyle refreshStyle;
+
   /// the visual extent indicator
   final double height;
+
   /// the stopped time when refresh complete or fail
   final Duration completeDuration;
 
   const RefreshIndicator(
       {Key key,
       this.height: 60.0,
-      this.completeDuration:
-          const Duration(milliseconds: 500),
+      this.completeDuration: const Duration(milliseconds: 500),
       this.refreshStyle: RefreshStyle.Follow})
       : super(key: key);
 }
@@ -36,8 +35,10 @@ abstract class RefreshIndicator extends StatefulWidget {
 abstract class LoadIndicator extends StatefulWidget {
   /// load more display style
   final LoadStyle loadStyle;
+
   /// the visual extent indicator
   final double height;
+
   /// callback when user click footer
   final VoidCallback onClick;
 
@@ -177,11 +178,11 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (refresher.enableTwoLevel &&
           offset >= configuration.twiceTriggerDistance) {
         mode = RefreshStatus.canTwoLevel;
-      }
-      else if(refresher.enableTwoLevel){
+      } else if (refresher.enableTwoLevel) {
         mode = RefreshStatus.idle;
       }
-      if (refresher.enablePullDown&&offset >= configuration.headerTriggerDistance) {
+      if (refresher.enablePullDown &&
+          offset >= configuration.headerTriggerDistance) {
         if (!configuration.skipCanRefresh) {
           mode = RefreshStatus.canRefresh;
         } else {
@@ -192,12 +193,12 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
             mode = RefreshStatus.refreshing;
           });
         }
-      } else if(refresher.enablePullDown){
+      } else if (refresher.enablePullDown) {
         mode = RefreshStatus.idle;
       }
     }
     //mostly for spring back
-    else if(activity is BallisticScrollActivity) {
+    else if (activity is BallisticScrollActivity) {
       if (RefreshStatus.canRefresh == mode) {
         // refreshing
         floating = true;
@@ -294,7 +295,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         paintOffsetY: configuration.headerOffset,
         child: RotatedBox(
           child: buildContent(context, mode),
-          quarterTurns: Scrollable.of(context).axisDirection==AxisDirection.up ? 10 : 0,
+          quarterTurns:
+              Scrollable.of(context).axisDirection == AxisDirection.up ? 10 : 0,
         ),
         floating: floating,
         refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||
@@ -420,7 +422,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         shouldFollowContent: configuration.shouldFooterFollowWhenNotFull != null
             ? configuration.shouldFooterFollowWhenNotFull(mode)
             : false,
-        layoutExtent: widget.loadStyle==LoadStyle.ShowAlways?widget.height:widget.loadStyle==LoadStyle.HideAlways?0.0:(floating ? widget.height : 0.0),
+        layoutExtent: widget.loadStyle == LoadStyle.ShowAlways
+            ? widget.height
+            : widget.loadStyle == LoadStyle.HideAlways
+                ? 0.0
+                : (floating ? widget.height : 0.0),
         mode: mode,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints cons) {
@@ -465,9 +471,8 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   ScrollActivity get activity => _position.activity;
 
-
-   // it doesn't support get the ScrollController as the listener, because it will cause "multiple scrollview use one ScollController"
-   // error,only replace the ScrollPosition to listen the offset
+  // it doesn't support get the ScrollController as the listener, because it will cause "multiple scrollview use one ScollController"
+  // error,only replace the ScrollPosition to listen the offset
   ScrollPosition _position;
 
   // update ui

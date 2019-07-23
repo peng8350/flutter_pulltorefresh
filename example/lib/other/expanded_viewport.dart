@@ -148,13 +148,31 @@ class SliverExpanded extends SingleChildRenderObjectWidget {
     // TODO: implement createRenderObject
     return _RenderExpanded();
   }
+
 }
 
-class _RenderExpanded extends RenderSliver
-    with RenderObjectWithChildMixin<RenderBox> {
+class _RenderExpanded extends RenderSliverSingleBoxAdapter{
+
+  _RenderExpanded({
+    RenderBox child,
+  }) : super(child: child);
+
+  @override
+  void layout(Constraints constraints, {bool parentUsesSize = false}) {
+    // TODO: implement layout
+
+    super.layout(constraints, parentUsesSize:parentUsesSize);
+    geometry =SliverGeometry(scrollExtent: 0.0,layoutExtent: 0.0,maxPaintExtent: 0.0,paintExtent: 0.0);
+  }
+
   @override
   void performLayout() {
     // TODO: implement performLayout
-    geometry = SliverGeometry.zero;
+    child.layout(constraints.asBoxConstraints(),);
+    geometry =SliverGeometry(scrollExtent: 60.0,layoutExtent: 60.0,maxPaintExtent: 60.0,paintExtent: 60.0);
   }
+
+
+
+
 }

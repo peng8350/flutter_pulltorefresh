@@ -17,15 +17,18 @@ import '../smart_refresher.dart';
 class WaterDropHeader extends RefreshIndicator {
   /// refreshing content
   final Widget refresh;
+
   /// complete content
   final Widget complete;
+
   /// failed content
   final Widget failed;
+
   /// idle Icon center in waterCircle
   final Widget idleIcon;
+
   /// waterDrop color,default grey
   final Color waterDropColor;
-
 
   const WaterDropHeader({
     Key key,
@@ -154,15 +157,20 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                       listener: _animationController,
                     ),
                   ),
-                  quarterTurns: Scrollable.of(context).axisDirection==AxisDirection.up ? 10 : 0,
+                  quarterTurns:
+                      Scrollable.of(context).axisDirection == AxisDirection.up
+                          ? 10
+                          : 0,
                 ),
                 Container(
-                  alignment: Scrollable.of(context).axisDirection==AxisDirection.up
-                      ? Alignment.bottomCenter
-                      : Alignment.topCenter,
-                  margin: Scrollable.of(context).axisDirection==AxisDirection.up
-                      ? EdgeInsets.only(bottom: 12.0)
-                      : EdgeInsets.only(top: 12.0),
+                  alignment:
+                      Scrollable.of(context).axisDirection == AxisDirection.up
+                          ? Alignment.bottomCenter
+                          : Alignment.topCenter,
+                  margin:
+                      Scrollable.of(context).axisDirection == AxisDirection.up
+                          ? EdgeInsets.only(bottom: 12.0)
+                          : EdgeInsets.only(top: 12.0),
                   child: widget.idleIcon,
                 )
               ],

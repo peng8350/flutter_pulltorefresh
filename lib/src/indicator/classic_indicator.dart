@@ -88,7 +88,9 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                         ? widget.refreshingText
                         : mode == RefreshStatus.idle
                             ? widget.idleText
-                            :   mode == RefreshStatus.canTwoLevel? widget.canTwoLevelText:"",
+                            : mode == RefreshStatus.canTwoLevel
+                                ? widget.canTwoLevelText
+                                : "",
         style: widget.textStyle);
   }
 

@@ -14,65 +14,60 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'dataSource.dart';
 import 'test_indicator.dart';
 
-
-void main(){
-
-
-
-  group("in Android ClampingScrollPhysics", (){
-    testWidgets("clamping physics,when user flip gesture up ,it shouldn't move out of viewport area", (tester) async{
+void main() {
+  group("in Android ClampingScrollPhysics", () {
+    testWidgets(
+        "clamping physics,when user flip gesture up ,it shouldn't move out of viewport area",
+        (tester) async {
       final RefreshController _refreshController = RefreshController();
       await tester.pumpWidget(MaterialApp(
-        theme: ThemeData(
-            platform: TargetPlatform.android
-        ),
+        theme: ThemeData(platform: TargetPlatform.android),
         home: SmartRefresher(
           header: TestHeader(),
           footer: TestFooter(),
           enablePullUp: true,
           enablePullDown: true,
           child: ListView.builder(
-            itemBuilder: (c, i) =>
-                Center(
-                  child: Text(data[i]),
-                ),
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
+            ),
             itemCount: 23,
             itemExtent: 100,
           ),
           controller: _refreshController,
         ),
       ));
-      await tester.fling(find.byType(Viewport), const Offset(0,100), 5200);
+      await tester.fling(find.byType(Viewport), const Offset(0, 100), 5200);
       while (tester.binding.transientCallbackCount > 0) {
-        expect(_refreshController.position.pixels, greaterThanOrEqualTo(-250.0));
+        expect(
+            _refreshController.position.pixels, greaterThanOrEqualTo(-250.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
 
       // from bottom flip up
-      _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent);
-      await tester.fling(find.byType(Viewport), const Offset(0,1000), 5200);
+      _refreshController.position
+          .jumpTo(_refreshController.position.maxScrollExtent);
+      await tester.fling(find.byType(Viewport), const Offset(0, 1000), 5200);
       while (tester.binding.transientCallbackCount > 0) {
-        expect(_refreshController.position.pixels, greaterThanOrEqualTo(-250.0));
+        expect(
+            _refreshController.position.pixels, greaterThanOrEqualTo(-250.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
     });
 
-    testWidgets("verity if it will spring back when jumpto", (tester) async{
+    testWidgets("verity if it will spring back when jumpto", (tester) async {
       final RefreshController _refreshController = RefreshController();
       await tester.pumpWidget(MaterialApp(
-        theme: ThemeData(
-            platform: TargetPlatform.android
-        ),
+        theme: ThemeData(platform: TargetPlatform.android),
         home: SmartRefresher(
           header: TestHeader(),
           footer: TestFooter(),
           enablePullUp: true,
           enablePullDown: true,
           child: ListView.builder(
-            itemBuilder: (c, i) =>
-                Center(
-                  child: Text(data[i]),
-                ),
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
+            ),
             itemCount: 23,
             itemExtent: 100,
           ),
@@ -80,31 +75,28 @@ void main(){
         ),
       ));
 
-     _refreshController.position.jumpTo(-100.0);
-      expect(_refreshController.position.pixels,-100.0);
+      _refreshController.position.jumpTo(-100.0);
+      expect(_refreshController.position.pixels, -100.0);
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 20));
       }
       expect(_refreshController.position.pixels, 0.0);
-
     });
 
-    testWidgets("When clamping,enablePullDown = false,it shouldn't overscroll", (tester) async{
+    testWidgets("When clamping,enablePullDown = false,it shouldn't overscroll",
+        (tester) async {
       final RefreshController _refreshController = RefreshController();
       await tester.pumpWidget(MaterialApp(
-        theme: ThemeData(
-            platform: TargetPlatform.android
-        ),
+        theme: ThemeData(platform: TargetPlatform.android),
         home: SmartRefresher(
           header: TestHeader(),
           footer: TestFooter(),
           enablePullUp: true,
           enablePullDown: false,
           child: ListView.builder(
-            itemBuilder: (c, i) =>
-                Center(
-                  child: Text(data[i]),
-                ),
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
+            ),
             itemCount: 23,
             itemExtent: 100,
           ),
@@ -112,7 +104,7 @@ void main(){
         ),
       ));
 
-      await tester.fling(find.byType(Viewport), Offset(0,100.0), 1000);
+      await tester.fling(find.byType(Viewport), Offset(0, 100.0), 1000);
       while (tester.binding.transientCallbackCount > 0) {
         expect(_refreshController.position.pixels, 0.0);
         await tester.pump(const Duration(milliseconds: 20));
@@ -121,29 +113,28 @@ void main(){
 
       // just little middle
       _refreshController.position.jumpTo(200.0);
-      await tester.fling(find.byType(Viewport), Offset(0,100.0), 1000);
+      await tester.fling(find.byType(Viewport), Offset(0, 100.0), 1000);
       while (tester.binding.transientCallbackCount > 0) {
         expect(_refreshController.position.pixels, greaterThanOrEqualTo(0.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
 
       // the most doubt stiuation,from bottomest fliping to top
-      _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent);
-      await tester.fling(find.byType(Viewport), Offset(0,1000.0), 5000);
+      _refreshController.position
+          .jumpTo(_refreshController.position.maxScrollExtent);
+      await tester.fling(find.byType(Viewport), Offset(0, 1000.0), 5000);
       while (tester.binding.transientCallbackCount > 0) {
         expect(_refreshController.position.pixels, greaterThanOrEqualTo(0.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
-
     });
   });
 
-  testWidgets("maxOverScrollExtent or maxUnderScrollExtent verity ", (tester) async{
+  testWidgets("maxOverScrollExtent or maxUnderScrollExtent verity ",
+      (tester) async {
     final RefreshController _refreshController = RefreshController();
     await tester.pumpWidget(MaterialApp(
-      theme: ThemeData(
-        platform: TargetPlatform.android
-      ),
+      theme: ThemeData(platform: TargetPlatform.android),
       home: RefreshConfiguration(
         child: SmartRefresher(
           header: TestHeader(),
@@ -151,10 +142,9 @@ void main(){
           enablePullUp: true,
           enablePullDown: true,
           child: ListView.builder(
-            itemBuilder: (c, i) =>
-                Center(
-                  child: Text(data[i]),
-                ),
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
+            ),
             itemCount: 23,
             itemExtent: 100,
           ),
@@ -165,25 +155,26 @@ void main(){
       ),
     ));
 
-    await tester.drag(find.byType(Viewport), Offset(0,300.0));
+    await tester.drag(find.byType(Viewport), Offset(0, 300.0));
     while (tester.binding.transientCallbackCount > 0) {
-
       expect(_refreshController.position.pixels, greaterThanOrEqualTo(-300));
       await tester.pump(const Duration(milliseconds: 20));
     }
     expect(_refreshController.position.pixels, 0.0);
 
-
-    _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent);
-    await tester.fling(find.byType(Viewport), Offset(0,-1000.0), 5000);
+    _refreshController.position
+        .jumpTo(_refreshController.position.maxScrollExtent);
+    await tester.fling(find.byType(Viewport), Offset(0, -1000.0), 5000);
     while (tester.binding.transientCallbackCount > 0) {
-      expect(_refreshController.position.pixels-_refreshController.position.maxScrollExtent, lessThanOrEqualTo(300.0));
+      expect(
+          _refreshController.position.pixels -
+              _refreshController.position.maxScrollExtent,
+          lessThanOrEqualTo(300.0));
       await tester.pump(const Duration(milliseconds: 20));
     }
-
   });
 
-  testWidgets("verity if refresh physics updated ", (tester) async{
+  testWidgets("verity if refresh physics updated ", (tester) async {
     final RefreshController refreshController = RefreshController();
     await tester.pumpWidget(MaterialApp(
       home: RefreshConfiguration(
@@ -193,10 +184,9 @@ void main(){
           enablePullUp: true,
           enablePullDown: true,
           child: ListView.builder(
-            itemBuilder: (c, i) =>
-                Center(
-                  child: Text(data[i]),
-                ),
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
+            ),
             itemCount: 23,
             itemExtent: 100,
           ),
@@ -206,7 +196,8 @@ void main(){
         maxUnderScrollExtent: 300.0,
       ),
     ));
-    expect((refreshController.position.physics as RefreshPhysics).updateFlag,1);
+    expect(
+        (refreshController.position.physics as RefreshPhysics).updateFlag, 1);
     await tester.pumpWidget(MaterialApp(
       home: RefreshConfiguration(
         child: SmartRefresher(
@@ -215,10 +206,9 @@ void main(){
           enablePullUp: true,
           enablePullDown: true,
           child: ListView.builder(
-            itemBuilder: (c, i) =>
-                Center(
-                  child: Text(data[i]),
-                ),
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
+            ),
             itemCount: 23,
             itemExtent: 100,
           ),
@@ -228,8 +218,12 @@ void main(){
         maxUnderScrollExtent: 300.0,
       ),
     ));
-    expect((refreshController.position.physics as RefreshPhysics).updateFlag,0);
-    expect((refreshController.position.physics as RefreshPhysics).maxOverScrollExtent,150);
+    expect(
+        (refreshController.position.physics as RefreshPhysics).updateFlag, 0);
+    expect(
+        (refreshController.position.physics as RefreshPhysics)
+            .maxOverScrollExtent,
+        150);
 
     await tester.pumpWidget(MaterialApp(
       home: RefreshConfiguration(
@@ -239,10 +233,9 @@ void main(){
           enablePullUp: true,
           enablePullDown: true,
           child: ListView.builder(
-            itemBuilder: (c, i) =>
-                Center(
-                  child: Text(data[i]),
-                ),
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
+            ),
             itemCount: 23,
             itemExtent: 100,
           ),
@@ -252,7 +245,8 @@ void main(){
         maxUnderScrollExtent: 300.0,
       ),
     ));
-    expect((refreshController.position.physics as RefreshPhysics).updateFlag,1);
+    expect(
+        (refreshController.position.physics as RefreshPhysics).updateFlag, 1);
     await tester.pumpWidget(MaterialApp(
       home: RefreshConfiguration(
         child: SmartRefresher(
@@ -261,10 +255,9 @@ void main(){
           enablePullUp: true,
           enablePullDown: true,
           child: ListView.builder(
-            itemBuilder: (c, i) =>
-                Center(
-                  child: Text(data[i]),
-                ),
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
+            ),
             itemCount: 23,
             itemExtent: 100,
           ),
@@ -274,9 +267,70 @@ void main(){
         maxUnderScrollExtent: 300.0,
       ),
     ));
-    expect((refreshController.position.physics as RefreshPhysics).updateFlag,1);
-
-
+    expect(
+        (refreshController.position.physics as RefreshPhysics).updateFlag, 1);
   });
 
+  testWidgets("when viewport not full, pull up can trigger loading", (tester) async {
+
+    final RefreshController _refreshController = RefreshController();
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: RefreshConfiguration(
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: CustomFooter(
+            loadStyle: LoadStyle.ShowAlways,
+            builder: (c,m) => Container(),
+          ),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
+            ),
+            itemCount: 1,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+        footerTriggerDistance: -30.0,
+      ),
+    ));
+
+    await tester.drag(find.byType(Scrollable), const Offset(0, -70.0));
+    await tester.pumpAndSettle(Duration(milliseconds: 2));
+    expect(_refreshController.footerStatus,LoadStatus.loading);
+    expect(_refreshController.position.pixels,greaterThanOrEqualTo(0.0));
+
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: RefreshConfiguration(
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: CustomFooter(
+            loadStyle: LoadStyle.HideAlways,
+            builder: (c,m) => Container(),
+          ),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
+            ),
+            itemCount: 1,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+        footerTriggerDistance: -30.0,
+      ),
+    ));
+
+    await tester.drag(find.byType(Scrollable), const Offset(0, -70.0));
+    await tester.pumpAndSettle(Duration(milliseconds: 2));
+    expect(_refreshController.footerStatus,LoadStatus.loading);
+    expect(_refreshController.position.pixels,greaterThanOrEqualTo(0.0));
+
+  });
 }

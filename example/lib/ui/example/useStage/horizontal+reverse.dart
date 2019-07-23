@@ -141,8 +141,7 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
                   );
                 },
               ),
-              header: WaterDropMaterialHeader(
-              ),
+              header: WaterDropMaterialHeader(),
               onLoading: () async {
                 await Future.delayed(const Duration(milliseconds: 1000));
                 if (mounted) setState(() {});

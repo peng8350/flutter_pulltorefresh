@@ -10,6 +10,7 @@ import '../smart_refresher.dart';
 
 /// custom header builder,you can use second paramter to know what header state is
 typedef Widget HeaderBuilder(BuildContext context, RefreshStatus mode);
+
 /// custom footer builder,you can use second paramter to know what footerr state is
 typedef Widget FooterBuilder(BuildContext context, LoadStatus mode);
 

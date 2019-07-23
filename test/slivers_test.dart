@@ -13,115 +13,165 @@ import 'package:pull_to_refresh/src/internals/slivers.dart';
 import 'dataSource.dart';
 import 'test_indicator.dart';
 
-
-
-Future<void> buildNotFullList(tester,bool reverse,Axis direction,{dynamic footer=const TestFooter(),dynamic header=const TestHeader(),bool initload:false}){
-  final RefreshController _refreshController = RefreshController(initialLoadStatus: initload?LoadStatus.loading:LoadStatus.idle);
-    return tester.pumpWidget(MaterialApp(
-      home: Container(
-        height: 600,
-        width: 800,
-        child: SmartRefresher(
-          header: header,
-          footer: footer,
-          enablePullUp: true,
-          enablePullDown: true,
-          child: ListView.builder(
-            reverse: reverse,
-            scrollDirection: direction,
-            itemBuilder: (c, i) =>
-                Center(
-                  child: Text(data[i]),
-                ),
-            itemCount: 1,
-            itemExtent: 100,
+Future<void> buildNotFullList(tester, bool reverse, Axis direction,
+    {dynamic footer = const TestFooter(),
+    dynamic header = const TestHeader(),
+    bool initload: false}) {
+  final RefreshController _refreshController = RefreshController(
+      initialLoadStatus: initload ? LoadStatus.loading : LoadStatus.idle);
+  return tester.pumpWidget(MaterialApp(
+    home: Container(
+      height: 600,
+      width: 800,
+      child: SmartRefresher(
+        header: header,
+        footer: footer,
+        enablePullUp: true,
+        enablePullDown: true,
+        child: ListView.builder(
+          reverse: reverse,
+          scrollDirection: direction,
+          itemBuilder: (c, i) => Center(
+            child: Text(data[i]),
           ),
-          controller: _refreshController,
+          itemCount: 1,
+          itemExtent: 100,
         ),
+        controller: _refreshController,
       ),
-    ));
+    ),
+  ));
 }
 
-void main(){
+void main() {
   /// this need to be fixed later
   // #126 may still exist render error with footer not full
-  testWidgets("footer rendering in four direction with different styles(unfollow content)", (tester) async{
-
+  testWidgets(
+      "footer rendering in four direction with different styles(unfollow content)",
+      (tester) async {
     final List<CustomFooter> footer_data = [
-    CustomFooter(builder: (_,c) => Container(height: 60.0,width: 60.0,),loadStyle: LoadStyle.ShowAlways,),
-      CustomFooter(builder: (_,c) => Container(height: 60.0,width: 60.0,),loadStyle: LoadStyle.ShowWhenLoading,),
-      CustomFooter(builder: (_,c) => Container(height: 60.0,width: 60.0,),loadStyle: LoadStyle.HideAlways,),
+      CustomFooter(
+        builder: (_, c) => Container(
+          height: 60.0,
+          width: 60.0,
+        ),
+        loadStyle: LoadStyle.ShowAlways,
+      ),
+      CustomFooter(
+        builder: (_, c) => Container(
+          height: 60.0,
+          width: 60.0,
+        ),
+        loadStyle: LoadStyle.ShowWhenLoading,
+      ),
+      CustomFooter(
+        builder: (_, c) => Container(
+          height: 60.0,
+          width: 60.0,
+        ),
+        loadStyle: LoadStyle.HideAlways,
+      ),
     ];
-    for(CustomFooter footer in footer_data){
-    // down
-    await buildNotFullList(tester,false,Axis.vertical,footer:footer);
-
-    RenderSliverSingleBoxAdapter sliver = tester.renderObject(find.byType(SliverLoading));
-    // behind the bottom ,if else ,it is render error
-    expect(sliver.child.localToGlobal(Offset(0.0,0.0)),const Offset(0,600));
-
-    // up
-    await buildNotFullList(tester,true,Axis.vertical,footer:footer);
-
-    sliver = tester.renderObject(find.byType(SliverLoading));
-    expect(sliver.child.localToGlobal(Offset(0.0,0.0)),const Offset(0,-60.0));
-
-    // left
-    await buildNotFullList(tester,true,Axis.horizontal,footer:footer);
-
-    sliver = tester.renderObject(find.byType(SliverLoading));
-    // behind the bottom ,if else ,it is render error
-    expect(sliver.child.localToGlobal(Offset(0.0,0.0)),const Offset(-60.0,0));
-
-    // right
-    await buildNotFullList(tester,false,Axis.horizontal,footer:footer);
-
-    sliver = tester.renderObject(find.byType(SliverLoading));
-    // behind the bottom ,if else ,it is render error
-    expect(sliver.child.localToGlobal(Offset(0.0,0.0)),const Offset(800.0,0));
-
-  }
-  });
-
-  testWidgets("footer rendering in four direction with different styles(unfollow content),loadingstate", (tester) async{
-
-    final List<CustomFooter> footer_data = [
-      CustomFooter(builder: (_,c) => Container(height: 60.0,width: 60.0,),loadStyle: LoadStyle.ShowAlways,),
-      CustomFooter(builder: (_,c) => Container(height: 60.0,width: 60.0,),loadStyle: LoadStyle.ShowWhenLoading,),
-      CustomFooter(builder: (_,c) => Container(height: 60.0,width: 60.0,),loadStyle: LoadStyle.HideAlways,),
-    ];
-    for(CustomFooter footer in footer_data){
+    for (CustomFooter footer in footer_data) {
       // down
-      await buildNotFullList(tester,false,Axis.vertical,footer:footer,initload: true);
+      await buildNotFullList(tester, false, Axis.vertical, footer: footer);
 
-      RenderSliverSingleBoxAdapter sliver = tester.renderObject(find.byType(SliverLoading));
+      RenderSliverSingleBoxAdapter sliver =
+          tester.renderObject(find.byType(SliverLoading));
       // behind the bottom ,if else ,it is render error
-      expect(sliver.child.localToGlobal(Offset(0.0,0.0)),const Offset(0,600));
+      expect(
+          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(0, 600));
 
       // up
-      await buildNotFullList(tester,true,Axis.vertical,footer:footer,initload: true);
+      await buildNotFullList(tester, true, Axis.vertical, footer: footer);
 
       sliver = tester.renderObject(find.byType(SliverLoading));
-      /// build failed in this ,may be I do some errors in this direction ,why -48.0?
-      expect(sliver.child.localToGlobal(Offset(0.0,0.0)),const Offset(0,-60.0));
+      expect(
+          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(0, -60.0));
 
       // left
-      await buildNotFullList(tester,true,Axis.horizontal,footer:footer,initload: true);
+      await buildNotFullList(tester, true, Axis.horizontal, footer: footer);
 
       sliver = tester.renderObject(find.byType(SliverLoading));
       // behind the bottom ,if else ,it is render error
-      expect(sliver.child.localToGlobal(Offset(0.0,0.0)),const Offset(-60.0,0));
+      expect(
+          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(-60.0, 0));
 
       // right
-      await buildNotFullList(tester,false,Axis.horizontal,footer:footer,initload: true);
+      await buildNotFullList(tester, false, Axis.horizontal, footer: footer);
 
       sliver = tester.renderObject(find.byType(SliverLoading));
       // behind the bottom ,if else ,it is render error
-
-      expect(sliver.child.localToGlobal(Offset(0.0,0.0)),const Offset(800.0,0));
-
+      expect(
+          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(800.0, 0));
     }
   });
 
+  testWidgets(
+      "footer rendering in four direction with different styles(unfollow content),loadingstate",
+      (tester) async {
+    final List<CustomFooter> footer_data = [
+      CustomFooter(
+        builder: (_, c) => Container(
+          height: 60.0,
+          width: 60.0,
+        ),
+        loadStyle: LoadStyle.ShowAlways,
+      ),
+      CustomFooter(
+        builder: (_, c) => Container(
+          height: 60.0,
+          width: 60.0,
+        ),
+        loadStyle: LoadStyle.ShowWhenLoading,
+      ),
+      CustomFooter(
+        builder: (_, c) => Container(
+          height: 60.0,
+          width: 60.0,
+        ),
+        loadStyle: LoadStyle.HideAlways,
+      ),
+    ];
+    for (CustomFooter footer in footer_data) {
+      // down
+      await buildNotFullList(tester, false, Axis.vertical,
+          footer: footer, initload: true);
 
+      RenderSliverSingleBoxAdapter sliver =
+          tester.renderObject(find.byType(SliverLoading));
+      // behind the bottom ,if else ,it is render error
+      expect(
+          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(0, 600));
+
+      // up
+      await buildNotFullList(tester, true, Axis.vertical,
+          footer: footer, initload: true);
+
+      sliver = tester.renderObject(find.byType(SliverLoading));
+
+      /// build failed in this ,may be I do some errors in this direction ,why -48.0?
+      expect(
+          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(0, -60.0));
+
+      // left
+      await buildNotFullList(tester, true, Axis.horizontal,
+          footer: footer, initload: true);
+
+      sliver = tester.renderObject(find.byType(SliverLoading));
+      // behind the bottom ,if else ,it is render error
+      expect(
+          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(-60.0, 0));
+
+      // right
+      await buildNotFullList(tester, false, Axis.horizontal,
+          footer: footer, initload: true);
+
+      sliver = tester.renderObject(find.byType(SliverLoading));
+      // behind the bottom ,if else ,it is render error
+
+      expect(
+          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(800.0, 0));
+    }
+  });
 }
