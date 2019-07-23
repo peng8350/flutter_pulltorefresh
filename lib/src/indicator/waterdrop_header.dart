@@ -13,24 +13,24 @@ import '../internals/indicator_wrap.dart';
 import 'package:flutter/cupertino.dart';
 import '../smart_refresher.dart';
 
+/// QQ ios refresh  header effect
 class WaterDropHeader extends RefreshIndicator {
+  /// refreshing content
   final Widget refresh;
-
+  /// complete content
   final Widget complete;
-
+  /// failed content
   final Widget failed;
-
+  /// idle Icon center in waterCircle
   final Widget idleIcon;
-
+  /// waterDrop color,default grey
   final Color waterDropColor;
 
-  final bool reverse;
 
   const WaterDropHeader({
     Key key,
     this.refresh,
     this.complete,
-    this.reverse: false,
     Duration completeDuration: const Duration(milliseconds: 600),
     this.failed,
     this.waterDropColor: Colors.grey,
@@ -154,13 +154,13 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                       listener: _animationController,
                     ),
                   ),
-                  quarterTurns: widget.reverse ? 10 : 0,
+                  quarterTurns: Scrollable.of(context).axisDirection==AxisDirection.up ? 10 : 0,
                 ),
                 Container(
-                  alignment: widget.reverse
+                  alignment: Scrollable.of(context).axisDirection==AxisDirection.up
                       ? Alignment.bottomCenter
                       : Alignment.topCenter,
-                  margin: widget.reverse
+                  margin: Scrollable.of(context).axisDirection==AxisDirection.up
                       ? EdgeInsets.only(bottom: 12.0)
                       : EdgeInsets.only(top: 12.0),
                   child: widget.idleIcon,

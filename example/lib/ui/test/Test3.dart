@@ -163,10 +163,7 @@ class Test3State extends State<Test3>
             enablePullUp: _enablePullDown,
             enablePullDown: _enablePullUp,
             controller: _refreshController,
-            header: ClassicHeader(
-              iconPos: IconPosition.top,
-              height: 60.0,
-            ),
+            header: WaterDropHeader(),
             footer: ClassicFooter(
               iconPos: IconPosition.top,
               height: 60.0,
@@ -185,7 +182,7 @@ class Test3State extends State<Test3>
               if (mounted) setState(() {});
               _refreshController.refreshCompleted();
 //        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
-////          data.add(Card());
+//          data.add(Card());
 //
 //        });
             },

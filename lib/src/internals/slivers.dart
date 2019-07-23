@@ -10,6 +10,7 @@ import 'dart:math' as Math;
 import 'package:flutter/rendering.dart';
 import '../smart_refresher.dart';
 
+///  Render header sliver widget
 class SliverRefresh extends SingleChildRenderObjectWidget {
   const SliverRefresh({
     Key key,
@@ -22,16 +23,17 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
         assert(refreshIndicatorLayoutExtent >= 0.0),
         assert(floating != null),
         super(key: key, child: child);
-
-  // The amount of space the indicator should occupy in the sliver in a
-  // resting state when in the refreshing mode.
+  /// The amount of space the indicator should occupy in the sliver in a
+  /// resting state when in the refreshing mode.
   final double refreshIndicatorLayoutExtent;
 
-  // _RenderCupertinoSliverRefresh will paint the child in the available
-  // space either way but this instructs the _RenderCupertinoSliverRefresh
-  // on whether to also occupy any layoutExtent space or not.
+  /// _RenderSliverRefresh will paint the child in the available
+  /// space either way but this instructs the _RenderSliverRefresh
+  /// on whether to also occupy any layoutExtent space or not.
   final bool floating;
+  /// header indicator display style
   final RefreshStyle refreshStyle;
+  /// headerOffset	Head indicator layout deviation Y coordinates, mostly for FrontStyle
   final double paintOffsetY;
 
   @override
@@ -269,10 +271,14 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   void applyPaintTransform(RenderObject child, Matrix4 transform) {}
 }
 
+/// Render footer sliver widget
 class SliverLoading extends SingleChildRenderObjectWidget {
+  /// when not full one page,whether it should be hide and disable loading
   final bool hideWhenNotFull;
+  /// load state
   final LoadStatus mode;
   final double layoutExtent;
+  /// when not full one page,whether it should follow content
   final bool shouldFollowContent;
 
   SliverLoading({
@@ -345,11 +351,10 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     return totalScrollExtent >= cons.viewportMainAxisExtent;
   }
 
-  /*
-  many sitiuation: 1. reverse 2. not reverse
-  3. follow content 4. unfollow content
-  5. not full 6. full
-   */
+
+   //  many sitiuation: 1. reverse 2. not reverse
+   // 3. follow content 4. unfollow content
+   //5. not full 6. full
   double computePaintOrigin(double boxExtent, bool reverse) {
     if (_computeIfFull(constraints) || shouldFollowContent) {
       if (reverse) {
@@ -381,7 +386,7 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     }
     bool active;
 
-    if (hideWhenNotFull && mode == LoadStatus.idle) {
+    if (hideWhenNotFull && mode != LoadStatus.noMore) {
       active = _computeIfFull(constraints);
     } else {
       active = true;

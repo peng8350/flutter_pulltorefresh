@@ -14,11 +14,17 @@ import '../smart_refresher.dart';
 // displacement; max displacement = _kDragSizeFactorLimit * displacement.
 const double _kDragSizeFactorLimit = 1.5;
 
+/// mostly use flutter inner's RefreshIndicator
 class MaterialClassicHeader extends RefreshIndicator {
+  /// see flutter RefreshIndicator documents,the meaning same with that
   final String semanticsLabel;
+  /// see flutter RefreshIndicator documents,the meaning same with that
   final String semanticsValue;
+  /// see flutter RefreshIndicator documents,the meaning same with that
   final Color color;
+  /// Distance from the top when refreshing
   final double distance;
+  /// see flutter RefreshIndicator documents,the meaning same with that
   final Color backgroundColor;
 
   const MaterialClassicHeader({
@@ -153,13 +159,13 @@ class _MaterialClassicHeaderState
   }
 }
 
+/// attach the waterdrop effect to [MaterialClassicHeader]
 class WaterDropMaterialHeader extends MaterialClassicHeader {
   const WaterDropMaterialHeader({
     Key key,
     String semanticsLabel,
     double distance: 60.0,
     String semanticsValue,
-    bool reverse: false,
     Color color: Colors.white,
     Color backgroundColor: Colors.blueAccent,
   }) : super(

@@ -12,10 +12,15 @@ import '../smart_refresher.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
+/// direction that icon should place to the text
 enum IconPosition { left, right, top, bottom }
 
+/// wrap child in outside,mostly use in add background color and padding
+typedef Widget OuterBuilder(Widget child);
+
+///the most common indicator,combine with a text and a icon
 class ClassicHeader extends RefreshIndicator {
-  final Function outerBuilder;
+  final OuterBuilder outerBuilder;
   final String releaseText,
       idleText,
       refreshingText,
@@ -36,7 +41,7 @@ class ClassicHeader extends RefreshIndicator {
 
   const ClassicHeader({
     Key key,
-    RefreshStyle refreshStyle: default_refreshStyle,
+    RefreshStyle refreshStyle: RefreshStyle.Follow,
     double height: 60.0,
     Duration completeDuration: const Duration(milliseconds: 600),
     this.outerBuilder,
@@ -146,10 +151,11 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
   }
 }
 
+///the most common indicator,combine with a text and a icon
 class ClassicFooter extends LoadIndicator {
   final String idleText, loadingText, noDataText, failedText;
 
-  final Function outerBuilder;
+  final OuterBuilder outerBuilder;
 
   final Widget idleIcon, loadingIcon, noMoreIcon, failedIcon;
 
@@ -161,7 +167,7 @@ class ClassicFooter extends LoadIndicator {
 
   const ClassicFooter({
     Key key,
-    Function onClick,
+    VoidCallback onClick,
     LoadStyle loadStyle: LoadStyle.ShowAlways,
     double height: 60.0,
     this.outerBuilder,

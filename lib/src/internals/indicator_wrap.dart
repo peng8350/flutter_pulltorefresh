@@ -13,30 +13,32 @@ import 'dart:math' as math;
 import '../smart_refresher.dart';
 import 'slivers.dart';
 
-const int default_completeDuration = 500;
 
-const RefreshStyle default_refreshStyle = RefreshStyle.Follow;
-
+/// a widget  implements ios pull down refresh effect and Android material RefreshIndicator overScroll effect
 abstract class RefreshIndicator extends StatefulWidget {
+  /// refresh display style
   final RefreshStyle refreshStyle;
-
+  /// the visual extent indicator
   final double height;
-
-
+  /// the stopped time when refresh complete or fail
   final Duration completeDuration;
 
   const RefreshIndicator(
       {Key key,
       this.height: 60.0,
       this.completeDuration:
-          const Duration(milliseconds: default_completeDuration),
-      this.refreshStyle: default_refreshStyle})
+          const Duration(milliseconds: 500),
+      this.refreshStyle: RefreshStyle.Follow})
       : super(key: key);
 }
 
+/// a widget  implements  pull up load
 abstract class LoadIndicator extends StatefulWidget {
+  /// load more display style
   final LoadStyle loadStyle;
+  /// the visual extent indicator
   final double height;
+  /// callback when user click footer
   final VoidCallback onClick;
 
   const LoadIndicator(
@@ -47,6 +49,75 @@ abstract class LoadIndicator extends StatefulWidget {
       : super(key: key);
 }
 
+/// Internal Implementation of Head Indicator
+///
+/// you can extends RefreshIndicatorState for custom header,if you want to active complex animation effect
+///
+/// here is the most simple example
+///
+/// ```dart
+///
+/// class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
+///    with TickerProviderStateMixin {
+///  AnimationController _scaleAnimation;
+///  AnimationController _offsetController;
+///  Tween<Offset> offsetTween;
+///
+///  @override
+///  void initState() {
+///    // TODO: implement initState
+///    _scaleAnimation = AnimationController(vsync: this);
+///    _offsetController = AnimationController(
+///        vsync: this, duration: Duration(milliseconds: 1000));
+///    offsetTween = Tween(end: Offset(0.6, 0.0), begin: Offset(0.0, 0.0));
+///    super.initState();
+///  }
+///
+///  @override
+///  void onOffsetChange(double offset) {
+///    // TODO: implement onOffsetChange
+///    if (!floating) {
+///      _scaleAnimation.value = offset / 80.0;
+///    }
+///    super.onOffsetChange(offset);
+///  }
+///
+///  @override
+///  void resetValue() {
+///    // TODO: implement handleModeChange
+///    _scaleAnimation.value = 0.0;
+///    _offsetController.value = 0.0;
+///  }
+///
+///  @override
+///  void dispose() {
+///    // TODO: implement dispose
+///    _scaleAnimation.dispose();
+///    _offsetController.dispose();
+///    super.dispose();
+///  }
+///
+///  @override
+///  Future<void> endRefresh() {
+///    // TODO: implement endRefresh
+///    return _offsetController.animateTo(1.0).whenComplete(() {});
+///  }
+///
+///  @override
+/// Widget buildContent(BuildContext context, RefreshStatus mode) {
+///    // TODO: implement buildContent
+///    return SlideTransition(
+///      child: ScaleTransition(
+///        child: (mode != RefreshStatus.idle || mode != RefreshStatus.canRefresh)
+///            ? Image.asset("images/custom_2.gif")
+///            : Image.asset("images/custom_1.jpg"),
+///        scale: _scaleAnimation,
+///      ),
+///      position: offsetTween.animate(_offsetController),
+///    );
+///  }
+/// }
+/// ```
 abstract class RefreshIndicatorState<T extends RefreshIndicator>
     extends State<T>
     with IndicatorStateMixin<T, RefreshStatus>, RefreshProcessor {
@@ -125,6 +196,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         mode = RefreshStatus.idle;
       }
     }
+    //mostly for spring back
     else if(activity is BallisticScrollActivity) {
       if (RefreshStatus.canRefresh == mode) {
         // refreshing
@@ -371,6 +443,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 }
 
+/// mixin in IndicatorState,it will get position and remove when dispose,init mode state
+///
+/// help to finish the work that the header indicator and footer indicator need to do
 mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   SmartRefresher refresher;
 
@@ -390,10 +465,9 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   ScrollActivity get activity => _position.activity;
 
-  /*
-    it doesn't support get the ScrollController as the listener, because it will cause "multiple scrollview use one ScollController"
-    error,only replace the ScrollPosition to listen the offset
-   */
+
+   // it doesn't support get the ScrollController as the listener, because it will cause "multiple scrollview use one ScollController"
+   // error,only replace the ScrollPosition to listen the offset
   ScrollPosition _position;
 
   // update ui
@@ -489,6 +563,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   Widget buildContent(BuildContext context, V mode);
 }
 
+/// head Indicator exposure interface
 abstract class RefreshProcessor {
   void onOffsetChange(double offset) {}
 
@@ -505,6 +580,7 @@ abstract class RefreshProcessor {
   void resetValue() {}
 }
 
+/// footer Indicator exposure interface
 abstract class LoadingProcessor {
   void onOffsetChange(double offset) {}
 

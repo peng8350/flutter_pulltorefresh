@@ -6,7 +6,9 @@
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/widgets.dart';
 
+/// enable header link other header place outside the viewport
 class LinkHeader extends RefreshIndicator {
+  /// the key that widget outside viewport indicator
   final Key linkKey;
 
   const LinkHeader(
@@ -71,7 +73,9 @@ class _LinkHeaderState extends RefreshIndicatorState<LinkHeader> {
   }
 }
 
+/// enable footer link other footer place outside the viewport
 class LinkFooter extends LoadIndicator {
+  /// the key that widget outside viewport indicator
   final Key linkKey;
 
   const LinkFooter(

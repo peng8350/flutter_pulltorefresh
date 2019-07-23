@@ -4,6 +4,7 @@
     createTime:2018-05-01 11:39
 */
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -15,69 +16,138 @@ import 'indicator/material_indicator.dart';
 
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
+
+/// callback when the indicator scroll out of edge
+/// up: indicate header or footer callback
+/// offset: the distance of indicator out of edge
 typedef void OnOffsetChange(bool up, double offset);
-
+/// when viewport not full one page, for different state,whether it should follow the content
 typedef bool ShouldFollowContent(LoadStatus status);
-
+/// global default indicator builder
 typedef IndicatorBuilder = Widget Function();
 
+/// header state
 enum RefreshStatus {
+  /// Initial state, when not being overscrolled into, or after the overscroll
+  /// is canceled or after done and the sliver retracted away.
   idle,
+  /// Dragged far enough that the onRefresh callback will callback
   canRefresh,
+  /// the indicator is refreshing,waiting for the finish callback
   refreshing,
+  /// the indicator refresh completed
   completed,
+  /// the indicator refresh failed
   failed,
+  ///  Dragged far enough that the onTwoLevel callback will callback
   canTwoLevel,
+  ///  indicator is opening twoLevel
   twoLevelOpening,
+  /// indicator is in twoLevel
   twoLeveling,
+  ///  indicator is closing twoLevel
   twoLevelClosing
 }
 
-enum LoadStatus { idle, loading, noMore, failed }
+///  footer state
+enum LoadStatus {
+  /// Initial state, which can be triggered loading more by gesture pull up
+  idle,
+  /// indicator is loading more data
+  loading,
+  /// indicator is no more data to loading,this state doesn't allow to load more whatever
+  noMore,
+  /// indicator load failed,Initial state, which can be click retry,If you need to pull up trigger load more,you should set enableLoadingWhenFailed = true in RefreshConfiguration
+  failed }
 
-enum RefreshStyle { Follow, UnFollow, Behind, Front }
+/// header indicator display style
+enum RefreshStyle {
+  // indicator box always follow content
+  Follow,
+  // indicator box follow content,When the box reaches the top and is fully visible, it does not follow content.
+  UnFollow,
+  /// Let the indicator size zoom in with the boundary distance,look like showing behind the content
+  Behind,
+  /// this style just like flutter RefreshIndicator,showing above the content
+  Front }
 
-enum LoadStyle { ShowAlways, HideAlways, ShowWhenLoading }
+/// footer indicator display style
+enum LoadStyle {
+  /// indicator always own layoutExtent whatever the state
+  ShowAlways,
+  /// indicator always own 0.0 layoutExtent whatever the state
+  HideAlways,
+  /// indicator always own layoutExtent when loading state, the other state is 0.0 layoutExtent
+  ShowWhenLoading
+}
 
-const double default_refresh_triggerDistance = 80.0;
 
-const double default_load_triggerDistance = 15.0;
 
-final RefreshIndicator defaultHeader =
-    defaultTargetPlatform == TargetPlatform.iOS
-        ? ClassicHeader()
-        : MaterialClassicHeader();
-
-final LoadIndicator defaultFooter = ClassicFooter();
-
-/*
-    This is the most important component that provides drop-down refresh and up loading.
- */
+/// This is the most important component that provides drop-down refresh and up loading.
+///
+/// [RefreshController] must not be null,Only one controller to one SmartRefresher
+///
+/// If you need to custom header or footer,You should check out [CustomHeader] or [CustomFooter]
+///
+/// See also:
+///
+/// * [RefreshConfiguration], A global configuration for all SmartRefresher in subtrees
+///
+/// * [RefreshController], A controller controll header and footer  indicators state
 class SmartRefresher extends StatefulWidget {
-  //indicate your listView
+
+  /// Refresh Content
+  ///
+  /// notice that: If child is  extends ScrollView,It will help you get the internal slivers and add footer and header in it.
+  /// else it will put child into SliverToBoxAdapter and add footer and header
   final Widget child;
-
+  /// header indicator displace before content
+  ///
+  /// If reverse is false,header displace at the top of content.
+  /// If reverse is true,header displace at the bottom of content.
+  /// if scrollDirection = Axis.horizontal,it will display at left or right
   final RefreshIndicator header;
+  /// footer indicator display after content
+  ///
+  /// If reverse is true,header displace at the top of content.
+  /// If reverse is false,header displace at the bottom of content.
+   /// if scrollDirection = Axis.horizontal,it will display at left or right
   final LoadIndicator footer;
-
   // This bool will affect whether or not to have the function of drop-up load.
   final bool enablePullUp;
-
-  // controll whether open the second floor function
+  /// controll whether open the second floor function
   final bool enableTwoLevel;
-
-  //This bool will affect whether or not to have the function of drop-down refresh.
+  /// This bool will affect whether or not to have the function of drop-down refresh.
   final bool enablePullDown;
+  /// callback when header refresh
+  ///
+  /// when the callback is happening,you should use [RefreshController]
+  /// to end refreshing state,else it will keep refreshing state
+  final VoidCallback onRefresh;
+  /// callback when footer loading more data
+  ///
+  /// when the callback is happening,you should use [RefreshController]
+  /// to end loading state,else it will keep loading state
+  final VoidCallback onLoading;
+  /// callback when header ready to twoLevel
+  ///
+  /// If you want to close twoLevel,you should use [RefreshController.closeTwoLevel]
+  final VoidCallback onTwoLevel;
 
-  // upper and downer callback when you drag out of the distance
-  final VoidCallback onRefresh, onLoading, onTwoLevel;
-
-  // This method will callback when the indicator changes from edge to edge.
+  /// callback when the indicator scroll out of edge
   final OnOffsetChange onOffsetChange;
 
-  // controll inner state
+  /// Controll inner state
   final RefreshController controller;
 
+  /// creates a widget help attach the refresh and load more function
+  ///
+  /// controller must not be null
+  ///
+  /// child is your refresh content
+  ///
+  /// If you don't need pull down refresh ,just enablePullDown = false,
+  /// If you  need pull up load ,just enablePullUp = true
   SmartRefresher(
       {Key key,
       @required this.controller,
@@ -108,6 +178,13 @@ class SmartRefresher extends StatefulWidget {
 class _SmartRefresherState extends State<SmartRefresher> {
   RefreshPhysics _physics;
   bool _updatePhysics = false;
+
+  final RefreshIndicator defaultHeader =
+  defaultTargetPlatform == TargetPlatform.iOS
+      ? ClassicHeader()
+      : MaterialClassicHeader();
+
+  final LoadIndicator defaultFooter = ClassicFooter();
 
   //build slivers from child Widget
   List<Widget> _buildSliversByChild(
@@ -259,10 +336,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
     // TODO: implement initState
     if (widget.controller.initialRefresh) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        /*
-           if mounted,it avoid one stiuation: when init done,then dispose the widget before build.
-           this   stiuation mostly TabBarView
-        */
+         //  if mounted,it avoid one situation: when init done,then dispose the widget before build.
+         //  this   situation mostly TabBarView
         if (mounted) widget.controller.requestRefresh();
       });
     }
@@ -295,13 +370,18 @@ class _SmartRefresherState extends State<SmartRefresher> {
 }
 
 class RefreshController {
+  /// header status mode controll
   ValueNotifier<RefreshStatus> headerMode;
-
+  /// footer status mode controll
   ValueNotifier<LoadStatus> footerMode;
-
+  /// the scrollable inner's position
+  ///
+  /// notice that: position is null before build,
+  /// the value is get when the header or footer callback onPositionUpdated
   ScrollPosition position;
   double _headerTriggerDistance;
   double _footerTriggerDistance;
+  /// deprecated member,not suggest to use it,it contain share position bug
   @Deprecated(
       'advice set ScrollController to child,use it directly will cause bug when call jumpTo() and animateTo()')
   ScrollController scrollController;
@@ -316,9 +396,13 @@ class RefreshController {
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 
-
   final bool initialRefresh;
 
+  /// initialRefresh:When SmartRefresher is init,it will call requestRefresh at once
+  ///
+  /// initialRefreshStatus: headerMode default value
+  ///
+  /// initialLoadStatus: footerMode default value
   RefreshController(
       {this.initialRefresh: false,
       RefreshStatus initialRefreshStatus,
@@ -327,6 +411,7 @@ class RefreshController {
     this.footerMode = ValueNotifier(initialLoadStatus ?? LoadStatus.idle);
   }
 
+  /// callback when the indicator is builded,and catch the scrollable's inner position
   void onPositionUpdated(ScrollPosition newPosition) {
     assert(newPosition != null);
     position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
@@ -338,15 +423,16 @@ class RefreshController {
     position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
   }
 
-  // when bounce out of edge and stopped by overScroll or underScroll, it should be SpringBack to 0.0
-  // but ScrollPhysics didn't provide one way to spring back when outOfEdge(stopped by applyBouncingCondition return != 0.0)
-  // so for making it spring back, it should be trigger goBallistic make it spring back
+  /// when bounce out of edge and stopped by overScroll or underScroll, it should be SpringBack to 0.0
+  /// but ScrollPhysics didn't provide one way to spring back when outOfEdge(stopped by applyBouncingCondition return != 0.0)
+  /// so for making it spring back, it should be trigger goBallistic make it spring back
   void _listenScrollEnd() {
     if (position.outOfRange) {
       position.activity.applyNewDimensions();
     }
   }
 
+  /// make the header enter refreshing state,and callback onRefresh
   void requestRefresh(
       {Duration duration: const Duration(milliseconds: 500),
       Curve curve: Curves.linear}) {
@@ -357,6 +443,7 @@ class RefreshController {
         duration: duration, curve: curve);
   }
 
+  /// make the footer enter loading state,and callback onLoading
   void requestLoading(
       {Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
@@ -379,6 +466,9 @@ class RefreshController {
       });
   }
 
+  /// request complete,the header will enter complete state,
+  ///
+  /// resetFooterState : it will set the footer state from noData to idle
   void refreshCompleted({bool resetFooterState: false}) {
     headerMode?.value = RefreshStatus.completed;
     if (resetFooterState) {
@@ -386,6 +476,7 @@ class RefreshController {
     }
   }
 
+  /// end twoLeveling,will return back first floor
   void twoLevelComplete(
       {Duration duration: const Duration(milliseconds: 500),
       Curve curve: Curves.linear}) {
@@ -399,14 +490,17 @@ class RefreshController {
     });
   }
 
+  /// request failed,the header display failed state
   void refreshFailed() {
     headerMode?.value = RefreshStatus.failed;
   }
 
+  /// not show success or failed, it will set header state to idle and spring back at once
   void refreshToIdle() {
     headerMode?.value = RefreshStatus.idle;
   }
 
+  /// after data returned,set the footer state to idle
   void loadComplete() {
     // change state after ui update,else it will have a bug:twice loading
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -414,6 +508,7 @@ class RefreshController {
     });
   }
 
+  /// If catchError happen,you may call loadFailed indicate fetch data from network failed
   void loadFailed() {
     // change state after ui update,else it will have a bug:twice loading
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -421,16 +516,19 @@ class RefreshController {
     });
   }
 
+  /// load more success without error,but no data returned
   void loadNoData() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       footerMode?.value = LoadStatus.noMore;
     });
   }
 
+  /// reset footer noData state  to idle
   void resetNoData() {
     footerMode?.value = LoadStatus.idle;
   }
 
+  /// for some special situation, you should call dispose() for safe,it may throw errors after parent widget dispose
   void dispose() {
     headerMode.dispose();
     footerMode.dispose();
@@ -439,31 +537,54 @@ class RefreshController {
   }
 }
 
-/*
-    use to global setting indicator
- */
+
+/// Controls how SmartRefresher widgets behave in a subtree.the usage just like [ScrollConfiguration]
+///
+/// The refresh configuration determines smartRefresher some behaviours,global setting default indicator
+///
+/// see also:
+///
+/// [SmartRefresher], a widget help attach the refresh and load more function
 class RefreshConfiguration extends InheritedWidget {
+
   final Widget child;
+  /// global default header builder
   final IndicatorBuilder headerBuilder;
+  /// global default footer builder
   final IndicatorBuilder footerBuilder;
+  /// custom spring animate
   final SpringDescription springDescription;
-  // If need to refreshing now when reaching triggerDistance
+  /// If need to refreshing now when reaching triggerDistance
   final bool skipCanRefresh;
+  /// if it should follow content for different state
   final ShouldFollowContent shouldFooterFollowWhenNotFull;
-  // when listView data small(not enough one page) , it should be hide
+  /// when listView data small(not enough one page) , it should be hide
   final bool hideFooterWhenNotFull;
+  /// header offset Y for layout
   final double headerOffset;
+  /// whether footer can trigger load by reaching footerDistance when idle
   final bool autoLoad;
+  /// whether user can drag viewport when twoLeveling
   final bool enableScrollWhenTwoLevel;
+  /// whether user can drag viewport when refresh complete and spring back
   final bool enableScrollWhenRefreshCompleted;
+  /// whether trigger refresh by  BallisticScrollActivity
   final bool enableBallisticRefresh;
+  /// whether footer can trigger load by reaching footerDistance when failed state
   final bool enableLoadingWhenFailed;
+  /// overScroll distance of trigger refresh
   final double headerTriggerDistance;
+  ///	the overScroll distance of trigger twoLevel
   final double twiceTriggerDistance;
+  /// Close the bottom crossing distance on the second floor, premise:enableScrollWhenTwoLevel is true
   final double closeTwoLevelDistance;
+  /// the extentAfter distance of trigger loading
   final double footerTriggerDistance;
+  /// the speed ratio when dragging overscroll ,compute=origin physics dragging speed *dragSpeedRatio
   final double dragSpeedRatio;
+  /// max overScroll distance when out of edge
   final double maxOverScrollExtent;
+  /// 	max underScroll distance when out of edge
   final double maxUnderScrollExtent;
 
   RefreshConfiguration({
@@ -484,8 +605,8 @@ class RefreshConfiguration extends InheritedWidget {
     this.autoLoad: true,
     this.maxOverScrollExtent,
     this.maxUnderScrollExtent,
-    this.headerTriggerDistance: default_refresh_triggerDistance,
-    this.footerTriggerDistance: default_load_triggerDistance,
+    this.headerTriggerDistance: 80.0,
+    this.footerTriggerDistance: 15.0,
     this.hideFooterWhenNotFull: false,
   });
 
@@ -499,8 +620,7 @@ class RefreshConfiguration extends InheritedWidget {
         skipCanRefresh != oldWidget.skipCanRefresh ||
         hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||
         headerOffset != oldWidget.headerOffset ||
-        dragSpeedRatio != oldWidget.dragSpeedRatio ||
-        springDescription != oldWidget.springDescription ||
+        dragSpeedRatio != oldWidget.dragSpeedRatio  ||
         enableScrollWhenRefreshCompleted !=
             oldWidget.enableScrollWhenRefreshCompleted ||
         enableBallisticRefresh != oldWidget.enableBallisticRefresh ||

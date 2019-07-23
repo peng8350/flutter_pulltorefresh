@@ -11,12 +11,11 @@ import 'dart:math' as math;
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-/*
- only support three parent physics:
- 1. AlwaysScroll
- 2.Clamping
- 3.Bouncing
- */
+
+/// a scrollPhysics for config refresh scroll effect,enable viewport out of edge whatever physics it is
+///
+/// in [ClampingScrollPhysics], it doesn't allow to flip out of edge,but in RefreshPhysics,it will allow to do that,
+/// by parent physics passing,it also can attach the different of iOS and Android different scroll effect
 // ignore: MUST_BE_IMMUTABLE
 class RefreshPhysics extends ScrollPhysics {
   final double maxOverScrollExtent, maxUnderScrollExtent;
@@ -26,6 +25,8 @@ class RefreshPhysics extends ScrollPhysics {
   final bool enableScrollWhenTwoLevel, enableScrollWhenRefreshCompleted;
   final ValueNotifier headerMode, footerMode;
   final int updateFlag;
+  /// find out the viewport when bouncing,for compute the layoutExtent in header and footer
+  /// This does not have any impact on performance. it only  execute once
   RenderViewport viewportRender;
 
   /// Creates scroll physics that bounce back from the edge.
@@ -93,12 +94,11 @@ class RefreshPhysics extends ScrollPhysics {
     return true;
   }
 
-  /*
-    It seem that it was odd to do so,but I have no choose to do this for updating the state value(enablePullDown and enablePullUp),
-    in Scrollable.dart _shouldUpdatePosition method,it use physics.runtimeType to check if the two physics is the same,this
-    will lead to whether the newPhysics should replace oldPhysics,If flutter can provide a method such as "shouldUpdate",
-    It can work perfectly.
-   */
+
+  //  It seem that it was odd to do so,but I have no choose to do this for updating the state value(enablePullDown and enablePullUp),
+   // in Scrollable.dart _shouldUpdatePosition method,it use physics.runtimeType to check if the two physics is the same,this
+   // will lead to whether the newPhysics should replace oldPhysics,If flutter can provide a method such as "shouldUpdate",
+   // It can work perfectly.
   @override
   // TODO: implement runtimeType
   Type get runtimeType {
