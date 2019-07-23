@@ -83,7 +83,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                         ? widget.refreshingText
                         : mode == RefreshStatus.idle
                             ? widget.idleText
-                            : widget.canTwoLevelText,
+                            :   mode == RefreshStatus.canTwoLevel? widget.canTwoLevelText:"",
         style: widget.textStyle);
   }
 
@@ -141,7 +141,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
         ? widget.outerBuilder(container)
         : Container(
             child: Center(child: container),
-            height: 60.0,
+            height: widget.height,
           );
   }
 }
@@ -245,7 +245,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
     return widget.outerBuilder != null
         ? widget.outerBuilder(container)
         : Container(
-            height: 60.0,
+            height: widget.height,
             child: Center(
               child: container,
             ),
