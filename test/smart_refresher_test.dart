@@ -286,4 +286,48 @@ void main() {
     _refreshController.loadComplete();
     expect(time,3);
   });
+
+  testWidgets("fronStyle can hittest content when springback", (tester) async {
+    final RefreshController _refreshController = RefreshController();
+    int time = 0;
+    await tester.pumpWidget(MaterialApp(
+      home: SmartRefresher(
+        header: CustomHeader(
+          builder: (c,m) => Container(),
+          height: 60.0,
+        ),
+        footer: TestFooter(),
+        enablePullDown: true,
+        enablePullUp: true,
+        child: GestureDetector(
+          child: Container(
+            height: 60.0,
+            width: 60.0,
+            color: Colors.transparent,
+          ),
+          onTap: (){
+            time++;
+          },
+        )
+        ,
+        onRefresh: ()  async{
+          time++;
+        },
+        onLoading: () async{
+          time++;
+        },
+        controller: _refreshController,
+      ),
+    ));
+
+    // test pull down
+    await tester.drag(find.byType(Viewport), const Offset(0,120));
+    await tester.pump();
+    expect(_refreshController.headerStatus,RefreshStatus.canRefresh);
+    await tester.pump(Duration(milliseconds: 2));
+    expect(_refreshController.headerStatus,RefreshStatus.refreshing);
+    expect(_refreshController.position.pixels,lessThan(0.0));
+    await tester.tapAt(Offset(30,30));
+    expect(time,1);
+  });
 }
