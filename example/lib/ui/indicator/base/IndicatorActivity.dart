@@ -40,7 +40,7 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
   RefreshController _refreshController;
 
   void _init() {
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 15; i++) {
       items.add(Item(
         title: "Data$i",
       ));

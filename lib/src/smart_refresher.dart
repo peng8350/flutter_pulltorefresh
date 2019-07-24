@@ -265,18 +265,18 @@ class _SmartRefresherState extends State<SmartRefresher> {
         headerMode: widget.controller.headerMode,
         updateFlag: _updatePhysics ? 0 : 1,
         enableScrollWhenRefreshCompleted:
-        conf?.enableScrollWhenRefreshCompleted ?? true,
+        conf?.enableScrollWhenRefreshCompleted ?? false,
         maxOverScrollExtent: conf?.maxOverScrollExtent ??
             (physics is ClampingScrollPhysics ||
                 (physics is AlwaysScrollableScrollPhysics &&
                     defaultTargetPlatform != TargetPlatform.iOS)
-                ? 150.0
+                ? 30.0
                 : double.infinity),
         maxUnderScrollExtent: conf?.maxUnderScrollExtent ??
             (physics is ClampingScrollPhysics ||
                 (physics is AlwaysScrollableScrollPhysics &&
                     defaultTargetPlatform != TargetPlatform.iOS)
-                ? 120.0
+                ? 0.0
                 : double.infinity))
         .applyTo(physics);
   }

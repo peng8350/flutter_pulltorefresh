@@ -248,3 +248,17 @@ other:
 * Fix ignore reverse load more paintOrigin issue 
 * change hideFooterWhenNotfull default value to false
 * update header default releaseIcon and footer idle default Icon
+
+## 1.5.1
+* add api docs in code
+* add test to prevent previous bugs as much as possible
+* enableScrollWhenCompleted default value change to false,when header spring back,doesn't allow to scroll by gesture
+* improve enableScrollWhenCompleted safety ,fix trigger disable scroll times error
+* maxScrollExtent should subtract boxExtent when floating(indicator layoutExtent != 0) or not
+* maxOverScrollExtent default change to 30.0 in Android,maxUnderScrollExtent default change to 0.0 in Android
+* Fix footer onClick not working when click near footer edge
+* fix canTwoLevel text showing in other twoLevel state
+* when enablePullDown= false && enableTwoLevel = true,it should add header into Viewport
+* remove reverse in some header indicators,inner auto check direction,no need to pass paramter
+* fix render error in footer when asix = Horizontal & reverse = true
+

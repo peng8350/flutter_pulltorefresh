@@ -33,7 +33,7 @@
 ```yaml
 
    dependencies:
-     pull_to_refresh: ^1.5.0
+     pull_to_refresh: ^1.5.1
 
 ```
 
@@ -175,7 +175,7 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 
 
 ## 更多
-- [属性文档](refresher_controller.md)
+- [属性文档](refresher_controller.md) 或者 [Api/Doc](https://pub.dev/documentation/pull_to_refresh/latest/pulltorefresh/SmartRefresher-class.html)
 - [自定义指示器](custom_indicator.md)
 - [指示器内部属性介绍](indicator_attribute.md)
 - [更新日志](CHANGELOG.md)

@@ -65,7 +65,7 @@
 | maxOverScrollExtent | 最大顶部越界距离   | double | inf | 可选 |
 | skipCanRefresh | 直接跳过canRefresh状态进入刷新   | bool | false | 可选 |
 | headerOffset | 头部指示器布局的偏差Y坐标,多用于FrontStyle,  | double | 0.0 | 可选 |
-| enableScrollWhenTwoLevel | 当进入二楼时,是否允许上下滑动   | bool | true | 可选 |
+| enableScrollWhenTwoLevel | 当进入二楼时,是否允许上下滑动   | bool | false | 可选 |
 | twiceTriggerDistance | 触发进入二楼的越界距离   | double | 150.0 | 可选 |
 | closeTwoLevelDistance | 关闭二楼底部的底部越界距离,前提enableScrollWhenTwoLevel要为true  | double | 80.0 | 可选 |
 | enableBallisticRefresh | 是否可以通过惯性来触发刷新  | bool | false | 可选 |

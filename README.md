@@ -33,7 +33,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ```yaml
 
    dependencies:
-     pull_to_refresh: ^1.5.0
+     pull_to_refresh: ^1.5.1
 
 ```
 
@@ -182,7 +182,7 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
 
 
 ## More
-- [Property Document](refresher_controller_en.md)
+- [Property Document](refresher_controller_en.md) or [Api/Doc](https://pub.dev/documentation/pull_to_refresh/latest/pulltorefresh/SmartRefresher-class.html)
 - [Custom Indicator](custom_indicator_en.md)
 - [Inner Attribute Of Indicators](indicator_attribute_en.md)
 - [Update Log](CHANGELOG.md)
