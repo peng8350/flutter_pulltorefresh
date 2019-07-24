@@ -10,6 +10,7 @@ import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh/src/internals/slivers.dart';
 
 /// a scrollPhysics for config refresh scroll effect,enable viewport out of edge whatever physics it is
 ///
@@ -32,17 +33,17 @@ class RefreshPhysics extends ScrollPhysics {
   /// Creates scroll physics that bounce back from the edge.
   RefreshPhysics(
       {ScrollPhysics parent,
-      this.updateFlag,
-      this.maxUnderScrollExtent,
-      this.headerMode,
-      this.springDescription,
-      this.footerMode,
-      this.dragSpeedRatio,
-      this.enablePullUp,
-      this.enableScrollWhenRefreshCompleted,
-      this.enableScrollWhenTwoLevel,
-      this.enablePullDown,
-      this.maxOverScrollExtent})
+        this.updateFlag,
+        this.maxUnderScrollExtent,
+        this.headerMode,
+        this.springDescription,
+        this.footerMode,
+        this.dragSpeedRatio,
+        this.enablePullUp,
+        this.enableScrollWhenRefreshCompleted,
+        this.enableScrollWhenTwoLevel,
+        this.enablePullDown,
+        this.maxOverScrollExtent})
       : super(parent: parent);
 
   @override
@@ -78,16 +79,24 @@ class RefreshPhysics extends ScrollPhysics {
 
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) {
+
     // TODO: implement shouldAcceptUserOffset
+    viewportRender ??=
+        findViewport((position as ScrollPosition).context.storageContext);
     if (headerMode.value == RefreshStatus.twoLeveling &&
         !enableScrollWhenTwoLevel) {
       return false;
-    } else if ((!enableScrollWhenRefreshCompleted &&
-            position.pixels < 0 &&
-            (headerMode.value == RefreshStatus.completed ||
-                headerMode.value == RefreshStatus.failed)) ||
-        headerMode.value == RefreshStatus.twoLevelOpening ||
-        RefreshStatus.twoLevelClosing == headerMode.value) {
+    }
+    // enableScrollWhenRefreshCompleted
+    else if (enablePullDown&&(!enableScrollWhenRefreshCompleted &&
+        position.pixels < 0 &&!(viewportRender.firstChild as RenderSliverRefresh).hasLayoutExtent&&
+        (headerMode.value == RefreshStatus.completed ||
+            headerMode.value == RefreshStatus.failed))
+        ) {
+      return false;
+    }
+    else if(headerMode.value == RefreshStatus.twoLevelOpening ||
+        RefreshStatus.twoLevelClosing == headerMode.value){
       return false;
     }
 
@@ -122,7 +131,7 @@ class RefreshPhysics extends ScrollPhysics {
     }
     if (position.outOfRange || headerMode.value == RefreshStatus.twoLeveling) {
       final double overscrollPastStart =
-          math.max(position.minScrollExtent - position.pixels, 0.0);
+      math.max(position.minScrollExtent - position.pixels, 0.0);
       final double overscrollPastEnd = math.max(
           position.pixels -
               (headerMode.value == RefreshStatus.twoLeveling
@@ -130,14 +139,14 @@ class RefreshPhysics extends ScrollPhysics {
                   : position.maxScrollExtent),
           0.0);
       final double overscrollPast =
-          math.max(overscrollPastStart, overscrollPastEnd);
+      math.max(overscrollPastStart, overscrollPastEnd);
       final bool easing = (overscrollPastStart > 0.0 && offset < 0.0) ||
           (overscrollPastEnd > 0.0 && offset > 0.0);
 
       final double friction = easing
-          // Apply less resistance when easing the overscroll vs tensioning.
+      // Apply less resistance when easing the overscroll vs tensioning.
           ? frictionFactor(
-              (overscrollPast - offset.abs()) / position.viewportDimension)
+          (overscrollPast - offset.abs()) / position.viewportDimension)
           : frictionFactor(overscrollPast / position.viewportDimension);
       final double direction = offset.sign;
       return direction *
@@ -188,8 +197,8 @@ class RefreshPhysics extends ScrollPhysics {
       topExtra = sliverHeader.geometry.scrollExtent != 0.0
           ? 0.0
           : (position.axis == Axis.vertical
-              ? sliverHeader.child.size.height
-              : sliverHeader.child.size.width);
+          ? sliverHeader.child.size.height
+          : sliverHeader.child.size.width);
     }
     if (enablePullUp) {
       final RenderSliverSingleBoxAdapter sliverFooter =
@@ -197,8 +206,8 @@ class RefreshPhysics extends ScrollPhysics {
       bottomExtra = sliverFooter.geometry.scrollExtent != 0.0
           ? 0.0
           : (position.axis == Axis.vertical
-              ? sliverFooter.child.size.height
-              : sliverFooter.child.size.width);
+          ? sliverFooter.child.size.height
+          : sliverFooter.child.size.width);
     }
     final double topBoundary =
         position.minScrollExtent - maxOverScrollExtent - topExtra;
@@ -240,7 +249,7 @@ class RefreshPhysics extends ScrollPhysics {
       }
     }
     if ((position.pixels > 0 &&
-            headerMode.value == RefreshStatus.twoLeveling) ||
+        headerMode.value == RefreshStatus.twoLeveling) ||
         position.outOfRange) {
       return BouncingScrollSimulation(
         spring: springDescription ?? spring,

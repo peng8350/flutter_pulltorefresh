@@ -230,6 +230,7 @@ void main() {
       await tester.pumpAndSettle(Duration(milliseconds: 600));
       expect(_refreshController.position.pixels == positionRecord - 60.0,
           true); //60.0 is indicator  visual extent
+      await tester.pump(Duration(milliseconds: 600));
       expect(_refreshController.headerStatus, RefreshStatus.idle);
     });
   });

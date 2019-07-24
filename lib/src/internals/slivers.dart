@@ -40,8 +40,8 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   final double paintOffsetY;
 
   @override
-  _RenderSliverRefresh createRenderObject(BuildContext context) {
-    return _RenderSliverRefresh(
+  RenderSliverRefresh createRenderObject(BuildContext context) {
+    return RenderSliverRefresh(
       refreshIndicatorExtent: refreshIndicatorLayoutExtent,
       hasLayoutExtent: floating,
       paintOffsetY: paintOffsetY,
@@ -51,7 +51,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, covariant _RenderSliverRefresh renderObject) {
+      BuildContext context, covariant RenderSliverRefresh renderObject) {
     final RefreshStatus mode =
         SmartRefresher.of(context).controller.headerMode.value;
     renderObject
@@ -66,8 +66,8 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   }
 }
 
-class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
-  _RenderSliverRefresh(
+class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
+  RenderSliverRefresh(
       {@required double refreshIndicatorExtent,
       @required bool hasLayoutExtent,
       RenderBox child,
@@ -111,6 +111,9 @@ class _RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   set hasLayoutExtent(bool value) {
     assert(value != null);
     if (value == _hasLayoutExtent) return;
+    if(!value){
+      _updateFlag = true;
+    }
     _hasLayoutExtent = value;
     markNeedsLayout();
   }
@@ -347,7 +350,7 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     RenderSliver sliverP = viewport.firstChild;
     double totalScrollExtent = cons.precedingScrollExtent;
     while (sliverP != this) {
-      if (sliverP is _RenderSliverRefresh) {
+      if (sliverP is RenderSliverRefresh) {
         totalScrollExtent -= sliverP.geometry.scrollExtent;
         break;
       }

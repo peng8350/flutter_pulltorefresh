@@ -54,6 +54,7 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
         url: data[index],
       ),
       onTap: () {
+        print("tap");
         _controller.requestRefresh();
       },
     );
