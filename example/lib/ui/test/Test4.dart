@@ -149,40 +149,24 @@ class Test4State extends State<Test4>
   @override
   Widget build(BuildContext context) {
     return RefreshConfiguration(
-      child: SmartRefresher(
+      child: SmartRefresher.builder(
         enablePullUp: true,
-        enablePullDown: false,
-        footer: ClassicFooter(
-          loadStyle: LoadStyle.ShowWhenLoading,
-        ),
-        child: Scrollable(
-          controller: _controller,
-          physics: AlwaysScrollableScrollPhysics(),
-          viewportBuilder: (context, offset) {
-            return ExpandedViewport(
-              slivers: <Widget>[
-                SliverToBoxAdapter(
-                  child: Text("aaaa"),
+        enablePullDown: true,
+        builder: (context,physics){
+          return CustomScrollView(
+            slivers: <Widget>[
+              ClassicHeader(),
+              SliverToBoxAdapter(
+                child: Container(
+                  color: Colors.red,
+                  height: 500.0,
                 ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    height: 100.0,
-                    color: Colors.redAccent,
-                  ),
-                ),
-                SliverExpanded(),
-                SliverToBoxAdapter(
-                  child: Container(
-                    height: 100.0,
-                    color: Colors.redAccent,
-                  ),
-                ),
-
-              ],
-              offset: offset,
-            );
-          },
-        ),
+              ),
+              ClassicFooter()
+            ],
+            physics: physics.applyTo(AlwaysScrollableScrollPhysics()),
+          );
+        },
         onRefresh: () async {
           await Future.delayed(Duration(milliseconds: 1000));
           _refreshController.refreshCompleted();

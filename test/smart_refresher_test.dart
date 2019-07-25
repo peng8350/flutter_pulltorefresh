@@ -95,6 +95,35 @@ void main() {
     expect(log.length, greaterThanOrEqualTo(1));
   });
 
+  testWidgets("test smartRefresher builder constructor ", (tester) async {
+    final RefreshController _refreshController = RefreshController();
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: SmartRefresher.builder(
+        enablePullUp: true,
+        builder: (BuildContext context,RefreshPhysics physics){
+            return CustomScrollView(
+              slivers: <Widget>[
+                TestHeader(),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                (c, i) => Container(
+          child: Card(),
+          height: 100.0,
+          ),childCount: 20
+                ),
+                ),
+                TestFooter(),
+              ],
+
+            );
+        },
+        controller: _refreshController,
+      ),
+    ));
+
+  });
+
   testWidgets("param check ", (tester) async {
     final RefreshController _refreshController = RefreshController();
     await tester.pumpWidget(Directionality(

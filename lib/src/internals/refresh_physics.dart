@@ -4,6 +4,7 @@
     createTime:2018-05-02 14:39
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -59,8 +60,18 @@ class RefreshPhysics extends ScrollPhysics {
         headerMode: headerMode,
         enableScrollWhenRefreshCompleted: enableScrollWhenRefreshCompleted,
         footerMode: footerMode,
-        maxUnderScrollExtent: maxUnderScrollExtent,
-        maxOverScrollExtent: maxOverScrollExtent);
+        maxUnderScrollExtent: maxUnderScrollExtent ??
+    (ancestor is ClampingScrollPhysics ||
+    (ancestor is AlwaysScrollableScrollPhysics &&
+    defaultTargetPlatform != TargetPlatform.iOS)
+    ? 0.0
+        : double.infinity),
+        maxOverScrollExtent:  maxOverScrollExtent ??
+    (ancestor is ClampingScrollPhysics ||
+    (ancestor is AlwaysScrollableScrollPhysics &&
+    defaultTargetPlatform != TargetPlatform.iOS)
+    ? 30.0
+        : double.infinity));
   }
 
   RenderViewport findViewport(BuildContext context) {

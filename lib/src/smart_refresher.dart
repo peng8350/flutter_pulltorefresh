@@ -28,6 +28,9 @@ typedef bool ShouldFollowContent(LoadStatus status);
 /// global default indicator builder
 typedef IndicatorBuilder = Widget Function();
 
+/// a builder for attaching refresh function with the physics
+typedef Widget RefresherBuilder(BuildContext context,RefreshPhysics physics);
+
 /// header state
 enum RefreshStatus {
   /// Initial state, when not being overscrolled into, or after the overscroll
@@ -163,12 +166,12 @@ class SmartRefresher extends StatefulWidget {
   /// Controll inner state
   final RefreshController controller;
 
+  /// child content builder
+  final RefresherBuilder builder;
+
   /// creates a widget help attach the refresh and load more function
-  ///
   /// controller must not be null
-  ///
   /// child is your refresh content
-  ///
   /// If you don't need pull down refresh ,just enablePullDown = false,
   /// If you  need pull up load ,just enablePullUp = true
   SmartRefresher(
@@ -184,7 +187,25 @@ class SmartRefresher extends StatefulWidget {
         this.onLoading,
         this.onTwoLevel,
         this.onOffsetChange})
-      : assert(controller != null),
+      : assert(controller != null),builder = null,
+        super(key: key);
+
+  /// creates a widget help attach the refresh and load more function
+  /// controller must not be null,builder must not be null
+  /// If you don't need pull down refresh ,just enablePullDown = false,
+  /// If you  need pull up load ,just enablePullUp = true
+  SmartRefresher.builder(
+      {Key key,
+        @required this.controller,
+        @required this.builder,
+        this.enablePullDown: true,
+        this.enablePullUp: false,
+        this.enableTwoLevel: false,
+        this.onRefresh,
+        this.onLoading,
+        this.onTwoLevel,
+        this.onOffsetChange})
+      : assert(controller != null),header =null,footer=null,child=null,
         super(key: key);
 
   static SmartRefresher of(BuildContext context) {
@@ -254,7 +275,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
   }
 
   ScrollPhysics _getScrollPhysics(
-      RefreshConfiguration conf, ScrollPhysics physics) {
+      RefreshConfiguration conf) {
     return _physics = RefreshPhysics(
         enablePullUp: widget.enablePullUp,
         enablePullDown: widget.enablePullDown || widget.enableTwoLevel,
@@ -266,19 +287,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
         updateFlag: _updatePhysics ? 0 : 1,
         enableScrollWhenRefreshCompleted:
         conf?.enableScrollWhenRefreshCompleted ?? false,
-        maxOverScrollExtent: conf?.maxOverScrollExtent ??
-            (physics is ClampingScrollPhysics ||
-                (physics is AlwaysScrollableScrollPhysics &&
-                    defaultTargetPlatform != TargetPlatform.iOS)
-                ? 30.0
-                : double.infinity),
-        maxUnderScrollExtent: conf?.maxUnderScrollExtent ??
-            (physics is ClampingScrollPhysics ||
-                (physics is AlwaysScrollableScrollPhysics &&
-                    defaultTargetPlatform != TargetPlatform.iOS)
-                ? 0.0
-                : double.infinity))
-        .applyTo(physics);
+        maxOverScrollExtent: conf?.maxOverScrollExtent,
+        maxUnderScrollExtent: conf?.maxUnderScrollExtent
+    );
   }
 
   // build the customScrollView
@@ -288,7 +299,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     if (childView is ScrollView) {
       body = CustomScrollView(
         physics: _getScrollPhysics(
-            conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
+            conf).applyTo(childView.physics ?? AlwaysScrollableScrollPhysics()),
         // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
         controller: widget.controller.scrollController =
             childView.controller ?? PrimaryScrollController.of(context),
@@ -303,7 +314,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     } else if (childView is Scrollable) {
       body = Scrollable(
         physics: _getScrollPhysics(
-            conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
+            conf).applyTo( childView.physics ?? AlwaysScrollableScrollPhysics()),
         controller: childView.controller,
         axisDirection: childView.axisDirection,
         semanticChildCount: childView.semanticChildCount,
@@ -330,7 +341,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
       );
     } else {
       body = CustomScrollView(
-        physics: _getScrollPhysics(conf, AlwaysScrollableScrollPhysics()),
+        physics: _getScrollPhysics(conf).applyTo(AlwaysScrollableScrollPhysics()),
         controller: PrimaryScrollController.of(context),
         slivers: slivers,
       );
@@ -390,6 +401,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
   @override
   Widget build(BuildContext context) {
     final RefreshConfiguration configuration = RefreshConfiguration.of(context);
+    if(widget.builder!=null) return widget.builder(context,_getScrollPhysics(configuration));
+
     widget.controller._headerTriggerDistance =
     -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
     widget.controller._footerTriggerDistance =
