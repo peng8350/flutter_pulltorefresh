@@ -7,6 +7,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -287,6 +288,7 @@ void main() {
     expect(
         (refreshController.position.physics as RefreshPhysics).updateFlag, 1);
   });
+
 
   testWidgets("when viewport not full, pull up can trigger loading", (tester) async {
 

@@ -22,7 +22,6 @@ class RefreshPhysics extends ScrollPhysics {
   final double maxOverScrollExtent, maxUnderScrollExtent;
   final SpringDescription springDescription;
   final double dragSpeedRatio;
-  final bool enablePullDown, enablePullUp;
   final bool enableScrollWhenTwoLevel, enableScrollWhenRefreshCompleted;
   final ValueNotifier headerMode, footerMode;
   final int updateFlag;
@@ -30,6 +29,7 @@ class RefreshPhysics extends ScrollPhysics {
   /// find out the viewport when bouncing,for compute the layoutExtent in header and footer
   /// This does not have any impact on performance. it only  execute once
   RenderViewport viewportRender;
+
 
   /// Creates scroll physics that bounce back from the edge.
   RefreshPhysics(
@@ -40,10 +40,8 @@ class RefreshPhysics extends ScrollPhysics {
         this.springDescription,
         this.footerMode,
         this.dragSpeedRatio,
-        this.enablePullUp,
         this.enableScrollWhenRefreshCompleted,
         this.enableScrollWhenTwoLevel,
-        this.enablePullDown,
         this.maxOverScrollExtent})
       : super(parent: parent);
 
@@ -53,9 +51,7 @@ class RefreshPhysics extends ScrollPhysics {
         parent: buildParent(ancestor),
         updateFlag: updateFlag,
         springDescription: springDescription,
-        enablePullDown: enablePullDown,
         dragSpeedRatio: dragSpeedRatio,
-        enablePullUp: enablePullUp,
         enableScrollWhenTwoLevel: enableScrollWhenTwoLevel,
         headerMode: headerMode,
         enableScrollWhenRefreshCompleted: enableScrollWhenRefreshCompleted,
@@ -90,7 +86,6 @@ class RefreshPhysics extends ScrollPhysics {
 
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) {
-
     // TODO: implement shouldAcceptUserOffset
     viewportRender ??=
         findViewport((position as ScrollPosition).context.storageContext);
@@ -99,7 +94,7 @@ class RefreshPhysics extends ScrollPhysics {
       return false;
     }
     // enableScrollWhenRefreshCompleted
-    else if (enablePullDown&&(!enableScrollWhenRefreshCompleted &&
+    else if (viewportRender.firstChild is RenderSliverRefresh&&(!enableScrollWhenRefreshCompleted &&
         position.pixels < 0 &&!(viewportRender.firstChild as RenderSliverRefresh).hasLayoutExtent&&
         (headerMode.value == RefreshStatus.completed ||
             headerMode.value == RefreshStatus.failed))
@@ -131,12 +126,14 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
     // TODO: implement applyPhysicsToUserOffset
+    viewportRender ??=
+        findViewport((position as ScrollPosition).context.storageContext);
     if (headerMode.value == RefreshStatus.twoLeveling) {
       if (offset > 0.0) {
         return parent.applyPhysicsToUserOffset(position, offset);
       }
     } else {
-      if ((offset > 0.0 && !enablePullDown) || (offset < 0 && !enablePullUp)) {
+      if ((offset > 0.0 && viewportRender.lastChild is! RenderSliverLoading) || (offset < 0 && viewportRender.lastChild is! RenderSliverLoading)) {
         return parent.applyPhysicsToUserOffset(position, offset);
       }
     }
@@ -189,6 +186,9 @@ class RefreshPhysics extends ScrollPhysics {
     // TODO: implement applyBoundaryConditions
     viewportRender ??=
         findViewport((position as ScrollPosition).context.storageContext);
+
+    final bool enablePullDown = viewportRender.firstChild is RenderSliverRefresh;
+    final bool enablePullUp = viewportRender.lastChild is RenderSliverLoading;
     if (headerMode.value == RefreshStatus.twoLeveling) {
       if (position.pixels - value > 0.0) {
         return parent.applyBoundaryConditions(position, value);
@@ -245,6 +245,10 @@ class RefreshPhysics extends ScrollPhysics {
   Simulation createBallisticSimulation(
       ScrollMetrics position, double velocity) {
     // TODO: implement createBallisticSimulation
+    viewportRender ??=
+        findViewport((position as ScrollPosition).context.storageContext);
+    final bool enablePullDown = viewportRender.firstChild is RenderSliverRefresh;
+    final bool enablePullUp = viewportRender.lastChild is RenderSliverLoading;
     if (headerMode.value == RefreshStatus.twoLeveling) {
       if (velocity < 0.0) {
         return parent.createBallisticSimulation(position, velocity);

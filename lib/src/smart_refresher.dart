@@ -277,8 +277,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
   ScrollPhysics _getScrollPhysics(
       RefreshConfiguration conf) {
     return _physics = RefreshPhysics(
-        enablePullUp: widget.enablePullUp,
-        enablePullDown: widget.enablePullDown || widget.enableTwoLevel,
         dragSpeedRatio: conf?.dragSpeedRatio,
         springDescription: conf?.springDescription,
         footerMode: widget.controller.footerMode,
@@ -358,9 +356,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
     if (conf.maxOverScrollExtent != _physics.maxOverScrollExtent ||
         _physics.maxUnderScrollExtent != conf.maxUnderScrollExtent ||
         _physics.dragSpeedRatio != conf.dragSpeedRatio ||
-        (widget.enablePullDown || widget.enableTwoLevel) !=
-            _physics.enablePullDown ||
-        widget.enablePullUp != _physics.enablePullUp ||
         _physics.enableScrollWhenTwoLevel != conf.enableScrollWhenTwoLevel ||
         _physics.enableScrollWhenRefreshCompleted !=
             conf.enableScrollWhenRefreshCompleted) {
@@ -401,7 +396,10 @@ class _SmartRefresherState extends State<SmartRefresher> {
   @override
   Widget build(BuildContext context) {
     final RefreshConfiguration configuration = RefreshConfiguration.of(context);
-    if(widget.builder!=null) return widget.builder(context,_getScrollPhysics(configuration));
+    if(widget.builder!=null) return RefreshConfiguration(
+      child: widget.builder(context,_getScrollPhysics(configuration)),
+
+    );
 
     widget.controller._headerTriggerDistance =
     -(configuration == null ? 80.0 : configuration.headerTriggerDistance);

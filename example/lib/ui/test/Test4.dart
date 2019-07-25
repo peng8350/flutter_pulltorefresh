@@ -153,7 +153,7 @@ class Test4State extends State<Test4>
         enablePullUp: true,
         enablePullDown: true,
         builder: (context,physics){
-          return CustomScrollView(
+          return RefreshListView(
             slivers: <Widget>[
               ClassicHeader(),
               SliverToBoxAdapter(
@@ -213,4 +213,43 @@ class CirclePainter extends CustomClipper<Path> {
     // TODO: implement shouldReclip
     return oldClipper != this;
   }
+}
+
+class RefreshListView extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _RefreshListViewState();
+  }
+  final ScrollPhysics physics;
+  final List<Widget> slivers;
+
+  RefreshListView({this.slivers,this.physics});
+}
+
+class _RefreshListViewState extends State<RefreshListView>{
+
+  bool show = true;
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      appBar: AppBar(actions: <Widget>[RaisedButton(
+        child: Text("改变隐藏"),
+        onPressed: (){
+          show = !show;
+          setState(() {
+
+          });
+        },
+      )],),
+      body: show?CustomScrollView(
+        slivers:widget.slivers
+            ,
+        physics: widget.physics,
+      ):CupertinoActivityIndicator(),
+    );
+  }
+
 }
