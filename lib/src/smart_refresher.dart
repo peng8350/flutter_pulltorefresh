@@ -404,7 +404,12 @@ class _SmartRefresherState extends State<SmartRefresher> {
     }
   }
 }
-
+/// A controller controll header and footer state,
+/// it  can trigger  driving request Refresh ,set the initalRefresh,status if needed
+///
+/// See also:
+///
+/// [SmartRefresher],a widget help you attach refresh and load more function easily
 class RefreshController {
   /// header status mode controll
   ValueNotifier<RefreshStatus> headerMode;
@@ -564,7 +569,9 @@ class RefreshController {
 
   /// reset footer noData state  to idle
   void resetNoData() {
-    footerMode?.value = LoadStatus.idle;
+    if(footerMode.value==LoadStatus.noMore) {
+      footerMode?.value = LoadStatus.idle;
+    }
   }
 
   /// for some special situation, you should call dispose() for safe,it may throw errors after parent widget dispose

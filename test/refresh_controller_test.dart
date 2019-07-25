@@ -109,6 +109,22 @@ void main() {
     expect(_refreshController.footerMode.value, LoadStatus.noMore);
   });
 
+  testWidgets("resetNoMoreData only can reset when footer mode is Nomore,if state is loading,may disable change state", (tester) async {
+    final RefreshController _refreshController = RefreshController(initialLoadStatus: LoadStatus.loading,initialRefreshStatus: RefreshStatus.refreshing);
+    _refreshController.refreshCompleted(resetFooterState: true);
+    expect(_refreshController.footerMode.value, LoadStatus.loading);
+
+    _refreshController.headerMode.value = RefreshStatus.refreshing;
+    _refreshController.footerMode.value = LoadStatus.noMore;
+    _refreshController.refreshCompleted(resetFooterState: true);
+    expect(_refreshController.footerMode.value, LoadStatus.idle);
+
+    _refreshController.headerMode.value = RefreshStatus.refreshing;
+    _refreshController.footerMode.value = LoadStatus.noMore;
+    _refreshController.resetNoData();
+    expect(_refreshController.footerMode.value, LoadStatus.idle);
+  });
+
   testRequestFun(true);
 
   testRequestFun(false);
