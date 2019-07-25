@@ -666,6 +666,7 @@ class RefreshConfiguration extends InheritedWidget {
     this.hideFooterWhenNotFull: false,
   });
 
+
   static RefreshConfiguration of(BuildContext context) {
     return context.inheritFromWidgetOfExactType(RefreshConfiguration);
   }

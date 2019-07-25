@@ -191,23 +191,19 @@ class RefreshPhysics extends ScrollPhysics {
     double topExtra = 0.0;
     double bottomExtra = 0.0;
     if (enablePullDown) {
-      final RenderSliverSingleBoxAdapter sliverHeader =
+      final RenderSliverRefresh sliverHeader =
           viewportRender.firstChild;
 
-      topExtra = sliverHeader.geometry.scrollExtent != 0.0
+      topExtra = sliverHeader.hasLayoutExtent
           ? 0.0
-          : (position.axis == Axis.vertical
-          ? sliverHeader.child.size.height
-          : sliverHeader.child.size.width);
+          : sliverHeader.refreshIndicatorLayoutExtent;
     }
     if (enablePullUp) {
-      final RenderSliverSingleBoxAdapter sliverFooter =
+      final RenderSliverLoading sliverFooter =
           viewportRender.lastChild;
-      bottomExtra = sliverFooter.geometry.scrollExtent != 0.0
+      bottomExtra = sliverFooter.geometry.scrollExtent!=0.0
           ? 0.0
-          : (position.axis == Axis.vertical
-          ? sliverFooter.child.size.height
-          : sliverFooter.child.size.width);
+          : sliverFooter.layoutExtent;
     }
     final double topBoundary =
         position.minScrollExtent - maxOverScrollExtent - topExtra;

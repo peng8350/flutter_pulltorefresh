@@ -10,6 +10,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Item.dart';
 
@@ -90,7 +91,8 @@ class _BasicExampleState extends State<BasicExample>
 
   void _onLoading(RefreshController controller, List<String> data) async {
     //monitor fetch data from network
-    await Future.delayed(Duration(milliseconds: 2000));
+    await Future.delayed(Duration(milliseconds: 4000));
+    print("Asd");
     for (int i = 0; i < 10; i++) {
       data.add("Item $i");
     }
@@ -120,9 +122,9 @@ class _BasicExampleState extends State<BasicExample>
       itemBuilder: (c, i) => Item(
         title: data2[i],
       ),
-      itemCount: data2.length,
+      itemCount: 1,
       gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 2/7),
     );
   }
 

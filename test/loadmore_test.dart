@@ -36,8 +36,8 @@ void main() {
     _refreshController.position
         .jumpTo(_refreshController.position.maxScrollExtent - 30);
     await tester.drag(find.byType(Scrollable), const Offset(0, -100.0));
-    await tester.pump();
-    expect(_refreshController.footerStatus, LoadStatus.idle);
+//    await tester.pump();
+//    expect(_refreshController.footerStatus, LoadStatus.idle);
     await tester.pump(Duration(milliseconds: 100));
     expect(_refreshController.footerStatus, LoadStatus.loading);
   });
@@ -256,7 +256,6 @@ void main() {
       _refreshController.position
           .jumpTo(_refreshController.position.maxScrollExtent - 100);
       await tester.drag(find.byType(Scrollable), const Offset(0, -150.0));
-      expect(_refreshController.footerStatus, LoadStatus.idle);
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 20));
       }
@@ -302,7 +301,6 @@ void main() {
       _refreshController.position
           .jumpTo(_refreshController.position.maxScrollExtent - 100);
       await tester.drag(find.byType(Scrollable), const Offset(0, -150.0));
-      expect(_refreshController.footerStatus, LoadStatus.idle);
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 20));
       }
@@ -319,7 +317,7 @@ void main() {
 
     testWidgets("loading->noData", (tester) async {
       final RefreshController _refreshController =
-          RefreshController(initialRefresh: true);
+          RefreshController();
       int time = 0;
       await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
@@ -346,7 +344,6 @@ void main() {
       _refreshController.position
           .jumpTo(_refreshController.position.maxScrollExtent - 100);
       await tester.drag(find.byType(Scrollable), const Offset(0, -150.0));
-      expect(_refreshController.footerStatus, LoadStatus.idle);
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 20));
       }
@@ -457,12 +454,13 @@ void main() {
           controller: _refreshController,
         ),
         footerTriggerDistance: -30.0,
+        maxUnderScrollExtent: 40.0,
       ),
     ));
 
     _refreshController.position
         .jumpTo(_refreshController.position.maxScrollExtent - 30.0);
-    await tester.drag(find.byType(Scrollable), const Offset(0, -70.0));
+    await tester.drag(find.byType(Scrollable), const Offset(0, -80.0));
     await tester.pump();
     await tester.pumpAndSettle(Duration(milliseconds: 2));
     expect(_refreshController.footerStatus, LoadStatus.loading);

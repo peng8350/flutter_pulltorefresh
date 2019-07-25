@@ -281,7 +281,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
 class SliverLoading extends SingleChildRenderObjectWidget {
   /// when not full one page,whether it should be hide and disable loading
   final bool hideWhenNotFull;
-
+  final bool floating;
   /// load state
   final LoadStatus mode;
   final double layoutExtent;
@@ -292,6 +292,7 @@ class SliverLoading extends SingleChildRenderObjectWidget {
   SliverLoading({
     Key key,
     this.mode,
+    this.floating,
     this.shouldFollowContent,
     this.layoutExtent,
     this.hideWhenNotFull,
@@ -299,33 +300,37 @@ class SliverLoading extends SingleChildRenderObjectWidget {
   }) : super(key: key, child: child);
 
   @override
-  _RenderSliverLoading createRenderObject(BuildContext context) {
-    return _RenderSliverLoading(
+  RenderSliverLoading createRenderObject(BuildContext context) {
+    return RenderSliverLoading(
         hideWhenNotFull: hideWhenNotFull,
         mode: mode,
+        hasLayoutExtent: floating,
         shouldFollowContent: shouldFollowContent,
         layoutExtent: layoutExtent);
   }
 
   @override
   void updateRenderObject(
-      BuildContext context, covariant _RenderSliverLoading renderObject) {
+      BuildContext context, covariant RenderSliverLoading renderObject) {
     renderObject
       ..mode = mode
+      ..hasLayoutExtent = floating
       ..layoutExtent = layoutExtent
       ..shouldFollowContent = shouldFollowContent
       ..hideWhenNotFull = hideWhenNotFull;
   }
 }
 
-class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
-  _RenderSliverLoading({
+class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
+  RenderSliverLoading({
     RenderBox child,
     this.mode,
     double layoutExtent,
+    bool hasLayoutExtent,
     this.shouldFollowContent,
     this.hideWhenNotFull,
   }) {
+    _hasLayoutExtent = hasLayoutExtent;
     this.layoutExtent = layoutExtent;
     this.child = child;
   }
@@ -344,6 +349,16 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   }
 
   get layoutExtent => _layoutExtent;
+
+  bool get hasLayoutExtent => _hasLayoutExtent;
+  bool _hasLayoutExtent;
+
+  set hasLayoutExtent(bool value) {
+    assert(value != null);
+    if (value == _hasLayoutExtent) return;
+    _hasLayoutExtent = value;
+    markNeedsLayout();
+  }
 
   bool _computeIfFull(SliverConstraints cons) {
     final RenderViewport viewport = parent;
@@ -365,7 +380,7 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   double computePaintOrigin(double boxExtent, bool reverse) {
     if (_computeIfFull(constraints) || shouldFollowContent) {
       if (reverse) {
-        return boxExtent - layoutExtent;
+        return layoutExtent;
       }
       return 0.0;
     } else {
@@ -374,7 +389,7 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
                 constraints.viewportMainAxisExtent -
                     constraints.precedingScrollExtent,
                 0.0) +
-            boxExtent -
+
             layoutExtent;
       } else {
         return Math.max(
@@ -418,7 +433,7 @@ class _RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     if (active) {
       // consider reverse loading and HideAlways==loadStyle
       geometry = SliverGeometry(
-        scrollExtent: layoutExtent,
+        scrollExtent: !_hasLayoutExtent||!_computeIfFull(constraints)?0.0:layoutExtent,
         paintExtent: paintedChildSize,
         // this need to fix later
         paintOrigin: computePaintOrigin(

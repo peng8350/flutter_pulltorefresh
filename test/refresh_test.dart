@@ -255,6 +255,7 @@ void main() {
           ),
           controller: _refreshController,
         ),
+        maxOverScrollExtent: 100.0,
         headerTriggerDistance: 100.0,
       ),
     ));
@@ -298,6 +299,7 @@ void main() {
           ),
           controller: _refreshController,
         ),
+        maxOverScrollExtent: 100.0,
       ),
     ));
 

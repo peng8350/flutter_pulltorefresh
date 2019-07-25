@@ -423,14 +423,15 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     // TODO: implement build
     return SliverLoading(
         hideWhenNotFull: configuration.hideFooterWhenNotFull,
+        floating:widget.loadStyle == LoadStyle.ShowAlways
+            ? true
+            : widget.loadStyle == LoadStyle.HideAlways
+            ? false
+            : floating,
         shouldFollowContent: configuration.shouldFooterFollowWhenNotFull != null
             ? configuration.shouldFooterFollowWhenNotFull(mode)
             : false,
-        layoutExtent: widget.loadStyle == LoadStyle.ShowAlways
-            ? widget.height
-            : widget.loadStyle == LoadStyle.HideAlways
-            ? 0.0
-            : (floating ? widget.height : 0.0),
+        layoutExtent: widget.height,
         mode: mode,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints cons) {

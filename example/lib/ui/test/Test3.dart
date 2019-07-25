@@ -191,7 +191,8 @@ class Test3State extends State<Test3>
               itemBuilder: (c, i) => data[i],
               itemCount: data.length,
             ),
-            onLoading: () {
+            onLoading: () async{
+              await Future.delayed(const Duration(milliseconds: 1000));
               print("onLoading");
               _refreshController.loadComplete();
             },

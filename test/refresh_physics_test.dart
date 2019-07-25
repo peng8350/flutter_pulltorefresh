@@ -167,8 +167,8 @@ void main() {
           ),
           controller: _refreshController,
         ),
-        maxOverScrollExtent: 300.0,
-        maxUnderScrollExtent: 300.0,
+        maxOverScrollExtent: 240.0,
+        maxUnderScrollExtent: 240.0,
       ),
     ));
 
