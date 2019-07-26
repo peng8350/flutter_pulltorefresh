@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../other/expanded_viewport.dart';
+import 'dart:async';
+import 'dart:ui' as ui show Image, Codec, FrameInfo;
 
 class Test4 extends StatefulWidget {
   Test4({Key key}) : super(key: key);
@@ -27,7 +30,6 @@ class Test4State extends State<Test4>
   bool _enablePullUp = true, _enablePullDown = true;
 
   void _getDatas() {
-
     data.add(Row(
       children: <Widget>[
         FlatButton(
@@ -125,9 +127,20 @@ class Test4State extends State<Test4>
 //
 //      });
 //    });
+//    final NetworkImage provider = AssetImage("images/animate.gif");
+//    provider.obtainKey(ImageConfiguration()).then((k) async{
+//        final ByteData data = await k.bundle.load(k.name);
+//         ui.Codec codec= await PaintingBinding.instance.instantiateImageCodec(data.buffer.asUint8List());
+//         ui.FrameInfo info;
+//         for(int i = 0 ;i<54;i++){
+//           info = await codec.getNextFrame();
+//         }
+//         print(codec.frameCount);
+//        return ;
+//    });
+
     _getDatas();
     _refreshController = RefreshController(initialRefresh: false);
-
     super.initState();
   }
 
@@ -149,22 +162,23 @@ class Test4State extends State<Test4>
 
   @override
   Widget build(BuildContext context) {
+//    // Check that a second resolve of the same image is synchronous.
+//    final ImageStream stream = provider.resolve(provider.);
+//    bool isSync;
+//    stream.addListener(ImageStreamListener((ImageInfo image, bool sync) { isSync = sync; }));
     return RefreshConfiguration(
       child: SmartRefresher.builder(
         enablePullUp: true,
         enablePullDown: true,
         builder: (context,physics){
-          return NestedScrollView(
+          return CustomScrollView(
             physics: physics,
-            headerSliverBuilder: (_,__){
-              return [
-                ClassicHeader()
-                ,SliverAppBar()
-              ];
-            },
-            body: ListView(
+            slivers:[ClassicHeader(),
+              SliverToBoxAdapter()
+              ,SliverAppBar(),
+            SliverToBoxAdapter(child: Container(height: 590,color: Colors.red,),)
+            ]
 
-            ),
           );
         },
         onRefresh: () async {

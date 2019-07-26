@@ -23,6 +23,7 @@ dependencies:
 
   flutter_sticky_header: ^0.4.0
 
+  flutter_gifimage: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -49,6 +50,7 @@ flutter:
     - images/material_waterdrop.gif
     - images/qqbg.jpg
     - images/custom_1.jpg
+    - images/gifindicator1.gif
     - images/msg_text_right_bg.9.png
     - images/custom_2.gif
     - images/loadstyle1.gif

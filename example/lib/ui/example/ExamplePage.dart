@@ -7,6 +7,7 @@ import 'package:example/ui/example/customindicator/shimmer_indicator.dart';
 import 'package:flutter/material.dart';
 import 'otherwidget/refresh_staggered_and_sticky.dart';
 import 'package:example/ui/example/useStage/empty_view.dart';
+import 'customindicator/gif_indicator_example1.dart';
 import 'package:example/ui/example/useStage/hidefooter_bycontent.dart';
 import 'package:example/ui/example/otherwidget/refesh_expansiopn_panel_list_example.dart';
 import 'package:example/ui/example/useStage/horizontal+reverse.dart';
@@ -224,6 +225,17 @@ class _ExamplePageState extends State<ExamplePage>
               return Scaffold(
                 appBar: AppBar(),
                 body: ShimmerIndicatorExample(),
+              );
+            }));
+          }),
+      ExampleItem(
+          title: "Gif指示器例子1",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(),
+                body: GifIndicatorExample1(),
               );
             }));
           })
