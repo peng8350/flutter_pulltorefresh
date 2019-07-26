@@ -169,9 +169,9 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 |:---:|:---:|:---:|
 |art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
 
-|Style| [ShimmerIndicator](example/lib/ui/example/customindicator/shimmer_indicator.dart) | |
+|Style| [ShimmerIndicator](example/lib/ui/example/customindicator/shimmer_indicator.dart) |[Gif Indicator](example/lib/ui/example/customindicator/gif_indicator_example1.dart) |
 |:---:|:---:|:---:|
-|art| ![](example/images/shimmerindicator.gif) |  |
+|art| ![](example/images/shimmerindicator.gif) | ![](arts/gifindicator.gif) |
 
 
 ## 更多

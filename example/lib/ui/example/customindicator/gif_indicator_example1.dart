@@ -9,6 +9,10 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_gifimage/flutter_gifimage.dart';
 import 'package:flutter/material.dart' hide RefreshIndicator,RefreshIndicatorState;
 
+/*
+  I use my plugin to implements gif effect,this plugin can help you to controll gif easily,
+  see page to find about usage: (https://github.com/peng8350/flutter_gifimage)
+*/
 class GifHeader1 extends RefreshIndicator{
 
 
