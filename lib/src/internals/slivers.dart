@@ -69,10 +69,10 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
 class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   RenderSliverRefresh(
       {@required double refreshIndicatorExtent,
-      @required bool hasLayoutExtent,
-      RenderBox child,
-      this.paintOffsetY,
-      this.refreshStyle})
+        @required bool hasLayoutExtent,
+        RenderBox child,
+        this.paintOffsetY,
+        this.refreshStyle})
       : assert(refreshIndicatorExtent != null),
         assert(refreshIndicatorExtent >= 0.0),
         assert(hasLayoutExtent != null),
@@ -196,7 +196,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
         parentUsesSize: true,
       );
     final double boxExtent = (constraints.axisDirection == AxisDirection.up ||
-            constraints.axisDirection == AxisDirection.down)
+        constraints.axisDirection == AxisDirection.down)
         ? child.size.height
         : child.size.width;
 
@@ -204,11 +204,11 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
       final double needPaintExtent = Math.min(
           Math.max(
             Math.max(
-                    (constraints.axisDirection == AxisDirection.up ||
-                            constraints.axisDirection == AxisDirection.down)
-                        ? child.size.height
-                        : child.size.width,
-                    layoutExtent) -
+                (constraints.axisDirection == AxisDirection.up ||
+                    constraints.axisDirection == AxisDirection.down)
+                    ? child.size.height
+                    : child.size.width,
+                layoutExtent) -
                 constraints.scrollOffset,
             0.0,
           ),
@@ -234,7 +234,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
             paintExtent: needPaintExtent,
             maxPaintExtent: needPaintExtent,
             layoutExtent:
-                Math.max(layoutExtent - constraints.scrollOffset, 0.0),
+            Math.max(layoutExtent - constraints.scrollOffset, 0.0),
           );
           break;
         case RefreshStyle.UnFollow:
@@ -254,7 +254,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
         case RefreshStyle.Front:
           geometry = SliverGeometry(
             paintOrigin: constraints.axisDirection == AxisDirection.up ||
-                    constraints.crossAxisDirection == AxisDirection.left
+                constraints.crossAxisDirection == AxisDirection.left
                 ? boxExtent
                 : 0.0,
             visible: true,
@@ -386,9 +386,9 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     } else {
       if (reverse) {
         return Math.max(
-                constraints.viewportMainAxisExtent -
-                    constraints.precedingScrollExtent,
-                0.0) +
+            constraints.viewportMainAxisExtent -
+                constraints.precedingScrollExtent,
+            0.0) +
 
             layoutExtent;
       } else {
@@ -425,9 +425,9 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
         : child.size.width;
     assert(childExtent != null);
     final double paintedChildSize =
-        calculatePaintOffset(constraints, from: 0.0, to: childExtent);
+    calculatePaintOffset(constraints, from: 0.0, to: childExtent);
     final double cacheExtent =
-        calculateCacheOffset(constraints, from: 0.0, to: childExtent);
+    calculateCacheOffset(constraints, from: 0.0, to: childExtent);
     assert(paintedChildSize.isFinite);
     assert(paintedChildSize >= 0.0);
     if (active) {

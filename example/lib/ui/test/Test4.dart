@@ -153,18 +153,17 @@ class Test4State extends State<Test4>
         enablePullUp: true,
         enablePullDown: true,
         builder: (context,physics){
-          return RefreshListView(
-            slivers: <Widget>[
-              ClassicHeader(),
-              SliverToBoxAdapter(
-                child: Container(
-                  color: Colors.red,
-                  height: 500.0,
-                ),
-              ),
-              ClassicFooter()
-            ],
-            physics: physics.applyTo(AlwaysScrollableScrollPhysics()),
+          return NestedScrollView(
+            physics: physics,
+            headerSliverBuilder: (_,__){
+              return [
+                ClassicHeader()
+                ,SliverAppBar()
+              ];
+            },
+            body: ListView(
+
+            ),
           );
         },
         onRefresh: () async {
@@ -234,22 +233,11 @@ class _RefreshListViewState extends State<RefreshListView>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(actions: <Widget>[RaisedButton(
-        child: Text("改变隐藏"),
-        onPressed: (){
-          show = !show;
-          setState(() {
-
-          });
-        },
-      )],),
-      body: show?CustomScrollView(
-        slivers:widget.slivers
-            ,
-        physics: widget.physics,
-      ):CupertinoActivityIndicator(),
-    );
+    return show?CustomScrollView(
+      slivers:widget.slivers
+      ,
+      physics:AlwaysScrollableScrollPhysics(),
+    ):CupertinoActivityIndicator();
   }
 
 }

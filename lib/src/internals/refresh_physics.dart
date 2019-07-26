@@ -14,9 +14,14 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:pull_to_refresh/src/internals/slivers.dart';
 
 /// a scrollPhysics for config refresh scroll effect,enable viewport out of edge whatever physics it is
-///
 /// in [ClampingScrollPhysics], it doesn't allow to flip out of edge,but in RefreshPhysics,it will allow to do that,
 /// by parent physics passing,it also can attach the different of iOS and Android different scroll effect
+/// it also handles interception scrolling when refreshed, or when the second floor is open and closed.
+/// with [SpringDescription] passing,you can custom spring back animate,the more paramter can be setting in [RefreshConfiguration]
+///
+/// see also:
+///
+/// [RefreshConfiguration], a configuration for Controlling how SmartRefresher widgets behave in a subtree
 // ignore: MUST_BE_IMMUTABLE
 class RefreshPhysics extends ScrollPhysics {
   final double maxOverScrollExtent, maxUnderScrollExtent;
@@ -183,7 +188,7 @@ class RefreshPhysics extends ScrollPhysics {
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
-    // TODO: implement applyBoundaryConditions
+
     viewportRender ??=
         findViewport((position as ScrollPosition).context.storageContext);
 
@@ -204,7 +209,6 @@ class RefreshPhysics extends ScrollPhysics {
     if (enablePullDown) {
       final RenderSliverRefresh sliverHeader =
           viewportRender.firstChild;
-
       topExtra = sliverHeader.hasLayoutExtent
           ? 0.0
           : sliverHeader.refreshIndicatorLayoutExtent;

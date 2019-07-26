@@ -23,6 +23,7 @@ dependencies:
 
   flutter_sticky_header: ^0.4.0
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

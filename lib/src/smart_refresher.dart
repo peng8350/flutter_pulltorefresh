@@ -104,9 +104,7 @@ enum LoadStyle {
 }
 
 /// This is the most important component that provides drop-down refresh and up loading.
-///
 /// [RefreshController] must not be null,Only one controller to one SmartRefresher
-///
 /// If you need to custom header or footer,You should check out [CustomHeader] or [CustomFooter]
 ///
 /// See also:
@@ -170,8 +168,11 @@ class SmartRefresher extends StatefulWidget {
   final RefresherBuilder builder;
 
   /// creates a widget help attach the refresh and load more function
-  /// controller must not be null
-  /// child is your refresh content
+  /// controller must not be null,
+  /// child is your refresh content,Note that there's a big difference between children inheriting from ScrollView or not.
+  /// If child is extends ScrollView,inner will get the slivers from ScrollView,if not,inner will wrap child into SliverToBoxAdapter.
+  /// If your child inner container Scrollable,please consider about converting to Sliver,and use CustomScrollView,or use [builder] constructor
+  /// such as AnimatedList,RecordableList,doesn't allow to put into child,it will wrap it into SliverToBoxAdapter
   /// If you don't need pull down refresh ,just enablePullDown = false,
   /// If you  need pull up load ,just enablePullUp = true
   SmartRefresher(
@@ -192,8 +193,11 @@ class SmartRefresher extends StatefulWidget {
 
   /// creates a widget help attach the refresh and load more function
   /// controller must not be null,builder must not be null
-  /// If you don't need pull down refresh ,just enablePullDown = false,
-  /// If you  need pull up load ,just enablePullUp = true
+  /// this constructor use to handle some special third party widgets,this widget need to pass slivers ,but they are
+  /// not extends ScrollView,so my widget inner will wrap child to SliverToBoxAdapter,which cause scrollable wrapping scrollable.
+  /// for example,NestedScrollView is a StalessWidget,it's headerSliversbuilder can return a slivers array,So if we want to do
+  /// refresh above NestedScrollVIew,we must use this constrctor to implements refresh above NestedScrollView,but for now,NestedScrollView
+  /// can not support overscroll out of edge
   SmartRefresher.builder(
       {Key key,
         @required this.controller,
