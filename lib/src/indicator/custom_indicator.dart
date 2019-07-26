@@ -14,6 +14,41 @@ typedef Widget HeaderBuilder(BuildContext context, RefreshStatus mode);
 /// custom footer builder,you can use second paramter to know what footerr state is
 typedef Widget FooterBuilder(BuildContext context, LoadStatus mode);
 
+/// a custom Indicator for header
+///
+/// here is the very simple usage
+///
+/// ```dart
+/// CustomHeader(
+///      builder: (context,mode){
+///        Widget body;
+///        if(mode==RefreshStatus.idle){
+///          body = Text("pull down refresh");
+///        }
+///       else if(mode==RefreshStatus.refreshing){
+///          body = CupertinoActivityIndicator();
+///        }
+///        else if(mode==RefreshStatus.canRefresh){
+///          body = Text("release to refresh");
+///        }
+///        else if(mode==RefreshStatus.completed){
+///          body = Text("refreshCompleted!");
+///       }
+///        return Container(
+///          height: 60.0,
+///          child: Center(
+///            child: body,
+///          ),
+///       );
+///      },
+///    )
+/// ```
+/// If you need to listen overScroll event do some animate,you should use [OnOffsetChange] callback in [SmartRefresher]
+/// finally,If your indicator contain more complex animation and need to update frequently ,I suggest you extends [RefreshIndicator] to implements
+///
+/// See also
+///
+/// [CustomFooter], a custom Indicator for footer
 class CustomHeader extends RefreshIndicator {
   final HeaderBuilder builder;
 
@@ -44,6 +79,10 @@ class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
   }
 }
 
+/// a custom Indicator for footer,the usage I have put in [CustomHeader],same with that
+/// See also
+///
+/// [CustomHeader], a custom Indicator for header
 class CustomFooter extends LoadIndicator {
   final FooterBuilder builder;
 

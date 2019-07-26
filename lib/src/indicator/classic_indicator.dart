@@ -19,7 +19,22 @@ enum IconPosition { left, right, top, bottom }
 typedef Widget OuterBuilder(Widget child);
 
 ///the most common indicator,combine with a text and a icon
+///
+/// See also:
+///
+/// [ClassicFooter]
 class ClassicHeader extends RefreshIndicator {
+  /// a builder for re wrap child,If you need to change the boxExtent or background,padding etc.you need outerBuilder to reWrap child
+  /// example:
+  /// ```dart
+  /// outerBuilder:(child){
+  ///    return Container(
+  ///       color:Colors.red,
+  ///       child:child
+  ///    );
+  /// }
+  /// ````
+  /// In this example,it will help to add backgroundColor in indicator
   final OuterBuilder outerBuilder;
   final String releaseText,
       idleText,
@@ -34,6 +49,7 @@ class ClassicHeader extends RefreshIndicator {
       failedIcon,
       canTwoLevelIcon,
       twoLevelView;
+  /// icon and text middle margin
   final double spacing;
   final IconPosition iconPos;
 
@@ -154,13 +170,28 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
 }
 
 ///the most common indicator,combine with a text and a icon
+///
+// See also:
+//
+// [ClassicHeader]
 class ClassicFooter extends LoadIndicator {
   final String idleText, loadingText, noDataText, failedText;
-
+  /// a builder for re wrap child,If you need to change the boxExtent or background,padding etc.you need outerBuilder to reWrap child
+  /// example:
+  /// ```dart
+  /// outerBuilder:(child){
+  ///    return Container(
+  ///       color:Colors.red,
+  ///       child:child
+  ///    );
+  /// }
+  /// ````
+  /// In this example,it will help to add backgroundColor in indicator
   final OuterBuilder outerBuilder;
 
   final Widget idleIcon, loadingIcon, noMoreIcon, failedIcon;
 
+  /// icon and text middle margin
   final double spacing;
 
   final IconPosition iconPos;
