@@ -12,6 +12,13 @@ import 'dart:math' as math;
 import '../smart_refresher.dart';
 import 'slivers.dart';
 
+
+typedef VoidFutureCallBack = Future<void> Function();
+
+typedef void OffsetCallBack(double offset);
+
+typedef void ModeChangeCallBack<T>(T mode);
+
 /// a widget  implements ios pull down refresh effect and Android material RefreshIndicator overScroll effect
 abstract class RefreshIndicator extends StatefulWidget {
   /// refresh display style
@@ -576,18 +583,21 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
 /// head Indicator exposure interface
 abstract class RefreshProcessor {
+  /// out of edge offset callback
   void onOffsetChange(double offset) {}
-
+  /// mode change callback
   void onModeChange(RefreshStatus mode) {}
-
+  /// when indicator is ready into refresh,it will call back and waiting for this function finish,then callback onRefresh
   Future readyToRefresh() {
     return Future.value();
   }
 
+  // when indicator is ready to dismiss layout ,it will callback and then spring back after finish
   Future endRefresh() {
     return Future.value();
   }
 
+  // when indicator has been spring back,it  need to reset value
   void resetValue() {}
 }
 

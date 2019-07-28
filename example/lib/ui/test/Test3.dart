@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -125,7 +126,7 @@ class Test3State extends State<Test3>
     _getDatas();
     _refreshController = RefreshController(
         initialRefresh: true, initialLoadStatus: LoadStatus.failed);
-
+    _animationController=  AnimationController(vsync: this);
     super.initState();
   }
 
@@ -144,6 +145,7 @@ class Test3State extends State<Test3>
     // TODO: implement dispose
     super.dispose();
   }
+  AnimationController _animationController;
 
   @override
   void didChangeDependencies() {
@@ -163,7 +165,20 @@ class Test3State extends State<Test3>
             enablePullUp: _enablePullDown,
             enablePullDown: _enablePullUp,
             controller: _refreshController,
-            header: WaterDropHeader(),
+            header: CustomHeader(
+              builder: (c,m){
+                return ScaleTransition(
+                  scale: _animationController,
+                  child: CupertinoActivityIndicator(),
+                );
+              },
+              readyToRefresh: (){
+                return Future.delayed(Duration(milliseconds: 1500));
+              },
+              onOffsetChange: (offset){
+                _animationController.value = offset/80.0;
+              },
+            ),
             footer: ClassicFooter(
               iconPos: IconPosition.top,
               loadStyle: LoadStyle.ShowWhenLoading,

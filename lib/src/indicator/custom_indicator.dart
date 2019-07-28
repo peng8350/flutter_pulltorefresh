@@ -8,6 +8,8 @@ import 'package:flutter/widgets.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 
+
+
 /// custom header builder,you can use second paramter to know what header state is
 typedef Widget HeaderBuilder(BuildContext context, RefreshStatus mode);
 
@@ -52,9 +54,24 @@ typedef Widget FooterBuilder(BuildContext context, LoadStatus mode);
 class CustomHeader extends RefreshIndicator {
   final HeaderBuilder builder;
 
+  final VoidFutureCallBack readyToRefresh;
+
+  final VoidFutureCallBack endRefresh;
+
+  final OffsetCallBack onOffsetChange;
+
+  final ModeChangeCallBack<RefreshStatus> onModeChange;
+
+  final VoidCallback onResetValue;
+
   const CustomHeader({
     Key key,
     @required this.builder,
+    this.readyToRefresh,
+    this.endRefresh,
+    this.onOffsetChange,
+    this.onModeChange,
+    this.onResetValue,
     double height: 60.0,
     Duration completeDuration: const Duration(milliseconds: 600),
     RefreshStyle refreshStyle: RefreshStyle.Follow,
@@ -72,6 +89,46 @@ class CustomHeader extends RefreshIndicator {
 }
 
 class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
+
+  @override
+  void onOffsetChange(double offset) {
+    // TODO: implement onOffsetChange
+    if(widget.onOffsetChange!=null){
+      widget.onOffsetChange(offset);
+    }
+    super.onOffsetChange(offset);
+  }
+
+  @override
+  void onModeChange(RefreshStatus mode) {
+    // TODO: implement onModeChange
+    if(widget.onModeChange!=null){
+      widget.onModeChange(mode);
+    }
+    super.onModeChange(mode);
+  }
+
+
+  @override
+  Future<void> readyToRefresh() {
+    // TODO: implement endRefresh
+    if(widget.readyToRefresh!=null){
+      return widget.readyToRefresh();
+    }
+    return super.readyToRefresh();
+  }
+
+  @override
+  Future<void> endRefresh() {
+    // TODO: implement endRefresh
+    if(widget.endRefresh!=null){
+      return widget.endRefresh();
+    }
+    return super.endRefresh();
+  }
+
+
+
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
@@ -86,9 +143,17 @@ class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
 class CustomFooter extends LoadIndicator {
   final FooterBuilder builder;
 
+  final OffsetCallBack onOffsetChange;
+
+  final ModeChangeCallBack onModeChange;
+
+
+
   const CustomFooter({
     Key key,
     double height: 60.0,
+    this.onModeChange,
+    this.onOffsetChange,
     LoadStyle loadStyle: LoadStyle.ShowAlways,
     @required this.builder,
     Function onClick,
@@ -102,6 +167,26 @@ class CustomFooter extends LoadIndicator {
 }
 
 class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
+
+  @override
+  void onOffsetChange(double offset) {
+    // TODO: implement onOffsetChange
+    if(widget.onOffsetChange!=null){
+      widget.onOffsetChange(offset);
+    }
+    super.onOffsetChange(offset);
+  }
+
+  @override
+  void onModeChange(LoadStatus mode) {
+    // TODO: implement onModeChange
+    if(widget.onModeChange!=null){
+      widget.onModeChange(mode);
+    }
+    super.onModeChange(mode);
+  }
+
+
   @override
   Widget buildContent(BuildContext context, LoadStatus mode) {
     // TODO: implement buildContent
