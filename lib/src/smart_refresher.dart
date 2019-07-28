@@ -9,6 +9,7 @@ import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
+import 'package:pull_to_refresh/src/internals/slivers.dart';
 import 'internals/indicator_wrap.dart';
 import 'internals/refresh_physics.dart';
 import 'indicator/classic_indicator.dart';
@@ -252,7 +253,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
       }
     } else if (child is! Scrollable) {
       slivers = [
-        SliverToBoxAdapter(
+        SliverRefreshBody(
           child: child ?? Container(),
         )
       ];

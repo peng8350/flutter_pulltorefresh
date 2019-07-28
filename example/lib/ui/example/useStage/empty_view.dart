@@ -31,10 +31,13 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
     // this way is more converient,but it doesn't reference ListView some attribute
     // If you don't need some attribute like physics,cacheExtent,just default
     // you can return emptyWidget directly,else return ListView
-    //first way
-    return Image.asset(
-      "images/empty.png",
-      fit: BoxFit.cover,
+    // from 1.5.2,you needn't  compute the height by LayoutBuilder,If your boxConstaints is double.infite,
+    // SmartRefresher can convert the height to the viewport mainExtent
+    return Center(
+      child: Image.asset(
+        "images/empty.png",
+        fit: BoxFit.cover,
+      ),
     );
     // second way
     return ListView(
