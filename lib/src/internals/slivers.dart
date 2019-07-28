@@ -377,7 +377,7 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   //  many sitiuation: 1. reverse 2. not reverse
   // 3. follow content 4. unfollow content
   //5. not full 6. full
-  double computePaintOrigin(double boxExtent, bool reverse) {
+  double computePaintOrigin(double layoutExtent, bool reverse) {
     if (_computeIfFull(constraints) || shouldFollowContent) {
       if (reverse) {
         return layoutExtent;
@@ -437,7 +437,7 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
         paintExtent: paintedChildSize,
         // this need to fix later
         paintOrigin: computePaintOrigin(
-            childExtent,
+            !_hasLayoutExtent||!_computeIfFull(constraints)?layoutExtent:0.0,
             constraints.axisDirection == AxisDirection.up ||
                 constraints.axisDirection == AxisDirection.left),
         cacheExtent: cacheExtent,

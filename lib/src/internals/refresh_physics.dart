@@ -71,7 +71,7 @@ class RefreshPhysics extends ScrollPhysics {
     (ancestor is ClampingScrollPhysics ||
     (ancestor is AlwaysScrollableScrollPhysics &&
     defaultTargetPlatform != TargetPlatform.iOS)
-    ? 30.0
+    ? 60.0
         : double.infinity));
   }
 

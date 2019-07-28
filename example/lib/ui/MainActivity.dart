@@ -118,10 +118,7 @@ class _MainActivityState extends State<MainActivity>
           maxUnderScrollExtent: 0.0,
           footerTriggerDistance: 45.0,
           shouldFooterFollowWhenNotFull: (mode) {
-            if (mode == LoadStatus.noMore) {
               return true;
-            }
-            return false;
           },
           enableScrollWhenRefreshCompleted: false,
           hideFooterWhenNotFull: false,

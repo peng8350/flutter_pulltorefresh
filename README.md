@@ -175,9 +175,9 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
 |art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
 
 
-|Style| [ShimmerIndicator](example/lib/ui/example/customindicator/shimmer_indicator.dart) | |
+|Style| [ShimmerIndicator](example/lib/ui/example/customindicator/shimmer_indicator.dart) | [Gif Indicator](example/lib/ui/example/customindicator/gif_indicator_example1.dart)  |
 |:---:|:---:|:---:|
-|art| ![](example/images/shimmerindicator.gif) |  |
+|art| ![](example/images/shimmerindicator.gif) | ![](arts/gifindicator.gif) |
 
 
 

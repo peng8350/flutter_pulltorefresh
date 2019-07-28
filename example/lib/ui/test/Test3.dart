@@ -39,7 +39,7 @@ class Test3State extends State<Test3>
             child: Text("请求加载数据"))
       ],
     ));
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 1; i++) {
       data.add(GestureDetector(
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
@@ -166,8 +166,7 @@ class Test3State extends State<Test3>
             header: WaterDropHeader(),
             footer: ClassicFooter(
               iconPos: IconPosition.top,
-              height: 60.0,
-              loadStyle: LoadStyle.ShowAlways,
+              loadStyle: LoadStyle.ShowWhenLoading,
               onClick: () {
                 print("cliclk");
               },
