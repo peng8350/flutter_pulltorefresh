@@ -102,11 +102,13 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
         ),
         body: SmartRefresher(
           child: CustomScrollView(
-            slivers: <Widget>[SliverAnimatedList(
-              key: _listKey,
-              initialItemCount: _list.length,
-              itemBuilder: _buildItem,
-            )],
+            slivers: <Widget>[
+              SliverAnimatedList(
+                key: _listKey,
+                initialItemCount: _list.length,
+                itemBuilder: _buildItem,
+              )
+            ],
           ),
           enablePullUp: true,
           controller: _refreshController,

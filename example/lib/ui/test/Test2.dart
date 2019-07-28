@@ -108,7 +108,7 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
       onOffsetChange: _onOffsetCallback,
       child: GridView.builder(
         gridDelegate:
-        SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: data.length,
         itemBuilder: buildImage,
       ),

@@ -49,6 +49,7 @@ class ClassicHeader extends RefreshIndicator {
       failedIcon,
       canTwoLevelIcon,
       twoLevelView;
+
   /// icon and text middle margin
   final double spacing;
   final IconPosition iconPos;
@@ -176,6 +177,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
 // [ClassicHeader]
 class ClassicFooter extends LoadIndicator {
   final String idleText, loadingText, noDataText, failedText;
+
   /// a builder for re wrap child,If you need to change the boxExtent or background,padding etc.you need outerBuilder to reWrap child
   /// example:
   /// ```dart

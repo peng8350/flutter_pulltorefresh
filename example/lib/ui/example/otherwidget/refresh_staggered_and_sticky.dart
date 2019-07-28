@@ -17,7 +17,8 @@ class RefreshStaggeredAndSticky extends StatefulWidget {
   RefreshStaggeredAndSticky({Key key}) : super(key: key);
 
   @override
-  RefreshStaggeredAndStickyState createState() => RefreshStaggeredAndStickyState();
+  RefreshStaggeredAndStickyState createState() =>
+      RefreshStaggeredAndStickyState();
 }
 
 class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
@@ -49,7 +50,7 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
           color: Color.fromARGB(255, 250, 250, 250),
           child: Card(
             margin:
-            EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
             child: Center(
               child: Text('Data $i'),
             ),
@@ -81,13 +82,13 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
     super.dispose();
   }
 
-  List<bool> expand = [false,false,false,false,false,false,false,false];
+  List<bool> expand = [false, false, false, false, false, false, false, false];
 
   @override
   Widget build(BuildContext context) {
     List<Widget> slivers = [];
-    for(int i = 0;i<expand.length;i++){
-      slivers.add( SliverStickyHeader(
+    for (int i = 0; i < expand.length; i++) {
+      slivers.add(SliverStickyHeader(
         header: GestureDetector(
           child: new Container(
             height: 60.0,
@@ -99,27 +100,27 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
               style: const TextStyle(color: Colors.white),
             ),
           ),
-          onTap: (){
+          onTap: () {
             expand[i] = !expand[i];
-            setState(() {
-
-            });
+            setState(() {});
           },
         ),
-        sliver: expand[i]?new SliverList(
-          delegate: new SliverChildBuilderDelegate(
-                (context, i) => new ListTile(
-              leading: new CircleAvatar(
-                child: new Text('0'),
-              ),
-              title: new Text('List tile #$i'),
-            ),
-            childCount: 4,
-          ),
-        ):null,
+        sliver: expand[i]
+            ? new SliverList(
+                delegate: new SliverChildBuilderDelegate(
+                  (context, i) => new ListTile(
+                    leading: new CircleAvatar(
+                      child: new Text('0'),
+                    ),
+                    title: new Text('List tile #$i'),
+                  ),
+                  childCount: 4,
+                ),
+              )
+            : null,
       ));
     }
-    slivers.add( SliverStaggeredGrid.countBuilder(
+    slivers.add(SliverStaggeredGrid.countBuilder(
       crossAxisCount: 4,
       itemCount: length,
       itemBuilder: (BuildContext context, int index) => new Container(
@@ -131,7 +132,7 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
             ),
           )),
       staggeredTileBuilder: (int index) =>
-      new StaggeredTile.count(2, index.isEven ? 2 : 1),
+          new StaggeredTile.count(2, index.isEven ? 2 : 1),
       mainAxisSpacing: 4.0,
       crossAxisSpacing: 4.0,
     ));
@@ -149,13 +150,13 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
             if (mounted) setState(() {});
             _refreshController.refreshFailed();
           },
-          child:CustomScrollView(
+          child: CustomScrollView(
             slivers: slivers,
           ),
           onLoading: () {
             print("onload");
             Future.delayed(const Duration(milliseconds: 2000)).then((val) {
-              length+=10;
+              length += 10;
               if (mounted) setState(() {});
               _refreshController.loadComplete();
             });

@@ -316,8 +316,7 @@ void main() {
     });
 
     testWidgets("loading->noData", (tester) async {
-      final RefreshController _refreshController =
-          RefreshController();
+      final RefreshController _refreshController = RefreshController();
       int time = 0;
       await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
@@ -472,6 +471,4 @@ void main() {
     await tester.pumpAndSettle();
     expect(_refreshController.footerStatus, LoadStatus.idle);
   });
-
-
 }

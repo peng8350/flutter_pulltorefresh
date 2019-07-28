@@ -262,3 +262,12 @@ other:
 * remove reverse in some header indicators,inner auto check direction,no need to pass paramter
 * fix render error in footer when asix = Horizontal & reverse = true
 
+## 1.5.2
+* change maxOverScrollExtent default to 60
+* maxScrollExtent should subtract layoutExtent instead of boxExtent when indicator not floating
+* add SmartRefresher builder constructor for some special use stage
+* when child is not extends scrollView,it should convert height to viewport's height when child's height is infite,such as PageView,emptyWidget with Center,else it will use LayoutBuilder get height
+* header,footer now unlimit the type ,convert to widget,but only sliver widget,Considering the problem of combined indicators
+* CustomHeader,CustomFooter expose inner indicator event
+* resetNoData should only can work when footer indicator is noMore state
+* fix twolevel and refresh prior problem

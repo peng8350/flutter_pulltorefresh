@@ -27,14 +27,14 @@ class ExpandedViewport extends Viewport {
     double cacheExtent,
     List<Widget> slivers = const <Widget>[],
   }) : super(
-      key: key,
-      slivers: slivers,
-      axisDirection: axisDirection,
-      crossAxisDirection: crossAxisDirection,
-      anchor: anchor,
-      offset: offset,
-      center: center,
-      cacheExtent: cacheExtent);
+            key: key,
+            slivers: slivers,
+            axisDirection: axisDirection,
+            crossAxisDirection: crossAxisDirection,
+            anchor: anchor,
+            offset: offset,
+            center: center,
+            cacheExtent: cacheExtent);
 
   @override
   RenderViewport createRenderObject(BuildContext context) {
@@ -60,13 +60,13 @@ class _RenderExpandedViewport extends RenderViewport {
     RenderSliver center,
     double cacheExtent,
   }) : super(
-      axisDirection: axisDirection,
-      crossAxisDirection: crossAxisDirection,
-      offset: offset,
-      anchor: anchor,
-      children: children,
-      center: center,
-      cacheExtent: cacheExtent);
+            axisDirection: axisDirection,
+            crossAxisDirection: crossAxisDirection,
+            offset: offset,
+            anchor: anchor,
+            children: children,
+            center: center,
+            cacheExtent: cacheExtent);
 
   @override
   void performLayout() {
@@ -107,16 +107,16 @@ class _RenderExpandedViewport extends RenderViewport {
     // reverse slivers).
     final double centerOffset = mainAxisExtent * anchor - correctedOffset;
     final double reverseDirectionRemainingPaintExtent =
-    centerOffset.clamp(0.0, mainAxisExtent);
+        centerOffset.clamp(0.0, mainAxisExtent);
 
     final double forwardDirectionRemainingPaintExtent =
-    (mainAxisExtent - centerOffset).clamp(0.0, mainAxisExtent);
+        (mainAxisExtent - centerOffset).clamp(0.0, mainAxisExtent);
     final double fullCacheExtent = mainAxisExtent + 2 * cacheExtent;
     final double centerCacheOffset = centerOffset + cacheExtent;
     final double reverseDirectionRemainingCacheExtent =
-    centerCacheOffset.clamp(0.0, fullCacheExtent);
+        centerCacheOffset.clamp(0.0, fullCacheExtent);
     final double forwardDirectionRemainingCacheExtent =
-    (fullCacheExtent - centerCacheOffset).clamp(0.0, fullCacheExtent);
+        (fullCacheExtent - centerCacheOffset).clamp(0.0, fullCacheExtent);
 
     final RenderSliver leadingNegativeChild = childBefore(center);
     // positive scroll offsets
@@ -124,7 +124,7 @@ class _RenderExpandedViewport extends RenderViewport {
       child: expandPosition,
       scrollOffset: math.max(0.0, -centerOffset),
       overlap:
-      leadingNegativeChild == null ? math.min(0.0, -centerOffset) : 0.0,
+          leadingNegativeChild == null ? math.min(0.0, -centerOffset) : 0.0,
       layoutOffset: centerOffset >= mainAxisExtent
           ? centerOffset
           : reverseDirectionRemainingPaintExtent,

@@ -11,7 +11,6 @@
 * 不支持SingleChildScrollView,使用ListView替代即可
 * 当想在ScrollView增加背景时,记住别在child节点给ListView或者GridView包装Container,请在SmartRefresher外部包装Container
 
-
 ## Behind刷新样式
 * 这种样式的实现事实上就是采用高度的动态变化来实现的,试试外围多利用Align属性,会有不同的滑动效果。
 

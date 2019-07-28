@@ -144,7 +144,7 @@ class _MaterialClassicHeaderState
   @override
   Future<void> readyToRefresh() {
     // TODO: implement readyToRefresh
-    return _positionController.animateTo(widget.distance/widget.height);
+    return _positionController.animateTo(widget.distance / widget.height);
   }
 
   @override
@@ -221,7 +221,7 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
         curve: Curves.bounceOut, duration: Duration(milliseconds: 550));
 
     return _positionController
-        .animateTo(widget.distance/widget.height,
+        .animateTo(widget.distance / widget.height,
             curve: Curves.bounceOut, duration: Duration(milliseconds: 550))
         .then((_) {
       _showWater = false;

@@ -126,7 +126,7 @@ class Test3State extends State<Test3>
     _getDatas();
     _refreshController = RefreshController(
         initialRefresh: true, initialLoadStatus: LoadStatus.failed);
-    _animationController=  AnimationController(vsync: this);
+    _animationController = AnimationController(vsync: this);
     super.initState();
   }
 
@@ -145,6 +145,7 @@ class Test3State extends State<Test3>
     // TODO: implement dispose
     super.dispose();
   }
+
   AnimationController _animationController;
 
   @override
@@ -166,17 +167,17 @@ class Test3State extends State<Test3>
             enablePullDown: _enablePullUp,
             controller: _refreshController,
             header: CustomHeader(
-              builder: (c,m){
+              builder: (c, m) {
                 return ScaleTransition(
                   scale: _animationController,
                   child: CupertinoActivityIndicator(),
                 );
               },
-              readyToRefresh: (){
+              readyToRefresh: () {
                 return Future.delayed(Duration(milliseconds: 1500));
               },
-              onOffsetChange: (offset){
-                _animationController.value = offset/80.0;
+              onOffsetChange: (offset) {
+                _animationController.value = offset / 80.0;
               },
             ),
             footer: ClassicFooter(
@@ -200,12 +201,22 @@ class Test3State extends State<Test3>
 //
 //        });
             },
-            child: ListView.builder(
-              itemExtent: 100.0,
-              itemBuilder: (c, i) => data[i],
-              itemCount: data.length,
+            child: ListView(
+              children: <Widget>[
+                ListView(
+                  children: <Widget>[
+                    Text("Asdsad"),
+                    Text("Asdsad"),
+                    Text("Asdsad"),
+                    Text("Asdsad"),
+                    Text("Asdsad")
+                  ],
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                )
+              ],
             ),
-            onLoading: () async{
+            onLoading: () async {
               await Future.delayed(const Duration(milliseconds: 1000));
               print("onLoading");
               _refreshController.loadComplete();

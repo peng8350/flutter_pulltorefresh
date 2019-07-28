@@ -107,7 +107,6 @@ void main() {
     }
   });
 
-
   testWidgets(
       "footer rendering in four direction with different styles(unfollow content),loadingstate",
       (tester) async {
@@ -176,112 +175,110 @@ void main() {
     }
   });
 
-  testWidgets(
-      "header or footer hittest test,make sure onClick can callback",
-          (tester) async {
-            int time = 0 ;
-            RefreshController _refreshController = RefreshController();
-            await tester.pumpWidget(RefreshConfiguration(
-              child: MaterialApp(
-                home: Container(
-                  height: 600,
-                  width: 800,
-                  child: SmartRefresher(
-                    header: ClassicHeader(),
-                    footer: ClassicFooter(
-                      onClick: (){
-                        time++;
-                      },
-                    ),
-                    enablePullUp: true,
-                    enablePullDown: true,
-                    child: ListView.builder(
-                      itemBuilder: (c, i) => Center(
-                        child: Text(data[i]),
-                      ),
-                      itemCount: 1,
-                      itemExtent: 100,
-                    ),
-                    controller: _refreshController,
-                  ),
-                ),
-              ),
-              shouldFooterFollowWhenNotFull: (a){
-                return true;
+  testWidgets("header or footer hittest test,make sure onClick can callback",
+      (tester) async {
+    int time = 0;
+    RefreshController _refreshController = RefreshController();
+    await tester.pumpWidget(RefreshConfiguration(
+      child: MaterialApp(
+        home: Container(
+          height: 600,
+          width: 800,
+          child: SmartRefresher(
+            header: ClassicHeader(),
+            footer: ClassicFooter(
+              onClick: () {
+                time++;
               },
-            ));
-
-            await tester.tapAt(Offset(0.0,100.0));
-            expect(time, 1);
-            await tester.tapAt(Offset(0.0,150.0));
-            expect(time, 2);
-            await tester.tapAt(Offset(799.0,150.0));
-            expect(time, 3);
-            await tester.tapAt(Offset(799.0,100.0));
-            expect(time, 4);
-            await tester.tapAt(Offset(400.0,100.0));
-            expect(time, 5);
-            await tester.tapAt(Offset(400.0,150.0));
-            expect(time, 6);
-            await tester.tapAt(Offset(0.0,-99.0));
-            expect(time, 6);
-            await tester.tapAt(Offset(0.0,160.0));
-            expect(time, 6);
-
-            time = 0 ;
-            _refreshController = RefreshController();
-            await tester.pumpWidget(RefreshConfiguration(
-              child: MaterialApp(
-                home: Container(
-                  height: 600,
-                  width: 800,
-                  child: SmartRefresher(
-                    header: ClassicHeader(),
-                    footer: CustomFooter(
-
-                      builder: (c,m){
-                        return Container(
-                          // If color not setting, onClick cannot work ,this question only can ask flutter why
-                          height: 60.0,
-                        );
-                      },
-                      onClick: (){
-                        time++;
-                      },
-                    ),
-                    enablePullUp: true,
-                    enablePullDown: true,
-                    child: ListView.builder(
-                      itemBuilder: (c, i) => Center(
-                        child: Text(data[i]),
-                      ),
-                      itemCount: 1,
-                      itemExtent: 100,
-                    ),
-                    controller: _refreshController,
-                  ),
-                ),
+            ),
+            enablePullUp: true,
+            enablePullDown: true,
+            child: ListView.builder(
+              itemBuilder: (c, i) => Center(
+                child: Text(data[i]),
               ),
-              shouldFooterFollowWhenNotFull: (a){
-                return true;
-              },
-            ));
+              itemCount: 1,
+              itemExtent: 100,
+            ),
+            controller: _refreshController,
+          ),
+        ),
+      ),
+      shouldFooterFollowWhenNotFull: (a) {
+        return true;
+      },
+    ));
 
-            await tester.tapAt(Offset(0.0,100.0));
-            expect(time, 1);
-            await tester.tapAt(Offset(0.0,150.0));
-            expect(time, 2);
-            await tester.tapAt(Offset(799.0,150.0));
-            expect(time, 3);
-            await tester.tapAt(Offset(799.0,100.0));
-            expect(time, 4);
-            await tester.tapAt(Offset(400.0,100.0));
-            expect(time, 5);
-            await tester.tapAt(Offset(400.0,150.0));
-            expect(time, 6);
-            await tester.tapAt(Offset(0.0,-99.0));
-            expect(time, 6);
-            await tester.tapAt(Offset(0.0,160.0));
-            expect(time, 6);
-      });
+    await tester.tapAt(Offset(0.0, 100.0));
+    expect(time, 1);
+    await tester.tapAt(Offset(0.0, 150.0));
+    expect(time, 2);
+    await tester.tapAt(Offset(799.0, 150.0));
+    expect(time, 3);
+    await tester.tapAt(Offset(799.0, 100.0));
+    expect(time, 4);
+    await tester.tapAt(Offset(400.0, 100.0));
+    expect(time, 5);
+    await tester.tapAt(Offset(400.0, 150.0));
+    expect(time, 6);
+    await tester.tapAt(Offset(0.0, -99.0));
+    expect(time, 6);
+    await tester.tapAt(Offset(0.0, 160.0));
+    expect(time, 6);
+
+    time = 0;
+    _refreshController = RefreshController();
+    await tester.pumpWidget(RefreshConfiguration(
+      child: MaterialApp(
+        home: Container(
+          height: 600,
+          width: 800,
+          child: SmartRefresher(
+            header: ClassicHeader(),
+            footer: CustomFooter(
+              builder: (c, m) {
+                return Container(
+                  // If color not setting, onClick cannot work ,this question only can ask flutter why
+                  height: 60.0,
+                );
+              },
+              onClick: () {
+                time++;
+              },
+            ),
+            enablePullUp: true,
+            enablePullDown: true,
+            child: ListView.builder(
+              itemBuilder: (c, i) => Center(
+                child: Text(data[i]),
+              ),
+              itemCount: 1,
+              itemExtent: 100,
+            ),
+            controller: _refreshController,
+          ),
+        ),
+      ),
+      shouldFooterFollowWhenNotFull: (a) {
+        return true;
+      },
+    ));
+
+    await tester.tapAt(Offset(0.0, 100.0));
+    expect(time, 1);
+    await tester.tapAt(Offset(0.0, 150.0));
+    expect(time, 2);
+    await tester.tapAt(Offset(799.0, 150.0));
+    expect(time, 3);
+    await tester.tapAt(Offset(799.0, 100.0));
+    expect(time, 4);
+    await tester.tapAt(Offset(400.0, 100.0));
+    expect(time, 5);
+    await tester.tapAt(Offset(400.0, 150.0));
+    expect(time, 6);
+    await tester.tapAt(Offset(0.0, -99.0));
+    expect(time, 6);
+    await tester.tapAt(Offset(0.0, 160.0));
+    expect(time, 6);
+  });
 }

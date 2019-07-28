@@ -170,16 +170,18 @@ class Test4State extends State<Test4>
       child: SmartRefresher.builder(
         enablePullUp: true,
         enablePullDown: true,
-        builder: (context,physics){
-          return CustomScrollView(
-            physics: physics,
-            slivers:[ClassicHeader(),
-              SliverToBoxAdapter()
-              ,SliverAppBar(),
-            SliverToBoxAdapter(child: Container(height: 590,color: Colors.red,),)
-            ]
-
-          );
+        builder: (context, physics) {
+          return CustomScrollView(physics: physics, slivers: [
+            ClassicHeader(),
+            SliverToBoxAdapter(),
+            SliverAppBar(),
+            SliverToBoxAdapter(
+              child: Container(
+                height: 590,
+                color: Colors.red,
+              ),
+            )
+          ]);
         },
         onRefresh: () async {
           await Future.delayed(Duration(milliseconds: 1000));
@@ -229,30 +231,30 @@ class CirclePainter extends CustomClipper<Path> {
   }
 }
 
-class RefreshListView extends StatefulWidget{
+class RefreshListView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return _RefreshListViewState();
   }
+
   final ScrollPhysics physics;
   final List<Widget> slivers;
 
-  RefreshListView({this.slivers,this.physics});
+  RefreshListView({this.slivers, this.physics});
 }
 
-class _RefreshListViewState extends State<RefreshListView>{
-
+class _RefreshListViewState extends State<RefreshListView> {
   bool show = true;
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return show?CustomScrollView(
-      slivers:widget.slivers
-      ,
-      physics:AlwaysScrollableScrollPhysics(),
-    ):CupertinoActivityIndicator();
+    return show
+        ? CustomScrollView(
+            slivers: widget.slivers,
+            physics: AlwaysScrollableScrollPhysics(),
+          )
+        : CupertinoActivityIndicator();
   }
-
 }

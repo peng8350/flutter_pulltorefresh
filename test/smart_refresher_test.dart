@@ -101,22 +101,21 @@ void main() {
       textDirection: TextDirection.ltr,
       child: SmartRefresher.builder(
         enablePullUp: true,
-        builder: (BuildContext context,RefreshPhysics physics){
-            return CustomScrollView(
-              slivers: <Widget>[
-                TestHeader(),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                (c, i) => Container(
-          child: Card(),
-          height: 100.0,
-          ),childCount: 20
-                ),
-                ),
-                TestFooter(),
-              ],
-
-            );
+        builder: (BuildContext context, RefreshPhysics physics) {
+          return CustomScrollView(
+            slivers: <Widget>[
+              TestHeader(),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                    (c, i) => Container(
+                          child: Card(),
+                          height: 100.0,
+                        ),
+                    childCount: 20),
+              ),
+              TestFooter(),
+            ],
+          );
         },
         controller: _refreshController,
       ),
@@ -263,7 +262,6 @@ void main() {
     await tester.pump(Duration(milliseconds: 20));
   });
 
-
   testWidgets(" verity smartRefresher and NestedScrollView", (tester) async {
     final RefreshController _refreshController = RefreshController();
     int time = 0;
@@ -280,10 +278,10 @@ void main() {
           itemCount: 20,
           itemExtent: 100,
         ),
-        onRefresh: ()  async{
+        onRefresh: () async {
           time++;
         },
-        onLoading: () async{
+        onLoading: () async {
           time++;
         },
         controller: _refreshController,
@@ -291,28 +289,28 @@ void main() {
     ));
 
     // test pull down
-    await tester.drag(find.byType(Viewport), const Offset(0,120));
+    await tester.drag(find.byType(Viewport), const Offset(0, 120));
     await tester.pump();
-    expect(_refreshController.headerStatus,RefreshStatus.canRefresh);
+    expect(_refreshController.headerStatus, RefreshStatus.canRefresh);
     await tester.pumpAndSettle();
-    expect(_refreshController.headerStatus,RefreshStatus.refreshing);
+    expect(_refreshController.headerStatus, RefreshStatus.refreshing);
     _refreshController.refreshCompleted();
     await tester.pumpAndSettle(Duration(milliseconds: 800));
 
-
     // test flip up
-    await tester.fling(find.byType(Viewport), const Offset(0,-1000),3000);
+    await tester.fling(find.byType(Viewport), const Offset(0, -1000), 3000);
     await tester.pumpAndSettle();
-    expect(_refreshController.footerStatus,LoadStatus.loading);
+    expect(_refreshController.footerStatus, LoadStatus.loading);
     _refreshController.footerMode.value = LoadStatus.idle;
     await tester.pumpAndSettle();
     // test drag up
-    _refreshController.position.jumpTo(_refreshController.position.maxScrollExtent);
-    await tester.drag(find.byType(Viewport), const Offset(0,-100));
+    _refreshController.position
+        .jumpTo(_refreshController.position.maxScrollExtent);
+    await tester.drag(find.byType(Viewport), const Offset(0, -100));
     await tester.pumpAndSettle();
-    expect( _refreshController.position.extentAfter, 0.0);
+    expect(_refreshController.position.extentAfter, 0.0);
     _refreshController.loadComplete();
-    expect(time,3);
+    expect(time, 3);
   });
 
   testWidgets("fronStyle can hittest content when springback", (tester) async {
@@ -321,7 +319,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: SmartRefresher(
         header: CustomHeader(
-          builder: (c,m) => Container(),
+          builder: (c, m) => Container(),
           height: 60.0,
         ),
         footer: TestFooter(),
@@ -333,15 +331,14 @@ void main() {
             width: 60.0,
             color: Colors.transparent,
           ),
-          onTap: (){
+          onTap: () {
             time++;
           },
-        )
-        ,
-        onRefresh: ()  async{
+        ),
+        onRefresh: () async {
           time++;
         },
-        onLoading: () async{
+        onLoading: () async {
           time++;
         },
         controller: _refreshController,
@@ -349,15 +346,13 @@ void main() {
     ));
 
     // test pull down
-    await tester.drag(find.byType(Viewport), const Offset(0,120));
+    await tester.drag(find.byType(Viewport), const Offset(0, 120));
     await tester.pump();
-    expect(_refreshController.headerStatus,RefreshStatus.canRefresh);
+    expect(_refreshController.headerStatus, RefreshStatus.canRefresh);
     await tester.pump(Duration(milliseconds: 2));
-    expect(_refreshController.headerStatus,RefreshStatus.refreshing);
-    expect(_refreshController.position.pixels,lessThan(0.0));
-    await tester.tapAt(Offset(30,30));
-    expect(time,1);
+    expect(_refreshController.headerStatus, RefreshStatus.refreshing);
+    expect(_refreshController.position.pixels, lessThan(0.0));
+    await tester.tapAt(Offset(30, 30));
+    expect(time, 1);
   });
-
-
 }

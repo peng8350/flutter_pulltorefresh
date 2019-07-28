@@ -9,6 +9,7 @@ import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:pull_to_refresh/src/internals/slivers.dart';
 import 'internals/indicator_wrap.dart';
 import 'internals/refresh_physics.dart';
@@ -30,7 +31,7 @@ typedef bool ShouldFollowContent(LoadStatus status);
 typedef IndicatorBuilder = Widget Function();
 
 /// a builder for attaching refresh function with the physics
-typedef Widget RefresherBuilder(BuildContext context,RefreshPhysics physics);
+typedef Widget RefresherBuilder(BuildContext context, RefreshPhysics physics);
 
 /// header state
 enum RefreshStatus {
@@ -106,7 +107,10 @@ enum LoadStyle {
 
 /// This is the most important component that provides drop-down refresh and up loading.
 /// [RefreshController] must not be null,Only one controller to one SmartRefresher
-/// If you need to custom header or footer,You should check out [CustomHeader] or [CustomFooter]
+///
+/// header,I have finished a lot indicators,you can checkout [ClassicHeader],[WaterDropMaterialHeader],[MaterialClassicHeader],[WaterDropHeader]
+/// footer,[ClassicFooter]
+///If you need to custom header or footer,You should check out [CustomHeader] or [CustomFooter]
 ///
 /// See also:
 ///
@@ -184,18 +188,19 @@ class SmartRefresher extends StatefulWidget {
   /// If you  need pull up load ,just enablePullUp = true
   SmartRefresher(
       {Key key,
-        @required this.controller,
-        this.child,
-        this.header,
-        this.footer,
-        this.enablePullDown: true,
-        this.enablePullUp: false,
-        this.enableTwoLevel: false,
-        this.onRefresh,
-        this.onLoading,
-        this.onTwoLevel,
-        this.onOffsetChange})
-      : assert(controller != null),builder = null,
+      @required this.controller,
+      this.child,
+      this.header,
+      this.footer,
+      this.enablePullDown: true,
+      this.enablePullUp: false,
+      this.enableTwoLevel: false,
+      this.onRefresh,
+      this.onLoading,
+      this.onTwoLevel,
+      this.onOffsetChange})
+      : assert(controller != null),
+        builder = null,
         super(key: key);
 
   /// creates a widget help attach the refresh and load more function
@@ -207,16 +212,19 @@ class SmartRefresher extends StatefulWidget {
   /// can not support overscroll out of edge
   SmartRefresher.builder(
       {Key key,
-        @required this.controller,
-        @required this.builder,
-        this.enablePullDown: true,
-        this.enablePullUp: false,
-        this.enableTwoLevel: false,
-        this.onRefresh,
-        this.onLoading,
-        this.onTwoLevel,
-        this.onOffsetChange})
-      : assert(controller != null),header =null,footer=null,child=null,
+      @required this.controller,
+      @required this.builder,
+      this.enablePullDown: true,
+      this.enablePullUp: false,
+      this.enableTwoLevel: false,
+      this.onRefresh,
+      this.onLoading,
+      this.onTwoLevel,
+      this.onOffsetChange})
+      : assert(controller != null),
+        header = null,
+        footer = null,
+        child = null,
         super(key: key);
 
   static SmartRefresher of(BuildContext context) {
@@ -235,9 +243,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
   bool _updatePhysics = false;
 
   final RefreshIndicator defaultHeader =
-  defaultTargetPlatform == TargetPlatform.iOS
-      ? ClassicHeader()
-      : MaterialClassicHeader();
+      defaultTargetPlatform == TargetPlatform.iOS
+          ? ClassicHeader()
+          : MaterialClassicHeader();
 
   final LoadIndicator defaultFooter = ClassicFooter();
 
@@ -285,8 +293,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
     return slivers;
   }
 
-  ScrollPhysics _getScrollPhysics(
-      RefreshConfiguration conf) {
+  ScrollPhysics _getScrollPhysics(RefreshConfiguration conf) {
     return _physics = RefreshPhysics(
         dragSpeedRatio: conf?.dragSpeedRatio,
         springDescription: conf?.springDescription,
@@ -295,10 +302,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
         headerMode: widget.controller.headerMode,
         updateFlag: _updatePhysics ? 0 : 1,
         enableScrollWhenRefreshCompleted:
-        conf?.enableScrollWhenRefreshCompleted ?? false,
+            conf?.enableScrollWhenRefreshCompleted ?? false,
         maxOverScrollExtent: conf?.maxOverScrollExtent,
-        maxUnderScrollExtent: conf?.maxUnderScrollExtent
-    );
+        maxUnderScrollExtent: conf?.maxUnderScrollExtent);
   }
 
   // build the customScrollView
@@ -307,8 +313,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
     Widget body;
     if (childView is ScrollView) {
       body = CustomScrollView(
-        physics: _getScrollPhysics(
-            conf).applyTo(childView.physics ?? AlwaysScrollableScrollPhysics()),
+        physics: _getScrollPhysics(conf)
+            .applyTo(childView.physics ?? AlwaysScrollableScrollPhysics()),
         // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
         controller: widget.controller.scrollController =
             childView.controller ?? PrimaryScrollController.of(context),
@@ -322,8 +328,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
       );
     } else if (childView is Scrollable) {
       body = Scrollable(
-        physics: _getScrollPhysics(
-            conf).applyTo( childView.physics ?? AlwaysScrollableScrollPhysics()),
+        physics: _getScrollPhysics(conf)
+            .applyTo(childView.physics ?? AlwaysScrollableScrollPhysics()),
         controller: childView.controller,
         axisDirection: childView.axisDirection,
         semanticChildCount: childView.semanticChildCount,
@@ -350,7 +356,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
       );
     } else {
       body = CustomScrollView(
-        physics: _getScrollPhysics(conf).applyTo(AlwaysScrollableScrollPhysics()),
+        physics:
+            _getScrollPhysics(conf).applyTo(AlwaysScrollableScrollPhysics()),
         controller: PrimaryScrollController.of(context),
         slivers: slivers,
       );
@@ -407,17 +414,17 @@ class _SmartRefresherState extends State<SmartRefresher> {
   @override
   Widget build(BuildContext context) {
     final RefreshConfiguration configuration = RefreshConfiguration.of(context);
-    if(widget.builder!=null) return RefreshConfiguration(
-      child: widget.builder(context,_getScrollPhysics(configuration)),
-
-    );
+    if (widget.builder != null)
+      return RefreshConfiguration(
+        child: widget.builder(context, _getScrollPhysics(configuration)),
+      );
 
     widget.controller._headerTriggerDistance =
-    -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
+        -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
     widget.controller._footerTriggerDistance =
         configuration?.footerTriggerDistance ?? 15.0;
     List<Widget> slivers =
-    _buildSliversByChild(context, widget.child, configuration);
+        _buildSliversByChild(context, widget.child, configuration);
     Widget body = _buildBodyBySlivers(widget.child, slivers, configuration);
     if (configuration != null) {
       return body;
@@ -426,12 +433,13 @@ class _SmartRefresherState extends State<SmartRefresher> {
     }
   }
 }
+
 /// A controller controll header and footer state,
 /// it  can trigger  driving request Refresh ,set the initalRefresh,status if needed
 ///
 /// See also:
 ///
-/// [SmartRefresher],a widget help you attach refresh and load more function easily
+/// * [SmartRefresher],a widget help you attach refresh and load more function easily
 class RefreshController {
   /// header status mode controll
   ValueNotifier<RefreshStatus> headerMode;
@@ -471,8 +479,8 @@ class RefreshController {
   /// initialLoadStatus: footerMode default value
   RefreshController(
       {this.initialRefresh: false,
-        RefreshStatus initialRefreshStatus,
-        LoadStatus initialLoadStatus}) {
+      RefreshStatus initialRefreshStatus,
+      LoadStatus initialLoadStatus}) {
     this.headerMode = ValueNotifier(initialRefreshStatus ?? RefreshStatus.idle);
     this.footerMode = ValueNotifier(initialLoadStatus ?? LoadStatus.idle);
   }
@@ -501,9 +509,9 @@ class RefreshController {
   /// make the header enter refreshing state,and callback onRefresh
   void requestRefresh(
       {Duration duration: const Duration(milliseconds: 500),
-        Curve curve: Curves.linear}) {
+      Curve curve: Curves.linear}) {
     assert(position != null,
-    'Try not to call requestRefresh() before build,please call after the ui was rendered');
+        'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (isRefresh) return;
     position?.animateTo(_headerTriggerDistance,
         duration: duration, curve: curve);
@@ -512,21 +520,21 @@ class RefreshController {
   /// make the footer enter loading state,and callback onLoading
   void requestLoading(
       {Duration duration: const Duration(milliseconds: 300),
-        Curve curve: Curves.linear}) {
+      Curve curve: Curves.linear}) {
     assert(position != null,
-    'Try not to call requestLoading() before build,please call after the ui was rendered');
+        'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (isLoading) return;
     if (_footerTriggerDistance < 0) {
       position
           ?.animateTo(position.maxScrollExtent - _footerTriggerDistance,
-          duration: duration, curve: curve)
+              duration: duration, curve: curve)
           ?.whenComplete(() {
         footerMode.value = LoadStatus.loading;
       });
     } else
       position
           ?.animateTo(position.maxScrollExtent,
-          duration: duration, curve: curve)
+              duration: duration, curve: curve)
           ?.whenComplete(() {
         footerMode.value = LoadStatus.loading;
       });
@@ -545,7 +553,7 @@ class RefreshController {
   /// end twoLeveling,will return back first floor
   void twoLevelComplete(
       {Duration duration: const Duration(milliseconds: 500),
-        Curve curve: Curves.linear}) {
+      Curve curve: Curves.linear}) {
     headerMode?.value = RefreshStatus.twoLevelClosing;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       position
@@ -591,7 +599,7 @@ class RefreshController {
 
   /// reset footer noData state  to idle
   void resetNoData() {
-    if(footerMode.value==LoadStatus.noMore) {
+    if (footerMode.value == LoadStatus.noMore) {
       footerMode?.value = LoadStatus.idle;
     }
   }
@@ -611,7 +619,7 @@ class RefreshController {
 ///
 /// see also:
 ///
-/// [SmartRefresher], a widget help attach the refresh and load more function
+/// * [SmartRefresher], a widget help attach the refresh and load more function
 class RefreshConfiguration extends InheritedWidget {
   final Widget child;
 
@@ -694,7 +702,6 @@ class RefreshConfiguration extends InheritedWidget {
     this.footerTriggerDistance: 15.0,
     this.hideFooterWhenNotFull: false,
   });
-
 
   static RefreshConfiguration of(BuildContext context) {
     return context.inheritFromWidgetOfExactType(RefreshConfiguration);

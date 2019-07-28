@@ -8,8 +8,6 @@ import 'package:flutter/widgets.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 
-
-
 /// custom header builder,you can use second paramter to know what header state is
 typedef Widget HeaderBuilder(BuildContext context, RefreshStatus mode);
 
@@ -89,11 +87,10 @@ class CustomHeader extends RefreshIndicator {
 }
 
 class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
-
   @override
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
-    if(widget.onOffsetChange!=null){
+    if (widget.onOffsetChange != null) {
       widget.onOffsetChange(offset);
     }
     super.onOffsetChange(offset);
@@ -102,17 +99,16 @@ class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
   @override
   void onModeChange(RefreshStatus mode) {
     // TODO: implement onModeChange
-    if(widget.onModeChange!=null){
+    if (widget.onModeChange != null) {
       widget.onModeChange(mode);
     }
     super.onModeChange(mode);
   }
 
-
   @override
   Future<void> readyToRefresh() {
     // TODO: implement endRefresh
-    if(widget.readyToRefresh!=null){
+    if (widget.readyToRefresh != null) {
       return widget.readyToRefresh();
     }
     return super.readyToRefresh();
@@ -121,13 +117,11 @@ class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
   @override
   Future<void> endRefresh() {
     // TODO: implement endRefresh
-    if(widget.endRefresh!=null){
+    if (widget.endRefresh != null) {
       return widget.endRefresh();
     }
     return super.endRefresh();
   }
-
-
 
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
@@ -147,8 +141,6 @@ class CustomFooter extends LoadIndicator {
 
   final ModeChangeCallBack onModeChange;
 
-
-
   const CustomFooter({
     Key key,
     double height: 60.0,
@@ -167,11 +159,10 @@ class CustomFooter extends LoadIndicator {
 }
 
 class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
-
   @override
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
-    if(widget.onOffsetChange!=null){
+    if (widget.onOffsetChange != null) {
       widget.onOffsetChange(offset);
     }
     super.onOffsetChange(offset);
@@ -180,12 +171,11 @@ class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
   @override
   void onModeChange(LoadStatus mode) {
     // TODO: implement onModeChange
-    if(widget.onModeChange!=null){
+    if (widget.onModeChange != null) {
       widget.onModeChange(mode);
     }
     super.onModeChange(mode);
   }
-
 
   @override
   Widget buildContent(BuildContext context, LoadStatus mode) {

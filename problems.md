@@ -14,8 +14,8 @@
 在RefreshConfiguration有提供一个属性hideFooterWhenNotFull,绝大多数的情况,它可以帮你计算并判断是否隐藏。
 
 5. <h3>指示器支持自定义帧动画吗?比如,我想随着下拉拖动改变gif进度,到达某个状态开始循环播放</h3>
-这个的话,我内部没有提供。主要是flutter也没有提供一个操作让你控制gif,所以要实现这个的话,难题是怎么去控制gif进度。
-还要考虑加载时间速度上会不会太耗时问题。只要解决这几个问题利用我自定义指示器的步骤来做基本ok
+这个问题我内部已经有完美的解决方法,需要依赖到我的三方插件来解决控制gif进度的问题,用法详见[这里](https://github.com/peng8350/flutter_gifimage),[例子](example/lib/ui/example/customindicator/gif_indicator_example1.dart)
+
 
 6. <h3>关于改变回弹动画的问题,SpringDecription里三个变量值是什么关系?怎么利用这三个值达到我要的回弹效果?</h3>
 这个问题建议你去查flutter里的api,需要明白一定的物理和数学知识。事实上,我也不知道怎么算
@@ -44,4 +44,6 @@ RefreshConfiguration配置属性footerTriggerDistance,屏幕一半你可以借�
 因为SingleChildView它内部采用的Viewport是SingleChild,而其他Viewport基本都是MultipleChild,所以我内部是没办法取它的Viewport里的sliver,取了也
 不能添加header和footer,使用ListView children替代它即可。
 
-
+14.为什么拖到最大的距离不能触发刷新?为什么加载更多不触发?
+这类问题一般发生在Android系统，绝大数情况是因为maxOverScrollExtent和maxUnderScrollExtent限制了最大拖动的高度问题,你需要确保它要大于triggerDistance,因为内部
+没有帮你自动识别判断

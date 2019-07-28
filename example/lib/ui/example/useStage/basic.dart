@@ -123,8 +123,8 @@ class _BasicExampleState extends State<BasicExample>
         title: data2[i],
       ),
       itemCount: 1,
-      gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 2/7),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, childAspectRatio: 2 / 7),
     );
   }
 

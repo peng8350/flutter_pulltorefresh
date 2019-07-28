@@ -33,7 +33,7 @@
 ```yaml
 
    dependencies:
-     pull_to_refresh: ^1.5.1
+     pull_to_refresh: ^1.5.2
 
 ```
 
@@ -190,7 +190,6 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 增加SmartRefresher,详见我这两个例子[例子1](example/lib/other/refresh_animatedlist.dart)和[例子2](example/lib/other/refresh_recordable_listview.dart)
 * 关于主动请求刷新不允许用户拖动问题,具体描述:当主动请求刷新列表往上滚动时,应该要拦截用户拖动的手势,防止用户拖动阻断了请求刷新的操作。
 这个问题目前我还没有很好的解决办法,我知道ScrollableState里setCanDrag可以阻止它,但是这个方法不是说随时都可以调用,一旦调用时机不对,就会奔溃。
-
 
 
 ## 感谢

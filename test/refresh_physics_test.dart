@@ -58,7 +58,9 @@ void main() {
       await tester.fling(find.byType(Viewport), const Offset(0, -100), 5200);
       while (tester.binding.transientCallbackCount > 0) {
         expect(
-            _refreshController.position.pixels-_refreshController.position.maxScrollExtent, lessThanOrEqualTo(250.0));
+            _refreshController.position.pixels -
+                _refreshController.position.maxScrollExtent,
+            lessThanOrEqualTo(250.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
 
@@ -68,7 +70,9 @@ void main() {
       await tester.fling(find.byType(Viewport), const Offset(0, -43000), 5200);
       while (tester.binding.transientCallbackCount > 0) {
         expect(
-            _refreshController.position.pixels-_refreshController.position.maxScrollExtent, lessThanOrEqualTo(250.0));
+            _refreshController.position.pixels -
+                _refreshController.position.maxScrollExtent,
+            lessThanOrEqualTo(250.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
     });
@@ -289,9 +293,8 @@ void main() {
         (refreshController.position.physics as RefreshPhysics).updateFlag, 1);
   });
 
-
-  testWidgets("when viewport not full, pull up can trigger loading", (tester) async {
-
+  testWidgets("when viewport not full, pull up can trigger loading",
+      (tester) async {
     final RefreshController _refreshController = RefreshController();
     await tester.pumpWidget(Directionality(
       textDirection: TextDirection.ltr,
@@ -300,7 +303,7 @@ void main() {
           header: TestHeader(),
           footer: CustomFooter(
             loadStyle: LoadStyle.ShowAlways,
-            builder: (c,m) => Container(),
+            builder: (c, m) => Container(),
           ),
           enablePullUp: true,
           enablePullDown: true,
@@ -319,8 +322,8 @@ void main() {
 
     await tester.drag(find.byType(Scrollable), const Offset(0, -70.0));
     await tester.pumpAndSettle(Duration(milliseconds: 2));
-    expect(_refreshController.footerStatus,LoadStatus.loading);
-    expect(_refreshController.position.pixels,greaterThanOrEqualTo(0.0));
+    expect(_refreshController.footerStatus, LoadStatus.loading);
+    expect(_refreshController.position.pixels, greaterThanOrEqualTo(0.0));
 
     await tester.pumpWidget(Directionality(
       textDirection: TextDirection.ltr,
@@ -329,7 +332,7 @@ void main() {
           header: TestHeader(),
           footer: CustomFooter(
             loadStyle: LoadStyle.HideAlways,
-            builder: (c,m) => Container(),
+            builder: (c, m) => Container(),
           ),
           enablePullUp: true,
           enablePullDown: true,
@@ -348,8 +351,7 @@ void main() {
 
     await tester.drag(find.byType(Scrollable), const Offset(0, -70.0));
     await tester.pumpAndSettle(Duration(milliseconds: 2));
-    expect(_refreshController.footerStatus,LoadStatus.loading);
-    expect(_refreshController.position.pixels,greaterThanOrEqualTo(0.0));
-
+    expect(_refreshController.footerStatus, LoadStatus.loading);
+    expect(_refreshController.position.pixels, greaterThanOrEqualTo(0.0));
   });
 }

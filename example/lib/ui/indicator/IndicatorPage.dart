@@ -87,7 +87,9 @@ class _IndicatorPageState extends State<IndicatorPage> {
                 builder: (BuildContext context) => IndicatorActivity(
                     reverse: false,
                     title: "官方Material指示器",
-                    header: MaterialClassicHeader(distance: 40,))));
+                    header: MaterialClassicHeader(
+                      distance: 40,
+                    ))));
           },
           imgRes: "images/material_classic.gif"),
       IndicatorItem(
@@ -97,8 +99,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
                 builder: (BuildContext context) => IndicatorActivity(
                     reverse: false,
                     title: "水滴坠落Material指示器",
-                    header: WaterDropMaterialHeader(
-                    ))));
+                    header: WaterDropMaterialHeader())));
           },
           imgRes: "images/material_waterdrop.gif"),
       IndicatorItem(
