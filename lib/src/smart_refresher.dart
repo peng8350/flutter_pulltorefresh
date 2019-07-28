@@ -125,14 +125,20 @@ class SmartRefresher extends StatefulWidget {
   /// If reverse is false,header displace at the top of content.
   /// If reverse is true,header displace at the bottom of content.
   /// if scrollDirection = Axis.horizontal,it will display at left or right
-  final RefreshIndicator header;
+  ///
+  /// from 1.5.2,it has been change RefreshIndicator to Widget,but remember only pass sliver widget,
+  /// if you pass not a sliver,it will throw error
+  final Widget header;
 
   /// footer indicator display after content
   ///
   /// If reverse is true,header displace at the top of content.
   /// If reverse is false,header displace at the bottom of content.
   /// if scrollDirection = Axis.horizontal,it will display at left or right
-  final LoadIndicator footer;
+  ///
+  /// from 1.5.2,it has been change LoadIndicator to Widget,but remember only pass sliver widget,
+  //  if you pass not a sliver,it will throw error
+  final Widget footer;
   // This bool will affect whether or not to have the function of drop-up load.
   final bool enablePullUp;
 
