@@ -76,10 +76,10 @@ class _MainActivityState extends State<MainActivity>
           title: Text(_tabIndex == 0
               ? "指示器界面"
               : _tabIndex == 1
-                  ? "例子界面"
-                  : _tabIndex == 2
-                      ? "测试界面"
-                      : _tabIndex == 3 ? "样例界面" : "App界面"),
+              ? "例子界面"
+              : _tabIndex == 2
+              ? "测试界面"
+              : _tabIndex == 3 ? "样例界面" : "App界面"),
           leading: GestureDetector(
             child: Icon(Icons.menu),
             onTap: () {
@@ -89,17 +89,17 @@ class _MainActivityState extends State<MainActivity>
           backgroundColor: Colors.greenAccent,
           bottom: _tabIndex == 3
               ? TabBar(
-                  isScrollable: true,
-                  tabs: [
-                    Tab(child: Text("超大数据量性能测试")),
-                    Tab(child: Text("SliverAppbar+Sliverheader")),
-                    Tab(child: Text("嵌套滚动视图")),
-                    Tab(child: Text("动态变化指示器+Navigator")),
-                    Tab(child: Text("主动刷新")),
-                    Tab(child: Text("四个方向不同风格测试绘制")),
-                  ],
-                  controller: _tabController,
-                )
+            isScrollable: true,
+            tabs: [
+              Tab(child: Text("超大数据量性能测试")),
+              Tab(child: Text("SliverAppbar+Sliverheader")),
+              Tab(child: Text("嵌套滚动视图")),
+              Tab(child: Text("动态变化指示器+Navigator")),
+              Tab(child: Text("主动刷新")),
+              Tab(child: Text("四个方向不同风格测试绘制")),
+            ],
+            controller: _tabController,
+          )
               : null,
         ),
         body: RefreshConfiguration(
@@ -110,7 +110,7 @@ class _MainActivityState extends State<MainActivity>
           ),
           enableLoadingWhenFailed: true,
           springDescription:
-              SpringDescription(mass: 2.0, stiffness: 200.0, damping: 15.0),
+          SpringDescription(mass: 3.0, stiffness: 200.0, damping: 16.0),
           dragSpeedRatio: 1.5,
           enableScrollWhenTwoLevel: true,
           autoLoad: true,
@@ -118,7 +118,7 @@ class _MainActivityState extends State<MainActivity>
           maxUnderScrollExtent: 0.0,
           footerTriggerDistance: 45.0,
           shouldFooterFollowWhenNotFull: (mode) {
-              return true;
+            return true;
           },
           enableScrollWhenRefreshCompleted: false,
           hideFooterWhenNotFull: false,
@@ -136,39 +136,39 @@ class _MainActivityState extends State<MainActivity>
         ),
         children: <Widget>[
           buildItem("各种指示器", Icon(Icons.apps, size: 18, color: Colors.grey),
-              () {
-            setState(() {
-              _tabIndex = 0;
-            });
-            _pageController.jumpToPage(0);
-            _menuController.closeMenu();
-          }),
+                  () {
+                setState(() {
+                  _tabIndex = 0;
+                });
+                _pageController.jumpToPage(0);
+                _menuController.closeMenu();
+              }),
           buildItem(
               "例子", Icon(Icons.insert_emoticon, size: 18, color: Colors.grey),
-              () {
-            setState(() {
-              _tabIndex = 1;
-            });
-            _pageController.jumpToPage(1);
-            _menuController.closeMenu();
-          }),
+                  () {
+                setState(() {
+                  _tabIndex = 1;
+                });
+                _pageController.jumpToPage(1);
+                _menuController.closeMenu();
+              }),
           buildItem("测试",
               Icon(Icons.airplanemode_active, size: 18, color: Colors.grey),
-              () {
-            setState(() {
-              _tabIndex = 2;
-            });
-            _menuController.closeMenu();
-            _pageController.jumpToPage(2);
-          }),
+                  () {
+                setState(() {
+                  _tabIndex = 2;
+                });
+                _menuController.closeMenu();
+                _pageController.jumpToPage(2);
+              }),
           buildItem("App界面",
               Icon(Icons.format_underlined, size: 18, color: Colors.grey), () {
-            setState(() {
-              _tabIndex = 4;
-            });
-            _menuController.closeMenu();
-            _pageController.jumpToPage(4);
-          }),
+                setState(() {
+                  _tabIndex = 4;
+                });
+                _menuController.closeMenu();
+                _pageController.jumpToPage(4);
+              }),
         ],
       ),
     );

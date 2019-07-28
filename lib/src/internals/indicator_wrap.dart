@@ -182,12 +182,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     if ((configuration.enableBallisticRefresh && activity.velocity < 0.0) ||
         activity is DragScrollActivity ||
         activity is DrivenScrollActivity) {
-      if (refresher.enableTwoLevel &&
-          offset >= configuration.twiceTriggerDistance) {
-        mode = RefreshStatus.canTwoLevel;
-      } else if (refresher.enableTwoLevel) {
-        mode = RefreshStatus.idle;
-      }
+
       if (refresher.enablePullDown &&
           offset >= configuration.headerTriggerDistance) {
         if (!configuration.skipCanRefresh) {
@@ -201,6 +196,12 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           });
         }
       } else if (refresher.enablePullDown) {
+        mode = RefreshStatus.idle;
+      }
+      if (refresher.enableTwoLevel &&
+          offset >= configuration.twiceTriggerDistance) {
+        mode = RefreshStatus.canTwoLevel;
+      } else if (refresher.enableTwoLevel&&!refresher.enablePullDown) {
         mode = RefreshStatus.idle;
       }
     }
@@ -261,7 +262,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
             }
           }
         });
-        });
+      });
 
     } else if (mode == RefreshStatus.refreshing) {
       if (refresher.onRefresh != null) refresher.onRefresh();

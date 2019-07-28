@@ -2,10 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:example/other/refresh_animatedlist.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../../../other/refresh_animatedlist.dart';
 
 class AnimatedListExample extends StatefulWidget {
   @override
@@ -13,8 +13,8 @@ class AnimatedListExample extends StatefulWidget {
 }
 
 class _AnimatedListExampleState extends State<AnimatedListExample> {
-  final GlobalKey<AnimatedListState> _listKey =
-      new GlobalKey<AnimatedListState>();
+  final GlobalKey<SliverAnimatedListState> _listKey =
+      new GlobalKey<SliverAnimatedListState>();
   ListModel<int> _list;
   int _selectedItem;
   int _nextItem; // The next item inserted when the user presses the '+' button.
@@ -49,8 +49,8 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
   // Used to build an item after it has been removed from the list. This method is
   // needed because a removed item remains  visible until its animation has
   // completed (even though it's gone as far this ListModel is concerned).
-  // The widget will be used by the [AnimatedListState.removeItem] method's
-  // [AnimatedListRemovedItemBuilder] parameter.
+  // The widget will be used by the [SliverAnimatedListState.removeItem] method's
+  // [SliverAnimatedListRemovedItemBuilder] parameter.
   Widget _buildRemovedItem(
       int item, BuildContext context, Animation<double> animation) {
     return new CardItem(
@@ -86,7 +86,7 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
     return new MaterialApp(
       home: new Scaffold(
         appBar: new AppBar(
-          title: const Text('AnimatedList'),
+          title: const Text('SliverAnimatedList'),
           actions: <Widget>[
             new IconButton(
               icon: const Icon(Icons.add_circle),
@@ -100,19 +100,23 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
             ),
           ],
         ),
-        body: RefreshAnimatedList(
-          key: _listKey,
-          initialItemCount: _list.length,
-          itemBuilder: _buildItem,
+        body: SmartRefresher(
+          child: CustomScrollView(
+            slivers: <Widget>[SliverAnimatedList(
+              key: _listKey,
+              initialItemCount: _list.length,
+              itemBuilder: _buildItem,
+            )],
+          ),
           enablePullUp: true,
-          refreshController: _refreshController,
+          controller: _refreshController,
         ),
       ),
     );
   }
 }
 
-/// Keeps a Dart List in sync with an AnimatedList.
+/// Keeps a Dart List in sync with an SliverAnimatedList.
 ///
 /// The [insert] and [removeAt] methods apply to both the internal list and the
 /// animated list that belongs to [listKey].
@@ -120,7 +124,7 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
 /// This class only exposes as much of the Dart List API as is needed by the
 /// sample app. More list methods are easily added, however methods that mutate the
 /// list must make the same changes to the animated list in terms of
-/// [AnimatedListState.insertItem] and [AnimatedList.removeItem].
+/// [SliverAnimatedListState.insertItem] and [SliverAnimatedList.removeItem].
 class ListModel<E> {
   ListModel({
     @required this.listKey,
@@ -130,21 +134,21 @@ class ListModel<E> {
         assert(removedItemBuilder != null),
         _items = new List<E>.from(initialItems ?? <E>[]);
 
-  final GlobalKey<AnimatedListState> listKey;
+  final GlobalKey<SliverAnimatedListState> listKey;
   final dynamic removedItemBuilder;
   final List<E> _items;
 
-  AnimatedListState get _animatedList => listKey.currentState;
+  SliverAnimatedListState get _SliverAnimatedList => listKey.currentState;
 
   void insert(int index, E item) {
     _items.insert(index, item);
-    _animatedList.insertItem(index);
+    _SliverAnimatedList.insertItem(index);
   }
 
   E removeAt(int index) {
     final E removedItem = _items.removeAt(index);
     if (removedItem != null) {
-      _animatedList.removeItem(index,
+      _SliverAnimatedList.removeItem(index,
           (BuildContext context, Animation<double> animation) {
         return removedItemBuilder(removedItem, context, animation);
       });

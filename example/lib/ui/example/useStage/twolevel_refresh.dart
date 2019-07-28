@@ -45,6 +45,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
     // TODO: implement build
     return RefreshConfiguration(
       enableScrollWhenTwoLevel: true,
+      maxOverScrollExtent: 120,
       child: LayoutBuilder(
         builder: (q, c) {
           return Scaffold(
@@ -152,7 +153,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                         ),
                         controller: _refreshController1,
                         enableTwoLevel: true,
-                        enablePullDown: false,
+                        enablePullDown: true,
                         onRefresh: () async {
                           await Future.delayed(Duration(milliseconds: 2000));
                           _refreshController1.refreshCompleted();
@@ -190,7 +191,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                       _refreshController2.refreshCompleted();
                     },
                     onTwoLevel: () {
-                      _refreshController2.position.activity.resetActivity();
+                      print("Asd");
                       _refreshController2.position.hold(() {});
                       Navigator.of(context)
                           .push(MaterialPageRoute(
