@@ -26,11 +26,13 @@ class BezierHeader extends RefreshIndicator{
   final Color bezierColor;
   final BezierDismissType dismissType;
 
+  final bool enableChildOverflow;
+
   final Widget child;
 
   final double rectHeight;
 
-  BezierHeader({this.child:const Text(""),this.onOffsetChange,this.onModeChange,this.readyRefresh,this.endRefresh,this.onResetValue,this.dismissType:BezierDismissType.ScaleToCenter,this.rectHeight:80,this.bezierColor:Colors.blueAccent}):super(refreshStyle:RefreshStyle.UnFollow,height:rectHeight);
+  BezierHeader({this.child:const Text(""),this.onOffsetChange,this.onModeChange,this.readyRefresh,this.enableChildOverflow:false,this.endRefresh,this.onResetValue,this.dismissType:BezierDismissType.RectSpread,this.rectHeight:80,this.bezierColor:Colors.blueAccent}):super(refreshStyle:RefreshStyle.UnFollow,height:rectHeight);
 
   @override
   State<StatefulWidget> createState() {
@@ -136,13 +138,16 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader> with Ticker
                     ),
                     clipper: _BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight),
                   ),
-                  ClipPath(
+                 ! widget.enableChildOverflow?ClipPath(
                     child: Container(
                       height: math.max(00, _beizerBounceCtl.value)+widget.rectHeight,
                       child: widget.child,
                     ),
                     clipper:_BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight) ,
-                  ),
+                  ):Container(
+                   height: math.max(00, _beizerBounceCtl.value)+widget.rectHeight,
+                   child: widget.child,
+                 ),
                 ],
               );
             },
