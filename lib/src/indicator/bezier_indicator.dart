@@ -6,6 +6,7 @@
 
 
 import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart' hide RefreshIndicator,RefreshIndicatorState;
@@ -13,18 +14,23 @@ import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 import 'dart:math' as math;
 import 'package:flutter/physics.dart';
 
+enum BezierDismissType{
+  None,RectSpread,ScaleToCenter
+}
+
 class BezierHeader extends RefreshIndicator{
   final OffsetCallBack onOffsetChange;
   final ModeChangeCallBack onModeChange;
   final VoidFutureCallBack readyRefresh,endRefresh;
   final VoidCallback onResetValue;
   final Color bezierColor;
+  final BezierDismissType dismissType;
 
   final Widget child;
 
   final double rectHeight;
 
-  BezierHeader({this.child:const Text(""),this.onOffsetChange,this.onModeChange,this.readyRefresh,this.endRefresh,this.onResetValue,this.rectHeight:80,this.bezierColor:Colors.blueAccent}):super(refreshStyle:RefreshStyle.UnFollow,height:rectHeight);
+  BezierHeader({this.child:const Text(""),this.onOffsetChange,this.onModeChange,this.readyRefresh,this.endRefresh,this.onResetValue,this.dismissType:BezierDismissType.ScaleToCenter,this.rectHeight:80,this.bezierColor:Colors.blueAccent}):super(refreshStyle:RefreshStyle.UnFollow,height:rectHeight);
 
   @override
   State<StatefulWidget> createState() {
@@ -36,15 +42,14 @@ class BezierHeader extends RefreshIndicator{
 
 class _BezierHeaderState extends RefreshIndicatorState<BezierHeader> with TickerProviderStateMixin{
 
-  AnimationController _beizerBounceCtl;
-
+  AnimationController _beizerBounceCtl,_bezierDismissCtl;
 
 
   @override
   void initState() {
     // TODO: implement initState
     _beizerBounceCtl = AnimationController(vsync: this,lowerBound: -10,upperBound: 50,value: 0);
-
+    _bezierDismissCtl = AnimationController(vsync: this);
     super.initState();
   }
 
@@ -72,6 +77,7 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader> with Ticker
   @override
   void dispose() {
     // TODO: implement dispose
+    _bezierDismissCtl.dispose();
     _beizerBounceCtl.dispose();
     super.dispose();
   }
@@ -93,10 +99,11 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader> with Ticker
   }
 
   @override
-  Future<void> endRefresh() {
+  Future<void> endRefresh() async {
     // TODO: implement endRefresh
     if(widget.endRefresh!=null){
-      return widget.endRefresh();
+      await widget.endRefresh();
+      return _bezierDismissCtl.animateTo(1.0,duration: Duration(milliseconds: 200));
     }
     return super.endRefresh();
   }
@@ -104,7 +111,7 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader> with Ticker
   @override
   void resetValue() {
     // TODO: implement resetValue
-
+    _bezierDismissCtl.reset();
     _beizerBounceCtl.value = 0;
     if(widget.onResetValue!=null){
       widget.onResetValue();
@@ -115,33 +122,96 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader> with Ticker
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
-    print(math.max(0,_beizerBounceCtl.value)+widget.rectHeight);
     return  AnimatedBuilder(
       builder: (_,__){
-        return Stack(
-          children: <Widget>[
-            ClipPath(
-              child: Container(
-                height: math.max(0,_beizerBounceCtl.value)+widget.rectHeight,
-                color: widget.bezierColor,
-              ),
-              clipper: _BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight),
-            ),
-            ClipPath(
-              child: Container(
-                height: math.max(00, _beizerBounceCtl.value)+widget.rectHeight,
-                child: widget.child,
-              ),
-              clipper:_BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight) ,
-            ),
-          ],
+        return ClipPath(
+          child: AnimatedBuilder(
+            builder: (_,__){
+              return Stack(
+                children: <Widget>[
+                  ClipPath(
+                    child: Container(
+                      height: math.max(0,_beizerBounceCtl.value)+widget.rectHeight,
+                      color: widget.bezierColor,
+                    ),
+                    clipper: _BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight),
+                  ),
+                  ClipPath(
+                    child: Container(
+                      height: math.max(00, _beizerBounceCtl.value)+widget.rectHeight,
+                      child: widget.child,
+                    ),
+                    clipper:_BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight) ,
+                  ),
+                ],
+              );
+            },
+            animation: _beizerBounceCtl,
+          ),
+          clipper: _BezierDismissPainter(value: _bezierDismissCtl.value,dismissType: widget.dismissType),
         );
       },
-      animation: _beizerBounceCtl,
+      animation: _bezierDismissCtl,
     );
 
   }
 
+}
+
+class _BezierDismissPainter extends CustomClipper<Path>{
+
+  final BezierDismissType dismissType;
+
+  final double value;
+
+
+  _BezierDismissPainter({this.dismissType,this.value});
+
+
+  @override
+  getClip(Size size) {
+    // TODO: implement getClip
+    Path path = Path();
+    if(dismissType==BezierDismissType.None||value==0){
+      path.moveTo(0, 0);
+      path.lineTo(size.width, 0);
+      path.lineTo(size.width, size.height);
+      path.lineTo(0, size.height);
+      path.lineTo(0, 0);
+    }
+    else if(dismissType==BezierDismissType.RectSpread){
+      Path path1 = Path();
+      Path path2 = Path();
+      double halfWidth =size.width/2;
+      path1.moveTo(0, 0);
+      path1.lineTo(halfWidth-value*halfWidth, 0);
+      path1.lineTo(halfWidth-value*halfWidth, size.height);
+      path1.lineTo(0, size.height);
+      path1.lineTo(0, 0);
+
+      path2.moveTo(size.width, 0);
+      path2.lineTo(halfWidth+value*halfWidth, 0);
+      path2.lineTo(halfWidth+value*halfWidth, size.height);
+      path2.lineTo(size.width, size.height);
+      path2.lineTo(size.width, 0);
+      path.addPath(path1, Offset(0,0));
+      path.addPath(path2, Offset(0,0));
+    }
+    else{
+      final double maxExtent = math.max(size.width, size.height)*(1.0-value);
+      final double centerX =size.width/2;
+      final double centerY = size.height/2;
+      path.addOval(prefix0.Rect.fromCircle(center:Offset(centerX,centerY),radius:maxExtent/2));
+
+    }
+    return path;
+  }
+
+  @override
+  bool shouldReclip(dynamic oldClipper) {
+    // TODO: implement shouldReclip
+    return true;
+  }
 }
 
 class _BezierPainter extends CustomClipper<Path>{
