@@ -175,5 +175,112 @@ class _BezierPainter extends CustomClipper<Path>{
   }
 }
 
+class BezierCircleHeader extends StatefulWidget{
+  final Color bezierColor;
+
+
+  final double rectHeight;
+
+  final Color circleColor;
+
+  final double circleRadius;
+
+  BezierCircleHeader({this.bezierColor:Colors.blueAccent,this.rectHeight:80,this.circleColor:Colors.white,this.circleRadius:25});
+
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _BezierCircleHeaderState();
+  }
+
+}
+
+class _BezierCircleHeaderState extends State<BezierCircleHeader> with TickerProviderStateMixin{
+  RefreshStatus mode = RefreshStatus.idle;
+  AnimationController _childMoveCtl;
+  Tween<AlignmentGeometry> _childMoveTween;
+  AnimationController _dismissCtrl;
+  Tween<Offset> _disMissTween;
+  @override
+  void initState() {
+    // TODO: implement initState
+    _dismissCtrl = AnimationController(vsync: this);
+    _childMoveCtl = AnimationController(vsync: this);
+    _childMoveTween = AlignmentGeometryTween(begin: Alignment.bottomCenter,end: Alignment.center);
+    _disMissTween = Tween<Offset>(begin: Offset(0.0,0.0),end: Offset(0.0,1.5));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _dismissCtrl.dispose();
+    _childMoveCtl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return BezierHeader(
+      bezierColor: widget.bezierColor,
+      rectHeight: widget.rectHeight,
+      readyRefresh: () async{
+        await _childMoveCtl.animateTo(1.0,duration: Duration(milliseconds: 300));
+      },
+      onResetValue: () {
+        _dismissCtrl.value =0;
+        _childMoveCtl.reset();
+      },
+      onModeChange: (m){
+        mode = m;
+        setState(() {
+
+        });
+      },
+      endRefresh: () async {
+        await _dismissCtrl.animateTo(1,duration: Duration(milliseconds: 550));
+      },
+      child:SlideTransition(
+        position: _disMissTween.animate(_dismissCtrl),
+        child: AlignTransition(
+          child:Container(
+            height: widget.circleRadius+5,
+            child: Stack(
+              children: <Widget>[
+                Center(
+                  child: Container(
+                    height: widget.circleRadius,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle
+                    ),
+                  ),
+                ),
+                Center(
+                  child: SizedBox(
+                    child: CircularProgressIndicator(
+                      valueColor: mode==RefreshStatus.refreshing?AlwaysStoppedAnimation(Colors.white):AlwaysStoppedAnimation(Colors.transparent),
+                      strokeWidth: 2,
+                    ),
+                    height: widget.circleRadius+5,
+                    width: widget.circleRadius+5,
+                  ),
+                )
+              ],
+            ),
+          )
+          ,
+
+          alignment: _childMoveCtl.drive(_childMoveTween),
+        ),
+
+      ),
+
+    );
+  }
+
+}
 
 

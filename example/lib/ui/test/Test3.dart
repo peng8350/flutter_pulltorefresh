@@ -166,6 +166,8 @@ class Test3State extends State<Test3>
             enablePullUp: _enablePullDown,
             enablePullDown: _enablePullUp,
             controller: _refreshController,
+            header: BezierCircleHeader(
+            ),
             footer: null,
             onRefresh: () async {
               print("onRefresh");
