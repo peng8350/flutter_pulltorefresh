@@ -6,7 +6,6 @@
 
 
 import 'package:flutter/animation.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart' hide RefreshIndicator,RefreshIndicatorState;
@@ -108,9 +107,8 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader> with Ticker
     // TODO: implement endRefresh
     if(widget.endRefresh!=null){
       await widget.endRefresh();
-      return _bezierDismissCtl.animateTo(1.0,duration: Duration(milliseconds: 200));
     }
-    return super.endRefresh();
+    return _bezierDismissCtl.animateTo(1.0,duration: Duration(milliseconds: 200));
   }
 
   @override
@@ -127,40 +125,42 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader> with Ticker
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
-    return  AnimatedBuilder(
+
+
+    return AnimatedBuilder(
       builder: (_,__){
-        return ClipPath(
-          child: AnimatedBuilder(
-            builder: (_,__){
-              return Stack(
-                children: <Widget>[
-                  ClipPath(
+        return Stack(
+          children: <Widget>[
+            AnimatedBuilder(
+              builder: (_,__){
+                return ClipPath(
+                  child: ClipPath(
                     child: Container(
                       height: math.max(0,_beizerBounceCtl.value)+widget.rectHeight,
                       color: widget.bezierColor,
                     ),
                     clipper: _BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight),
                   ),
-                 ! widget.enableChildOverflow?ClipPath(
-                    child: Container(
-                      height: (mode==RefreshStatus.refreshing?0:math.max(0, _beizerBounceCtl.value))+widget.rectHeight,
-                      child: widget.child,
-                    ),
-                    clipper:_BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight) ,
-                  ):Container(
-                   height: math.max(00, _beizerBounceCtl.value)+widget.rectHeight,
-                   child: widget.child,
-                 ),
-                ],
-              );
-            },
-            animation: _beizerBounceCtl,
-          ),
-          clipper: _BezierDismissPainter(value: _bezierDismissCtl.value,dismissType: widget.dismissType),
+                  clipper: _BezierDismissPainter(value: _bezierDismissCtl.value,dismissType: widget.dismissType),
+                );
+              },
+              animation: _bezierDismissCtl,
+            ),
+            ! widget.enableChildOverflow?ClipPath(
+              child: Container(
+                height: (mode==RefreshStatus.refreshing?0:math.max(0, _beizerBounceCtl.value))+widget.rectHeight,
+                child: widget.child,
+              ),
+              clipper:_BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight) ,
+            ):Container(
+              height: math.max(00, _beizerBounceCtl.value)+widget.rectHeight,
+              child: widget.child,
+            ),
+          ],
         );
       },
-      animation: _bezierDismissCtl,
-    );
+      animation: _beizerBounceCtl,
+    ) ;
 
   }
 
@@ -209,7 +209,7 @@ class _BezierDismissPainter extends CustomClipper<Path>{
       final double maxExtent = math.max(size.width, size.height)*(1.0-value);
       final double centerX =size.width/2;
       final double centerY = size.height/2;
-      path.addOval(prefix0.Rect.fromCircle(center:Offset(centerX,centerY),radius:maxExtent/2));
+      path.addOval(Rect.fromCircle(center:Offset(centerX,centerY),radius:maxExtent/2));
 
     }
     return path;
@@ -263,7 +263,11 @@ class BezierCircleHeader extends StatefulWidget{
 
   final double circleRadius;
 
-  BezierCircleHeader({this.bezierColor:Colors.blueAccent,this.rectHeight:80,this.circleColor:Colors.white,this.circleType:BezierCircleType.Raidal,this.circleRadius:12});
+  final bool enableChildOverflow;
+
+  final BezierDismissType dismissType;
+
+  BezierCircleHeader({this.bezierColor:Colors.blueAccent,this.rectHeight:80,this.circleColor:Colors.white,this.enableChildOverflow:false,this.dismissType:BezierDismissType.RectSpread,this.circleType:BezierCircleType.Progress,this.circleRadius:12});
 
 
   @override
@@ -309,6 +313,8 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader> with TickerProv
     return BezierHeader(
       bezierColor: widget.bezierColor,
       rectHeight: widget.rectHeight,
+      dismissType: widget.dismissType,
+      enableChildOverflow: widget.enableChildOverflow,
       readyRefresh: () async{
         await _childMoveCtl.animateTo(1.0,duration: Duration(milliseconds: 300));
       },
@@ -332,7 +338,6 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader> with TickerProv
       child:SlideTransition(
         position: _disMissTween.animate(_dismissCtrl),
         child: AlignTransition(
-
           child: widget.circleType==BezierCircleType.Progress?Container(
             height: widget.circleRadius*2+5,
             child: Stack(
@@ -341,7 +346,7 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader> with TickerProv
                   child: Container(
                     height: widget.circleRadius*2,
                     decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: widget.circleColor,
                         shape: BoxShape.circle
                     ),
                   ),
@@ -349,7 +354,7 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader> with TickerProv
                 Center(
                   child: SizedBox(
                     child: CircularProgressIndicator(
-                      valueColor: mode==RefreshStatus.refreshing?AlwaysStoppedAnimation(Colors.white):AlwaysStoppedAnimation(Colors.transparent),
+                      valueColor: mode==RefreshStatus.refreshing?AlwaysStoppedAnimation(widget.circleColor):AlwaysStoppedAnimation(Colors.transparent),
                       strokeWidth: 2,
                     ),
                     height: widget.circleRadius*2+5,
@@ -358,7 +363,7 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader> with TickerProv
                 )
               ],
             ),
-          ): prefix0.AnimatedBuilder(
+          ): AnimatedBuilder(
             builder: (_,__){
               return CustomPaint(
                 painter: _RaidalPainter(value: _radialCtrl.value,circleColor: widget.circleColor,circleRadius: widget.circleRadius),
@@ -390,17 +395,17 @@ class _RaidalPainter extends CustomPainter{
   _RaidalPainter({this.value,this.circleColor,this.circleRadius});
 
   @override
-  void paint(prefix0.Canvas canvas, prefix0.Size size) {
+  void paint(Canvas canvas, Size size) {
     // TODO: implement paint
     Paint paint = Paint();
-    paint.color=Colors.white;
+    paint.color=circleColor;
     paint.strokeWidth = 2;
     paint.strokeCap = StrokeCap.round;
     paint.style = PaintingStyle.stroke;
     canvas.drawArc(Rect.fromCircle(center:Offset(size.width/2,size.height/2),radius: circleRadius+3), -math.pi/2, math.pi*4, false, paint);
     paint.style = PaintingStyle.fill;
     canvas.drawArc(Rect.fromCircle(center:Offset(size.width/2,size.height/2),radius: circleRadius), -math.pi/2, math.pi*4, true, paint);
-    paint.color=Color.fromRGBO(233, 233, 233, 0.5);
+    paint.color=Color.fromRGBO(233, 233, 233, 0.8);
     canvas.drawArc(Rect.fromCircle(center:Offset(size.width/2,size.height/2),radius: circleRadius), -math.pi/2, math.pi*4*value, true, paint);
     paint.style = PaintingStyle.stroke;
     canvas.drawArc(Rect.fromCircle(center:Offset(size.width/2,size.height/2),radius: circleRadius+3), -math.pi/2, math.pi*4*value, false, paint);
@@ -409,7 +414,7 @@ class _RaidalPainter extends CustomPainter{
   @override
   bool shouldRepaint(_RaidalPainter oldDelegate) {
     // TODO: implement shouldRepaint
-    return true;
+    return value!=oldDelegate.value;
   }
 
 }

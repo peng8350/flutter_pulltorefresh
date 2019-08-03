@@ -167,6 +167,10 @@ class Test3State extends State<Test3>
             enablePullDown: _enablePullUp,
             controller: _refreshController,
             header: BezierCircleHeader(
+              bezierColor: Colors.red,
+              circleColor: Colors.amber,
+              dismissType: BezierDismissType.ScaleToCenter,
+              circleType: BezierCircleType.Raidal,
             ),
             footer: null,
             onRefresh: () async {
