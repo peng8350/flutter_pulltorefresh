@@ -166,27 +166,7 @@ class Test3State extends State<Test3>
             enablePullUp: _enablePullDown,
             enablePullDown: _enablePullUp,
             controller: _refreshController,
-            header: CustomHeader(
-              builder: (c, m) {
-                return ScaleTransition(
-                  scale: _animationController,
-                  child: CupertinoActivityIndicator(),
-                );
-              },
-              readyToRefresh: () {
-                return Future.delayed(Duration(milliseconds: 1500));
-              },
-              onOffsetChange: (offset) {
-                _animationController.value = offset / 80.0;
-              },
-            ),
-            footer: ClassicFooter(
-              iconPos: IconPosition.top,
-              loadStyle: LoadStyle.ShowWhenLoading,
-              onClick: () {
-                print("cliclk");
-              },
-            ),
+            footer: null,
             onRefresh: () async {
               print("onRefresh");
               await Future.delayed(const Duration(milliseconds: 1000));

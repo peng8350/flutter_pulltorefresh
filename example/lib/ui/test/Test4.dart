@@ -173,14 +173,14 @@ class Test4State extends State<Test4>
         builder: (context, physics) {
           return CustomScrollView(physics: physics, slivers: [
             ClassicHeader(),
-            SliverToBoxAdapter(),
             SliverAppBar(),
             SliverToBoxAdapter(
               child: Container(
-                height: 590,
+                height: 0,
                 color: Colors.red,
               ),
-            )
+            ),
+            ClassicFooter(),
           ]);
         },
         onRefresh: () async {
