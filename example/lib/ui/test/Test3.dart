@@ -171,7 +171,7 @@ class Test3State extends State<Test3>
             footer: null,
             onRefresh: () async {
               print("onRefresh");
-              await Future.delayed(const Duration(milliseconds: 1000));
+              await Future.delayed(const Duration(milliseconds: 3000));
               data.add(Container(
                 child: Card(),
                 height: 100.0,

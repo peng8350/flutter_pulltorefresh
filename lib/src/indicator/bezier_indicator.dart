@@ -18,6 +18,12 @@ enum BezierDismissType{
   None,RectSpread,ScaleToCenter
 }
 
+
+enum BezierCircleType{
+  Raidal,Progress
+}
+
+
 class BezierHeader extends RefreshIndicator{
   final OffsetCallBack onOffsetChange;
   final ModeChangeCallBack onModeChange;
@@ -25,11 +31,8 @@ class BezierHeader extends RefreshIndicator{
   final VoidCallback onResetValue;
   final Color bezierColor;
   final BezierDismissType dismissType;
-
   final bool enableChildOverflow;
-
   final Widget child;
-
   final double rectHeight;
 
   BezierHeader({this.child:const Text(""),this.onOffsetChange,this.onModeChange,this.readyRefresh,this.enableChildOverflow:false,this.endRefresh,this.onResetValue,this.dismissType:BezierDismissType.RectSpread,this.rectHeight:80,this.bezierColor:Colors.blueAccent}):super(refreshStyle:RefreshStyle.UnFollow,height:rectHeight);
@@ -140,7 +143,7 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader> with Ticker
                   ),
                  ! widget.enableChildOverflow?ClipPath(
                     child: Container(
-                      height: math.max(00, _beizerBounceCtl.value)+widget.rectHeight,
+                      height: (mode==RefreshStatus.refreshing?0:math.max(0, _beizerBounceCtl.value))+widget.rectHeight,
                       child: widget.child,
                     ),
                     clipper:_BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight) ,
@@ -213,9 +216,9 @@ class _BezierDismissPainter extends CustomClipper<Path>{
   }
 
   @override
-  bool shouldReclip(dynamic oldClipper) {
+  bool shouldReclip(_BezierDismissPainter oldClipper) {
     // TODO: implement shouldReclip
-    return true;
+    return dismissType!=oldClipper.dismissType||value!=oldClipper.value;
   }
 }
 
@@ -233,7 +236,6 @@ class _BezierPainter extends CustomClipper<Path>{
   getClip(Size size) {
     // TODO: implement getClip
     Path path = Path();
-    path.moveTo(0, 0);
     path.lineTo(0, startOffsetY);
     path.quadraticBezierTo( size.width/2, startOffsetY+value*2, size.width, startOffsetY);
     path.moveTo(size.width, startOffsetY);
@@ -253,6 +255,7 @@ class _BezierPainter extends CustomClipper<Path>{
 class BezierCircleHeader extends StatefulWidget{
   final Color bezierColor;
 
+  final BezierCircleType circleType;
 
   final double rectHeight;
 
@@ -260,7 +263,7 @@ class BezierCircleHeader extends StatefulWidget{
 
   final double circleRadius;
 
-  BezierCircleHeader({this.bezierColor:Colors.blueAccent,this.rectHeight:80,this.circleColor:Colors.white,this.circleRadius:25});
+  BezierCircleHeader({this.bezierColor:Colors.blueAccent,this.rectHeight:80,this.circleColor:Colors.white,this.circleType:BezierCircleType.Raidal,this.circleRadius:12});
 
 
   @override
@@ -277,11 +280,14 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader> with TickerProv
   Tween<AlignmentGeometry> _childMoveTween;
   AnimationController _dismissCtrl;
   Tween<Offset> _disMissTween;
+  AnimationController _radialCtrl;
+
   @override
   void initState() {
     // TODO: implement initState
     _dismissCtrl = AnimationController(vsync: this);
     _childMoveCtl = AnimationController(vsync: this);
+    _radialCtrl = AnimationController(vsync: this,duration: Duration(milliseconds: 500));
     _childMoveTween = AlignmentGeometryTween(begin: Alignment.bottomCenter,end: Alignment.center);
     _disMissTween = Tween<Offset>(begin: Offset(0.0,0.0),end: Offset(0.0,1.5));
     super.initState();
@@ -292,8 +298,10 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader> with TickerProv
     // TODO: implement dispose
     _dismissCtrl.dispose();
     _childMoveCtl.dispose();
+    _radialCtrl.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -307,26 +315,31 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader> with TickerProv
       onResetValue: () {
         _dismissCtrl.value =0;
         _childMoveCtl.reset();
+
       },
       onModeChange: (m){
         mode = m;
+        if(m==RefreshStatus.refreshing)
+          _radialCtrl.repeat(period: Duration(milliseconds: 500));
         setState(() {
 
         });
       },
       endRefresh: () async {
+        _radialCtrl.reset();
         await _dismissCtrl.animateTo(1,duration: Duration(milliseconds: 550));
       },
       child:SlideTransition(
         position: _disMissTween.animate(_dismissCtrl),
         child: AlignTransition(
-          child:Container(
-            height: widget.circleRadius+5,
+
+          child: widget.circleType==BezierCircleType.Progress?Container(
+            height: widget.circleRadius*2+5,
             child: Stack(
               children: <Widget>[
                 Center(
                   child: Container(
-                    height: widget.circleRadius,
+                    height: widget.circleRadius*2,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle
@@ -339,12 +352,19 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader> with TickerProv
                       valueColor: mode==RefreshStatus.refreshing?AlwaysStoppedAnimation(Colors.white):AlwaysStoppedAnimation(Colors.transparent),
                       strokeWidth: 2,
                     ),
-                    height: widget.circleRadius+5,
-                    width: widget.circleRadius+5,
+                    height: widget.circleRadius*2+5,
+                    width: widget.circleRadius*2+5,
                   ),
                 )
               ],
             ),
+          ): prefix0.AnimatedBuilder(
+            builder: (_,__){
+              return CustomPaint(
+                painter: _RaidalPainter(value: _radialCtrl.value,circleColor: widget.circleColor,circleRadius: widget.circleRadius),
+              );
+            },
+            animation: _radialCtrl,
           )
           ,
 
@@ -358,4 +378,38 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader> with TickerProv
 
 }
 
+class _RaidalPainter extends CustomPainter{
 
+  final double value;
+
+  final Color circleColor;
+
+  final double circleRadius;
+
+
+  _RaidalPainter({this.value,this.circleColor,this.circleRadius});
+
+  @override
+  void paint(prefix0.Canvas canvas, prefix0.Size size) {
+    // TODO: implement paint
+    Paint paint = Paint();
+    paint.color=Colors.white;
+    paint.strokeWidth = 2;
+    paint.strokeCap = StrokeCap.round;
+    paint.style = PaintingStyle.stroke;
+    canvas.drawArc(Rect.fromCircle(center:Offset(size.width/2,size.height/2),radius: circleRadius+3), -math.pi/2, math.pi*4, false, paint);
+    paint.style = PaintingStyle.fill;
+    canvas.drawArc(Rect.fromCircle(center:Offset(size.width/2,size.height/2),radius: circleRadius), -math.pi/2, math.pi*4, true, paint);
+    paint.color=Color.fromRGBO(233, 233, 233, 0.5);
+    canvas.drawArc(Rect.fromCircle(center:Offset(size.width/2,size.height/2),radius: circleRadius), -math.pi/2, math.pi*4*value, true, paint);
+    paint.style = PaintingStyle.stroke;
+    canvas.drawArc(Rect.fromCircle(center:Offset(size.width/2,size.height/2),radius: circleRadius+3), -math.pi/2, math.pi*4*value, false, paint);
+  }
+
+  @override
+  bool shouldRepaint(_RaidalPainter oldDelegate) {
+    // TODO: implement shouldRepaint
+    return true;
+  }
+
+}

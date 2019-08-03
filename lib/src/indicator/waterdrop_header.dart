@@ -215,7 +215,6 @@ class _QqPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final double originH = 20.0;
-
     final double middleW = size.width / 2;
 
     final double circleSize = 12.0;
