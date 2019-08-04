@@ -22,16 +22,23 @@ enum BezierCircleType{
   Raidal,Progress
 }
 
-
+/// bezier container,if you need to implements indicator with bezier ,you can use consider about use this
+/// this will add the bezier container effect
+///
+/// See also:
+///
+/// [BezierCircleHeader], bezier container +circle progress indicator
 class BezierHeader extends RefreshIndicator{
   final OffsetCallBack onOffsetChange;
   final ModeChangeCallBack onModeChange;
   final VoidFutureCallBack readyRefresh,endRefresh;
   final VoidCallback onResetValue;
   final Color bezierColor;
+  // decide how to behave when bezier is ready to dismiss
   final BezierDismissType dismissType;
   final bool enableChildOverflow;
   final Widget child;
+  // container height(not contain bezier)
   final double rectHeight;
 
   BezierHeader({this.child:const Text(""),this.onOffsetChange,this.onModeChange,this.readyRefresh,this.enableChildOverflow:false,this.endRefresh,this.onResetValue,this.dismissType:BezierDismissType.RectSpread,this.rectHeight:80,this.bezierColor:Colors.blueAccent}):super(refreshStyle:RefreshStyle.UnFollow,height:rectHeight);
@@ -251,10 +258,20 @@ class _BezierPainter extends CustomClipper<Path>{
     return value !=oldClipper.value;
   }
 }
-
+/// bezier + circle indicator,you can use this directly
+///
+///simple usage
+///```dart
+///header: BezierCircleHeader(
+///bezierColor: Colors.red,
+///circleColor: Colors.amber,
+///dismissType: BezierDismissType.ScaleToCenter,
+///circleType: BezierCircleType.Raidal,
+///)
+///```
 class BezierCircleHeader extends StatefulWidget{
   final Color bezierColor;
-
+  // two style:radial or progress
   final BezierCircleType circleType;
 
   final double rectHeight;
