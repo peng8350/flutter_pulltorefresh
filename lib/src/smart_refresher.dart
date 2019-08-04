@@ -295,8 +295,12 @@ class _SmartRefresherState extends State<SmartRefresher> {
 
   ScrollPhysics _getScrollPhysics(RefreshConfiguration conf) {
     return _physics = RefreshPhysics(
-        dragSpeedRatio: conf?.dragSpeedRatio,
-        springDescription: conf?.springDescription,
+        dragSpeedRatio: conf?.dragSpeedRatio ?? 1,
+        springDescription: conf?.springDescription ?? const SpringDescription(
+          mass: 2.2,
+          stiffness: 300,
+          damping: 16,
+        ),
         controller: widget.controller,
         enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? true,
         updateFlag: _updatePhysics ? 0 : 1,
@@ -514,7 +518,7 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (isRefresh) return;
-    position?.animateTo(_headerTriggerDistance,
+    position?.animateTo(_headerTriggerDistance-20,
         duration: duration, curve: curve);
   }
 
@@ -690,9 +694,9 @@ class RefreshConfiguration extends InheritedWidget {
     this.enableScrollWhenTwoLevel: true,
     this.enableBallisticRefresh: false,
     this.springDescription:const SpringDescription(
-      mass: 1.8,
-      stiffness: 200,
-      damping: 16,
+      mass: 2.2,
+      stiffness: 250,
+      damping: 17,
     ),
     this.enableScrollWhenRefreshCompleted: false,
     this.headerOffset: 0.0,

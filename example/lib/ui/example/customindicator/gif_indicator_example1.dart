@@ -97,6 +97,7 @@ class GifIndicatorExample1State extends State<GifIndicatorExample1> {
     // TODO: implement build
     return SmartRefresher(
       controller: _controller,
+      enablePullUp: true,
       header: GifHeader1(),
       onRefresh: () async {
         await Future.delayed(Duration(milliseconds: 2000));
