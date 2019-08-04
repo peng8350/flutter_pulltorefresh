@@ -297,9 +297,8 @@ class _SmartRefresherState extends State<SmartRefresher> {
     return _physics = RefreshPhysics(
         dragSpeedRatio: conf?.dragSpeedRatio,
         springDescription: conf?.springDescription,
-        footerMode: widget.controller.footerMode,
+        controller: widget.controller,
         enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? true,
-        headerMode: widget.controller.headerMode,
         updateFlag: _updatePhysics ? 0 : 1,
         enableScrollWhenRefreshCompleted:
             conf?.enableScrollWhenRefreshCompleted ?? false,

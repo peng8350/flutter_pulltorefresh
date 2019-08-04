@@ -28,7 +28,7 @@ class RefreshPhysics extends ScrollPhysics {
   final SpringDescription springDescription;
   final double dragSpeedRatio;
   final bool enableScrollWhenTwoLevel, enableScrollWhenRefreshCompleted;
-  final ValueNotifier headerMode, footerMode;
+  final RefreshController controller;
   final int updateFlag;
 
   /// find out the viewport when bouncing,for compute the layoutExtent in header and footer
@@ -40,9 +40,8 @@ class RefreshPhysics extends ScrollPhysics {
       {ScrollPhysics parent,
       this.updateFlag,
       this.maxUnderScrollExtent,
-      this.headerMode,
       this.springDescription,
-      this.footerMode,
+        this.controller,
       this.dragSpeedRatio,
       this.enableScrollWhenRefreshCompleted,
       this.enableScrollWhenTwoLevel,
@@ -57,9 +56,8 @@ class RefreshPhysics extends ScrollPhysics {
         springDescription: springDescription,
         dragSpeedRatio: dragSpeedRatio,
         enableScrollWhenTwoLevel: enableScrollWhenTwoLevel,
-        headerMode: headerMode,
+        controller: controller,
         enableScrollWhenRefreshCompleted: enableScrollWhenRefreshCompleted,
-        footerMode: footerMode,
         maxUnderScrollExtent: maxUnderScrollExtent ??
             (ancestor is ClampingScrollPhysics ||
                     (ancestor is AlwaysScrollableScrollPhysics &&
@@ -92,8 +90,8 @@ class RefreshPhysics extends ScrollPhysics {
   bool shouldAcceptUserOffset(ScrollMetrics position) {
     // TODO: implement shouldAcceptUserOffset
     viewportRender ??=
-        findViewport((position as ScrollPosition).context.storageContext);
-    if (headerMode.value == RefreshStatus.twoLeveling &&
+        findViewport(controller.position.context.storageContext);
+    if (controller.headerMode.value == RefreshStatus.twoLeveling &&
         !enableScrollWhenTwoLevel) {
       return false;
     }
@@ -103,11 +101,11 @@ class RefreshPhysics extends ScrollPhysics {
             position.pixels < 0 &&
             !(viewportRender.firstChild as RenderSliverRefresh)
                 .hasLayoutExtent &&
-            (headerMode.value == RefreshStatus.completed ||
-                headerMode.value == RefreshStatus.failed))) {
+            (controller.headerMode.value == RefreshStatus.completed ||
+                controller.headerMode.value == RefreshStatus.failed))) {
       return false;
-    } else if (headerMode.value == RefreshStatus.twoLevelOpening ||
-        RefreshStatus.twoLevelClosing == headerMode.value) {
+    } else if (controller.headerMode.value == RefreshStatus.twoLevelOpening ||
+        RefreshStatus.twoLevelClosing == controller.headerMode.value) {
       return false;
     }
 
@@ -132,8 +130,8 @@ class RefreshPhysics extends ScrollPhysics {
   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
     // TODO: implement applyPhysicsToUserOffset
     viewportRender ??=
-        findViewport((position as ScrollPosition).context.storageContext);
-    if (headerMode.value == RefreshStatus.twoLeveling) {
+        findViewport(controller.position.context.storageContext);
+    if (controller.headerMode.value == RefreshStatus.twoLeveling) {
       if (offset > 0.0) {
         return parent.applyPhysicsToUserOffset(position, offset);
       }
@@ -143,12 +141,12 @@ class RefreshPhysics extends ScrollPhysics {
         return parent.applyPhysicsToUserOffset(position, offset);
       }
     }
-    if (position.outOfRange || headerMode.value == RefreshStatus.twoLeveling) {
+    if (position.outOfRange || controller.headerMode.value == RefreshStatus.twoLeveling) {
       final double overscrollPastStart =
           math.max(position.minScrollExtent - position.pixels, 0.0);
       final double overscrollPastEnd = math.max(
           position.pixels -
-              (headerMode.value == RefreshStatus.twoLeveling
+              (controller.headerMode.value == RefreshStatus.twoLeveling
                   ? 0.0
                   : position.maxScrollExtent),
           0.0);
@@ -190,12 +188,12 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     viewportRender ??=
-        findViewport((position as ScrollPosition).context.storageContext);
+        findViewport(controller.position.context.storageContext);
 
     final bool enablePullDown =
         viewportRender.firstChild is RenderSliverRefresh;
     final bool enablePullUp = viewportRender.lastChild is RenderSliverLoading;
-    if (headerMode.value == RefreshStatus.twoLeveling) {
+    if (controller.headerMode.value == RefreshStatus.twoLeveling) {
       if (position.pixels - value > 0.0) {
         return parent.applyBoundaryConditions(position, value);
       }
@@ -249,11 +247,11 @@ class RefreshPhysics extends ScrollPhysics {
       ScrollMetrics position, double velocity) {
     // TODO: implement createBallisticSimulation
     viewportRender ??=
-        findViewport((position as ScrollPosition).context.storageContext);
+        findViewport(controller.position.context.storageContext);
     final bool enablePullDown =
         viewportRender.firstChild is RenderSliverRefresh;
     final bool enablePullUp = viewportRender.lastChild is RenderSliverLoading;
-    if (headerMode.value == RefreshStatus.twoLeveling) {
+    if (controller.headerMode.value == RefreshStatus.twoLeveling) {
       if (velocity < 0.0) {
         return parent.createBallisticSimulation(position, velocity);
       }
@@ -264,7 +262,7 @@ class RefreshPhysics extends ScrollPhysics {
       }
     }
     if ((position.pixels > 0 &&
-            headerMode.value == RefreshStatus.twoLeveling) ||
+            controller.headerMode.value == RefreshStatus.twoLeveling) ||
         position.outOfRange) {
       return BouncingScrollSimulation(
         spring: springDescription ?? spring,
@@ -273,7 +271,7 @@ class RefreshPhysics extends ScrollPhysics {
         velocity: velocity * 0.91,
         // TODO(abarth): We should move this constant closer to the drag end.
         leadingExtent: position.minScrollExtent,
-        trailingExtent: headerMode.value == RefreshStatus.twoLeveling
+        trailingExtent: controller.headerMode.value == RefreshStatus.twoLeveling
             ? 0.0
             : position.maxScrollExtent,
         tolerance: tolerance,
