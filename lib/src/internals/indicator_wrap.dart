@@ -334,7 +334,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         configuration.autoLoad &&
         _enableLoading &&
         activity is! DragScrollActivity &&
-        _position.extentBefore > 0.0 &&
+        _position.extentBefore > 3.0 &&
         ((configuration.enableLoadingWhenFailed && mode == LoadStatus.failed) ||
             mode == LoadStatus.idle);
   }

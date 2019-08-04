@@ -689,7 +689,11 @@ class RefreshConfiguration extends InheritedWidget {
     this.shouldFooterFollowWhenNotFull,
     this.enableScrollWhenTwoLevel: true,
     this.enableBallisticRefresh: false,
-    this.springDescription,
+    this.springDescription:const SpringDescription(
+      mass: 1.8,
+      stiffness: 200,
+      damping: 16,
+    ),
     this.enableScrollWhenRefreshCompleted: false,
     this.headerOffset: 0.0,
     this.enableLoadingWhenFailed: false,
@@ -702,11 +706,12 @@ class RefreshConfiguration extends InheritedWidget {
     this.headerTriggerDistance: 80.0,
     this.footerTriggerDistance: 15.0,
     this.hideFooterWhenNotFull: false,
-  });
+  }):assert(child!=null),assert(headerTriggerDistance>0),assert(twiceTriggerDistance>0),assert(closeTwoLevelDistance>0),assert(dragSpeedRatio>0);
 
   static RefreshConfiguration of(BuildContext context) {
     return context.inheritFromWidgetOfExactType(RefreshConfiguration);
   }
+
 
   @override
   bool updateShouldNotify(RefreshConfiguration oldWidget) {

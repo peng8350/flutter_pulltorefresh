@@ -41,7 +41,7 @@ class BezierHeader extends RefreshIndicator{
   // container height(not contain bezier)
   final double rectHeight;
 
-  BezierHeader({this.child:const Text(""),this.onOffsetChange,this.onModeChange,this.readyRefresh,this.enableChildOverflow:false,this.endRefresh,this.onResetValue,this.dismissType:BezierDismissType.RectSpread,this.rectHeight:80,this.bezierColor:Colors.blueAccent}):super(refreshStyle:RefreshStyle.UnFollow,height:rectHeight);
+  BezierHeader({this.child:const Text(""),this.onOffsetChange,this.onModeChange,this.readyRefresh,this.enableChildOverflow:false,this.endRefresh,this.onResetValue,this.dismissType:BezierDismissType.RectSpread,this.rectHeight:70,this.bezierColor:Colors.blueAccent}):super(refreshStyle:RefreshStyle.UnFollow,height:rectHeight);
 
   @override
   State<StatefulWidget> createState() {
@@ -284,7 +284,7 @@ class BezierCircleHeader extends StatefulWidget{
 
   final BezierDismissType dismissType;
 
-  BezierCircleHeader({this.bezierColor:Colors.blueAccent,this.rectHeight:80,this.circleColor:Colors.white,this.enableChildOverflow:false,this.dismissType:BezierDismissType.RectSpread,this.circleType:BezierCircleType.Progress,this.circleRadius:12});
+  BezierCircleHeader({this.bezierColor:Colors.blueAccent,this.rectHeight:70,this.circleColor:Colors.white,this.enableChildOverflow:false,this.dismissType:BezierDismissType.RectSpread,this.circleType:BezierCircleType.Progress,this.circleRadius:12});
 
 
   @override
