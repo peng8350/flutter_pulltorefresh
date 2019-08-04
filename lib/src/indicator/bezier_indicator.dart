@@ -382,8 +382,11 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader> with TickerProv
             ),
           ): AnimatedBuilder(
             builder: (_,__){
-              return CustomPaint(
-                painter: _RaidalPainter(value: _radialCtrl.value,circleColor: widget.circleColor,circleRadius: widget.circleRadius),
+              return Container(
+                height: widget.circleRadius*2,
+                child: CustomPaint(
+                  painter: _RaidalPainter(value: _radialCtrl.value,circleColor: widget.circleColor,circleRadius: widget.circleRadius,refreshing:mode==RefreshStatus.refreshing),
+                ),
               );
             },
             animation: _radialCtrl,
@@ -408,8 +411,9 @@ class _RaidalPainter extends CustomPainter{
 
   final double circleRadius;
 
+  final bool refreshing;
 
-  _RaidalPainter({this.value,this.circleColor,this.circleRadius});
+  _RaidalPainter({this.value,this.circleColor,this.circleRadius,this.refreshing});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -419,13 +423,22 @@ class _RaidalPainter extends CustomPainter{
     paint.strokeWidth = 2;
     paint.strokeCap = StrokeCap.round;
     paint.style = PaintingStyle.stroke;
-    canvas.drawArc(Rect.fromCircle(center:Offset(size.width/2,size.height/2),radius: circleRadius+3), -math.pi/2, math.pi*4, false, paint);
+    if(refreshing) {
+      canvas.drawArc(Rect.fromCircle(
+          center: Offset(size.width / 2, size.height / 2),
+          radius: circleRadius + 3), -math.pi / 2, math.pi * 4, false, paint);
+    }
     paint.style = PaintingStyle.fill;
     canvas.drawArc(Rect.fromCircle(center:Offset(size.width/2,size.height/2),radius: circleRadius), -math.pi/2, math.pi*4, true, paint);
     paint.color=Color.fromRGBO(233, 233, 233, 0.8);
     canvas.drawArc(Rect.fromCircle(center:Offset(size.width/2,size.height/2),radius: circleRadius), -math.pi/2, math.pi*4*value, true, paint);
     paint.style = PaintingStyle.stroke;
-    canvas.drawArc(Rect.fromCircle(center:Offset(size.width/2,size.height/2),radius: circleRadius+3), -math.pi/2, math.pi*4*value, false, paint);
+    if(refreshing) {
+      canvas.drawArc(Rect.fromCircle(
+          center: Offset(size.width / 2, size.height / 2),
+          radius: circleRadius + 3), -math.pi / 2, math.pi * 4 * value, false,
+          paint);
+    }
   }
 
   @override

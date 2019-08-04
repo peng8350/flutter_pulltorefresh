@@ -413,22 +413,24 @@ class _SmartRefresherState extends State<SmartRefresher> {
   @override
   Widget build(BuildContext context) {
     final RefreshConfiguration configuration = RefreshConfiguration.of(context);
-    if (widget.builder != null)
-      return RefreshConfiguration(
-        child: widget.builder(context, _getScrollPhysics(configuration)),
-      );
-
+    Widget body;
     widget.controller._headerTriggerDistance =
-        -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
+    -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
     widget.controller._footerTriggerDistance =
         configuration?.footerTriggerDistance ?? 15.0;
-    List<Widget> slivers =
-        _buildSliversByChild(context, widget.child, configuration);
-    Widget body = _buildBodyBySlivers(widget.child, slivers, configuration);
+    if (widget.builder != null)
+      body =  widget.builder(context, _getScrollPhysics(configuration));
+    else {
+      List<Widget> slivers =
+      _buildSliversByChild(context, widget.child, configuration);
+      body = _buildBodyBySlivers(widget.child, slivers, configuration);
+    }
     if (configuration != null) {
       return body;
     } else {
-      return RefreshConfiguration(child: body);
+      return RefreshConfiguration(
+          child: body
+      );
     }
   }
 }
