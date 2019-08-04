@@ -5,8 +5,8 @@
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | controller | 控制内部状态  | RefreshController | null | 必要 |
 | child      | 你的内容部件   | ? extends Widget   |   null |  可选 |
-| header | 头部指示器构造  | ? extends RefreshIndicator  | ClassicHeader | 可选|
-| footer | 尾部指示器构造     | ? extends LoadIndicator | ClassicFooter | 可选 |
+| header | 头部指示器构造  | ? extends Widget  | ClassicHeader | 可选|
+| footer | 尾部指示器构造     | ? extends Widget | ClassicFooter | 可选 |
 | enablePullDown | 是否允许下拉     | boolean | true | 可选 |
 | enableTwoLevel |   是否允许打开头部指示器二楼的功能 | boolean | false | 可选 |
 | enablePullUp |   是否允许上拉 | boolean | false | 可选 |

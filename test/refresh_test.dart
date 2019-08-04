@@ -275,7 +275,7 @@ void main() {
         touchSlopY: 0.0);
     await tester.pump();
     expect(_refreshController.headerStatus, RefreshStatus.canRefresh);
-    await tester.pumpAndSettle(Duration(milliseconds: 600));
+    await tester.pumpAndSettle(Duration(milliseconds: 200));
     expect(_refreshController.headerStatus, RefreshStatus.refreshing);
   });
 

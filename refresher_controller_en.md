@@ -5,8 +5,8 @@
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | controller | controll inner headerMode and footerMode  | RefreshController | null | necessary |
 | child      | your content  Widget   | ? extends Wiget   |   null |  optional |
-| header | refresh indicator  | ? extends RefreshIndicator  | ClassicHeader | optional|
-| footer | load indicator     | ? extends LoadIndicator | ClassicFooter | optional |
+| header | refresh indicator  | ? extends Widget  | ClassicHeader | optional|
+| footer | load indicator     | ? extends Widget | ClassicFooter | optional |
 | enablePullDown | switch of pulldownrefresh     | boolean | true | optional |
 | enableTwoLevel |   whether to open the function of twoLevel for header | boolean | false | 可选 |
 | enablePullUp |   switch of pullupload | boolean | false | optional |

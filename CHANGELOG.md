@@ -271,3 +271,9 @@ other:
 * CustomHeader,CustomFooter expose inner indicator event
 * resetNoData should only can work when footer indicator is noMore state
 * fix twolevel and refresh prior problem
+
+
+## 1.5.3
+* add new indicator: BezierCircleHeader
+* change spring default value ,make it fast and smooth
+* fix cast ScrollPosition error with NestedScrollView

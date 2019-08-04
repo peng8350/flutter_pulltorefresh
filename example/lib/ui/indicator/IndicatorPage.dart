@@ -103,7 +103,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       dismissType: BezierDismissType.ScaleToCenter,
                     ))));
           },
-          imgRes: "images/empty.png"),
+          imgRes: "images/bezier.gif"),
       IndicatorItem(
           title: "水滴坠落Material指示器",
           onClick: () {

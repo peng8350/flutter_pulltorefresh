@@ -33,7 +33,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 ```yaml
 
    dependencies:
-     pull_to_refresh: ^1.5.2
+     pull_to_refresh: ^1.5.3
 
 ```
 
@@ -48,7 +48,7 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
     
   List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
   RefreshController _refreshController =
-      RefreshController(initialRefresh: true);
+      RefreshController(initialRefresh: false);
 
   void _onRefresh() async{
     // monitor network fetch
@@ -140,44 +140,40 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
 
 ## ScreenShots
 
+
+
 ### Examples
-|Style| [ basic usage ](example/lib/ui/example/useStage/basic.dart) | [header in other place](example/lib/ui/example/customindicator/link_header_example.dart) |
-|:---:|:---:|:---:|
-|art| ![](arts/example1.gif) | ![](arts/example2.gif) |
+|Style| [basic](example/lib/ui/example/useStage/basic.dart) | [header in other place](example/lib/ui/example/customindicator/link_header_example.dart) | [reverse + horizontal](example/lib/ui/example/useStage/horizontal+reverse.dart) |
+|:---:|:---:|:---:|:---:|
+|| ![](arts/example1.gif) | ![](arts/example2.gif) |![](arts/example3.gif) |
 
-|Style| [ reverse + horizontal](example/lib/ui/example/useStage/horizontal+reverse.dart) | [twoLevel refresh](example/lib/ui/example/useStage/twolevel_refresh.dart) |
-|:---:|:---:|:---:|
-|art| ![](arts/example3.gif) | ![](arts/example4.gif) |
+|Style|  [twoLevel](example/lib/ui/example/useStage/twolevel_refresh.dart) |[use with other widgets](example/lib/ui/example/otherwidget) |  [chat](example/lib/ui/example/useStage/qq_chat_list.dart) |
+|:---:|:---:|:---:|:---:|
+||  ![](arts/example4.gif) |![](arts/example5.gif) | ![](arts/example6.gif) |
 
-|Style| [ use with other widgets](example/lib/ui/example/otherwidget) |  [chat list](example/lib/ui/example/useStage/qq_chat_list.dart) |
-|:---:|:---:|:---:|
-|art| ![](arts/example5.gif) | ![](arts/example6.gif) |
 
-|Style| [ simple custom header(使用SpinKit)](example/lib/ui/example/customindicator/spinkit_header.dart)| [dragableScrollSheet+LoadMore](example/lib/ui/example/otherwidget/draggable_bottomsheet_loadmore.dart)|
-|:---:|:---:| :---:|
-|art| ![](arts/example7.gif) | ![](arts/example8.gif) |
+|Style| [simple custom header(使用SpinKit)](example/lib/ui/example/customindicator/spinkit_header.dart)| [dragableScrollSheet+LoadMore](example/lib/ui/example/otherwidget/draggable_bottomsheet_loadmore.dart)|[Gif Indicator](example/lib/ui/example/customindicator/gif_indicator_example1.dart) |
+|:---:|:---:|:---:|:---:|
+|| ![](arts/example7.gif) | ![](arts/example8.gif) | ![](arts/gifindicator.gif) |
 
 
 
 ### Indicator
 
-| Refresh Style |   | Loading Style | |
+### 各种指示器
+
+| refresh style |   |pull up load style| |
 |:---:|:---:|:---:|:---:|
-| ![跟随](example/images/refreshstyle1.gif)| ![不跟随](example/images/refreshstyle2.gif)| ![永远显示](example/images/loadstyle1.gif) | ![永远隐藏](example/images/loadstyle2.gif)|
+| ![Follow](example/images/refreshstyle1.gif)| ![不跟随](example/images/refreshstyle2.gif)| ![永远显示](example/images/loadstyle1.gif) | ![永远隐藏](example/images/loadstyle2.gif)|
 | ![背部](example/images/refreshstyle3.gif)| ![前面悬浮](example/images/refreshstyle4.gif)| ![当加载中才显示,其它隐藏](example/images/loadstyle3.gif) | |
 
-|Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) |
-|:---:|:---:|:---:|
-|art| ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) |
+|Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) | [MaterialClassicHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) |
+|:---:|:---:|:---:|:---:|
+|| ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) | ![](example/images/material_classic.gif) |
 
-|Style| [MaterialClassicHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) |
-|:---:|:---:|:---:|
-|art| ![](example/images/material_classic.gif) | ![](example/images/material_waterdrop.gif) |
-
-
-|Style| [ShimmerIndicator](example/lib/ui/example/customindicator/shimmer_indicator.dart) | [Gif Indicator](example/lib/ui/example/customindicator/gif_indicator_example1.dart)  |
-|:---:|:---:|:---:|
-|art| ![](example/images/shimmerindicator.gif) | ![](arts/gifindicator.gif) |
+|Style|  [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [Bezier+circle](example/lib/ui/example/customindicator/shimmer_indicator.dart) |[Bezier+Circle](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/bezier_indicator.dart) |
+|:---:|:---:|:---:|:---:|
+||  ![](example/images/material_waterdrop.gif) |![](example/images/shimmerindicator.gif) | ![](example/images/bezier.gif) |
 
 
 

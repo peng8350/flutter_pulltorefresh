@@ -108,7 +108,7 @@ enum LoadStyle {
 /// This is the most important component that provides drop-down refresh and up loading.
 /// [RefreshController] must not be null,Only one controller to one SmartRefresher
 ///
-/// header,I have finished a lot indicators,you can checkout [ClassicHeader],[WaterDropMaterialHeader],[MaterialClassicHeader],[WaterDropHeader]
+/// header,I have finished a lot indicators,you can checkout [ClassicHeader],[WaterDropMaterialHeader],[MaterialClassicHeader],[WaterDropHeader],[BezierCircleHeader]
 /// footer,[ClassicFooter]
 ///If you need to custom header or footer,You should check out [CustomHeader] or [CustomFooter]
 ///
@@ -298,7 +298,7 @@ class _SmartRefresherState extends State<SmartRefresher> {
         dragSpeedRatio: conf?.dragSpeedRatio ?? 1,
         springDescription: conf?.springDescription ?? const SpringDescription(
           mass: 2.2,
-          stiffness: 300,
+          stiffness: 150,
           damping: 16,
         ),
         controller: widget.controller,
@@ -695,8 +695,8 @@ class RefreshConfiguration extends InheritedWidget {
     this.enableBallisticRefresh: false,
     this.springDescription:const SpringDescription(
       mass: 2.2,
-      stiffness: 250,
-      damping: 17,
+      stiffness: 150,
+      damping: 16,
     ),
     this.enableScrollWhenRefreshCompleted: false,
     this.headerOffset: 0.0,
