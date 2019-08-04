@@ -93,6 +93,18 @@ class _IndicatorPageState extends State<IndicatorPage> {
           },
           imgRes: "images/material_classic.gif"),
       IndicatorItem(
+          title: "bezier+circle",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => IndicatorActivity(
+                    reverse: false,
+                    title: "bezier+circle",
+                    header: BezierCircleHeader(
+                      dismissType: BezierDismissType.ScaleToCenter,
+                    ))));
+          },
+          imgRes: "images/empty.png"),
+      IndicatorItem(
           title: "水滴坠落Material指示器",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(

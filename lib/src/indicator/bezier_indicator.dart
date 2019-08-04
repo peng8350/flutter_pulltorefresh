@@ -97,9 +97,9 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader> with Ticker
   Future<void> readyToRefresh() {
     // TODO: implement readyToRefresh
     final Simulation simulation = SpringSimulation(SpringDescription(
-      mass: 4,
+      mass: 3.4,
       stiffness: 10000.5,
-      damping: 7,
+      damping: 6,
 
     ), _beizerBounceCtl.value, 0, 1000);
     _beizerBounceCtl.animateWith(simulation);
@@ -137,30 +137,36 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader> with Ticker
     return AnimatedBuilder(
       builder: (_,__){
         return Stack(
+          overflow: Overflow.visible,
           children: <Widget>[
-            AnimatedBuilder(
-              builder: (_,__){
-                return ClipPath(
-                  child: ClipPath(
-                    child: Container(
-                      height: math.max(0,_beizerBounceCtl.value)+widget.rectHeight,
-                      color: widget.bezierColor,
+            Positioned(
+              child: AnimatedBuilder(
+                builder: (_,__){
+                  return ClipPath(
+                    child: ClipPath(
+                      child: Container(
+                        height: widget.rectHeight+30,
+                        color: widget.bezierColor,
+                      ),
+                      clipper: _BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight),
                     ),
-                    clipper: _BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight),
-                  ),
-                  clipper: _BezierDismissPainter(value: _bezierDismissCtl.value,dismissType: widget.dismissType),
-                );
-              },
-              animation: _bezierDismissCtl,
+                    clipper: _BezierDismissPainter(value: _bezierDismissCtl.value,dismissType: widget.dismissType),
+                  );
+                },
+                animation: _bezierDismissCtl,
+              ),
+              bottom: -50,
+              top: 0,
+              left: 0,
+              right: 0,
             ),
-            ! widget.enableChildOverflow?ClipPath(
+            ! widget.enableChildOverflow?ClipRect(
               child: Container(
-                height: (mode==RefreshStatus.refreshing?0:math.max(0, _beizerBounceCtl.value))+widget.rectHeight,
+                height: (_beizerBounceCtl.isAnimating||mode==RefreshStatus.refreshing?0:math.max(0, _beizerBounceCtl.value))+widget.rectHeight,
                 child: widget.child,
               ),
-              clipper:_BezierPainter(value: _beizerBounceCtl.value,startOffsetY: widget.rectHeight) ,
             ):Container(
-              height: math.max(00, _beizerBounceCtl.value)+widget.rectHeight,
+              height: (_beizerBounceCtl.isAnimating||mode==RefreshStatus.refreshing?0:math.max(0, _beizerBounceCtl.value))+widget.rectHeight,
               child: widget.child,
             ),
           ],

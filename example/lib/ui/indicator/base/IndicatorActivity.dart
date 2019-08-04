@@ -14,9 +14,9 @@ import '../../Item.dart';
 class IndicatorActivity extends StatefulWidget {
   final String title;
 
-  final RefreshIndicator header;
+  final Widget header;
 
-  final LoadIndicator footer;
+  final Widget footer;
 
   final bool enableOverScroll;
   final bool reverse;

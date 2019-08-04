@@ -110,6 +110,16 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
               )
             ],
           ),
+          onRefresh: () async{
+            await Future.delayed(Duration(milliseconds: 500));
+            _list.insert(0, 0);
+            _refreshController.refreshFailed();
+          },
+          onLoading: () async{
+            await Future.delayed(Duration(milliseconds: 500));
+            _list.insert(_list.length, _list.length);
+            _refreshController.loadComplete();
+          } ,
           enablePullUp: true,
           controller: _refreshController,
         ),
