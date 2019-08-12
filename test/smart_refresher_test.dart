@@ -93,7 +93,6 @@ void main() {
     await tester.drag(find.byType(Scrollable), const Offset(0.0, -100.0));
     await tester.pumpAndSettle();
     expect(log.length, greaterThanOrEqualTo(1));
-
   });
 
   testWidgets("test smartRefresher builder constructor ", (tester) async {
@@ -357,10 +356,11 @@ void main() {
     expect(time, 1);
   });
 
-  testWidgets("test RefreshConfiguration new Constructor valid", (tester) async {
+  testWidgets("test RefreshConfiguration new Constructor valid",
+      (tester) async {
     final RefreshController _refreshController = RefreshController();
     int time = 0;
-    BuildContext context1,context2;
+    BuildContext context1, context2;
     await tester.pumpWidget(RefreshConfiguration(
       hideFooterWhenNotFull: true,
       dragSpeedRatio: 0.8,
@@ -369,16 +369,16 @@ void main() {
       autoLoad: false,
       enableScrollWhenRefreshCompleted: true,
       child: Builder(
-        builder: (c1){
+        builder: (c1) {
           return MaterialApp(
             home: RefreshConfiguration.copyAncestor(
-              context: context1=c1,
+              context: context1 = c1,
               enableScrollWhenRefreshCompleted: false,
               hideFooterWhenNotFull: true,
               maxUnderScrollExtent: 100,
               dragSpeedRatio: 0.7,
               child: Builder(
-                builder: (c2){
+                builder: (c2) {
                   context2 = c2;
                   return SmartRefresher(
                     header: CustomHeader(
@@ -413,13 +413,12 @@ void main() {
         },
       ),
     ));
-    expect(RefreshConfiguration.of(context2).maxUnderScrollExtent ,100);
-    expect(RefreshConfiguration.of(context2).dragSpeedRatio ,0.7);
-    expect(RefreshConfiguration.of(context2).hideFooterWhenNotFull ,true);
-    expect(RefreshConfiguration.of(context2).closeTwoLevelDistance ,100);
-    expect(RefreshConfiguration.of(context2).footerTriggerDistance ,150);
-    expect(RefreshConfiguration.of(context2).enableScrollWhenTwoLevel ,true);
-    expect(RefreshConfiguration.of(context2).enableBallisticRefresh ,false);
-
+    expect(RefreshConfiguration.of(context2).maxUnderScrollExtent, 100);
+    expect(RefreshConfiguration.of(context2).dragSpeedRatio, 0.7);
+    expect(RefreshConfiguration.of(context2).hideFooterWhenNotFull, true);
+    expect(RefreshConfiguration.of(context2).closeTwoLevelDistance, 100);
+    expect(RefreshConfiguration.of(context2).footerTriggerDistance, 150);
+    expect(RefreshConfiguration.of(context2).enableScrollWhenTwoLevel, true);
+    expect(RefreshConfiguration.of(context2).enableBallisticRefresh, false);
   });
 }

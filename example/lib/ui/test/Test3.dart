@@ -162,52 +162,56 @@ class Test3State extends State<Test3>
     return Column(
       children: <Widget>[
         Expanded(
-          child: RefreshConfiguration.copyAncestor(context: context, child: SmartRefresher(
-            enablePullUp: true,
-            enablePullDown: true,
-            controller: _refreshController,
-            header: BezierCircleHeader(
-              bezierColor: Colors.red,
-              circleColor: Colors.amber,
-              dismissType: BezierDismissType.ScaleToCenter,
-              circleType: BezierCircleType.Raidal,
-            ),
-            footer: null,
-            onRefresh: () async {
-              print("onRefresh");
-              await Future.delayed(const Duration(milliseconds: 3000));
-              data.add(Container(
-                child: Card(),
-                height: 100.0,
-              ));
-              if (mounted) setState(() {});
-              _refreshController.refreshCompleted();
+          child: RefreshConfiguration.copyAncestor(
+            context: context,
+            child: SmartRefresher(
+              enablePullUp: true,
+              enablePullDown: true,
+              controller: _refreshController,
+              header: BezierCircleHeader(
+                bezierColor: Colors.red,
+                circleColor: Colors.amber,
+                dismissType: BezierDismissType.ScaleToCenter,
+                circleType: BezierCircleType.Raidal,
+              ),
+              footer: null,
+              onRefresh: () async {
+                print("onRefresh");
+                await Future.delayed(const Duration(milliseconds: 3000));
+                data.add(Container(
+                  child: Card(),
+                  height: 100.0,
+                ));
+                if (mounted) setState(() {});
+                _refreshController.refreshCompleted();
 //        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
 //          data.add(Card());
 //
 //        });
-            },
-            child: ListView(
-              children: <Widget>[
-                ListView(
-                  children: <Widget>[
-                    Text("Asdsad"),
-                    Text("Asdsad"),
-                    Text("Asdsad"),
-                    Text("Asdsad"),
-                    Text("Asdsad")
-                  ],
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                )
-              ],
+              },
+              child: ListView(
+                children: <Widget>[
+                  ListView(
+                    children: <Widget>[
+                      Text("Asdsad"),
+                      Text("Asdsad"),
+                      Text("Asdsad"),
+                      Text("Asdsad"),
+                      Text("Asdsad")
+                    ],
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                  )
+                ],
+              ),
+              onLoading: () async {
+                await Future.delayed(const Duration(milliseconds: 1000));
+                print("onLoading");
+                _refreshController.loadComplete();
+              },
             ),
-            onLoading: () async {
-              await Future.delayed(const Duration(milliseconds: 1000));
-              print("onLoading");
-              _refreshController.loadComplete();
-            },
-          ),dragSpeedRatio: 0.9,),
+            dragSpeedRatio: 0.9,
+          ),
         )
       ],
     );

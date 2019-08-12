@@ -246,7 +246,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           2. As FrontStyle,when user dragging in 0~100 in refreshing state,it should be reset after the state change
           */
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if(!mounted){
+          if (!mounted) {
             return;
           }
           if (widget.refreshStyle == RefreshStyle.Front) {
@@ -267,7 +267,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (refresher.onRefresh != null) refresher.onRefresh();
     } else if (mode == RefreshStatus.twoLevelOpening) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if(!mounted)return;
+        if (!mounted) return;
         activity.resetActivity();
         _position
             .animateTo(0.0,

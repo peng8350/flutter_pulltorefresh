@@ -277,3 +277,10 @@ other:
 * add new indicator: BezierCircleHeader
 * change spring default value ,make it fast and smooth
 * fix cast ScrollPosition error with NestedScrollView
+
+## 1.5.4
+* add new RefreshConfiguration constructor "copyAncestor"
+* fix bug 1: when !enablePullDown && !enablePullUp crash error
+* fix bug 2: "pixels" call on null when refresh completed and ready to springback In a very short time and disposed
+* enable "primary" attr working,Avoiding clicking on the status bar to cause scrolling to the top in some stiuation
+

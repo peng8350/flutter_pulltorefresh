@@ -15,15 +15,11 @@ class MyApp extends StatelessWidget {
     return RefreshConfiguration(
       footerTriggerDistance: 100,
       dragSpeedRatio: 0.91,
-      headerBuilder: () => MaterialClassicHeader(
-      ),
+      headerBuilder: () => MaterialClassicHeader(),
       footerBuilder: () => ClassicFooter(),
-      autoLoad: false,
-      springDescription: SpringDescription(
-        stiffness: 200,
-        damping: 18,
-        mass: 2.2
-      ),
+      autoLoad: true,
+      springDescription:
+          SpringDescription(stiffness: 200, damping: 18, mass: 2.2),
       child: MaterialApp(
         title: 'Pulltorefresh Demo',
         debugShowCheckedModeBanner: false,

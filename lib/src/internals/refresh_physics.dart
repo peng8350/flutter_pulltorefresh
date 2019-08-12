@@ -41,7 +41,7 @@ class RefreshPhysics extends ScrollPhysics {
       this.updateFlag,
       this.maxUnderScrollExtent,
       this.springDescription,
-        this.controller,
+      this.controller,
       this.dragSpeedRatio,
       this.enableScrollWhenRefreshCompleted,
       this.enableScrollWhenTwoLevel,
@@ -73,7 +73,7 @@ class RefreshPhysics extends ScrollPhysics {
   }
 
   RenderViewport findViewport(BuildContext context) {
-    if(context==null){
+    if (context == null) {
       return null;
     }
     RenderViewport result;
@@ -138,12 +138,14 @@ class RefreshPhysics extends ScrollPhysics {
         return parent.applyPhysicsToUserOffset(position, offset);
       }
     } else {
-      if ((offset > 0.0 && viewportRender?.firstChild is! RenderSliverRefresh) ||
+      if ((offset > 0.0 &&
+              viewportRender?.firstChild is! RenderSliverRefresh) ||
           (offset < 0 && viewportRender?.lastChild is! RenderSliverLoading)) {
         return parent.applyPhysicsToUserOffset(position, offset);
       }
     }
-    if (position.outOfRange || controller.headerMode.value == RefreshStatus.twoLeveling) {
+    if (position.outOfRange ||
+        controller.headerMode.value == RefreshStatus.twoLeveling) {
       final double overscrollPastStart =
           math.max(position.minScrollExtent - position.pixels, 0.0);
       final double overscrollPastEnd = math.max(
@@ -192,9 +194,12 @@ class RefreshPhysics extends ScrollPhysics {
     viewportRender ??=
         findViewport(controller.position?.context?.storageContext);
 
-    final bool enablePullDown = viewportRender==null?false:
-        viewportRender.firstChild is RenderSliverRefresh;
-    final bool enablePullUp = viewportRender==null?false:viewportRender.lastChild is RenderSliverLoading;
+    final bool enablePullDown = viewportRender == null
+        ? false
+        : viewportRender.firstChild is RenderSliverRefresh;
+    final bool enablePullUp = viewportRender == null
+        ? false
+        : viewportRender.lastChild is RenderSliverLoading;
     if (controller.headerMode.value == RefreshStatus.twoLeveling) {
       if (position.pixels - value > 0.0) {
         return parent.applyBoundaryConditions(position, value);
@@ -250,9 +255,12 @@ class RefreshPhysics extends ScrollPhysics {
     // TODO: implement createBallisticSimulation
     viewportRender ??=
         findViewport(controller.position?.context?.storageContext);
-    final bool enablePullDown =
-    viewportRender==null?false: viewportRender.firstChild is RenderSliverRefresh;
-    final bool enablePullUp =viewportRender==null?false: viewportRender.lastChild is RenderSliverLoading;
+    final bool enablePullDown = viewportRender == null
+        ? false
+        : viewportRender.firstChild is RenderSliverRefresh;
+    final bool enablePullUp = viewportRender == null
+        ? false
+        : viewportRender.lastChild is RenderSliverLoading;
     if (controller.headerMode.value == RefreshStatus.twoLeveling) {
       if (velocity < 0.0) {
         return parent.createBallisticSimulation(position, velocity);
