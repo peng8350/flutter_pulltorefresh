@@ -162,9 +162,9 @@ class Test3State extends State<Test3>
     return Column(
       children: <Widget>[
         Expanded(
-          child: SmartRefresher(
-            enablePullUp: false,
-            enablePullDown: false,
+          child: RefreshConfiguration.copyAncestor(context: context, child: SmartRefresher(
+            enablePullUp: true,
+            enablePullDown: true,
             controller: _refreshController,
             header: BezierCircleHeader(
               bezierColor: Colors.red,
@@ -207,7 +207,7 @@ class Test3State extends State<Test3>
               print("onLoading");
               _refreshController.loadComplete();
             },
-          ),
+          ),dragSpeedRatio: 0.5,),
         )
       ],
     );

@@ -713,6 +713,53 @@ class RefreshConfiguration extends InheritedWidget {
     this.hideFooterWhenNotFull: false,
   }):assert(child!=null),assert(headerTriggerDistance>0),assert(twiceTriggerDistance>0),assert(closeTwoLevelDistance>0),assert(dragSpeedRatio>0);
 
+  /// Construct RefreshConfiguration to copy attributes from ancestor nodes
+  /// If the parameter is null, it will automatically help you to absorb the attributes of your ancestor Refresh Configuration, instead of having to copy them manually by yourself.
+  ///
+  /// it mostly use in some stiuation is different the other SmartRefresher in App
+  RefreshConfiguration.copyAncestor({
+    @required BuildContext context,
+    @required this.child,
+    IndicatorBuilder headerBuilder,
+    IndicatorBuilder footerBuilder,
+    double dragSpeedRatio,
+    ShouldFollowContent shouldFooterFollowWhenNotFull,
+    bool enableScrollWhenTwoLevel,
+    bool enableBallisticRefresh,
+    SpringDescription springDescription,
+    bool enableScrollWhenRefreshCompleted,
+    double headerOffset,
+    bool enableLoadingWhenFailed,
+    double twiceTriggerDistance,
+    double closeTwoLevelDistance,
+    bool skipCanRefresh,
+    bool autoLoad,
+    double maxOverScrollExtent,
+    double maxUnderScrollExtent,
+    double headerTriggerDistance,
+    double footerTriggerDistance,
+    bool hideFooterWhenNotFull,
+  }):assert(context!=null,child!=null),assert(RefreshConfiguration.of(context)!=null,"search RefreshConfiguration anscestor return null,please  Make sure that RefreshConfiguration is the ancestor of that element"),
+        autoLoad =autoLoad??RefreshConfiguration.of(context).autoLoad,headerBuilder=RefreshConfiguration.of(context).headerBuilder,
+    footerBuilder = footerBuilder??RefreshConfiguration.of(context).footerBuilder,
+    dragSpeedRatio =dragSpeedRatio?? RefreshConfiguration.of(context).dragSpeedRatio,
+    twiceTriggerDistance = twiceTriggerDistance??RefreshConfiguration.of(context).twiceTriggerDistance,
+    headerTriggerDistance = headerTriggerDistance??RefreshConfiguration.of(context).headerTriggerDistance,
+    footerTriggerDistance =footerTriggerDistance??RefreshConfiguration.of(context).footerTriggerDistance,
+    springDescription =springDescription?? RefreshConfiguration.of(context).springDescription,
+    headerOffset = headerOffset??RefreshConfiguration.of(context).headerOffset,
+    hideFooterWhenNotFull = hideFooterWhenNotFull??RefreshConfiguration.of(context).hideFooterWhenNotFull,
+    maxOverScrollExtent =maxOverScrollExtent?? RefreshConfiguration.of(context).maxOverScrollExtent,
+    maxUnderScrollExtent =maxUnderScrollExtent?? RefreshConfiguration.of(context).maxUnderScrollExtent,
+    skipCanRefresh =skipCanRefresh?? RefreshConfiguration.of(context).skipCanRefresh,
+    enableScrollWhenRefreshCompleted =enableScrollWhenRefreshCompleted?? RefreshConfiguration.of(context).enableScrollWhenRefreshCompleted,
+    enableScrollWhenTwoLevel = enableScrollWhenTwoLevel??RefreshConfiguration.of(context).enableScrollWhenTwoLevel,
+    enableBallisticRefresh =enableBallisticRefresh?? RefreshConfiguration.of(context).enableBallisticRefresh,
+    enableLoadingWhenFailed = enableLoadingWhenFailed??RefreshConfiguration.of(context).enableLoadingWhenFailed,
+    closeTwoLevelDistance =closeTwoLevelDistance?? RefreshConfiguration.of(context).closeTwoLevelDistance,
+    shouldFooterFollowWhenNotFull =shouldFooterFollowWhenNotFull??RefreshConfiguration.of(context).shouldFooterFollowWhenNotFull;
+
+
   static RefreshConfiguration of(BuildContext context) {
     return context.inheritFromWidgetOfExactType(RefreshConfiguration);
   }

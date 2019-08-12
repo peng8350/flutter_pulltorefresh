@@ -119,7 +119,7 @@ class _MainActivityState extends State<MainActivity>
             return true;
           },
           enableScrollWhenRefreshCompleted: false,
-          hideFooterWhenNotFull: false,
+          hideFooterWhenNotFull: true,
         ),
       ),
       decoration: BoxDecoration(color: Colors.purple),
