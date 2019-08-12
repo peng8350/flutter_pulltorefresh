@@ -520,11 +520,14 @@ class _SwiperAndListState extends State<SwiperAndList> {
                 new Offset(370.0, -40.0)
               ]),
               itemWidth: double.infinity,
-              itemHeight:double.infinity,
+              itemHeight:200,
               itemBuilder: (context, index) {
-                return new Image.asset(
-                  "images/empty.png",
-                  fit: BoxFit.cover,
+                return Container(
+                  height: 200,
+                  child: new Image.asset(
+                    "images/empty.png",
+                    fit: BoxFit.cover,
+                  ),
                 );
               },
               itemCount: 10),

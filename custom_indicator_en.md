@@ -2,7 +2,7 @@
 
 ## First
 Assuming that the indicator function you want to implement is not too complex, you can use CustomHeader or CustomFooter, and use the onOffset Change
- callback in Smart Refresher to complete some simple animations.
+ callback in Smart Refresher to complete some simple animations.((1.5.2 add new callback in CustomHeader and customFooter,you can use this to implements complex animation))
 
 ```dart
    Widget buildHeader(BuildContext context,RefreshStatus mode){
@@ -11,10 +11,12 @@ Assuming that the indicator function you want to implement is not too complex, y
 
    SmartRefresher(
       ...
-      header: CustomHeader(builder:buildHeader)
-      onOffsetChange:(offset){
-        //do some ani
-      }
+      header: CustomHeader(builder:buildHeader,
+             onOffsetChange:(offset){
+                  //do some ani
+             }
+     ),
+
       ...
    )
 
@@ -163,6 +165,9 @@ This header is not included in packages, because most people don't use it, just 
    */
    void onOffsetChange(double offset) ;
 
+   // When the indicator status changes, it calls back
+   void onModeChange(RefreshStatus mode);
+
    /*
      This method represents the operation to be performed when the refresh state is about to enter, and returns a Future. This method cannot be refreshed until it has been called.
 
@@ -178,8 +183,6 @@ This header is not included in packages, because most people don't use it, just 
   // Return different content depending on the RefreshStatus
   Widget buildContent(BuildContext context,RefreshStatus mode);
 
-    // When the indicator status changes, it calls back, which can be used to reset the values in Animation Controller
-    void handleModeChange();
 
 ```
 

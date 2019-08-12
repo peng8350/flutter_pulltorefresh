@@ -47,3 +47,7 @@ RefreshConfiguration配置属性footerTriggerDistance,屏幕一半你可以借�
 14.为什么拖到最大的距离不能触发刷新?为什么加载更多不触发?
 这类问题一般发生在Android系统，绝大数情况是因为maxOverScrollExtent和maxUnderScrollExtent限制了最大拖动的高度问题,你需要确保它要大于triggerDistance,因为内部
 没有帮你自动识别判断
+
+15.快速上滑或者下滑会冲出视图范围的问题
+遇到这个问题,一般是发生在Android平台,大部分是因为maxOverScrollExtent和maxUnderScrollExtent为double.infite的问题,你需要在RefreshConfiguration里给予一个有限值,目前来说,为什么有的默认值会判断错误,目前
+我还没查明白到底是为什么。如果你发现为什么,请issue

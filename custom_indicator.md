@@ -3,7 +3,7 @@
 现提供两种自定义指示器的方法。
 
 ## 第一种
-假设你要实现的指示器功能不是太过于复杂,可以使用CustomHeader或者CustomFooter,利用SmartRefresher里的onOffsetChange回调可完成一些简单的动画。
+假设你要实现的指示器功能不是太过于复杂,可以使用CustomHeader或者CustomFooter,利用SmartRefresher里的onOffsetChange回调可完成一些简单的动画。(1.5.2新增参数回调,你也可以直接用这个实现复杂的动画效果)
 
 ```dart
    Widget buildHeader(BuildContext context,RefreshStatus mode){
@@ -15,10 +15,13 @@
 
    SmartRefresher(
       ...
-      header: CustomHeader(builder:buildHeader)
-      onOffsetChange:(offset){
-        //do some ani
-      }
+      header: CustomHeader(
+         builder:buildHeader
+         onOffsetChange:(offset){
+                 //do some ani
+         }
+      )
+
       ...
    )
 
@@ -164,9 +167,11 @@ RefreshIndicatorState里一些非常重要的可重写方法和属性
    */
    void onOffsetChange(double offset) ;
 
+    // 当指示器状态发生改变时,会回调
+   void onModeChange(RefreshStatus mode);
+
    /*
      这个方法表示即将进入刷新状态时需要执行的操作,返回一个Future。这个方法调用完毕才能进入刷新状态。
-
     */
   Future<void> readyToRefresh();
 
@@ -178,8 +183,7 @@ RefreshIndicatorState里一些非常重要的可重写方法和属性
 
   // 根据不同的状态,返回不同的内容
   Widget buildContent(BuildContext context,RefreshStatus mode);
-  // 当指示器状态发生改变时,会回调,可以用于重设AnimationController里面的值
-  void handleModeChange();
+
 
 ```
 
