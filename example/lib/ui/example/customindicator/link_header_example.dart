@@ -53,7 +53,7 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
+    return RefreshConfiguration.copyAncestor(context: context, child: Scaffold(
       body: Stack(
         children: <Widget>[
           Stack(
@@ -82,9 +82,9 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
                       ),
                       SliverFixedExtentList(
                         delegate: SliverChildBuilderDelegate(
-                            (c, i) => Item(
-                                  title: data[i],
-                                ),
+                                (c, i) => Item(
+                              title: data[i],
+                            ),
                             childCount: data.length),
                         itemExtent: 100.0,
                       )
@@ -98,7 +98,7 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
             height: 64.0,
             child: AppBar(
               backgroundColor:
-                  dismissAppbar ? Colors.blueAccent : Colors.transparent,
+              dismissAppbar ? Colors.blueAccent : Colors.transparent,
               elevation: dismissAppbar ? 1.0 : 0.0,
               title: SimpleLinkBar(
                 key: linkKey,
@@ -107,6 +107,8 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
           )
         ],
       ),
+    ),
+    maxOverScrollExtent: 100,
     );
   }
 }

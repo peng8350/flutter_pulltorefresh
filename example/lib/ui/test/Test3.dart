@@ -159,11 +159,6 @@ class Test3State extends State<Test3>
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      _refreshController.requestRefresh().whenComplete((){
-        print("refere");
-      });
-    });
     return Column(
       children: <Widget>[
         Expanded(

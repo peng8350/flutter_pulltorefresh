@@ -30,18 +30,24 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
 
 ## Usage
 
+add this line to pubspec.yaml
+
 ```yaml
 
    dependencies:
-     pull_to_refresh: ^1.5.3
+     pull_to_refresh: ^1.5.4
 
 ```
+
+import package
 
 ```dart
 
     import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 ```
+
+simple example
 
 ```dart
 
@@ -109,33 +115,39 @@ If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter
     );
   }
 
-  // don't forget to dispose refreshController
-  @override
-  void dispose() {
+  // from 1.5.0, it is not necessary to add this line
+  //@override
+ // void dispose() {
     // TODO: implement dispose
-    _refreshController.dispose();
-    super.dispose();
-  }
+  //  _refreshController.dispose();
+  //  super.dispose();
+ // }
 
 ```
 
+The global configuration RefreshConfiguration, which configures all Smart Refresher representations under the subtree, is generally stored at the root of MaterialApp and is similar in usage to ScrollConfiguration.
+In addition, if one of your SmartRefresher behaves differently from the rest of the world, you can use RefreshConfiguration.copyAncestor() to copy attributes from your ancestor RefreshConfiguration and replace
+attributes that are not empty.
 
-In addition, if you have almost the same header and tail indicators for each page, consider using RefreshConfiguration
-, which reduces the repeatability of constructing headers and footers for each new page.
-At the same time, you can also set some global properties, such as whether to turn on automatic loading, refresh the trigger distance, whether to automatically hide the tail indicator should not meet a page.
-the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/MainActivity.dart) in my demo
+```dart
+    // Smart Refresher under the global configuration subtree, here are a few particularly important attributes
+     RefreshConfiguration(
+         headerBuilder: () => WaterDropHeader(),        // Configure the default header indicator. If you have the same header indicator for each page, you need to set this
+         footerBuilder:  () => ClassicFooter(),        // Configure default bottom indicator
+         headerTriggerDistance: 80.0,        // header trigger refresh trigger distance
+         springDescription:SpringDescription(stiffness: 170, damping: 16, mass: 1.9),         // custom spring back animate,the props meaning see the flutter api
+         maxOverScrollExtent :100, //The maximum dragging range of the head. Set this property if a rush out of the view area occurs
+         maxUnderScrollExtent:0, // Maximum dragging range at the bottom
+         enableScrollWhenRefreshCompleted: true, //This property is incompatible with PageView and TabBarView. If you need TabBarView to slide left and right, you need to set it to true.
+         enableLoadingWhenFailed : true, //In the case of load failure, users can still trigger more loads by gesture pull-up.
+         hideFooterWhenNotFull: false, // Disable pull-up to load more functionality when Viewport is less than one screen
+        child: MaterialApp(
+            ........
+        )
+    );
 
 ```
 
-    RefreshConfiguration(
-        headerBuilder: () => WaterDropHeader(),
-        footerBuilder:  () => ClassicFooter(),
-         headerTriggerDistance: 80.0,
-         hideFooterWhenNotFull: true,
-        child: .....
-    )
-
-```
 
 
 ## ScreenShots
@@ -187,8 +199,7 @@ the [example](https://github.com/peng8350/flutter_pulltorefresh/blob/master/exam
 
 
 ## Exist Problems
-* about NestedScrollView, refreshing under SliverAppBar is temporarily impossible. 
-When you slide down and then slide up quickly, it will return back. The main reason is that
+* about NestedScrollView,When you slide down and then slide up quickly, it will return back. The main reason is that
  NestedScrollView does not consider the problem of cross-border elasticity under 
  bouncingScrollPhysics. Relevant flutter issues: 34316, 33367, 29264. This problem 
  can only wait for flutter to fix this.

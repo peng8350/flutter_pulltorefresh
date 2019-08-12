@@ -30,18 +30,24 @@
 
 ## 用法
 
+添加这一行到pubspec.yaml
+
 ```yaml
 
    dependencies:
-     pull_to_refresh: ^1.5.3
+     pull_to_refresh: ^1.5.4
 
 ```
+
+导包
 
 ```dart
 
     import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 ```
+
+简单用法
 
 ```dart
     
@@ -79,16 +85,16 @@
           builder: (BuildContext context,LoadStatus mode){
             Widget body ;
             if(mode==LoadStatus.idle){
-              body =  Text("pull up load");
+              body =  Text("上拉加载");
             }
             else if(mode==LoadStatus.loading){
               body =  CupertinoActivityIndicator();
             }
             else if(mode == LoadStatus.failed){
-              body = Text("Load Failed!Click retry!");
+              body = Text("加载失败！点击重试！");
             }
             else{
-              body = Text("No more Data");
+              body = Text("没有更多数据了!");
             }
             return Container(
               height: 55.0,
@@ -108,31 +114,39 @@
     );
   }
 
-  // don't forget to dispose refreshController
-  @override
-  void dispose() {
+  // 1.5.0后,应该没有必要加这一行了
+ // @override
+ // void dispose() {
     // TODO: implement dispose
-    _refreshController.dispose();
-    super.dispose();
-  }
+ //   _refreshController.dispose();
+//    super.dispose();
+//  }
 
 ```
 
+全局配置RefreshConfiguration,配置子树下的所有SmartRefresher表现,一般存放于MaterialApp的根部,用法和ScrollConfiguration是类似的。
+另外,假如你某一个SmartRefresher表现和全局不一样的情况,你可以使用RefreshConfiguration.copyAncestor从祖先RefreshConfiguration复制属性过来并替换不为空的属性。
 
-另外,假如你每个页面的头部和尾部指示器几乎都是一样的情况下,可以考虑使用RefreshConfiguration,使用这个可以减少每次新建页面构造
-header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRefresher没有header和footer节点默认会采用IndicatorConfiguration的指示器。
-同时,你也可以设置一些全局的属性,比如是否开启自动加载,刷新触发距离,是否自动隐藏尾部指示器当不满足一页。[例子](https://github.com/peng8350/flutter_pulltorefresh/blob/master/example/lib/ui/MainActivity.dart)里有使用到这个
-
-```
+```dart
+    // 全局配置子树下的SmartRefresher,下面列举几个特别重要的属性
      RefreshConfiguration(
-        headerBuilder: () => WaterDropHeader(),
-        footerBuilder:  () => ClassicFooter(),
-         headerTriggerDistance: 80.0,
-         hideFooterWhenNotFull: true,
-        child: .....
+         headerBuilder: () => WaterDropHeader(),        // 配置默认头部指示器,假如你每个页面的头部指示器都一样的话,你需要设置这个
+         footerBuilder:  () => ClassicFooter(),        // 配置默认底部指示器
+         headerTriggerDistance: 80.0,        // 头部触发刷新的越界距离
+         springDescription:SpringDescription(stiffness: 170, damping: 16, mass: 1.9),         // 自定义回弹动画,三个属性值意义请查询flutter api
+         maxOverScrollExtent :100, //头部最大可以拖动的范围,如果发生冲出视图范围区域,请设置这个属性
+         maxUnderScrollExtent:0, // 底部最大可以拖动的范围
+         enableScrollWhenRefreshCompleted: true, //这个属性不兼容PageView和TabBarView,如果你特别需要TabBarView左右滑动,你需要把它设置为true
+         enableLoadingWhenFailed : true, //在加载失败的状态下,用户仍然可以通过手势上拉来触发加载更多
+         hideFooterWhenNotFull: false, // Viewport不满一屏时,禁用上拉加载更多功能
+        child: MaterialApp(
+            ........
+        )
     );
     
 ```
+
+
 
 ## 截图
 ### 例子
@@ -175,7 +189,7 @@ header和footer的重复性的工作,在RefreshConfiguration子树下的SmartRef
 - [常见问题](problems.md)
 
 ## 暂时存在的问题
-* 关于配合NestedScrollView,在SliverAppBar下面做刷新的功能暂时是没办法实现的,当你下滑然后快速上滑,
+* 关于配合NestedScrollView一起使用,会出现很多奇怪的现象,当你下滑然后快速上滑,
 它会出现跳动,主要是NestedScrollView没有考虑到在BouncingScrollPhysics下的越界问题,相关flutter issue:
 34316,33367,29264,这个问题只能等待flutter修复。
 * SmartRefresher不具有向子树下的ScrollView注入刷新功能,也就是如果直接把AnimatedList,RecordableListView放在child结点是不行的,这个问题我尝试过很多个方法都失败了,由于实现原理,我必须得在slivers头部和尾部追加,事实上,这个问题也不大是我组件的问题,比如说AnimatedList,假如我要结合AnimatedList和GridView一起使用是没办法的,唯有把AnimatedList转换为SliverAnimatedList才能解决。目前呢,面对这种问题的话,我已经有临时的解决方案,但有点麻烦,要重写它内部的代码,然后在ScrollView外部

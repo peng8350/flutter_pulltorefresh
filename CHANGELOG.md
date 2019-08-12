@@ -283,4 +283,4 @@ other:
 * fix bug 1: when !enablePullDown && !enablePullUp crash error
 * fix bug 2: "pixels" call on null when refresh completed and ready to springback In a very short time and disposed
 * enable "primary" attr working,Avoiding clicking on the status bar to cause scrolling to the top in some stiuation
-
+* requestRefresh() and requestLoading() change to return a future
