@@ -93,6 +93,7 @@ void main() {
     await tester.drag(find.byType(Scrollable), const Offset(0.0, -100.0));
     await tester.pumpAndSettle();
     expect(log.length, greaterThanOrEqualTo(1));
+
   });
 
   testWidgets("test smartRefresher builder constructor ", (tester) async {

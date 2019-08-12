@@ -163,8 +163,8 @@ class Test3State extends State<Test3>
       children: <Widget>[
         Expanded(
           child: SmartRefresher(
-            enablePullUp: _enablePullDown,
-            enablePullDown: _enablePullUp,
+            enablePullUp: false,
+            enablePullDown: false,
             controller: _refreshController,
             header: BezierCircleHeader(
               bezierColor: Colors.red,

@@ -267,6 +267,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (refresher.onRefresh != null) refresher.onRefresh();
     } else if (mode == RefreshStatus.twoLevelOpening) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        if(!mounted)return;
         activity.resetActivity();
         _position
             .animateTo(0.0,

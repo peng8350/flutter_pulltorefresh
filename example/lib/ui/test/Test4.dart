@@ -176,7 +176,7 @@ class Test4State extends State<Test4>
             SliverAppBar(),
             SliverToBoxAdapter(
               child: Container(
-                height: 0,
+                height: 2000,
                 color: Colors.red,
               ),
             ),

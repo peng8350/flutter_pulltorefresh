@@ -73,6 +73,9 @@ class RefreshPhysics extends ScrollPhysics {
   }
 
   RenderViewport findViewport(BuildContext context) {
+    if(context==null){
+      return null;
+    }
     RenderViewport result;
     context.visitChildElements((Element e) {
       final RenderObject renderObject = e.findRenderObject();
@@ -90,16 +93,16 @@ class RefreshPhysics extends ScrollPhysics {
   bool shouldAcceptUserOffset(ScrollMetrics position) {
     // TODO: implement shouldAcceptUserOffset
     viewportRender ??=
-        findViewport(controller.position.context.storageContext);
+        findViewport(controller.position?.context?.storageContext);
     if (controller.headerMode.value == RefreshStatus.twoLeveling &&
         !enableScrollWhenTwoLevel) {
       return false;
     }
     // enableScrollWhenRefreshCompleted
-    else if (viewportRender.firstChild is RenderSliverRefresh &&
+    else if (viewportRender?.firstChild is RenderSliverRefresh &&
         (!enableScrollWhenRefreshCompleted &&
             position.pixels < 0 &&
-            !(viewportRender.firstChild as RenderSliverRefresh)
+            !(viewportRender?.firstChild as RenderSliverRefresh)
                 .hasLayoutExtent &&
             (controller.headerMode.value == RefreshStatus.completed ||
                 controller.headerMode.value == RefreshStatus.failed))) {
@@ -108,7 +111,6 @@ class RefreshPhysics extends ScrollPhysics {
         RefreshStatus.twoLevelClosing == controller.headerMode.value) {
       return false;
     }
-
     return true;
   }
 
@@ -130,14 +132,14 @@ class RefreshPhysics extends ScrollPhysics {
   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
     // TODO: implement applyPhysicsToUserOffset
     viewportRender ??=
-        findViewport(controller.position.context.storageContext);
+        findViewport(controller.position?.context?.storageContext);
     if (controller.headerMode.value == RefreshStatus.twoLeveling) {
       if (offset > 0.0) {
         return parent.applyPhysicsToUserOffset(position, offset);
       }
     } else {
-      if ((offset > 0.0 && viewportRender.firstChild is! RenderSliverRefresh) ||
-          (offset < 0 && viewportRender.lastChild is! RenderSliverLoading)) {
+      if ((offset > 0.0 && viewportRender?.firstChild is! RenderSliverRefresh) ||
+          (offset < 0 && viewportRender?.lastChild is! RenderSliverLoading)) {
         return parent.applyPhysicsToUserOffset(position, offset);
       }
     }
@@ -188,11 +190,11 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     viewportRender ??=
-        findViewport(controller.position.context.storageContext);
+        findViewport(controller.position?.context?.storageContext);
 
-    final bool enablePullDown =
+    final bool enablePullDown = viewportRender==null?false:
         viewportRender.firstChild is RenderSliverRefresh;
-    final bool enablePullUp = viewportRender.lastChild is RenderSliverLoading;
+    final bool enablePullUp = viewportRender==null?false:viewportRender.lastChild is RenderSliverLoading;
     if (controller.headerMode.value == RefreshStatus.twoLeveling) {
       if (position.pixels - value > 0.0) {
         return parent.applyBoundaryConditions(position, value);
@@ -247,10 +249,10 @@ class RefreshPhysics extends ScrollPhysics {
       ScrollMetrics position, double velocity) {
     // TODO: implement createBallisticSimulation
     viewportRender ??=
-        findViewport(controller.position.context.storageContext);
+        findViewport(controller.position?.context?.storageContext);
     final bool enablePullDown =
-        viewportRender.firstChild is RenderSliverRefresh;
-    final bool enablePullUp = viewportRender.lastChild is RenderSliverLoading;
+    viewportRender==null?false: viewportRender.firstChild is RenderSliverRefresh;
+    final bool enablePullUp =viewportRender==null?false: viewportRender.lastChild is RenderSliverLoading;
     if (controller.headerMode.value == RefreshStatus.twoLeveling) {
       if (velocity < 0.0) {
         return parent.createBallisticSimulation(position, velocity);
