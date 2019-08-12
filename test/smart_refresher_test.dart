@@ -356,4 +356,70 @@ void main() {
     await tester.tapAt(Offset(30, 30));
     expect(time, 1);
   });
+
+  testWidgets("test RefreshConfiguration new Constructor valid", (tester) async {
+    final RefreshController _refreshController = RefreshController();
+    int time = 0;
+    BuildContext context1,context2;
+    await tester.pumpWidget(RefreshConfiguration(
+      hideFooterWhenNotFull: true,
+      dragSpeedRatio: 0.8,
+      closeTwoLevelDistance: 100,
+      footerTriggerDistance: 150,
+      autoLoad: false,
+      enableScrollWhenRefreshCompleted: true,
+      child: Builder(
+        builder: (c1){
+          return MaterialApp(
+            home: RefreshConfiguration.copyAncestor(
+              context: context1=c1,
+              enableScrollWhenRefreshCompleted: false,
+              hideFooterWhenNotFull: true,
+              maxUnderScrollExtent: 100,
+              dragSpeedRatio: 0.7,
+              child: Builder(
+                builder: (c2){
+                  context2 = c2;
+                  return SmartRefresher(
+                    header: CustomHeader(
+                      builder: (c, m) => Container(),
+                      height: 60.0,
+                    ),
+                    footer: TestFooter(),
+                    enablePullDown: true,
+                    enablePullUp: true,
+                    child: GestureDetector(
+                      child: Container(
+                        height: 60.0,
+                        width: 60.0,
+                        color: Colors.transparent,
+                      ),
+                      onTap: () {
+                        time++;
+                      },
+                    ),
+                    onRefresh: () async {
+                      time++;
+                    },
+                    onLoading: () async {
+                      time++;
+                    },
+                    controller: _refreshController,
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      ),
+    ));
+    expect(RefreshConfiguration.of(context2).maxUnderScrollExtent ,100);
+    expect(RefreshConfiguration.of(context2).dragSpeedRatio ,0.7);
+    expect(RefreshConfiguration.of(context2).hideFooterWhenNotFull ,true);
+    expect(RefreshConfiguration.of(context2).closeTwoLevelDistance ,100);
+    expect(RefreshConfiguration.of(context2).footerTriggerDistance ,150);
+    expect(RefreshConfiguration.of(context2).enableScrollWhenTwoLevel ,true);
+    expect(RefreshConfiguration.of(context2).enableBallisticRefresh ,false);
+
+  });
 }
