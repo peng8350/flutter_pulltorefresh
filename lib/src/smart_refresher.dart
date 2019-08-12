@@ -320,8 +320,9 @@ class _SmartRefresherState extends State<SmartRefresher> {
             .applyTo(childView.physics ?? AlwaysScrollableScrollPhysics()),
         // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
         controller: widget.controller.scrollController =
-            childView.controller ?? PrimaryScrollController.of(context),
+            childView.controller ,
         cacheExtent: childView.cacheExtent,
+        primary: childView.primary,
         key: childView.key,
         scrollDirection: childView.scrollDirection,
         semanticChildCount: childView.semanticChildCount,
@@ -361,7 +362,6 @@ class _SmartRefresherState extends State<SmartRefresher> {
       body = CustomScrollView(
         physics:
             _getScrollPhysics(conf).applyTo(AlwaysScrollableScrollPhysics()),
-        controller: PrimaryScrollController.of(context),
         slivers: slivers,
       );
     }
