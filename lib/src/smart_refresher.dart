@@ -513,32 +513,32 @@ class RefreshController {
   }
 
   /// make the header enter refreshing state,and callback onRefresh
-  void requestRefresh(
+  Future<void> requestRefresh(
       {Duration duration: const Duration(milliseconds: 500),
       Curve curve: Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    if (isRefresh) return;
-    position?.animateTo(_headerTriggerDistance - 20,
+    if (isRefresh) return Future.value();
+    return position?.animateTo(_headerTriggerDistance - 20,
         duration: duration, curve: curve);
   }
 
   /// make the footer enter loading state,and callback onLoading
-  void requestLoading(
+  Future<void> requestLoading(
       {Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
     assert(position != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
-    if (isLoading) return;
+    if (isLoading) return Future.value();
     if (_footerTriggerDistance < 0) {
-      position
+      return position
           ?.animateTo(position.maxScrollExtent - _footerTriggerDistance,
               duration: duration, curve: curve)
           ?.whenComplete(() {
         footerMode.value = LoadStatus.loading;
       });
     } else
-      position
+      return position
           ?.animateTo(position.maxScrollExtent,
               duration: duration, curve: curve)
           ?.whenComplete(() {

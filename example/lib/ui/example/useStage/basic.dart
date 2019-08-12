@@ -34,7 +34,6 @@ class BasicExample extends StatefulWidget {
 
 class _BasicExampleState extends State<BasicExample>
     with SingleTickerProviderStateMixin {
-
 //  int pageIndex = 0;
   List<String> data1 = [], data2 = [], data3 = [];
   TabController _tabController;
@@ -79,10 +78,9 @@ class _BasicExampleState extends State<BasicExample>
               Tab(
                 text: "SliverAppBar+list",
               ),
-
-          Tab(
-          text: "GridView+ListView",
-        ),
+              Tab(
+                text: "GridView+ListView",
+              ),
               Tab(
                 text: "水平组件+listView",
               ),
@@ -121,8 +119,8 @@ class OnlyListView extends StatefulWidget {
 
 class _OnlyListViewState extends State<OnlyListView> {
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
-  List<String> data = ["1","2","3","4","5","6","7","8","9","10"];
+      RefreshController(initialRefresh: false);
+  List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   Widget buildCtn() {
     return ListView.separated(
@@ -191,15 +189,13 @@ class OnlyGridView extends StatefulWidget {
 
 class _OnlyGridViewState extends State<OnlyGridView> {
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
-  List<String> data = ["1","2","3","4","5","6","7","8","9","10"];
+      RefreshController(initialRefresh: false);
+  List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   Widget buildCtn() {
     return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2
-
-      ),
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (c, i) => Item(
         title: data[i],
       ),
@@ -260,36 +256,36 @@ class NoScrollable extends StatefulWidget {
 
 class _NoScrollableState extends State<NoScrollable> {
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
-  List<String> data = ["1","2","3","4","5","6","7","8","9","10"];
+      RefreshController(initialRefresh: false);
+  List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   Widget buildCtn() {
     return Container(
         height: 1000.0,
         child: Column(
-        children: <Widget>[
-        Container(
-        color: Colors.redAccent,
-        height: 200.0,
-    ),
-    Text("标题"),
-    Container(
-    color: Colors.redAccent,
-    height: 200.0,
-    ),
-    Text("标题"),
-    Container(
-    color: Colors.redAccent,
-    height: 200.0,
-    ),
-    Text("标题"),
-    Container(
-    color: Colors.redAccent,
-    height: 200.0,
-    ),
-    Text("标题"),
-    ],
-    ));
+          children: <Widget>[
+            Container(
+              color: Colors.redAccent,
+              height: 200.0,
+            ),
+            Text("标题"),
+            Container(
+              color: Colors.redAccent,
+              height: 200.0,
+            ),
+            Text("标题"),
+            Container(
+              color: Colors.redAccent,
+              height: 200.0,
+            ),
+            Text("标题"),
+            Container(
+              color: Colors.redAccent,
+              height: 200.0,
+            ),
+            Text("标题"),
+          ],
+        ));
   }
 
   @override
@@ -343,8 +339,8 @@ class SliverAppBarWithList extends StatefulWidget {
 
 class _SliverAppBarWithListState extends State<SliverAppBarWithList> {
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
-  List<String> data = ["1","2","3","4","5","6","7","8","9","10"];
+      RefreshController(initialRefresh: false);
+  List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   Widget buildCtn() {
     return CustomScrollView(
@@ -356,7 +352,7 @@ class _SliverAppBarWithListState extends State<SliverAppBarWithList> {
         ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
-                (c, i) => Item(title: data[i]),
+            (c, i) => Item(title: data[i]),
             childCount: data.length,
           ),
         )
@@ -415,31 +411,26 @@ class GridAndList extends StatefulWidget {
 
 class _GridAndListState extends State<GridAndList> {
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
-  List<String> data = ["1","2","3","4","5","6","7","8","9","10"];
+      RefreshController(initialRefresh: false);
+  List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   Widget buildCtn() {
     return CustomScrollView(
       slivers: <Widget>[
         SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3
-          ),
+          gridDelegate:
+              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
           delegate: SliverChildBuilderDelegate(
-                (c, i) => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.storage),
-                    Text("菜单标题")
-                  ],
-                ),
+            (c, i) => Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[Icon(Icons.storage), Text("菜单标题")],
+            ),
             childCount: 6,
           ),
-
-    ),
+        ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
-                (c, i) => Item(title: data[i]),
+            (c, i) => Item(title: data[i]),
             childCount: data.length,
           ),
         )
@@ -498,29 +489,24 @@ class SwiperAndList extends StatefulWidget {
 
 class _SwiperAndListState extends State<SwiperAndList> {
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
-  List<String> data = ["1","2","3","4","5","6","7","8","9","10"];
+      RefreshController(initialRefresh: false);
+  List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   Widget buildCtn() {
     return CustomScrollView(
       slivers: <Widget>[
         SliverToBoxAdapter(
-          child:  Swiper(
+          child: Swiper(
               layout: SwiperLayout.CUSTOM,
-              customLayoutOption: new CustomLayoutOption(
-                  startIndex: -1,
-                  stateCount: 3
-              ).addRotate([
-                -45.0/180,
-                0.0,
-                45.0/180
-              ]).addTranslate([
+              customLayoutOption:
+                  new CustomLayoutOption(startIndex: -1, stateCount: 3)
+                      .addRotate([-45.0 / 180, 0.0, 45.0 / 180]).addTranslate([
                 new Offset(-370.0, -40.0),
                 new Offset(0.0, 0.0),
                 new Offset(370.0, -40.0)
               ]),
               itemWidth: double.infinity,
-              itemHeight:200,
+              itemHeight: 200,
               itemBuilder: (context, index) {
                 return Container(
                   height: 200,
@@ -534,7 +520,7 @@ class _SwiperAndListState extends State<SwiperAndList> {
         ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
-                (c, i) => Item(title: data[i]),
+            (c, i) => Item(title: data[i]),
             childCount: data.length,
           ),
         )

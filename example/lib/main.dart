@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       footerBuilder: () => ClassicFooter(),
       autoLoad: true,
       springDescription:
-          SpringDescription(stiffness: 200, damping: 18, mass: 2.2),
+          SpringDescription(stiffness: 170, damping: 16, mass: 1.9),
       child: MaterialApp(
         title: 'Pulltorefresh Demo',
         debugShowCheckedModeBanner: false,
