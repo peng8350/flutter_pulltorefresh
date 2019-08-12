@@ -102,24 +102,10 @@ class _MainActivityState extends State<MainActivity>
                 )
               : null,
         ),
-        body: RefreshConfiguration(
-          child: PageView(
-            controller: _pageController,
-            children: views,
-            physics: NeverScrollableScrollPhysics(),
-          ),
-          enableLoadingWhenFailed: true,
-          dragSpeedRatio: 1.5,
-          enableScrollWhenTwoLevel: true,
-          autoLoad: true,
-          maxOverScrollExtent: 60.0,
-          maxUnderScrollExtent: 0.0,
-          footerTriggerDistance: 45.0,
-          shouldFooterFollowWhenNotFull: (mode) {
-            return true;
-          },
-          enableScrollWhenRefreshCompleted: false,
-          hideFooterWhenNotFull: true,
+        body: PageView(
+          controller: _pageController,
+          children: views,
+          physics: NeverScrollableScrollPhysics(),
         ),
       ),
       decoration: BoxDecoration(color: Colors.purple),

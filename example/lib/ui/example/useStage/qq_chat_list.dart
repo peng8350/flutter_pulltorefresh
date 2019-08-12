@@ -64,7 +64,8 @@ class _QQChatListState extends State<QQChatList> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return CupertinoApp(
-      home: RefreshConfiguration(
+      home: RefreshConfiguration.copyAncestor(
+        context: context,
         shouldFooterFollowWhenNotFull: (mode) {
           return true;
         },

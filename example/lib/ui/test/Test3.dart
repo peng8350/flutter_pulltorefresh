@@ -207,7 +207,7 @@ class Test3State extends State<Test3>
               print("onLoading");
               _refreshController.loadComplete();
             },
-          ),dragSpeedRatio: 0.5,),
+          ),dragSpeedRatio: 0.9,),
         )
       ],
     );

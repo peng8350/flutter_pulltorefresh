@@ -33,7 +33,8 @@ class HideFooterManualState extends State<HideFooterManual> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return RefreshConfiguration(
+    return RefreshConfiguration.copyAncestor(
+      context: context,
       child: LayoutBuilder(
         builder: (b, c) {
           double refresherHeight = c.biggest.height -

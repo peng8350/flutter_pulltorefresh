@@ -166,7 +166,8 @@ class Test4State extends State<Test4>
 //    final ImageStream stream = provider.resolve(provider.);
 //    bool isSync;
 //    stream.addListener(ImageStreamListener((ImageInfo image, bool sync) { isSync = sync; }));
-    return RefreshConfiguration(
+    return RefreshConfiguration.copyAncestor(
+      context: context,
       child: SmartRefresher.builder(
         enablePullUp: true,
         enablePullDown: true,

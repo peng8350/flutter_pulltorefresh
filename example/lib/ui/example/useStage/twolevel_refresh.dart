@@ -43,7 +43,8 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return RefreshConfiguration(
+    return RefreshConfiguration.copyAncestor(
+      context: context,
       enableScrollWhenTwoLevel: true,
       maxOverScrollExtent: 120,
       child: LayoutBuilder(

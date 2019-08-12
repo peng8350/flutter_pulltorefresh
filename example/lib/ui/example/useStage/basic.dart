@@ -149,7 +149,8 @@ class _BasicExampleState extends State<BasicExample>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return RefreshConfiguration(
+    return RefreshConfiguration.copyAncestor(
+      context: context,
       child: Scaffold(
         appBar: AppBar(
           bottom: TabBar(

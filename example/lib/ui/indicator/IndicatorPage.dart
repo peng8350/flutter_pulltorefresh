@@ -131,7 +131,8 @@ class _IndicatorPageState extends State<IndicatorPage> {
           title: "底部指示器(经常隐藏)",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => RefreshConfiguration(
+                builder: (BuildContext context) => RefreshConfiguration.copyAncestor(
+                  context: context,
                       child: IndicatorActivity(
                           reverse: false,
                           title: "底部指示器(经常隐藏)",
@@ -148,8 +149,10 @@ class _IndicatorPageState extends State<IndicatorPage> {
           title: "底部指示器(只有加载中才显示)",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => RefreshConfiguration(
-                      child: RefreshConfiguration(
+                builder: (BuildContext context) => RefreshConfiguration.copyAncestor(
+                  context: context,
+                      child: RefreshConfiguration.copyAncestor(
+                        context: context,
                         child: IndicatorActivity(
                             reverse: false,
                             title: "底部指示器(只有加载中才显示)",
