@@ -58,53 +58,88 @@ class _BasicExampleState extends State<BasicExample>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return RefreshConfiguration.copyAncestor(
-      context: context,
-      child: Scaffold(
-        appBar: AppBar(
-          bottom: TabBar(
-            isScrollable: true,
+    return ScrollConfiguration(
+      child: RefreshConfiguration.copyAncestor(
+        context: context,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: TabBar(
+              isScrollable: true,
+              controller: _tabController,
+              tabs: <Widget>[
+                Tab(
+                  text: "ListView",
+                ),
+                Tab(
+                  text: "GridView",
+                ),
+                Tab(
+                  text: "非滚动组件",
+                ),
+                Tab(
+                  text: "SliverAppBar+list",
+                ),
+                Tab(
+                  text: "GridView+ListView",
+                ),
+                Tab(
+                  text: "水平组件+listView",
+                ),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
             controller: _tabController,
-            tabs: <Widget>[
-              Tab(
-                text: "ListView",
+            children: <Widget>[
+              Scrollbar(
+                child: OnlyListView(),
               ),
-              Tab(
-                text: "GridView",
+              Scrollbar(
+                child: OnlyGridView(),
               ),
-              Tab(
-                text: "非滚动组件",
+              Scrollbar(
+                child: NoScrollable(),
               ),
-              Tab(
-                text: "SliverAppBar+list",
+              Scrollbar(
+                child: SliverAppBarWithList(),
               ),
-              Tab(
-                text: "GridView+ListView",
-              ),
-              Tab(
-                text: "水平组件+listView",
-              ),
+              Scrollbar(child: GridAndList(),),
+              Scrollbar(child: SwiperAndList(),)
             ],
           ),
         ),
-        body: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: _tabController,
-          children: <Widget>[
-            OnlyListView(),
-            OnlyGridView(),
-            NoScrollable(),
-            SliverAppBarWithList(),
-            GridAndList(),
-            SwiperAndList()
-          ],
+        headerBuilder: () => WaterDropMaterialHeader(
+          backgroundColor: Theme.of(context).primaryColor,
         ),
+        footerTriggerDistance: 80.0,
       ),
-      headerBuilder: () => WaterDropMaterialHeader(
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      footerTriggerDistance: 80.0,
+      behavior: RefreshScrollBehavior(),
     );
+  }
+}
+
+class RefreshScrollBehavior extends ScrollBehavior{
+
+
+  @override
+  Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axisDirection) {
+    // When modifying this function, consider modifying the implementation in
+    // _MaterialScrollBehavior as well.
+    switch (getPlatform(context)) {
+      case TargetPlatform.iOS:
+        return child;
+      case TargetPlatform.android:
+      case TargetPlatform.fuchsia:
+        return GlowingOverscrollIndicator(
+          child: child,
+          // this will disable top Bouncing OverScroll Indicator showing in Android
+          showLeading: false,
+          axisDirection: axisDirection,
+          color: Theme.of(context).primaryColor,
+        );
+    }
+    return null;
   }
 }
 
