@@ -47,10 +47,10 @@
 
 ```
 
-简单用法
+简单例子如下,另外你要注意SmartRefresher里child存放什么组件有哪些区别,目前出现很多这类的issue。如果你不清楚,请看<a href="#child">这里</a>
 
 ```dart
-    
+
   List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -143,7 +143,7 @@
             ........
         )
     );
-    
+
 ```
 
 
@@ -177,6 +177,63 @@
 |Style|  [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [Bezier+circle](example/lib/ui/example/customindicator/shimmer_indicator.dart) |[Bezier+Circle](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/bezier_indicator.dart) |
 |:---:|:---:|:---:|:---:|
 ||  ![](example/images/material_waterdrop.gif) |![](example/images/shimmerindicator.gif) | ![](example/images/bezier.gif) |
+
+<a name="child"></a>
+
+## 对SmartRefresher里child详细说明
+
+自1.4.3,child属性从ScrollView转变为Widget,但是这并不意味着对于所有Widget处理是一样的。SmartRefresher内部实现机制并非是类如NestedScrollView<br><br>
+这里的处理机制分了两个大类,`第一类`是继承于ScrollView的那一类组件,目前来说,就只有这三种,`ListView`,`GridView`,`CustomScrollView`。`第二类`,是非继承于ScrollView的那类组件,一般是存放空视图,非滚动视图(非滚动转化为滚动),PageView,无需你自己通过`LayoutBuilder`估计高度。<br><br>
+对于第一类的处理机制是从内部"非法"取出slivers。第二类,则是把child直接放进类如`SliverToBoxAdapter`。通过前后拼接header和footer组成slivers,然后SmartRefresher内部把slivers放进`CustomScrollView`,你可以把SmartRefresher理解成`CustomScrollView`,因为内部就是返回CustomScrollView。所以,这里child结点是不是ScrollView区别是很大的。
+<br><br>
+现在,猜想你有一个需求:需要在ScrollView外部增加背景,滚动条什么的。下面演示错误和正确的做法
+
+```dart
+
+   // 错误的做法
+   SmartRefresher(
+      child: ScrollBar(
+          child: ListView(
+             ....
+      )
+    )
+   )
+
+   // 正确的做法
+   ScrollBar(
+      child: SmartRefresher(
+          child: ListView(
+             ....
+      )
+    )
+   )
+
+```
+
+再演示多一种错误做法,把ScrollView存放到另外一个widget
+
+```dart
+
+   //error
+   SmartRefresher(
+      child:MainView()
+   )
+
+   class MainView extends StatelessWidget{
+       Widget build(){
+          return ListView(
+             ....
+          );
+       }
+
+   }
+
+```
+
+上面的错误做法就导致了scrollable再嵌套一个scrollable了,导致你无论怎么滑也看不到header和footer。
+同理的,你可能需要配合NotificationListener,ScrollConfiguration...这类组件,记住,千万别在ScrollView(你想增加刷新部分)外和SmartRefresher内存放。
+
+
 
 
 

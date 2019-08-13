@@ -47,7 +47,8 @@ import package
 
 ```
 
-simple example
+simple example,In addition, you should pay attention to the differences in what components SmartRefresher children store,
+               and there are many such issues. If you are not sure child usage, see <a href="#child"> here</a>
 
 ```dart
 
@@ -187,6 +188,65 @@ attributes that are not empty.
 |:---:|:---:|:---:|:---:|
 ||  ![](example/images/material_waterdrop.gif) |![](example/images/shimmerindicator.gif) | ![](example/images/bezier.gif) |
 
+
+<a name="child"></a>
+
+## about SmartRefresher's child explain
+
+Since 1.4.3, the child attribute has changed from ScrollView to Widget, but this does not mean that all widgets are processed the same. SmartRefresher's internal implementation mechanism is not like  NestedScrollView<br><br>
+There are two main types of processing mechanisms here, `the first category`is the component inherited from ScrollView. At present, there are only three types,
+ `ListView`, `GridView`, `CustomScrollView`. ` The second category ` is components that are not inherited from ScrollView, which generally put empty views,
+  NoScrollable views (NoScrollable convert Scrollable), PageView, and you don't need to estimate height  by `LayoutBuilder` yourself.
+<br><br>
+For the first type of mechanism, slivers are taken out of the system "illegally". The second is to put children directly into classes such as `SliverToBox Adapter'. By splicing headers and footers back and forth to form slivers, and then putting slivers inside Smart Refresher into CustomScrollView, you can understand Smart Refresher as CustomScrollView,
+because the inside is to return to CustomScrollView. So, there's a big difference between a child node and a ScrollView.
+<br><br>
+Now, guess you have a requirement: you need to add background, scrollbars or something outside ScrollView. Here's a demonstration of errors and correct practices
+
+```dart
+
+   //error
+   SmartRefresher(
+      child: ScrollBar(
+          child: ListView(
+             ....
+      )
+    )
+   )
+
+   // right
+   ScrollBar(
+      child: SmartRefresher(
+          child: ListView(
+             ....
+      )
+    )
+   )
+
+```
+
+Demonstrate another wrong doing,put ScrollView in another widget
+
+```dart
+
+   //error
+   SmartRefresher(
+      child:MainView()
+   )
+
+   class MainView extends StatelessWidget{
+       Widget build(){
+          return ListView(
+             ....
+          );
+       }
+
+   }
+
+```
+
+The above mistake led to scrollable nesting another scrollable, causing you to not see the header and footer no matter how slippery you are.
+Similarly, you may need to work with components like NotificationListener, ScrollConfiguration..., remember, don't store them outside ScrollView (you want to add refresh parts) and Smart Refresher memory.。
 
 
 ## More
