@@ -24,8 +24,11 @@ class RefreshExpansionPanelListState extends State<RefreshExpansionPanelList> {
   Widget build(BuildContext context) {
     return SmartRefresher(
       controller: _controller,
-      child: Container(
-        child: _buildPanel(),
+      child: ListView(
+        shrinkWrap: true,
+        children: <Widget>[
+          _buildPanel()
+        ],
       ),
       enablePullUp: true,
     );

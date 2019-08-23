@@ -104,18 +104,14 @@ class PageViewExampleState extends State<PageViewExample>
             if (mounted) setState(() {});
             _refreshController.refreshFailed();
           },
-          child: Container(
-            // notice this ,height is necessary ,else it will throw error
-            height: height,
-            child: PageView(
-              physics: ClampingScrollPhysics(),
-              children: <Widget>[
-                Text("页面一"),
-                Text("页面二"),
-                Text("页面三"),
-                Text("页面四"),
-              ],
-            ),
+          child: PageView(
+            physics: ClampingScrollPhysics(),
+            children: <Widget>[
+              Text("页面一"),
+              Text("页面二"),
+              Text("页面三"),
+              Text("页面四"),
+            ],
           ),
           onLoading: () {
             print("onload");

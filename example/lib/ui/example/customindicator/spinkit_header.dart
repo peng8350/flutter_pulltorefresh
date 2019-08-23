@@ -32,8 +32,9 @@ class CustomHeaderExample extends StatefulWidget {
 class _CustomHeaderExampleState extends State<CustomHeaderExample>
     with TickerProviderStateMixin {
   AnimationController _anicontroller, _scaleController;
-
+  AnimationController _footerController;
   RefreshController _refreshController = RefreshController();
+  int count = 20;
   @override
   void initState() {
     // TODO: implement initState
@@ -41,6 +42,7 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
         vsync: this, duration: Duration(milliseconds: 2000));
     _scaleController =
         AnimationController(value: 0.0, vsync: this, upperBound: 1.0);
+    _footerController= AnimationController(vsync: this, duration: Duration(milliseconds: 2000));
     _refreshController.headerMode.addListener(() {
       if (_refreshController.headerStatus == RefreshStatus.idle) {
         _scaleController.value = 0.0;
@@ -57,42 +59,58 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
     // TODO: implement dispose
     _refreshController.dispose();
     _scaleController.dispose();
+    _footerController.dispose();
     _anicontroller.dispose();
     super.dispose();
   }
 
-  void _onOffsetChange(bool up, double offset) {
-    if (up &&
-        (_refreshController.headerStatus == RefreshStatus.idle ||
-            _refreshController.headerStatus == RefreshStatus.canRefresh)) {
-      // 80.0 is headerTriggerDistance default value
-      _scaleController.value = offset / 80.0;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
       child: SmartRefresher(
+        enablePullUp: true,
         controller: _refreshController,
-        onOffsetChange: _onOffsetChange,
         onRefresh: () async {
           await Future.delayed(Duration(milliseconds: 1000));
           _refreshController.refreshCompleted();
         },
-        child: Container(
-          color: Colors.red,
-          height: 800.0,
+        onLoading: () async{
+          await Future.delayed(Duration(milliseconds: 1000));
+          count+=4;
+          setState(() {
+
+          });
+          _refreshController.loadComplete();
+        },
+        child: ListView.builder(
+          itemBuilder: (c,i) => Card(),
+          itemExtent: 100,
+          itemCount: count,
         ),
-        header: CustomHeader(
-          refreshStyle: RefreshStyle.Behind,
-          builder: (c, m) {
-            return Container(
-              child: ScaleTransition(
-                child: SpinKitFadingCircle(
+        footer: CustomFooter(
+          onModeChange: (mode){
+            if (mode == LoadStatus.loading) {
+              _scaleController.value = 0.0;
+              _footerController.repeat();
+            } else {
+              _footerController.reset();
+            }
+          },
+          builder: (context,mode){
+            Widget child;
+            switch(mode){
+              case LoadStatus.failed:
+                child = Text("failed,click retry");
+                break;
+              case LoadStatus.noMore:
+                child = Text("no more data");
+                break;
+              default:
+                child = SpinKitFadingCircle(
                   size: 30.0,
-                  animationController: _anicontroller,
+                  animationController: _footerController,
                   itemBuilder: (_, int index) {
                     return DecoratedBox(
                       decoration: BoxDecoration(
@@ -100,16 +118,47 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
                       ),
                     );
                   },
-                ),
-                scale: _scaleController,
+                );
+                break;
+            }
+            return Container(
+              height: 60,
+              child: Center(
+                child: child,
               ),
-              alignment: Alignment.topCenter,
-              color: Colors.green,
+            );
+          },
+        ),
+        header: CustomHeader(
+          refreshStyle: RefreshStyle.Behind,
+          onOffsetChange: (offset){
+            if(_refreshController.headerMode.value!=RefreshStatus.refreshing)
+            _scaleController.value = offset / 80.0;
+          },
+          builder: (c, m) {
+            return Container(
+              child: FadeTransition(
+                opacity: _scaleController,
+                child: ScaleTransition(
+                  child: SpinKitFadingCircle(
+                    size: 30.0,
+                    animationController: _anicontroller,
+                    itemBuilder: (_, int index) {
+                      return DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: index.isEven ? Colors.red : Colors.green,
+                        ),
+                      );
+                    },
+                  ),
+                  scale: _scaleController,
+                ),
+              ),
+              alignment: Alignment.center,
             );
           },
         ),
       ),
-      color: Colors.grey,
     );
   }
 }

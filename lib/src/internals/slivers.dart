@@ -481,7 +481,7 @@ class RenderSliverRefreshBody extends RenderSliverSingleBoxAdapter {
       geometry = SliverGeometry.zero;
       return;
     }
-    child.layout(constraints.asBoxConstraints(maxExtent: 11111),
+    child.layout(constraints.asBoxConstraints(maxExtent: 11111 ),
         parentUsesSize: true);
     double childExtent;
     switch (constraints.axis) {
