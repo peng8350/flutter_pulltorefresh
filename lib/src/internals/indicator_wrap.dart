@@ -137,7 +137,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
             ? (mode == RefreshStatus.twoLeveling ||
                     mode == RefreshStatus.twoLevelOpening ||
                     mode == RefreshStatus.twoLevelClosing
-                ? SmartRefresher.of(context).viewportExtent
+                ? SmartRefresher.ofState(context).viewportExtent
                 : widget.height)
             : 0.0) -
         _position?.pixels;
@@ -314,7 +314,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||
                 mode == RefreshStatus.twoLevelOpening ||
                 mode == RefreshStatus.twoLevelClosing
-            ? SmartRefresher.of(context).viewportExtent
+            ? SmartRefresher.ofState(context).viewportExtent
             : widget.height,
         refreshStyle: widget.refreshStyle);
   }
@@ -515,7 +515,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   void _updateListener() {
     configuration = RefreshConfiguration.of(context);
-    refresher = SmartRefresher.of(context).widget;
+    refresher = SmartRefresher.of(context);
     ValueNotifier<V> newMode = V == RefreshStatus
         ? refresher.controller.headerMode
         : refresher.controller.footerMode;
@@ -537,7 +537,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   void initState() {
     // TODO: implement initState
     if (V == RefreshStatus) {
-      SmartRefresher.of(context)?.widget?.controller?.headerMode?.value =
+      SmartRefresher.of(context)?.controller?.headerMode?.value =
           RefreshStatus.idle;
     }
     super.initState();

@@ -207,7 +207,7 @@ class TwoLevelWidget extends StatelessWidget{
                 color: Colors.white,
               ),
               onTap: () {
-                SmartRefresher.of(context).widget.controller.twoLevelComplete();
+                SmartRefresher.of(context).controller.twoLevelComplete();
               },
             ),
             alignment: Alignment.bottomLeft,
