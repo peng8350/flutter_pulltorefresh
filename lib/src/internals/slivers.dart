@@ -183,7 +183,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
       }
     }
     bool active = constraints.overlap < 0.0 || layoutExtent > 0.0;
-    final double overscrolledExtent = constraints.overlap.abs();
+    final double overscrolledExtent = -(parent as RenderViewportBase).offset.pixels;
     if (refreshStyle == RefreshStyle.Behind) {
       child.layout(
         constraints.asBoxConstraints(

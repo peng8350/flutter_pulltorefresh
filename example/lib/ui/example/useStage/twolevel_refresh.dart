@@ -30,7 +30,7 @@ class TwoLevelExample extends StatefulWidget {
 
 class _TwoLevelExampleState extends State<TwoLevelExample> {
   RefreshController _refreshController1 =
-      RefreshController();
+      RefreshController(initialRefreshStatus: RefreshStatus.twoLeveling);
   RefreshController _refreshController2 = RefreshController();
   int _tabIndex = 0;
 
@@ -42,16 +42,23 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
 
         });
     });
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _refreshController1.position.jumpTo(0);
+      setState(() {
+
+      });
+      print(_refreshController1.position.pixels);
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    print(!_refreshController1.isTwoLevel);
+    print(_refreshController1);
     return RefreshConfiguration.copyAncestor(
       context: context,
-      enableScrollWhenTwoLevel: true,
+      enableScrollWhenTwoLevel: true  ,
       maxOverScrollExtent: 120,
       child: Scaffold(
         bottomNavigationBar: !_refreshController1.isTwoLevel?BottomNavigationBar(
@@ -78,10 +85,13 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                       textStyle: TextStyle(
                           color: Colors.white
                       ),
+                      displayAlignment: TwoLevelDisplayAlignment.fromTop,
                       decoration: BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage("images/secondfloor.jpg"),
-                            fit:BoxFit.cover
+                            fit:BoxFit.cover,
+                            // 很重要的属性,这会影响你打开二楼和关闭二楼的动画效果
+                            alignment: Alignment.topCenter
                         ),
                       ),
                       twoLevelWidget: TwoLevelWidget(),
@@ -100,6 +110,12 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                                       Navigator.of(context).pop();
                                     },
                                     child: Text("点击这里返回上一页!"),
+                                  ),
+                                  RaisedButton(
+                                    onPressed: () {
+                                      _refreshController1.requestTwoLevel();
+                                    },
+                                    child: Text("点击这里打开二楼!"),
                                   )
                                 ],
                               ),
@@ -183,7 +199,10 @@ class TwoLevelWidget extends StatelessWidget{
       decoration: BoxDecoration(
         image: DecorationImage(
             image: AssetImage("images/secondfloor.jpg"),
+            // 很重要的属性,这会影响你打开二楼和关闭二楼的动画效果,关联到TwoLevelHeader,如果背景一致的情况,请设置相同
+            alignment: Alignment.topCenter,
             fit:BoxFit.cover
+
         ),
       ),
       child: Stack(

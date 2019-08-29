@@ -189,17 +189,17 @@ class SmartRefresher extends StatefulWidget {
   /// If you  need pull up load ,just enablePullUp = true
   SmartRefresher(
       {Key key,
-      @required this.controller,
-      this.child,
-      this.header,
-      this.footer,
-      this.enablePullDown: true,
-      this.enablePullUp: false,
-      this.enableTwoLevel: false,
-      this.onRefresh,
-      this.onLoading,
-      this.onTwoLevel,
-      this.onOffsetChange})
+        @required this.controller,
+        this.child,
+        this.header,
+        this.footer,
+        this.enablePullDown: true,
+        this.enablePullUp: false,
+        this.enableTwoLevel: false,
+        this.onRefresh,
+        this.onLoading,
+        this.onTwoLevel,
+        this.onOffsetChange})
       : assert(controller != null),
         builder = null,
         super(key: key);
@@ -213,15 +213,15 @@ class SmartRefresher extends StatefulWidget {
   /// can not support overscroll out of edge
   SmartRefresher.builder(
       {Key key,
-      @required this.controller,
-      @required this.builder,
-      this.enablePullDown: true,
-      this.enablePullUp: false,
-      this.enableTwoLevel: false,
-      this.onRefresh,
-      this.onLoading,
-      this.onTwoLevel,
-      this.onOffsetChange})
+        @required this.controller,
+        @required this.builder,
+        this.enablePullDown: true,
+        this.enablePullUp: false,
+        this.enableTwoLevel: false,
+        this.onRefresh,
+        this.onLoading,
+        this.onTwoLevel,
+        this.onOffsetChange})
       : assert(controller != null),
         header = null,
         footer = null,
@@ -250,9 +250,9 @@ class SmartRefresherState extends State<SmartRefresher> {
   double viewportExtent = 0;
 
   final RefreshIndicator defaultHeader =
-      defaultTargetPlatform == TargetPlatform.iOS
-          ? ClassicHeader()
-          : MaterialClassicHeader();
+  defaultTargetPlatform == TargetPlatform.iOS
+      ? ClassicHeader()
+      : MaterialClassicHeader();
 
   final LoadIndicator defaultFooter = ClassicFooter();
 
@@ -313,7 +313,7 @@ class SmartRefresherState extends State<SmartRefresher> {
         enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? true,
         updateFlag: _updatePhysics ? 0 : 1,
         enableScrollWhenRefreshCompleted:
-            conf?.enableScrollWhenRefreshCompleted ?? false,
+        conf?.enableScrollWhenRefreshCompleted ?? false,
         maxOverScrollExtent: conf?.maxOverScrollExtent,
         maxUnderScrollExtent: conf?.maxUnderScrollExtent);
   }
@@ -371,7 +371,7 @@ class SmartRefresherState extends State<SmartRefresher> {
       widget.controller.scrollController = PrimaryScrollController.of(context);
       body = CustomScrollView(
         physics:
-            _getScrollPhysics(conf).applyTo(AlwaysScrollableScrollPhysics()),
+        _getScrollPhysics(conf).applyTo(AlwaysScrollableScrollPhysics()),
         slivers: slivers,
       );
     }
@@ -428,15 +428,12 @@ class SmartRefresherState extends State<SmartRefresher> {
   Widget build(BuildContext context) {
     final RefreshConfiguration configuration = RefreshConfiguration.of(context);
     Widget body;
-    widget.controller._headerTriggerDistance =
-        -(configuration == null ? 80.0 : configuration.headerTriggerDistance);
-    widget.controller._footerTriggerDistance =
-        configuration?.footerTriggerDistance ?? 15.0;
+    widget.controller._configuration = configuration;
     if (widget.builder != null)
       body = widget.builder(context, _getScrollPhysics(configuration));
     else {
       List<Widget> slivers =
-          _buildSliversByChild(context, widget.child, configuration);
+      _buildSliversByChild(context, widget.child, configuration);
       body = _buildBodyBySlivers(widget.child, slivers, configuration);
     }
     if (configuration == null) {
@@ -469,8 +466,7 @@ class RefreshController {
   /// notice that: position is null before build,
   /// the value is get when the header or footer callback onPositionUpdated
   ScrollPosition position;
-  double _headerTriggerDistance;
-  double _footerTriggerDistance;
+  RefreshConfiguration _configuration;
 
   /// deprecated member,not suggest to use it,it contain share position bug
   @Deprecated(
@@ -496,8 +492,8 @@ class RefreshController {
   /// initialLoadStatus: footerMode default value
   RefreshController(
       {this.initialRefresh: false,
-      RefreshStatus initialRefreshStatus,
-      LoadStatus initialLoadStatus}) {
+        RefreshStatus initialRefreshStatus,
+        LoadStatus initialLoadStatus}) {
     this.headerMode = ValueNotifier(initialRefreshStatus ?? RefreshStatus.idle);
     this.footerMode = ValueNotifier(initialLoadStatus ?? LoadStatus.idle);
   }
@@ -526,32 +522,42 @@ class RefreshController {
   /// make the header enter refreshing state,and callback onRefresh
   Future<void> requestRefresh(
       {Duration duration: const Duration(milliseconds: 500),
-      Curve curve: Curves.linear}) {
+        Curve curve: Curves.linear}) {
     assert(position != null,
-        'Try not to call requestRefresh() before build,please call after the ui was rendered');
+    'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (isRefresh) return Future.value();
-    return position?.animateTo(_headerTriggerDistance - 20,
+    return position?.animateTo(-(( _configuration?.headerTriggerDistance?? 80 )+ 20),
+        duration: duration, curve: curve);
+  }
+
+  /// make the header enter refreshing state,and callback onRefresh
+  Future<void> requestTwoLevel(
+      {Duration duration: const Duration(milliseconds: 200),
+        Curve curve: Curves.linear}) {
+    assert(position != null,
+    'Try not to call requestRefresh() before build,please call after the ui was rendered');
+    return position?.animateTo(-((_configuration?.twiceTriggerDistance ?? 150 )+ 20),
         duration: duration, curve: curve);
   }
 
   /// make the footer enter loading state,and callback onLoading
   Future<void> requestLoading(
       {Duration duration: const Duration(milliseconds: 300),
-      Curve curve: Curves.linear}) {
+        Curve curve: Curves.linear}) {
     assert(position != null,
-        'Try not to call requestLoading() before build,please call after the ui was rendered');
+    'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (isLoading) return Future.value();
-    if (_footerTriggerDistance < 0) {
+    if (_configuration.footerTriggerDistance <0) {
       return position
-          ?.animateTo(position.maxScrollExtent - _footerTriggerDistance,
-              duration: duration, curve: curve)
+          ?.animateTo(position.maxScrollExtent - (_configuration?.footerTriggerDistance??15),
+          duration: duration, curve: curve)
           ?.whenComplete(() {
         footerMode.value = LoadStatus.loading;
       });
     } else
       return position
           ?.animateTo(position.maxScrollExtent,
-              duration: duration, curve: curve)
+          duration: duration, curve: curve)
           ?.whenComplete(() {
         footerMode.value = LoadStatus.loading;
       });
@@ -570,7 +576,7 @@ class RefreshController {
   /// end twoLeveling,will return back first floor
   void twoLevelComplete(
       {Duration duration: const Duration(milliseconds: 500),
-      Curve curve: Curves.linear}) {
+        Curve curve: Curves.linear}) {
     headerMode?.value = RefreshStatus.twoLevelClosing;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       position
@@ -756,7 +762,7 @@ class RefreshConfiguration extends InheritedWidget {
     bool hideFooterWhenNotFull,
   })  : assert(context != null, child != null),
         assert(RefreshConfiguration.of(context) != null,
-            "search RefreshConfiguration anscestor return null,please  Make sure that RefreshConfiguration is the ancestor of that element"),
+        "search RefreshConfiguration anscestor return null,please  Make sure that RefreshConfiguration is the ancestor of that element"),
         autoLoad = autoLoad ?? RefreshConfiguration.of(context).autoLoad,
         headerBuilder = RefreshConfiguration.of(context).headerBuilder,
         footerBuilder =

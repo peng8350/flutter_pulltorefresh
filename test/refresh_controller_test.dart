@@ -12,29 +12,33 @@ import 'dataSource.dart';
 import 'test_indicator.dart';
 
 Widget buildRefresher(RefreshController controller, {int count: 20}) {
-  return Directionality(
-    textDirection: TextDirection.ltr,
-    child: Container(
-      width: 375.0,
-      height: 690.0,
-      child: SmartRefresher(
-        header: TestHeader(),
-        footer: TestFooter(),
-        enablePullUp: true,
-        child: ListView.builder(
-          itemBuilder: (c, i) => Text(data[i]),
-          itemCount: 0,
-          itemExtent: 100,
+  return RefreshConfiguration(
+    child: Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: 375.0,
+        height: 690.0,
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enableTwoLevel: true,
+          enablePullUp: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) => Text(data[i]),
+            itemCount: 0,
+            itemExtent: 100,
+          ),
+          controller: controller,
         ),
-        controller: controller,
       ),
     ),
+    maxOverScrollExtent: 180,
   );
 }
 
 // consider two situation, the one is Viewport full,second is Viewport not full
 void testRequestFun(bool full) {
-  testWidgets("requestRefresh(init),requestLoading function", (tester) async {
+  testWidgets("requestRefresh(init),requestLoading function,requestTwoLevel", (tester) async {
     final RefreshController _refreshController =
         RefreshController(initialRefresh: true);
 
@@ -58,6 +62,13 @@ void testRequestFun(bool full) {
     _refreshController.requestLoading();
     await tester.pumpAndSettle();
     expect(_refreshController.footerStatus, LoadStatus.loading);
+    _refreshController.loadComplete();
+    _refreshController.requestTwoLevel();
+    await tester.pumpAndSettle();
+    expect(_refreshController.headerStatus, RefreshStatus.twoLeveling);
+    _refreshController.twoLevelComplete();
+    await tester.pumpAndSettle();
+    expect(_refreshController.headerStatus, RefreshStatus.idle);
   });
 }
 

@@ -10,10 +10,19 @@ import 'package:flutter/widgets.dart';
 import 'classic_indicator.dart';
 import '../smart_refresher.dart';
 
+
+enum TwoLevelDisplayAlignment{
+  fromTop,
+  fromCenter,
+  fromBottom
+}
+
 class TwoLevelHeader extends StatelessWidget {
   final BoxDecoration decoration;
 
   final Widget twoLevelWidget;
+
+  final TwoLevelDisplayAlignment displayAlignment;
 
   final String releaseText,
       idleText,
@@ -41,6 +50,7 @@ class TwoLevelHeader extends StatelessWidget {
     Key key,
     this.height: 80.0,
     this.decoration,
+    this.displayAlignment:TwoLevelDisplayAlignment.fromBottom,
     this.completeDuration: const Duration(milliseconds: 600),
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
     this.releaseText: 'Refresh when release',
@@ -65,7 +75,7 @@ class TwoLevelHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return ClassicHeader(
-      refreshStyle: RefreshStyle.Follow,
+      refreshStyle: displayAlignment==TwoLevelDisplayAlignment.fromBottom?RefreshStyle.Follow:RefreshStyle.Behind,
       height: height,
       refreshingIcon: refreshingIcon,
       refreshingText: refreshingText,
@@ -89,19 +99,37 @@ class TwoLevelHeader extends StatelessWidget {
         final bool isTwoLevel = (mode == RefreshStatus.twoLevelClosing ||
             mode == RefreshStatus.twoLeveling ||
             mode == RefreshStatus.twoLevelOpening);
-        return Container(
-          decoration: !isTwoLevel
-              ? (decoration ?? BoxDecoration(color: Colors.redAccent))
-              : null,
-          height: SmartRefresher.ofState(context).viewportExtent,
-          alignment: isTwoLevel ? null : Alignment.bottomCenter,
-          child: isTwoLevel
-              ? twoLevelWidget
-              : Padding(
-            child: child,
-            padding: EdgeInsets.only(bottom: 15),
-          ),
-        );
+        if(displayAlignment==TwoLevelDisplayAlignment.fromBottom) {
+          return Container(
+            decoration: !isTwoLevel
+                ? (decoration ?? BoxDecoration(color: Colors.redAccent))
+                : null,
+            height: SmartRefresher
+                .ofState(context)
+                .viewportExtent,
+            alignment: isTwoLevel ? null : Alignment.bottomCenter,
+            child: isTwoLevel
+                ? twoLevelWidget
+                : Padding(
+              child: child,
+              padding: EdgeInsets.only(bottom: 15),
+            ),
+          );
+        }
+        else{
+          return Container(
+            child: isTwoLevel
+                ? twoLevelWidget
+                : Container(
+              decoration: !isTwoLevel
+                  ? (decoration ?? BoxDecoration(color: Colors.redAccent))
+                  : null,
+              alignment: Alignment.bottomCenter,
+              child: child,
+              padding: EdgeInsets.only(bottom: 15),
+            ),
+          );
+        }
       },
     );
   }
