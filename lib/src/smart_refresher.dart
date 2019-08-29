@@ -5,6 +5,7 @@
 */
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -227,20 +228,21 @@ class SmartRefresher extends StatefulWidget {
         child = null,
         super(key: key);
 
-  static SmartRefresher of(BuildContext context) {
-    return context.ancestorWidgetOfExactType(SmartRefresher);
+  static SmartRefresherState of(BuildContext context) {
+    return context.ancestorStateOfType(TypeMatcher<SmartRefresherState>());
   }
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _SmartRefresherState();
+    return SmartRefresherState();
   }
 }
 
-class _SmartRefresherState extends State<SmartRefresher> {
+class SmartRefresherState extends State<SmartRefresher> {
   RefreshPhysics _physics;
   bool _updatePhysics = false;
+  double viewportExtent = 0;
 
   final RefreshIndicator defaultHeader =
       defaultTargetPlatform == TargetPlatform.iOS
@@ -432,11 +434,15 @@ class _SmartRefresherState extends State<SmartRefresher> {
           _buildSliversByChild(context, widget.child, configuration);
       body = _buildBodyBySlivers(widget.child, slivers, configuration);
     }
-    if (configuration != null) {
-      return body;
-    } else {
-      return RefreshConfiguration(child: body);
+    if (configuration == null) {
+      body =  RefreshConfiguration(child: body);
     }
+    return LayoutBuilder(
+      builder: (c2,cons){
+        viewportExtent = cons.biggest.height;
+        return body;
+      },
+    );
   }
 }
 
@@ -472,7 +478,7 @@ class RefreshController {
 
   bool get isRefresh => headerMode?.value == RefreshStatus.refreshing;
 
-  bool get isTwoLevel => headerMode?.value == RefreshStatus.twoLeveling;
+  bool get isTwoLevel => headerMode?.value == RefreshStatus.twoLeveling||headerMode?.value == RefreshStatus.twoLevelOpening||headerMode?.value == RefreshStatus.twoLevelClosing;
 
   bool get isLoading => footerMode?.value == LoadStatus.loading;
 

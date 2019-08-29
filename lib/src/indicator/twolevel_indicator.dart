@@ -10,7 +10,7 @@ import 'package:flutter/widgets.dart';
 import 'classic_indicator.dart';
 import '../smart_refresher.dart';
 
-class TwoLevelHeader extends StatefulWidget {
+class TwoLevelHeader extends StatelessWidget {
   final BoxDecoration decoration;
 
   final Widget twoLevelWidget;
@@ -62,66 +62,48 @@ class TwoLevelHeader extends StatefulWidget {
 
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _TwoLevelHeaderState();
-  }
-}
-
-class _TwoLevelHeaderState extends State<TwoLevelHeader> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    // this will rebuild,because position.viewportDimension return null when first build,I have no idea how to catch Viewport height in first build
-//    WidgetsBinding.instance.addPostFrameCallback((_) {
-//      setState(() {});
-//    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     // TODO: implement build
-//    print(Scrollable.of(context).position.viewportDimension);
     return ClassicHeader(
       refreshStyle: RefreshStyle.Follow,
-      height: widget.height,
-      refreshingIcon: widget.refreshingIcon,
-      refreshingText: widget.refreshingText,
-      releaseIcon: widget.releaseIcon,
-      releaseText: widget.releaseText,
-      completeDuration: widget.completeDuration,
-      canTwoLevelIcon: widget.canTwoLevelIcon,
-      canTwoLevelText: widget.canTwoLevelText,
-      failedIcon: widget.failedIcon,
-      failedText: widget.failedText,
-      idleIcon: widget.idleIcon,
-      idleText: widget.idleText,
-      completeIcon: widget.completeIcon,
-      completeText: widget.completeText,
-      spacing: widget.spacing,
-      textStyle: widget.textStyle,
-      iconPos: widget.iconPos,
+      height: height,
+      refreshingIcon: refreshingIcon,
+      refreshingText: refreshingText,
+      releaseIcon: releaseIcon,
+      releaseText: releaseText,
+      completeDuration: completeDuration,
+      canTwoLevelIcon: canTwoLevelIcon,
+      canTwoLevelText: canTwoLevelText,
+      failedIcon: failedIcon,
+      failedText: failedText,
+      idleIcon: idleIcon,
+      idleText: idleText,
+      completeIcon: completeIcon,
+      completeText: completeText,
+      spacing: spacing,
+      textStyle: textStyle,
+      iconPos: iconPos,
       outerBuilder: (child) {
         final RefreshStatus mode =
-            SmartRefresher.of(context).controller.headerStatus;
+            SmartRefresher.of(context).widget.controller.headerStatus;
         final bool isTwoLevel = (mode == RefreshStatus.twoLevelClosing ||
             mode == RefreshStatus.twoLeveling ||
             mode == RefreshStatus.twoLevelOpening);
         return Container(
           decoration: !isTwoLevel
-              ? (widget.decoration ?? BoxDecoration(color: Colors.redAccent))
+              ? (decoration ?? BoxDecoration(color: Colors.redAccent))
               : null,
-          height: Scrollable.of(context).position.viewportDimension,
+          height: SmartRefresher.of(context).viewportExtent,
           alignment: isTwoLevel ? null : Alignment.bottomCenter,
           child: isTwoLevel
-              ? widget.twoLevelWidget
+              ? twoLevelWidget
               : Padding(
-                  child: child,
-                  padding: EdgeInsets.only(bottom: 15),
-                ),
+            child: child,
+            padding: EdgeInsets.only(bottom: 15),
+          ),
         );
       },
     );
   }
 }
+
