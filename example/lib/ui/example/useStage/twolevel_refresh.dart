@@ -37,16 +37,12 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
   @override
   void initState() {
     // TODO: implement initState
-    _refreshController1.headerMode.addListener((){
-        setState(() {
-
-        });
+    _refreshController1.headerMode.addListener(() {
+      setState(() {});
     });
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _refreshController1.position.jumpTo(0);
-      setState(() {
-
-      });
+      setState(() {});
       print(_refreshController1.position.pixels);
     });
     super.initState();
@@ -58,22 +54,24 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
     print(_refreshController1);
     return RefreshConfiguration.copyAncestor(
       context: context,
-      enableScrollWhenTwoLevel: true  ,
+      enableScrollWhenTwoLevel: true,
       maxOverScrollExtent: 120,
       child: Scaffold(
-        bottomNavigationBar: !_refreshController1.isTwoLevel?BottomNavigationBar(
-          currentIndex: _tabIndex,
-          onTap: (index) {
-            _tabIndex = index;
-            if (mounted) setState(() {});
-          },
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.add), title: Text("二级刷新例子1")),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.border_clear), title: Text("二级刷新例子2"))
-          ],
-        ):null,
+        bottomNavigationBar: !_refreshController1.isTwoLevel
+            ? BottomNavigationBar(
+                currentIndex: _tabIndex,
+                onTap: (index) {
+                  _tabIndex = index;
+                  if (mounted) setState(() {});
+                },
+                items: [
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.add), title: Text("二级刷新例子1")),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.border_clear), title: Text("二级刷新例子2"))
+                ],
+              )
+            : null,
         body: Stack(
           children: <Widget>[
             Offstage(
@@ -82,17 +80,14 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                 builder: (_, c) {
                   return SmartRefresher(
                     header: TwoLevelHeader(
-                      textStyle: TextStyle(
-                          color: Colors.white
-                      ),
+                      textStyle: TextStyle(color: Colors.white),
                       displayAlignment: TwoLevelDisplayAlignment.fromTop,
                       decoration: BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage("images/secondfloor.jpg"),
-                            fit:BoxFit.cover,
+                            fit: BoxFit.cover,
                             // 很重要的属性,这会影响你打开二楼和关闭二楼的动画效果
-                            alignment: Alignment.topCenter
-                        ),
+                            alignment: Alignment.topCenter),
                       ),
                       twoLevelWidget: TwoLevelWidget(),
                     ),
@@ -169,10 +164,10 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                   _refreshController2.position.hold(() {});
                   Navigator.of(context)
                       .push(MaterialPageRoute(
-                      builder: (c) => Scaffold(
-                        appBar: AppBar(),
-                        body: Text("二楼刷新"),
-                      )))
+                          builder: (c) => Scaffold(
+                                appBar: AppBar(),
+                                body: Text("二楼刷新"),
+                              )))
                       .whenComplete(() {
                     _refreshController2.twoLevelComplete(
                         duration: Duration(microseconds: 1));
@@ -187,13 +182,9 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
   }
 }
 
-
-class TwoLevelWidget extends StatelessWidget{
-
-
+class TwoLevelWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     // TODO: implement build
     return Container(
       decoration: BoxDecoration(
@@ -201,9 +192,7 @@ class TwoLevelWidget extends StatelessWidget{
             image: AssetImage("images/secondfloor.jpg"),
             // 很重要的属性,这会影响你打开二楼和关闭二楼的动画效果,关联到TwoLevelHeader,如果背景一致的情况,请设置相同
             alignment: Alignment.topCenter,
-            fit:BoxFit.cover
-
-        ),
+            fit: BoxFit.cover),
       ),
       child: Stack(
         children: <Widget>[
@@ -235,5 +224,4 @@ class TwoLevelWidget extends StatelessWidget{
       ),
     );
   }
-
 }

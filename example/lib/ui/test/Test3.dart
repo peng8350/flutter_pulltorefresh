@@ -125,7 +125,7 @@ class Test3State extends State<Test3>
 //    });
     _getDatas();
     _refreshController = RefreshController(
-        initialRefresh: false, initialLoadStatus: LoadStatus.failed);
+        initialRefresh: false, initialLoadStatus: LoadStatus.noMore);
     _animationController = AnimationController(vsync: this);
     super.initState();
   }
@@ -167,7 +167,6 @@ class Test3State extends State<Test3>
             child: SmartRefresher(
               enablePullUp: true,
               enablePullDown: true,
-              enableTwoLevel: true,
               controller: _refreshController,
               header: TwoLevelHeader(
                 twoLevelWidget: Center(
@@ -195,6 +194,7 @@ class Test3State extends State<Test3>
 //        });
               },
               child: ListView(
+                physics: ClampingScrollPhysics(),
                 children: <Widget>[
                   Text("Asdsad"),
                   Text("Asdsad"),
@@ -206,7 +206,6 @@ class Test3State extends State<Test3>
                   Text("Asdsad"),
                   Text("Asdsad"),
                 ],
-                physics: NeverScrollableScrollPhysics(),
               ),
               onLoading: () async {
                 await Future.delayed(const Duration(milliseconds: 1000));

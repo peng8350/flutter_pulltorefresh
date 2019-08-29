@@ -38,7 +38,8 @@ Widget buildRefresher(RefreshController controller, {int count: 20}) {
 
 // consider two situation, the one is Viewport full,second is Viewport not full
 void testRequestFun(bool full) {
-  testWidgets("requestRefresh(init),requestLoading function,requestTwoLevel", (tester) async {
+  testWidgets("requestRefresh(init),requestLoading function,requestTwoLevel",
+      (tester) async {
     final RefreshController _refreshController =
         RefreshController(initialRefresh: true);
 

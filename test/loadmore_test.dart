@@ -471,4 +471,86 @@ void main() {
     await tester.pumpAndSettle();
     expect(_refreshController.footerStatus, LoadStatus.idle);
   });
+
+  // # 157
+  testWidgets(
+      "in Android,when viewport not full,it shouldn't make footer out of bottom edge,when enablePullUp = false || hideNotfull || state == nomore",
+      (tester) async {
+    RefreshController _refreshController = RefreshController();
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: SmartRefresher(
+        header: TestHeader(),
+        footer: TestFooter(),
+        enablePullUp: false,
+        enablePullDown: true,
+        child: ListView.builder(
+          physics: ClampingScrollPhysics(),
+          itemBuilder: (c, i) => Center(
+            child: Text(data[i]),
+          ),
+          itemCount: 1,
+          itemExtent: 100,
+        ),
+        controller: _refreshController,
+      ),
+    ));
+    await tester.drag(find.byType(Scrollable), const Offset(0, -200.0));
+    await tester.pump();
+    expect(_refreshController.position.pixels, 0);
+    await tester.pumpAndSettle();
+    await tester.pumpWidget(RefreshConfiguration(
+      maxUnderScrollExtent: 0,
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            physics: ClampingScrollPhysics(),
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
+            ),
+            itemCount: 1,
+            itemExtent: 100,
+          ),
+          controller: _refreshController,
+        ),
+      ),
+      hideFooterWhenNotFull: true,
+    ));
+    await tester.drag(find.byType(Scrollable), const Offset(0, -200.0));
+    await tester.pump();
+    expect(_refreshController.position.pixels, 0);
+    await tester.pumpAndSettle();
+
+    _refreshController.loadNoData();
+    await tester.pumpWidget(RefreshConfiguration(
+      hideFooterWhenNotFull: true,
+      maxUnderScrollExtent: 0,
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            physics: ClampingScrollPhysics(),
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
+            ),
+            itemCount: 1,
+            itemExtent: 22,
+          ),
+          controller: _refreshController,
+        ),
+      ),
+    ));
+    await tester.drag(find.byType(Scrollable), const Offset(0, -200.0));
+    await tester.pumpAndSettle();
+    expect(_refreshController.position.pixels, 0);
+  });
 }

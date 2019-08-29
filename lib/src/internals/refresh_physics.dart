@@ -193,7 +193,7 @@ class RefreshPhysics extends ScrollPhysics {
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     viewportRender ??=
         findViewport(controller.position?.context?.storageContext);
-
+    bool notFull = position.minScrollExtent == position.maxScrollExtent;
     final bool enablePullDown = viewportRender == null
         ? false
         : viewportRender.firstChild is RenderSliverRefresh;
@@ -220,7 +220,13 @@ class RefreshPhysics extends ScrollPhysics {
     }
     if (enablePullUp) {
       final RenderSliverLoading sliverFooter = viewportRender.lastChild;
-      bottomExtra = sliverFooter.geometry.scrollExtent != 0.0
+      bottomExtra = sliverFooter.geometry.scrollExtent != 0.0 ||
+              (notFull && controller.footerStatus == LoadStatus.noMore) ||
+              (notFull &&
+                  (RefreshConfiguration.of(
+                              controller.position.context.storageContext)
+                          .hideFooterWhenNotFull ??
+                      false))
           ? 0.0
           : sliverFooter.layoutExtent;
     }
