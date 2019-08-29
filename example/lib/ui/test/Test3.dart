@@ -167,12 +167,17 @@ class Test3State extends State<Test3>
             child: SmartRefresher(
               enablePullUp: true,
               enablePullDown: true,
+              enableTwoLevel: true,
               controller: _refreshController,
-              header: BezierCircleHeader(
-                bezierColor: Colors.red,
-                circleColor: Colors.amber,
-                dismissType: BezierDismissType.ScaleToCenter,
-                circleType: BezierCircleType.Raidal,
+              header: TwoLevelHeader(
+                twoLevelWidget: Center(
+                  child: Container(
+                    color: Colors.green,
+                    width: double.infinity,
+                    child: Text("twoLevel"),
+                    height: 60,
+                  ),
+                ),
               ),
               footer: null,
               onRefresh: () async {
@@ -191,18 +196,17 @@ class Test3State extends State<Test3>
               },
               child: ListView(
                 children: <Widget>[
-                  ListView(
-                    children: <Widget>[
-                      Text("Asdsad"),
-                      Text("Asdsad"),
-                      Text("Asdsad"),
-                      Text("Asdsad"),
-                      Text("Asdsad")
-                    ],
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                  )
+                  Text("Asdsad"),
+                  Text("Asdsad"),
+                  Text("Asdsad"),
+                  Text("Asdsad"),
+                  Text("Asdsad"),
+                  Text("Asdsad"),
+                  Text("Asdsad"),
+                  Text("Asdsad"),
+                  Text("Asdsad"),
                 ],
+                physics: NeverScrollableScrollPhysics(),
               ),
               onLoading: () async {
                 await Future.delayed(const Duration(milliseconds: 1000));

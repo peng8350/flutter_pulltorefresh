@@ -53,62 +53,64 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return RefreshConfiguration.copyAncestor(context: context, child: Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-              Positioned(
-                top: -150.0,
-                bottom: 0.0,
-                left: 0.0,
-                right: 0.0,
-                child: SmartRefresher(
-                  controller: _refreshController,
-                  header: LinkHeader(linkKey: linkKey),
-                  onRefresh: () async {
-                    await Future.delayed(Duration(milliseconds: 3000));
-                    _refreshController.refreshCompleted();
-                  },
-                  child: CustomScrollView(
-                    controller: _scrollController,
-                    slivers: <Widget>[
-                      SliverToBoxAdapter(
-                        child: Image.asset(
-                          "images/qqbg.jpg",
-                          fit: BoxFit.fill,
-                          height: 300.0,
+    return RefreshConfiguration.copyAncestor(
+      context: context,
+      child: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            Stack(
+              children: <Widget>[
+                Positioned(
+                  top: -150.0,
+                  bottom: 0.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: SmartRefresher(
+                    controller: _refreshController,
+                    header: LinkHeader(linkKey: linkKey),
+                    onRefresh: () async {
+                      await Future.delayed(Duration(milliseconds: 3000));
+                      _refreshController.refreshCompleted();
+                    },
+                    child: CustomScrollView(
+                      controller: _scrollController,
+                      slivers: <Widget>[
+                        SliverToBoxAdapter(
+                          child: Image.asset(
+                            "images/qqbg.jpg",
+                            fit: BoxFit.fill,
+                            height: 300.0,
+                          ),
                         ),
-                      ),
-                      SliverFixedExtentList(
-                        delegate: SliverChildBuilderDelegate(
-                                (c, i) => Item(
-                              title: data[i],
-                            ),
-                            childCount: data.length),
-                        itemExtent: 100.0,
-                      )
-                    ],
+                        SliverFixedExtentList(
+                          delegate: SliverChildBuilderDelegate(
+                              (c, i) => Item(
+                                    title: data[i],
+                                  ),
+                              childCount: data.length),
+                          itemExtent: 100.0,
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
-          ),
-          Container(
-            height: 64.0,
-            child: AppBar(
-              backgroundColor:
-              dismissAppbar ? Colors.blueAccent : Colors.transparent,
-              elevation: dismissAppbar ? 1.0 : 0.0,
-              title: SimpleLinkBar(
-                key: linkKey,
-              ),
+                )
+              ],
             ),
-          )
-        ],
+            Container(
+              height: 64.0,
+              child: AppBar(
+                backgroundColor:
+                    dismissAppbar ? Colors.blueAccent : Colors.transparent,
+                elevation: dismissAppbar ? 1.0 : 0.0,
+                title: SimpleLinkBar(
+                  key: linkKey,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
-    ),
-    maxOverScrollExtent: 100,
+      maxOverScrollExtent: 100,
     );
   }
 }

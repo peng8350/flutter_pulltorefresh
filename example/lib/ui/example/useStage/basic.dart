@@ -104,8 +104,12 @@ class _BasicExampleState extends State<BasicExample>
               Scrollbar(
                 child: SliverAppBarWithList(),
               ),
-              Scrollbar(child: GridAndList(),),
-              Scrollbar(child: SwiperAndList(),)
+              Scrollbar(
+                child: GridAndList(),
+              ),
+              Scrollbar(
+                child: SwiperAndList(),
+              )
             ],
           ),
         ),
@@ -119,11 +123,10 @@ class _BasicExampleState extends State<BasicExample>
   }
 }
 
-class RefreshScrollBehavior extends ScrollBehavior{
-
-
+class RefreshScrollBehavior extends ScrollBehavior {
   @override
-  Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axisDirection) {
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
     // When modifying this function, consider modifying the implementation in
     // _MaterialScrollBehavior as well.
     switch (getPlatform(context)) {

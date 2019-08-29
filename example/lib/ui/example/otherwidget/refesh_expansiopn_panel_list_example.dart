@@ -26,9 +26,7 @@ class RefreshExpansionPanelListState extends State<RefreshExpansionPanelList> {
       controller: _controller,
       child: ListView(
         shrinkWrap: true,
-        children: <Widget>[
-          _buildPanel()
-        ],
+        children: <Widget>[_buildPanel()],
       ),
       enablePullUp: true,
     );

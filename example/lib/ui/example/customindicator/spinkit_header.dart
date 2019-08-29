@@ -42,7 +42,8 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
         vsync: this, duration: Duration(milliseconds: 2000));
     _scaleController =
         AnimationController(value: 0.0, vsync: this, upperBound: 1.0);
-    _footerController= AnimationController(vsync: this, duration: Duration(milliseconds: 2000));
+    _footerController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 2000));
     _refreshController.headerMode.addListener(() {
       if (_refreshController.headerStatus == RefreshStatus.idle) {
         _scaleController.value = 0.0;
@@ -64,7 +65,6 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -76,21 +76,19 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
           await Future.delayed(Duration(milliseconds: 1000));
           _refreshController.refreshCompleted();
         },
-        onLoading: () async{
+        onLoading: () async {
           await Future.delayed(Duration(milliseconds: 1000));
-          count+=4;
-          setState(() {
-
-          });
+          count += 4;
+          setState(() {});
           _refreshController.loadComplete();
         },
         child: ListView.builder(
-          itemBuilder: (c,i) => Card(),
+          itemBuilder: (c, i) => Card(),
           itemExtent: 100,
           itemCount: count,
         ),
         footer: CustomFooter(
-          onModeChange: (mode){
+          onModeChange: (mode) {
             if (mode == LoadStatus.loading) {
               _scaleController.value = 0.0;
               _footerController.repeat();
@@ -98,9 +96,9 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
               _footerController.reset();
             }
           },
-          builder: (context,mode){
+          builder: (context, mode) {
             Widget child;
-            switch(mode){
+            switch (mode) {
               case LoadStatus.failed:
                 child = Text("failed,click retry");
                 break;
@@ -131,9 +129,9 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
         ),
         header: CustomHeader(
           refreshStyle: RefreshStyle.Behind,
-          onOffsetChange: (offset){
-            if(_refreshController.headerMode.value!=RefreshStatus.refreshing)
-            _scaleController.value = offset / 80.0;
+          onOffsetChange: (offset) {
+            if (_refreshController.headerMode.value != RefreshStatus.refreshing)
+              _scaleController.value = offset / 80.0;
           },
           builder: (c, m) {
             return Container(
