@@ -405,7 +405,10 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   void _listenScrollEnd() {
     if (!_position.isScrollingNotifier.value) {
       // when user release gesture from screen
-      if (!_isHide && _checkIfCanLoading()) {
+      if(_isHide||mode==LoadStatus.loading||mode==LoadStatus.noMore){
+        return;
+      }
+      if ( _checkIfCanLoading()) {
         if (activity is IdleScrollActivity) {
           if((configuration.enableBallisticLoad ?? true)||((!configuration.enableBallisticLoad ?? true) &&mode==LoadStatus.canLoading))
           mode = LoadStatus.loading;
