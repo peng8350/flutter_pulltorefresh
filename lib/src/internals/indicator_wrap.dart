@@ -325,6 +325,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   // use to update between one page and above one page
   bool _isHide = false;
   bool _enableLoading = false;
+  LoadStatus lastMode = LoadStatus.idle;
 
   double _calculateScrollOffset() {
     final double overScrollPastEnd =
@@ -336,11 +337,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     return _position.maxScrollExtent - _position.pixels <=
             configuration.footerTriggerDistance &&
         configuration.autoLoad &&
-        _enableLoading &&
-        activity is! DragScrollActivity &&
+        _enableLoading
+     &&
         _position.extentBefore > 2.0 &&
         ((configuration.enableLoadingWhenFailed && mode == LoadStatus.failed) ||
-            mode == LoadStatus.idle);
+            mode == LoadStatus.idle||mode==LoadStatus.canLoading);
   }
 
   void _handleModeChange() {
@@ -348,7 +349,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       return;
     }
     update();
-
+    if(mode==LoadStatus.idle||mode==LoadStatus.failed){
+      lastMode = mode;
+    }
     if (mode == LoadStatus.loading) {
       if (refresher.onLoading != null) {
         refresher.onLoading();
@@ -366,11 +369,20 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   void _dispatchModeByOffset(double offset) {
-    if (!mounted || _isHide) {
+    if (!mounted || _isHide||LoadStatus.noMore==mode||LoadStatus.loading==mode) {
       return;
     }
     // avoid trigger more time when user dragging in the same direction
-    if (_checkIfCanLoading()) {
+    if(activity is DragScrollActivity){
+      if(_checkIfCanLoading()){
+        mode=LoadStatus.canLoading;
+      }
+      else{
+        mode = lastMode;
+      }
+    }
+
+    if (activity is! DragScrollActivity&&_checkIfCanLoading()) {
       mode = LoadStatus.loading;
     }
   }

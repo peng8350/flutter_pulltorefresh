@@ -70,6 +70,8 @@ enum LoadStatus {
   /// Initial state, which can be triggered loading more by gesture pull up
   idle,
 
+
+  canLoading,
   /// indicator is loading more data
   loading,
 

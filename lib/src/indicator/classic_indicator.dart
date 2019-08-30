@@ -241,7 +241,9 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
                 ? widget.noDataText
                 : LoadStatus.failed == mode
                     ? widget.failedText
-                    : widget.idleText,
+                    :  LoadStatus.canLoading == mode
+            ? "canLoad"
+            :widget.idleText,
         style: widget.textStyle);
   }
 

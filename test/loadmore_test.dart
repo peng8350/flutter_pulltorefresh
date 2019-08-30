@@ -208,7 +208,7 @@ void main() {
       ));
 
       await tester.drag(find.byType(Scrollable), const Offset(0, -10.0));
-      expect(_refreshController.footerStatus, LoadStatus.idle);
+      expect(_refreshController.footerStatus, LoadStatus.canLoading);
       await tester.pump();
       await tester.pump(Duration(milliseconds: 20));
       expect(_refreshController.footerStatus, LoadStatus.loading);

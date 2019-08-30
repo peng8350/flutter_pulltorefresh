@@ -116,7 +116,7 @@ class _BasicExampleState extends State<BasicExample>
         headerBuilder: () => WaterDropMaterialHeader(
           backgroundColor: Theme.of(context).primaryColor,
         ),
-        footerTriggerDistance: 80.0,
+        footerTriggerDistance: 30.0,
       ),
       behavior: RefreshScrollBehavior(),
     );
