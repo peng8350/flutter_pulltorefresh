@@ -125,7 +125,7 @@ class Test3State extends State<Test3>
 //    });
     _getDatas();
     _refreshController = RefreshController(
-        initialRefresh: false, initialLoadStatus: LoadStatus.noMore);
+        initialRefresh: false, initialLoadStatus: LoadStatus.idle);
     _animationController = AnimationController(vsync: this);
     super.initState();
   }

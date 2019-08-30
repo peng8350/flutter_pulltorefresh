@@ -458,7 +458,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             : widget.loadStyle == LoadStyle.HideAlways ? false : floating,
         shouldFollowContent: configuration.shouldFooterFollowWhenNotFull != null
             ? configuration.shouldFooterFollowWhenNotFull(mode)
-            : false,
+            : mode==LoadStatus.noMore,
         layoutExtent: widget.height,
         mode: mode,
         child: LayoutBuilder(
