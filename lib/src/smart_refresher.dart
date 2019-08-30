@@ -689,6 +689,8 @@ class RefreshConfiguration extends InheritedWidget {
 
   /// whether trigger refresh by  BallisticScrollActivity
   final bool enableBallisticRefresh;
+  /// whether trigger loading by  BallisticScrollActivity
+  final bool enableBallisticLoad;
 
   /// whether footer can trigger load by reaching footerDistance when failed state
   final bool enableLoadingWhenFailed;
@@ -735,6 +737,7 @@ class RefreshConfiguration extends InheritedWidget {
     this.skipCanRefresh: false,
     this.autoLoad: true,
     this.maxOverScrollExtent,
+    this.enableBallisticLoad:true,
     this.maxUnderScrollExtent,
     this.headerTriggerDistance: 80.0,
     this.footerTriggerDistance: 15.0,
@@ -758,6 +761,7 @@ class RefreshConfiguration extends InheritedWidget {
     ShouldFollowContent shouldFooterFollowWhenNotFull,
     bool enableScrollWhenTwoLevel,
     bool enableBallisticRefresh,
+    bool enableBallisticLoad,
     SpringDescription springDescription,
     bool enableScrollWhenRefreshCompleted,
     double headerOffset,
@@ -804,6 +808,8 @@ class RefreshConfiguration extends InheritedWidget {
             RefreshConfiguration.of(context).enableScrollWhenTwoLevel,
         enableBallisticRefresh = enableBallisticRefresh ??
             RefreshConfiguration.of(context).enableBallisticRefresh,
+        enableBallisticLoad = enableBallisticLoad ??
+            RefreshConfiguration.of(context).enableBallisticLoad,
         enableLoadingWhenFailed = enableLoadingWhenFailed ??
             RefreshConfiguration.of(context).enableLoadingWhenFailed,
         closeTwoLevelDistance = closeTwoLevelDistance ??

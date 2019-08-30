@@ -372,7 +372,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     if (!mounted || _isHide||LoadStatus.noMore==mode||LoadStatus.loading==mode) {
       return;
     }
-    // avoid trigger more time when user dragging in the same direction
+
     if(activity is DragScrollActivity){
       if(_checkIfCanLoading()){
         mode=LoadStatus.canLoading;
@@ -382,8 +382,14 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       }
     }
 
-    if (activity is! DragScrollActivity&&_checkIfCanLoading()) {
-      mode = LoadStatus.loading;
+    if (activity is BallisticScrollActivity) {
+      if(configuration.enableBallisticLoad ?? true) {
+        if(_checkIfCanLoading())
+        mode = LoadStatus.loading;
+      }
+      else if(mode==LoadStatus.canLoading){
+        mode = LoadStatus.loading;
+      }
     }
   }
 
@@ -401,6 +407,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       // when user release gesture from screen
       if (!_isHide && _checkIfCanLoading()) {
         if (activity is IdleScrollActivity) {
+          if((configuration.enableBallisticLoad ?? true)||((!configuration.enableBallisticLoad ?? true) &&mode==LoadStatus.canLoading))
           mode = LoadStatus.loading;
         }
       }
