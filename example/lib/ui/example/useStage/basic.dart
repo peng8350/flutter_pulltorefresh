@@ -183,6 +183,9 @@ class _OnlyListViewState extends State<OnlyListView> {
       controller: _refreshController,
       enablePullUp: true,
       child: buildCtn(),
+      footer: ClassicFooter(
+        loadStyle: LoadStyle.ShowWhenLoading,
+      ),
       header: WaterDropHeader(),
       onRefresh: () async {
         //monitor fetch data from network
@@ -204,13 +207,13 @@ class _OnlyListViewState extends State<OnlyListView> {
       },
       onLoading: () async {
         //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 4000));
-        for (int i = 0; i < 10; i++) {
-          data.add("Item $i");
-        }
+        await Future.delayed(Duration(milliseconds: 1000));
+//        for (int i = 0; i < 10; i++) {
+//          data.add("Item $i");
+//        }
 //    pageIndex++;
-        if (mounted) setState(() {});
-        _refreshController.loadComplete();
+//        if (mounted) setState(() {});
+        _refreshController.loadFailed();
       },
     );
   }

@@ -71,66 +71,64 @@ void main() {
     expect(_refreshController.footerStatus, LoadStatus.idle);
   });
 
-  testWidgets(
-      "enableBallsticLoad=false test",
-          (tester) async {
-        final RefreshController _refreshController =
+  testWidgets("enableBallsticLoad=false test", (tester) async {
+    final RefreshController _refreshController =
         RefreshController(initialRefresh: true);
-        await tester.pumpWidget(Directionality(
-          textDirection: TextDirection.ltr,
-          child: RefreshConfiguration(
-            maxUnderScrollExtent: 80,
-            child: SmartRefresher(
-              header: TestHeader(),
-              footer: TestFooter(),
-              enablePullUp: true,
-              enablePullDown: true,
-              child: ListView.builder(
-                itemBuilder: (c, i) => Center(
-                  child: Text(data[i]),
-                ),
-                itemCount: 20,
-                itemExtent: 100,
-              ),
-              controller: _refreshController,
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: RefreshConfiguration(
+        maxUnderScrollExtent: 80,
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullUp: true,
+          enablePullDown: true,
+          child: ListView.builder(
+            itemBuilder: (c, i) => Center(
+              child: Text(data[i]),
             ),
-            footerTriggerDistance: -50,
-            enableBallisticLoad: false,
+            itemCount: 20,
+            itemExtent: 100,
           ),
-        ));
+          controller: _refreshController,
+        ),
+        footerTriggerDistance: -50,
+        enableBallisticLoad: false,
+      ),
+    ));
 
-        //fling to bottom
-        _refreshController.position
-            .jumpTo(_refreshController.position.maxScrollExtent - 500);
+    //fling to bottom
+    _refreshController.position
+        .jumpTo(_refreshController.position.maxScrollExtent - 500);
 
-        await tester.fling(find.byType(Scrollable), const Offset(0, -300.0), 2200);
-        await tester.pump();
-        while (tester.binding.transientCallbackCount > 0) {
-          expect(_refreshController.footerStatus, LoadStatus.idle);
-          await tester.pump(const Duration(milliseconds: 20));
-        }
+    await tester.fling(find.byType(Scrollable), const Offset(0, -300.0), 2200);
+    await tester.pump();
+    while (tester.binding.transientCallbackCount > 0) {
+      expect(_refreshController.footerStatus, LoadStatus.idle);
+      await tester.pump(const Duration(milliseconds: 20));
+    }
 
-        // drag to bottom out of edge
-        _refreshController.position
-            .jumpTo(_refreshController.position.maxScrollExtent);
-        expect(_refreshController.footerStatus, LoadStatus.idle);
-        await tester.drag(find.byType(Scrollable), const Offset(0, -90.0));
-        expect(_refreshController.footerStatus, LoadStatus.canLoading);
-        await tester.pump();
-        await tester.pumpAndSettle();
-        expect(_refreshController.footerStatus, LoadStatus.loading);
+    // drag to bottom out of edge
+    _refreshController.position
+        .jumpTo(_refreshController.position.maxScrollExtent);
+    expect(_refreshController.footerStatus, LoadStatus.idle);
+    await tester.drag(find.byType(Scrollable), const Offset(0, -90.0));
+    expect(_refreshController.footerStatus, LoadStatus.canLoading);
+    await tester.pump();
+    await tester.pumpAndSettle();
+    expect(_refreshController.footerStatus, LoadStatus.loading);
 
-        _refreshController.loadFailed();
-        //fling to bottom when mode = failed
-        _refreshController.position
-            .jumpTo(_refreshController.position.maxScrollExtent - 500);
-        await tester.fling(find.byType(Scrollable), const Offset(0, -300.0), 2200);
-        await tester.pump();
-        while (tester.binding.transientCallbackCount > 0) {
-          expect(_refreshController.footerStatus, LoadStatus.failed);
-          await tester.pump(const Duration(milliseconds: 20));
-        }
-      });
+    _refreshController.loadFailed();
+    //fling to bottom when mode = failed
+    _refreshController.position
+        .jumpTo(_refreshController.position.maxScrollExtent - 500);
+    await tester.fling(find.byType(Scrollable), const Offset(0, -300.0), 2200);
+    await tester.pump();
+    while (tester.binding.transientCallbackCount > 0) {
+      expect(_refreshController.footerStatus, LoadStatus.failed);
+      await tester.pump(const Duration(milliseconds: 20));
+    }
+  });
 
   testWidgets(
       "far from bottom,flip to bottom by ballstic also can trigger loading",
@@ -337,26 +335,29 @@ void main() {
       final RefreshController _refreshController =
           RefreshController(initialRefresh: true);
       int time = 0;
-      await tester.pumpWidget(Directionality(
-        textDirection: TextDirection.ltr,
-        child: SmartRefresher(
-          header: TestHeader(),
-          footer: TestFooter(),
-          enablePullUp: true,
-          enablePullDown: true,
-          onLoading: () {
-            _refreshController.loadFailed();
-            time++;
-          },
-          child: ListView.builder(
-            itemBuilder: (c, i) => Center(
-              child: Text(data[i]),
+      await tester.pumpWidget(RefreshConfiguration(
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: SmartRefresher(
+            header: TestHeader(),
+            footer: TestFooter(),
+            enablePullUp: true,
+            enablePullDown: true,
+            onLoading: () {
+              _refreshController.loadFailed();
+              time++;
+            },
+            child: ListView.builder(
+              itemBuilder: (c, i) => Center(
+                child: Text(data[i]),
+              ),
+              itemCount: 20,
+              itemExtent: 100,
             ),
-            itemCount: 20,
-            itemExtent: 100,
+            controller: _refreshController,
           ),
-          controller: _refreshController,
         ),
+        enableLoadingWhenFailed: false,
       ));
 
       _refreshController.position

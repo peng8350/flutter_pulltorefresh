@@ -188,7 +188,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
     if (refreshStyle == RefreshStyle.Behind) {
       child.layout(
         constraints.asBoxConstraints(
-            maxExtent: overscrolledExtent + layoutExtent),
+            maxExtent: Math.max(0, overscrolledExtent + layoutExtent)),
         parentUsesSize: true,
       );
     } else

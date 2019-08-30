@@ -333,15 +333,50 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     return overScrollPastEnd;
   }
 
+  void enterLoading() {
+    setState(() {
+      floating = true;
+    });
+    readyToLoad().then((_) {
+      if (!mounted) {
+        return;
+      }
+      mode = LoadStatus.loading;
+    });
+  }
+
+  @override
+  Future endLoading() {
+    // TODO: implement endLoading
+    return Future.delayed(Duration(milliseconds: 0));
+  }
+
+  void finishLoading() {
+    if (!floating) {
+      return;
+    }
+    endLoading().then((_) {
+      if (!mounted) {
+        return;
+      }
+      if(_position.outOfRange)
+      activity.delegate.goBallistic(0);
+      _enableLoading = false;
+      setState(() {
+        floating = false;
+      });
+    });
+  }
+
   bool _checkIfCanLoading() {
     return _position.maxScrollExtent - _position.pixels <=
             configuration.footerTriggerDistance &&
         configuration.autoLoad &&
-        _enableLoading
-     &&
+        _enableLoading &&
         _position.extentBefore > 2.0 &&
         ((configuration.enableLoadingWhenFailed && mode == LoadStatus.failed) ||
-            mode == LoadStatus.idle||mode==LoadStatus.canLoading);
+            mode == LoadStatus.idle ||
+            mode == LoadStatus.canLoading);
   }
 
   void _handleModeChange() {
@@ -349,8 +384,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       return;
     }
     update();
-    if(mode==LoadStatus.idle||mode==LoadStatus.failed){
+    if (mode == LoadStatus.idle || mode == LoadStatus.failed) {
       lastMode = mode;
+      finishLoading();
     }
     if (mode == LoadStatus.loading) {
       if (refresher.onLoading != null) {
@@ -361,34 +397,34 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       }
     } else {
       if (activity is! DragScrollActivity) _enableLoading = false;
-      if (widget.loadStyle == LoadStyle.ShowWhenLoading) {
-        floating = false;
-      }
+//      if (widget.loadStyle == LoadStyle.ShowWhenLoading) {
+//        floating = false;
+//      }
     }
     onModeChange(mode);
   }
 
   void _dispatchModeByOffset(double offset) {
-    if (!mounted || _isHide||LoadStatus.noMore==mode||LoadStatus.loading==mode) {
+    if (!mounted ||
+        _isHide ||
+        LoadStatus.noMore == mode ||
+        LoadStatus.loading == mode ||
+        floating) {
       return;
     }
-
-    if(activity is DragScrollActivity){
-      if(_checkIfCanLoading()){
-        mode=LoadStatus.canLoading;
-      }
-      else{
+    if (activity is DragScrollActivity) {
+      if (_checkIfCanLoading()) {
+        mode = LoadStatus.canLoading;
+      } else {
         mode = lastMode;
       }
     }
 
     if (activity is BallisticScrollActivity) {
-      if(configuration.enableBallisticLoad ?? true) {
-        if(_checkIfCanLoading())
-        mode = LoadStatus.loading;
-      }
-      else if(mode==LoadStatus.canLoading){
-        mode = LoadStatus.loading;
+      if (configuration.enableBallisticLoad ?? true) {
+        if (_checkIfCanLoading()) enterLoading();
+      } else if (mode == LoadStatus.canLoading) {
+        enterLoading();
       }
     }
   }
@@ -405,13 +441,17 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   void _listenScrollEnd() {
     if (!_position.isScrollingNotifier.value) {
       // when user release gesture from screen
-      if(_isHide||mode==LoadStatus.loading||mode==LoadStatus.noMore){
+      if (_isHide ||
+          mode == LoadStatus.loading ||
+          mode == LoadStatus.noMore ||
+          floating) {
         return;
       }
-      if ( _checkIfCanLoading()) {
+      if (_checkIfCanLoading()) {
         if (activity is IdleScrollActivity) {
-          if((configuration.enableBallisticLoad ?? true)||((!configuration.enableBallisticLoad ?? true) &&mode==LoadStatus.canLoading))
-          mode = LoadStatus.loading;
+          if ((configuration.enableBallisticLoad ?? true) ||
+              ((!configuration.enableBallisticLoad ?? true) &&
+                  mode == LoadStatus.canLoading)) enterLoading();
         }
       }
     } else {
@@ -425,20 +465,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     _position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
     newPosition?.isScrollingNotifier?.addListener(_listenScrollEnd);
     super._onPositionUpdated(newPosition);
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    floating = widget.loadStyle == LoadStyle.ShowAlways;
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(T oldWidget) {
-    // TODO: implement didUpdateWidget
-    floating = widget.loadStyle == LoadStyle.ShowAlways;
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -458,7 +484,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             : widget.loadStyle == LoadStyle.HideAlways ? false : floating,
         shouldFollowContent: configuration.shouldFooterFollowWhenNotFull != null
             ? configuration.shouldFooterFollowWhenNotFull(mode)
-            : mode==LoadStatus.noMore,
+            : mode == LoadStatus.noMore,
         layoutExtent: widget.height,
         mode: mode,
         child: LayoutBuilder(
@@ -470,7 +496,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
                 if ((mode == LoadStatus.idle && !configuration.autoLoad) ||
                     (!configuration.enableLoadingWhenFailed &&
                         _mode.value == LoadStatus.failed)) {
-                  mode = LoadStatus.loading;
+                  enterLoading();
                 }
                 if (widget.onClick != null) {
                   widget.onClick();
@@ -629,4 +655,17 @@ abstract class LoadingProcessor {
   void onOffsetChange(double offset) {}
 
   void onModeChange(LoadStatus mode) {}
+
+  /// when indicator is ready into refresh,it will call back and waiting for this function finish,then callback onRefresh
+  Future readyToLoad() {
+    return Future.value();
+  }
+
+  // when indicator is ready to dismiss layout ,it will callback and then spring back after finish
+  Future endLoading() {
+    return Future.value();
+  }
+
+  // when indicator has been spring back,it  need to reset value
+  void resetValue() {}
 }

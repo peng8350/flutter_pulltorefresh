@@ -70,8 +70,8 @@ enum LoadStatus {
   /// Initial state, which can be triggered loading more by gesture pull up
   idle,
 
-
   canLoading,
+
   /// indicator is loading more data
   loading,
 
@@ -559,7 +559,8 @@ class RefreshController {
       return position
           ?.animateTo(
               position.maxScrollExtent -
-                  (_configuration?.footerTriggerDistance ?? 15),
+                  (_configuration?.footerTriggerDistance ?? 15) +
+                  20,
               duration: duration,
               curve: curve)
           ?.whenComplete(() {
@@ -689,6 +690,7 @@ class RefreshConfiguration extends InheritedWidget {
 
   /// whether trigger refresh by  BallisticScrollActivity
   final bool enableBallisticRefresh;
+
   /// whether trigger loading by  BallisticScrollActivity
   final bool enableBallisticLoad;
 
@@ -737,7 +739,7 @@ class RefreshConfiguration extends InheritedWidget {
     this.skipCanRefresh: false,
     this.autoLoad: true,
     this.maxOverScrollExtent,
-    this.enableBallisticLoad:true,
+    this.enableBallisticLoad: true,
     this.maxUnderScrollExtent,
     this.headerTriggerDistance: 80.0,
     this.footerTriggerDistance: 15.0,

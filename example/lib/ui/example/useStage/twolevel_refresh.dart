@@ -37,9 +37,9 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
   @override
   void initState() {
     // TODO: implement initState
-    _refreshController1.headerMode.addListener(() {
-      setState(() {});
-    });
+//    _refreshController1.headerMode.addListener(() {
+//      setState(() {});
+//    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _refreshController1.position.jumpTo(0);
       setState(() {});
@@ -123,6 +123,11 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                     controller: _refreshController1,
                     enableTwoLevel: true,
                     enablePullDown: true,
+                    enablePullUp: true,
+                    onLoading: () async {
+                      await Future.delayed(Duration(milliseconds: 2000));
+                      _refreshController1.loadComplete();
+                    },
                     onRefresh: () async {
                       await Future.delayed(Duration(milliseconds: 2000));
                       _refreshController1.refreshCompleted();

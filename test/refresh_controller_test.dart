@@ -64,6 +64,9 @@ void testRequestFun(bool full) {
     await tester.pumpAndSettle();
     expect(_refreshController.footerStatus, LoadStatus.loading);
     _refreshController.loadComplete();
+    await tester.pump(Duration(milliseconds: 200));
+    await tester.pumpAndSettle(Duration(milliseconds: 2000));
+    _refreshController.position.jumpTo(0);
     _refreshController.requestTwoLevel();
     await tester.pumpAndSettle();
     expect(_refreshController.headerStatus, RefreshStatus.twoLeveling);
