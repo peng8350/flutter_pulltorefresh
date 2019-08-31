@@ -199,6 +199,8 @@ class ClassicFooter extends LoadIndicator {
   final IconPosition iconPos;
 
   final TextStyle textStyle;
+  
+  final Duration completeDuration;
 
   const ClassicFooter({
     Key key,
@@ -216,6 +218,7 @@ class ClassicFooter extends LoadIndicator {
     this.failedIcon: const Icon(Icons.error, color: Colors.grey),
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
+    this.completeDuration:const Duration(milliseconds: 300),
     this.loadingIcon,
     this.canLoadingIcon: const Icon(Icons.autorenew, color: Colors.grey),
     this.idleIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
@@ -263,6 +266,12 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
             ? widget.noMoreIcon
             : mode == LoadStatus.failed ? widget.failedIcon : mode == LoadStatus.canLoading ? widget.canLoadingIcon : widget.idleIcon;
     return icon ?? Container();
+  }
+  
+  @override
+  Future endLoading() {
+    // TODO: implement endLoading
+    return Future.delayed(widget.completeDuration);
   }
 
   @override

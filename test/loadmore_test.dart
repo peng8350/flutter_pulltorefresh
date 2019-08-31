@@ -441,7 +441,7 @@ void main() {
           controller: _refreshController,
         ),
         autoLoad: false,
-        enableLoadingWhenFailed: true,
+        enableLoadingWhenFailed: false,
       ),
     ));
 
@@ -457,10 +457,12 @@ void main() {
         .jumpTo(_refreshController.position.maxScrollExtent - 30.0);
     expect(_refreshController.position.pixels,
         _refreshController.position.maxScrollExtent - 30.0);
+    expect(_refreshController.footerStatus, LoadStatus.failed);
+    await tester.pump();
     await tester.drag(find.byType(Scrollable), const Offset(0, -100.0));
     await tester.pump();
     expect(_refreshController.footerStatus, LoadStatus.failed);
-    await tester.pump(Duration(milliseconds: 200));
+    await tester.pumpAndSettle(Duration(milliseconds: 200));
     expect(_refreshController.footerStatus, LoadStatus.failed);
 
     await tester.pumpWidget(Directionality(
@@ -492,6 +494,17 @@ void main() {
         _refreshController.position.maxScrollExtent - 30.0);
     await tester.drag(find.byType(Scrollable), const Offset(0, -100.0));
     await tester.pump(Duration(milliseconds: 200));
+    expect(_refreshController.footerStatus, LoadStatus.loading);
+
+    _refreshController.loadComplete();
+    _refreshController.position
+        .jumpTo(_refreshController.position.maxScrollExtent - 30.0);
+    expect(_refreshController.position.pixels,
+        _refreshController.position.maxScrollExtent - 30.0);
+    await tester.pumpAndSettle();
+    expect(_refreshController.footerStatus, LoadStatus.idle);
+    await tester.drag(find.byType(Scrollable), const Offset(0, -100.0));
+    await tester.pumpAndSettle();
     expect(_refreshController.footerStatus, LoadStatus.loading);
   });
 

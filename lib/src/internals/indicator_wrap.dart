@@ -369,14 +369,22 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   bool _checkIfCanLoading() {
-    return _position.maxScrollExtent - _position.pixels <=
-            configuration.footerTriggerDistance &&
-        configuration.autoLoad &&
-        _enableLoading &&
-        _position.extentBefore > 2.0 &&
-        ((configuration.enableLoadingWhenFailed && mode == LoadStatus.failed) ||
-            mode == LoadStatus.idle ||
-            mode == LoadStatus.canLoading);
+    if(_position.maxScrollExtent - _position.pixels <=
+        configuration.footerTriggerDistance&&
+        _position.extentBefore > 2.0&&
+        _enableLoading){
+      if(!configuration.autoLoad&&mode == LoadStatus.idle ){
+        return false;
+      }
+      if(!configuration.enableLoadingWhenFailed && mode == LoadStatus.failed){
+        return false;
+      }
+      if(mode!=LoadStatus.canLoading&&_position.userScrollDirection!=ScrollDirection.reverse){
+        return false;
+      }
+      return true;
+    }
+    return false;
   }
 
   void _handleModeChange() {
@@ -494,7 +502,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
               behavior: HitTestBehavior.opaque,
               onTap: () {
                 if ((mode == LoadStatus.idle && !configuration.autoLoad) ||
-                    (!configuration.enableLoadingWhenFailed &&
+                    (
                         _mode.value == LoadStatus.failed)) {
                   enterLoading();
                 }

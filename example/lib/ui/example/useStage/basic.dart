@@ -60,6 +60,7 @@ class _BasicExampleState extends State<BasicExample>
     // TODO: implement build
     return ScrollConfiguration(
       child: RefreshConfiguration.copyAncestor(
+        enableLoadingWhenFailed: true,
         context: context,
         child: Scaffold(
           appBar: AppBar(
