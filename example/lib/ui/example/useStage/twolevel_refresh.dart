@@ -30,20 +30,19 @@ class TwoLevelExample extends StatefulWidget {
 
 class _TwoLevelExampleState extends State<TwoLevelExample> {
   RefreshController _refreshController1 =
-      RefreshController(initialRefreshStatus: RefreshStatus.twoLeveling);
+      RefreshController();
   RefreshController _refreshController2 = RefreshController();
   int _tabIndex = 0;
 
   @override
   void initState() {
     // TODO: implement initState
-//    _refreshController1.headerMode.addListener(() {
-//      setState(() {});
-//    });
+    _refreshController1.headerMode.addListener(() {
+      setState(() {});
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _refreshController1.position.jumpTo(0);
       setState(() {});
-      print(_refreshController1.position.pixels);
     });
     super.initState();
   }
@@ -51,7 +50,6 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    print(_refreshController1);
     return RefreshConfiguration.copyAncestor(
       context: context,
       enableScrollWhenTwoLevel: true,

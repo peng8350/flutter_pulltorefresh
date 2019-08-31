@@ -3,6 +3,7 @@
  * Email: peng8350@gmail.com
  * Time:  2019-06-24 17:21
  */
+import 'package:example/ui/example/customindicator/footer_underscroll.dart';
 import 'package:example/ui/example/customindicator/shimmer_indicator.dart';
 import 'package:flutter/material.dart';
 import 'otherwidget/refresh_staggered_and_sticky.dart';
@@ -238,7 +239,14 @@ class _ExamplePageState extends State<ExamplePage>
                 body: GifIndicatorExample1(),
               );
             }));
-          })
+          }),
+      ExampleItem(
+          title: "footer使其于header同样表现",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return ConvertFooter();
+            }));
+          }),
     ];
 
     return Column(
