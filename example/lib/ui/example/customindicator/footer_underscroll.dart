@@ -18,8 +18,10 @@ class ConvertFooter extends StatelessWidget{
 
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
+
   Widget buildCtn() {
     return ListView.separated(
+      physics: ClampingScrollPhysics(),
       padding: EdgeInsets.only(left: 5, right: 5),
       itemBuilder: (c, i) => Item(
         title: data[i],
@@ -41,10 +43,9 @@ class ConvertFooter extends StatelessWidget{
       body: RefreshConfiguration.copyAncestor(
         enableBallisticLoad: false,
         footerTriggerDistance: -80,
-        maxOverScrollExtent: 60,
+        maxUnderScrollExtent: 60,
         context: context,
         child: SmartRefresher(
-
           enablePullUp: true,
           footer: ClassicFooter(
             loadStyle: LoadStyle.ShowWhenLoading,

@@ -94,6 +94,9 @@ class RefreshPhysics extends ScrollPhysics {
     // TODO: implement shouldAcceptUserOffset
     viewportRender ??=
         findViewport(controller.position?.context?.storageContext);
+    if(parent is NeverScrollableScrollPhysics){
+      return false;
+    }
     if (controller.headerMode.value == RefreshStatus.twoLeveling &&
         !enableScrollWhenTwoLevel) {
       return false;

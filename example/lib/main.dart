@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshConfiguration(
-      footerTriggerDistance: 100,
+      footerTriggerDistance: 15,
       dragSpeedRatio: 0.91,
       headerBuilder: () => MaterialClassicHeader(),
       footerBuilder: () => ClassicFooter(),

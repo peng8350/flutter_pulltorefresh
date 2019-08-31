@@ -5,6 +5,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 /*
@@ -59,6 +60,7 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
       controller: _refreshController,
       enablePullUp: true,
       enablePullDown: true,
+      physics: NeverScrollableScrollPhysics(),
       onRefresh: () async {
         await Future.delayed(const Duration(milliseconds: 2000));
         if (mounted)
