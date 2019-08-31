@@ -184,7 +184,6 @@ class _OnlyListViewState extends State<OnlyListView> {
       enablePullUp: true,
       child: buildCtn(),
       footer: ClassicFooter(
-        loadStyle: LoadStyle.ShowWhenLoading,
       ),
       header: WaterDropHeader(),
       onRefresh: () async {
@@ -272,7 +271,7 @@ class _OnlyGridViewState extends State<OnlyGridView> {
       },
       onLoading: () async {
         //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 4000));
+        await Future.delayed(Duration(milliseconds: 1000));
         for (int i = 0; i < 10; i++) {
           data.add("Item $i");
         }
@@ -357,7 +356,7 @@ class _NoScrollableState extends State<NoScrollable> {
       },
       onLoading: () async {
         //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 4000));
+        await Future.delayed(Duration(milliseconds: 1000));
         for (int i = 0; i < 10; i++) {
           data.add("Item $i");
         }
@@ -429,7 +428,7 @@ class _SliverAppBarWithListState extends State<SliverAppBarWithList> {
       },
       onLoading: () async {
         //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 4000));
+        await Future.delayed(Duration(milliseconds: 1000));
         for (int i = 0; i < 10; i++) {
           data.add("Item $i");
         }
@@ -507,7 +506,7 @@ class _GridAndListState extends State<GridAndList> {
       },
       onLoading: () async {
         //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 4000));
+        await Future.delayed(Duration(milliseconds: 1000));
         for (int i = 0; i < 10; i++) {
           data.add("Item $i");
         }
@@ -597,7 +596,7 @@ class _SwiperAndListState extends State<SwiperAndList> {
       },
       onLoading: () async {
         //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 4000));
+        await Future.delayed(Duration(milliseconds: 1000));
         for (int i = 0; i < 10; i++) {
           data.add("Item $i");
         }

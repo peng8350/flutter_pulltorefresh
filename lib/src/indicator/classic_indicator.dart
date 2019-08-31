@@ -176,7 +176,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
 //
 // [ClassicHeader]
 class ClassicFooter extends LoadIndicator {
-  final String idleText, loadingText, noDataText, failedText;
+  final String idleText, loadingText, noDataText, failedText,canLoadingText;
 
   /// a builder for re wrap child,If you need to change the boxExtent or background,padding etc.you need outerBuilder to reWrap child
   /// example:
@@ -191,7 +191,7 @@ class ClassicFooter extends LoadIndicator {
   /// In this example,it will help to add backgroundColor in indicator
   final OuterBuilder outerBuilder;
 
-  final Widget idleIcon, loadingIcon, noMoreIcon, failedIcon;
+  final Widget idleIcon, loadingIcon, noMoreIcon, failedIcon,canLoadingIcon;
 
   /// icon and text middle margin
   final double spacing;
@@ -212,10 +212,12 @@ class ClassicFooter extends LoadIndicator {
     this.noMoreIcon,
     this.idleText: 'Load More..',
     this.failedText: 'Load Failed,Click Retry!',
+    this.canLoadingText: 'Release to load more..',
     this.failedIcon: const Icon(Icons.error, color: Colors.grey),
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
     this.loadingIcon,
+    this.canLoadingIcon: const Icon(Icons.autorenew, color: Colors.grey),
     this.idleIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
   }) : super(
           key: key,
@@ -242,7 +244,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
                 : LoadStatus.failed == mode
                     ? widget.failedText
                     : LoadStatus.canLoading == mode
-                        ? "canLoad"
+                        ? widget.canLoadingText
                         : widget.idleText,
         style: widget.textStyle);
   }
@@ -259,7 +261,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
             )
         : mode == LoadStatus.noMore
             ? widget.noMoreIcon
-            : mode == LoadStatus.failed ? widget.failedIcon : widget.idleIcon;
+            : mode == LoadStatus.failed ? widget.failedIcon : mode == LoadStatus.canLoading ? widget.canLoadingIcon : widget.idleIcon;
     return icon ?? Container();
   }
 

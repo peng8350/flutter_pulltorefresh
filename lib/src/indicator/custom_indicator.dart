@@ -141,11 +141,17 @@ class CustomFooter extends LoadIndicator {
 
   final ModeChangeCallBack onModeChange;
 
+  final VoidFutureCallBack readyLoading;
+
+  final VoidFutureCallBack endLoading;
+
   const CustomFooter({
     Key key,
     double height: 60.0,
     this.onModeChange,
     this.onOffsetChange,
+    this.readyLoading,
+    this.endLoading,
     LoadStyle loadStyle: LoadStyle.ShowAlways,
     @required this.builder,
     Function onClick,
@@ -175,6 +181,24 @@ class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
       widget.onModeChange(mode);
     }
     super.onModeChange(mode);
+  }
+
+  @override
+  Future readyToLoad() {
+    // TODO: implement readyToLoad
+    if(widget.readyLoading!=null){
+      return widget.readyLoading();
+    }
+    return super.readyToLoad();
+  }
+
+  @override
+  Future endLoading() {
+    // TODO: implement endLoading
+    if(widget.endLoading!=null){
+      return widget.endLoading();
+    }
+    return super.endLoading();
   }
 
   @override
