@@ -163,6 +163,7 @@ class _OnlyListViewState extends State<OnlyListView> {
 
   Widget buildCtn() {
     return ListView.separated(
+      physics: ClampingScrollPhysics(),
       padding: EdgeInsets.only(left: 5, right: 5),
       itemBuilder: (c, i) => Item(
         title: data[i],
@@ -208,11 +209,10 @@ class _OnlyListViewState extends State<OnlyListView> {
       onLoading: () async {
         //monitor fetch data from network
         await Future.delayed(Duration(milliseconds: 1000));
-//        for (int i = 0; i < 10; i++) {
-//          data.add("Item $i");
-//        }
-//    pageIndex++;
-//        if (mounted) setState(() {});
+        for (int i = 0; i < 10; i++) {
+          data.add("Item $i");
+        }
+        if (mounted) setState(() {});
         _refreshController.loadFailed();
       },
     );

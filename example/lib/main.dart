@@ -18,8 +18,6 @@ class MyApp extends StatelessWidget {
       headerBuilder: () => MaterialClassicHeader(),
       footerBuilder: () => ClassicFooter(),
       autoLoad: true,
-      springDescription:
-          SpringDescription(stiffness: 170, damping: 16, mass: 1.9),
       child: MaterialApp(
         title: 'Pulltorefresh Demo',
         debugShowCheckedModeBanner: false,

@@ -199,7 +199,7 @@ class ClassicFooter extends LoadIndicator {
   final IconPosition iconPos;
 
   final TextStyle textStyle;
-  
+  /// notice that ,this attrs only works for LoadStyle.ShowWhenLoading
   final Duration completeDuration;
 
   const ClassicFooter({

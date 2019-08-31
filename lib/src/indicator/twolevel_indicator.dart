@@ -12,19 +12,60 @@ import '../smart_refresher.dart';
 
 enum TwoLevelDisplayAlignment { fromTop, fromCenter, fromBottom }
 
+
+
+/// this header help you implements twoLevel function easyily,
+/// the behaviour just like TaoBao,XieCheng(携程) App TwoLevel
+///
+/// just a example
+///TwoLevelHeader(
+///  textStyle: TextStyle(color: Colors.white),
+///  displayAlignment: TwoLevelDisplayAlignment.fromTop,
+///  decoration: BoxDecoration(
+///  image: DecorationImage(
+///  image: AssetImage("images/secondfloor.jpg"),
+///  fit: BoxFit.cover,
+///  // 很重要的属性,这会影响你打开二楼和关闭二楼的动画效果
+///  alignment: Alignment.topCenter),
+///),
+///twoLevelWidget: Container(
+///   decoration: BoxDecoration(
+///   image: DecorationImage(
+///   image: AssetImage("images/secondfloor.jpg"),
+//    很重要的属性,这会影响你打开二楼和关闭二楼的动画效果,关联到TwoLevelHeader,如果背景一致的情况,请设置相同
+///   alignment: Alignment.topCenter,
+///   fit: BoxFit.cover),
+///   ),
+///   Container(
+///     height: 60.0,
+///     child: GestureDetector(
+///     child: Icon(
+///       Icons.arrow_back_ios,
+///     color: Colors.white,
+///    ),
+///   onTap: () {
+///     SmartRefresher.of(context).controller.twoLevelComplete();
+///   },
+///   ),
+///   alignment: Alignment.bottomLeft,
+///),
+///),
+///);
 class TwoLevelHeader extends StatelessWidget {
+  /// this  attr mostly put image or color
   final BoxDecoration decoration;
-
+  /// the content in TwoLevel,display in (twoLevelOpening,closing,TwoLeveling state)
   final Widget twoLevelWidget;
-
+  /// fromTop use with RefreshStyle.Behind,from bottom use with Follow Style
   final TwoLevelDisplayAlignment displayAlignment;
-
+  // the following is the same with ClassicHeader
   final String releaseText,
       idleText,
       refreshingText,
       completeText,
       failedText,
       canTwoLevelText;
+
   final Widget releaseIcon,
       idleIcon,
       refreshingIcon,
