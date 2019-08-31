@@ -27,6 +27,11 @@
       void requestLoading(
           {Duration duration: const Duration(milliseconds: 300),
           Curve curve: Curves.linear}) ;
+      //  主动打开二楼
+      void requestTwoLevel(
+                {Duration duration: const Duration(milliseconds: 300),
+                Curve curve: Curves.linear});
+
       // 顶部指示器刷新成功,是否要还原底部没有更多数据状态
       void refreshCompleted({bool resetFooterState:false});
       // 不显示任何状态,直接变成idle状态隐藏掉
@@ -81,5 +86,6 @@
 | autoLoad | 自动加载更多,假如为false,滑动底部不会触发,但提供点击加载更多的方法  | bool | true | 可选 |
 | footerTriggerDistance |   距离底部边缘触发加载更多的距离,注意这个属性和header的不同,它可以为负数,负数代表越界 | double | 15.0 | 可选 |
 | maxUnderScrollExtent | 最大底部越界距离  | double | ios:inf,android:0 | 可选 |
+| enableBallisticLoad | 是否可以通过惯性来触发加载更多  | bool | true | 可选 |
 | enableLoadingWhenFailed |  是否允许通过手势来触发加载更多当失败的状态,为false就提供点击回调,true就可通过手势触发  | bool | false| 可选 |
 | shouldFooterFollowWhenNotFull | 当不满一个屏幕时,对于不同状态要不要跟随内容列表,前提hideFooterWhenNotFull = false | (LoadStatus) => bool | () => false | 可选 |

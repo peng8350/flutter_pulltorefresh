@@ -176,7 +176,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
 //
 // [ClassicHeader]
 class ClassicFooter extends LoadIndicator {
-  final String idleText, loadingText, noDataText, failedText,canLoadingText;
+  final String idleText, loadingText, noDataText, failedText, canLoadingText;
 
   /// a builder for re wrap child,If you need to change the boxExtent or background,padding etc.you need outerBuilder to reWrap child
   /// example:
@@ -191,7 +191,7 @@ class ClassicFooter extends LoadIndicator {
   /// In this example,it will help to add backgroundColor in indicator
   final OuterBuilder outerBuilder;
 
-  final Widget idleIcon, loadingIcon, noMoreIcon, failedIcon,canLoadingIcon;
+  final Widget idleIcon, loadingIcon, noMoreIcon, failedIcon, canLoadingIcon;
 
   /// icon and text middle margin
   final double spacing;
@@ -199,6 +199,7 @@ class ClassicFooter extends LoadIndicator {
   final IconPosition iconPos;
 
   final TextStyle textStyle;
+
   /// notice that ,this attrs only works for LoadStyle.ShowWhenLoading
   final Duration completeDuration;
 
@@ -218,7 +219,7 @@ class ClassicFooter extends LoadIndicator {
     this.failedIcon: const Icon(Icons.error, color: Colors.grey),
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
-    this.completeDuration:const Duration(milliseconds: 300),
+    this.completeDuration: const Duration(milliseconds: 300),
     this.loadingIcon,
     this.canLoadingIcon: const Icon(Icons.autorenew, color: Colors.grey),
     this.idleIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
@@ -264,10 +265,14 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
             )
         : mode == LoadStatus.noMore
             ? widget.noMoreIcon
-            : mode == LoadStatus.failed ? widget.failedIcon : mode == LoadStatus.canLoading ? widget.canLoadingIcon : widget.idleIcon;
+            : mode == LoadStatus.failed
+                ? widget.failedIcon
+                : mode == LoadStatus.canLoading
+                    ? widget.canLoadingIcon
+                    : widget.idleIcon;
     return icon ?? Container();
   }
-  
+
   @override
   Future endLoading() {
     // TODO: implement endLoading

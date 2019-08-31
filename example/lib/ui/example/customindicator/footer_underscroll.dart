@@ -4,7 +4,6 @@
  * Time:  2019-08-31 10:58
  */
 
-
 // convert footer to header to use ,behaviour almost same with header
 
 import 'package:flutter/material.dart';
@@ -13,11 +12,10 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../Item.dart';
 
-class ConvertFooter extends StatelessWidget{
+class ConvertFooter extends StatelessWidget {
   RefreshController _refreshController = RefreshController();
 
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-
 
   Widget buildCtn() {
     return ListView.separated(
@@ -51,7 +49,7 @@ class ConvertFooter extends StatelessWidget{
             loadStyle: LoadStyle.ShowWhenLoading,
           ),
           child: buildCtn(),
-          onLoading: () async{
+          onLoading: () async {
             await Future.delayed(Duration(milliseconds: 1000));
 //            for(int i =0 ;i<5;i++)
 //            data.add("1");
@@ -66,5 +64,4 @@ class ConvertFooter extends StatelessWidget{
       appBar: AppBar(),
     );
   }
-
 }

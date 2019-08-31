@@ -12,8 +12,6 @@ import '../smart_refresher.dart';
 
 enum TwoLevelDisplayAlignment { fromTop, fromCenter, fromBottom }
 
-
-
 /// this header help you implements twoLevel function easyily,
 /// the behaviour just like TaoBao,XieCheng(携程) App TwoLevel
 ///
@@ -54,8 +52,10 @@ enum TwoLevelDisplayAlignment { fromTop, fromCenter, fromBottom }
 class TwoLevelHeader extends StatelessWidget {
   /// this  attr mostly put image or color
   final BoxDecoration decoration;
+
   /// the content in TwoLevel,display in (twoLevelOpening,closing,TwoLeveling state)
   final Widget twoLevelWidget;
+
   /// fromTop use with RefreshStyle.Behind,from bottom use with Follow Style
   final TwoLevelDisplayAlignment displayAlignment;
   // the following is the same with ClassicHeader

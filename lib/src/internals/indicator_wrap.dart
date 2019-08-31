@@ -264,6 +264,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         });
       });
     } else if (mode == RefreshStatus.refreshing) {
+      if (!floating) {
+        floating = true;
+        readyToRefresh();
+      }
       if (refresher.onRefresh != null) refresher.onRefresh();
     } else if (mode == RefreshStatus.twoLevelOpening) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -355,31 +359,40 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     if (!floating) {
       return;
     }
-    endLoading().then((_) {
-      if (!mounted) {
-        return;
-      }
-      if(_position.outOfRange)
-      activity.delegate.goBallistic(0);
-      _enableLoading = false;
+    if(_position.outOfRange){
+      endLoading().then((_) {
+        if (!mounted) {
+          return;
+        }
+        if (_position.outOfRange) activity.delegate.goBallistic(0);
+        setState(() {
+          floating = false;
+        });
+      });
+    }
+    else{
       setState(() {
         floating = false;
       });
-    });
+    }
+
+
   }
 
   bool _checkIfCanLoading() {
-    if(_position.maxScrollExtent - _position.pixels <=
-        configuration.footerTriggerDistance&&
-        _position.extentBefore > 2.0&&
-        _enableLoading){
-      if(!configuration.autoLoad&&mode == LoadStatus.idle ){
+    if (_position.maxScrollExtent - _position.pixels <=
+            configuration.footerTriggerDistance &&
+        _position.extentBefore > 2.0 &&
+        _enableLoading) {
+      if (!configuration.autoLoad && mode == LoadStatus.idle) {
         return false;
       }
-      if(!configuration.enableLoadingWhenFailed && mode == LoadStatus.failed){
+      if (!configuration.enableLoadingWhenFailed && mode == LoadStatus.failed) {
         return false;
       }
-      if(mode!=LoadStatus.canLoading&&_position.userScrollDirection!=ScrollDirection.reverse){
+      // this check to ScrollDirection.forward ,because in NestedScrollView return idle,I don't knot why design to idle
+      if (mode != LoadStatus.canLoading &&
+          _position.userScrollDirection == ScrollDirection.forward) {
         return false;
       }
       return true;
@@ -397,6 +410,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       finishLoading();
     }
     if (mode == LoadStatus.loading) {
+      if (!floating) {
+        enterLoading();
+      }
       if (refresher.onLoading != null) {
         refresher.onLoading();
       }
@@ -405,9 +421,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       }
     } else {
       if (activity is! DragScrollActivity) _enableLoading = false;
-//      if (widget.loadStyle == LoadStyle.ShowWhenLoading) {
-//        floating = false;
-//      }
     }
     onModeChange(mode);
   }
@@ -427,7 +440,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         mode = lastMode;
       }
     }
-
     if (activity is BallisticScrollActivity) {
       if (configuration.enableBallisticLoad ?? true) {
         if (_checkIfCanLoading()) enterLoading();
@@ -447,14 +459,15 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   void _listenScrollEnd() {
+
     if (!_position.isScrollingNotifier.value) {
       // when user release gesture from screen
       if (_isHide ||
           mode == LoadStatus.loading ||
-          mode == LoadStatus.noMore ||
-          floating) {
+          mode == LoadStatus.noMore ) {
         return;
       }
+
       if (_checkIfCanLoading()) {
         if (activity is IdleScrollActivity) {
           if ((configuration.enableBallisticLoad ?? true) ||
@@ -502,8 +515,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
               behavior: HitTestBehavior.opaque,
               onTap: () {
                 if ((mode == LoadStatus.idle && !configuration.autoLoad) ||
-                    (
-                        _mode.value == LoadStatus.failed)) {
+                    (_mode.value == LoadStatus.failed)) {
                   enterLoading();
                 }
                 if (widget.onClick != null) {

@@ -42,7 +42,7 @@ RefreshConfiguration配置属性footerTriggerDistance,屏幕一半你可以借�
 
 13. <h3>为什么不兼容SingleChildView?</h3>
 因为SingleChildView它内部采用的Viewport是SingleChild,而其他Viewport基本都是MultipleChild,所以我内部是没办法取它的Viewport里的sliver,取了也
-不能添加header和footer,使用ListView children替代它即可。
+不能添加header和footer,直接把child存放在SmartRefresher child里即可,child为非ScrollView,作用等同于SingleChildScrollView
 
 14.为什么拖到最大的距离不能触发刷新?为什么加载更多不触发?
 这类问题一般发生在Android系统，绝大数情况是因为maxOverScrollExtent和maxUnderScrollExtent限制了最大拖动的高度问题,你需要确保它要大于triggerDistance,因为内部

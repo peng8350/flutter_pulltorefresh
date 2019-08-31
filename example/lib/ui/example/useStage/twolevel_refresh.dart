@@ -29,8 +29,7 @@ class TwoLevelExample extends StatefulWidget {
 }
 
 class _TwoLevelExampleState extends State<TwoLevelExample> {
-  RefreshController _refreshController1 =
-      RefreshController();
+  RefreshController _refreshController1 = RefreshController();
   RefreshController _refreshController2 = RefreshController();
   int _tabIndex = 0;
 

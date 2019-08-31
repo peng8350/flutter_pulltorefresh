@@ -40,7 +40,7 @@ RefreshConfiguration's shouldFooterFollowWhenNotFull can solve
 
 13.  <h3>Why not compatible with SingleChildView?</h3>
 Because SingleChildView uses SingleChild as its internal Viewport, while other Viewports are basically MultipleChild, so I can't get sliver from its Viewport internally.
-You can't add header and footer, just use ListView children instead.
+You can't add header and footer. just put it into SmartRefresher's child instead.
 
 
 

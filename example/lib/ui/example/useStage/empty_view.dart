@@ -25,7 +25,7 @@ class RefreshWithEmptyView extends StatefulWidget {
 class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
   List<String> data = [];
   RefreshController _refreshController =
-      RefreshController(initialRefresh: true);
+      RefreshController(initialRefresh: false);
 
   Widget buildEmpty() {
     // there are two ways
@@ -34,11 +34,15 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
     // you can return emptyWidget directly,else return ListView
     // from 1.5.2,you needn't  compute the height by LayoutBuilder,If your boxConstaints is double.infite,
     // SmartRefresher can convert the height to the viewport mainExtent
-    return Center(
-      child: Image.asset(
-        "images/empty.png",
-        fit: BoxFit.cover,
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Image.asset(
+          "images/empty1.png",
+          fit: BoxFit.cover,
+        ),
+        Text("没数据,请下拉刷新")
+      ],
     );
     // second way
     return ListView(
@@ -58,9 +62,8 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
     // TODO: implement build
     return SmartRefresher(
       controller: _refreshController,
-      enablePullUp: true,
+      enablePullUp: data.length != 0,
       enablePullDown: true,
-      physics: NeverScrollableScrollPhysics(),
       onRefresh: () async {
         await Future.delayed(const Duration(milliseconds: 2000));
         if (mounted)

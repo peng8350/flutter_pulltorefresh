@@ -284,3 +284,26 @@ other:
 * fix bug 2: "pixels" call on null when refresh completed and ready to springback In a very short time and disposed
 * enable "primary" attr working,Avoiding clicking on the status bar to cause scrolling to the top in some stiuation
 * requestRefresh() and requestLoading() change to return a future
+
+## 1.5.5
+
+### breaking change
+* add new canLoading state for footer
+* add canLoadingText,canLoadingIcon,completeDuration in footer
+* enableLoadingWhenFailed default value change to true
+* shouldFollowContentWhenNotFull: in noMore state default return true
+
+### twoLevel
+* add TwoLevelHeader,reduce the difficulty of using the second floor function
+
+
+### Bug fix
+* twoLevel bug: fix viewportDimenssion use error,which lead to height dynamic error
+* fix underScroll bug when footer is noMore state or hideWhenNotFull=true and viewport not full one screen in Android
+* NeverScrollPhysics is ignored,when passing NeverScrollPhysics,it should disable scroll
+
+### other
+* add enableBallisticLoad(same with enableBallisticRefresh) in RefreshConfiguration
+* add requestTwoLevel method in RefreshController
+* add endLoading,readyToLoad for CustomFooter
+* add ScrollView's props to SmartRefresher,mostly for SingleChildView not ScrollView

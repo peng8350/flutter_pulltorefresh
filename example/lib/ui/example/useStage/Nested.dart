@@ -141,11 +141,9 @@ class _RefreshListViewState extends State<RefreshListView> {
             body = CupertinoActivityIndicator();
           } else if (mode == LoadStatus.failed) {
             body = Text("Load Failed!Click retry!");
-          }
-          else if (mode == LoadStatus.canLoading) {
+          } else if (mode == LoadStatus.canLoading) {
             body = Text("Release to Load more");
-          }
-          else {
+          } else {
             body = Text("No more Data");
           }
           return Container(

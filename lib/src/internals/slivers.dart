@@ -4,7 +4,6 @@
  * Time: 2019/5/2 下午5:09
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as Math;
 import 'package:flutter/rendering.dart';
@@ -166,7 +165,6 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
       Scrollable.of(context).position.applyNewDimensions();
       _updateFlag = false;
     }
-
     // The new layout extent this sliver should now have.
     final double layoutExtent =
         (_hasLayoutExtent ? 1.0 : 0.0) * _refreshIndicatorExtent;

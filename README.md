@@ -35,7 +35,7 @@ add this line to pubspec.yaml
 ```yaml
 
    dependencies:
-     pull_to_refresh: ^1.5.4
+     pull_to_refresh: ^1.5.5
 
 ```
 
@@ -95,6 +95,9 @@ simple example,In addition, you should pay attention to the differences in what 
             else if(mode == LoadStatus.failed){
               body = Text("Load Failed!Click retry!");
             }
+            else if(mode == LoadStatus.canLoad){
+                body = Text("release to load more");
+            }
             else{
               body = Text("No more Data");
             }
@@ -142,6 +145,7 @@ attributes that are not empty.
          enableScrollWhenRefreshCompleted: true, //This property is incompatible with PageView and TabBarView. If you need TabBarView to slide left and right, you need to set it to true.
          enableLoadingWhenFailed : true, //In the case of load failure, users can still trigger more loads by gesture pull-up.
          hideFooterWhenNotFull: false, // Disable pull-up to load more functionality when Viewport is less than one screen
+         enableBallisticLoad: true, // trigger load more by BallisticScrollActivity
         child: MaterialApp(
             ........
         )
@@ -270,8 +274,6 @@ Component issues, such as AnimatedList, can't be used with AnimatedList and Grid
  I convert AnimatedList to SliverAnimatedList is the solution. At the moment,
  I have a temporary solution to this problem, but it's a bit cumbersome to rewrite the code inside it and then outside ScrollView.
 Add SmartRefresher, see my two examples [Example 1](example/lib/other/refresh_animatedlist.dart)和[Example 2](example/lib/other/refresh_recordable_listview.dart)
-* As for the problem that active request refresh does not allow users to drag, it is specifically described that when active request refresh list scrolls upwards, the user's dragging gesture should be intercepted to prevent user drag from blocking the operation of request refresh.
-I know that setCanDrag in Scrollable State can prevent it, but this method does not mean that it can be called at any time, once the call timing is wrong, it will crash.
 
 ## Thanks
 

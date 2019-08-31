@@ -190,4 +190,23 @@ RefreshIndicatorState里一些非常重要的可重写方法和属性
 
 LoadIndicatorState就不展开介绍了,和上面同理,只不过上面的比较多。
 
+## 第三种(1.5.2支持,推荐使用这种方法!)
+1.5.2把footer,header转换为Widget限制类型,这样的好处是为了更容易组合指示器来使用,更符合flutter的设计规则,而不是返回一个函数
+我们可以把CustomHeader封装在一个StatelessWidget和StatefulWidget里。当我们需要组合其他组件时,可以向上回调函数来使用,参考BeizerHeader。
+你也可以组合ClassicHeader来使用,TwoLevelHeader也是基于ClassicHeader来组合使用。CustomHeader里面的参数和上面方法意思一样。
 
+```dart
+
+    class XXXXHeader extends StatelessWidget{
+
+       Widget build(){
+
+           return CustomHeader(
+                ....
+           );
+       }
+
+    }
+
+
+```

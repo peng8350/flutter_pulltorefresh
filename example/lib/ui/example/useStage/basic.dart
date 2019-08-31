@@ -185,8 +185,7 @@ class _OnlyListViewState extends State<OnlyListView> {
       controller: _refreshController,
       enablePullUp: true,
       child: buildCtn(),
-      footer: ClassicFooter(
-      ),
+      footer: ClassicFooter(loadStyle: LoadStyle.ShowAlways,completeDuration: Duration(milliseconds: 500),),
       header: WaterDropHeader(),
       onRefresh: () async {
         //monitor fetch data from network
@@ -209,9 +208,9 @@ class _OnlyListViewState extends State<OnlyListView> {
       onLoading: () async {
         //monitor fetch data from network
         await Future.delayed(Duration(milliseconds: 1000));
-        for (int i = 0; i < 10; i++) {
-          data.add("Item $i");
-        }
+//        for (int i = 0; i < 10; i++) {
+//          data.add("Item $i");
+//        }
         if (mounted) setState(() {});
         _refreshController.loadFailed();
       },
@@ -235,6 +234,7 @@ class _OnlyGridViewState extends State<OnlyGridView> {
 
   Widget buildCtn() {
     return GridView.builder(
+      physics: ClampingScrollPhysics(),
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (c, i) => Item(

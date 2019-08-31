@@ -190,3 +190,24 @@ This header is not included in packages, because most people don't use it, just 
 LoadIndicatorState does not expand on the introduction, which is similar to the above.
 
 
+## Third(support after 1.5.2,recommended!)
+
+1.5.2 converts footer and header to Widget restriction type, which has the advantage of making it easier to combine indicators. This design is more in line with flutter's design rules than returning a function
+We can encapsulate CustomHeader in a StatelessWidget and StatefulWidget. When we need to combine other components, we can use the callback function up, refer to BeizerHeader.
+You can also combine Classic Header and TwoLevel Header based on Classic Header.
+
+```dart
+
+    class XXXXHeader extends StatelessWidget{
+
+       Widget build(){
+
+           return CustomHeader(
+                ....
+           );
+       }
+
+    }
+
+
+```

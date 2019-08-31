@@ -4,11 +4,8 @@
     createTime:2018-05-01 11:39
 */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/physics.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -181,20 +178,28 @@ class SmartRefresher extends StatefulWidget {
 
   /// child content builder
   final RefresherBuilder builder;
+
   /// copy from ScrollView,for setting in SingleChildView,not ScrollView
   final Axis scrollDirection;
+
   /// copy from ScrollView,for setting in SingleChildView,not ScrollView
   final bool reverse;
+
   /// copy from ScrollView,for setting in SingleChildView,not ScrollView
   final ScrollController scrollController;
+
   /// copy from ScrollView,for setting in SingleChildView,not ScrollView
   final bool primary;
+
   /// copy from ScrollView,for setting in SingleChildView,not ScrollView
   final ScrollPhysics physics;
+
   /// copy from ScrollView,for setting in SingleChildView,not ScrollView
   final double cacheExtent;
+
   /// copy from ScrollView,for setting in SingleChildView,not ScrollView
   final int semanticChildCount;
+
   /// copy from ScrollView,for setting in SingleChildView,not ScrollView
   final DragStartBehavior dragStartBehavior;
 
@@ -219,15 +224,14 @@ class SmartRefresher extends StatefulWidget {
       this.onLoading,
       this.onTwoLevel,
       this.onOffsetChange,
-        this.dragStartBehavior,
-        this.primary,
-        this.cacheExtent,
-        this.semanticChildCount,
-        this.reverse,
-        this.physics,
-        this.scrollDirection,
-        this.scrollController
-      })
+      this.dragStartBehavior,
+      this.primary,
+      this.cacheExtent,
+      this.semanticChildCount,
+      this.reverse,
+      this.physics,
+      this.scrollDirection,
+      this.scrollController})
       : assert(controller != null),
         builder = null,
         super(key: key);
@@ -254,14 +258,14 @@ class SmartRefresher extends StatefulWidget {
         header = null,
         footer = null,
         child = null,
-        scrollController=null,
-        scrollDirection= null,
-        physics=null,
-        reverse=null,
-        semanticChildCount=null,
-        dragStartBehavior=null,
-        cacheExtent =null,
-        primary=null,
+        scrollController = null,
+        scrollDirection = null,
+        physics = null,
+        reverse = null,
+        semanticChildCount = null,
+        dragStartBehavior = null,
+        cacheExtent = null,
+        primary = null,
         super(key: key);
 
   static SmartRefresher of(BuildContext context) {
@@ -357,14 +361,14 @@ class SmartRefresherState extends State<SmartRefresher> {
   Widget _buildBodyBySlivers(
       Widget childView, List<Widget> slivers, RefreshConfiguration conf) {
     Widget body;
-    if(childView is! Scrollable){
-      bool primary =widget.primary;
+    if (childView is! Scrollable) {
+      bool primary = widget.primary;
       Key key = widget.key;
       double cacheExtent = widget.cacheExtent;
       Axis scrollDirection = widget.scrollDirection;
       int semanticChildCount = widget.semanticChildCount;
       bool reverse = widget.reverse;
-      ScrollController scrollController= widget.scrollController;
+      ScrollController scrollController = widget.scrollController;
       DragStartBehavior dragStartBehavior = widget.dragStartBehavior;
       ScrollPhysics physics = widget.physics;
 
@@ -373,34 +377,35 @@ class SmartRefresherState extends State<SmartRefresher> {
         cacheExtent = cacheExtent ?? childView.cacheExtent;
         key = key ?? childView.key;
         semanticChildCount = semanticChildCount ?? childView.semanticChildCount;
-        reverse = reverse??childView.reverse;
-        dragStartBehavior  = dragStartBehavior ??childView.dragStartBehavior;
+        reverse = reverse ?? childView.reverse;
+        dragStartBehavior = dragStartBehavior ?? childView.dragStartBehavior;
         scrollDirection = scrollDirection ?? childView.scrollDirection;
         physics = physics ?? childView.physics;
         scrollController = scrollController ?? childView.controller;
-
-        widget.controller.scrollController = scrollController ?? childView.controller ??
+        // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
+        widget.controller.scrollController = scrollController ??
+            childView.controller ??
             (childView.primary ? PrimaryScrollController.of(context) : null);
-
-      }
-      else {
-        widget.controller.scrollController = PrimaryScrollController.of(context);
+      } else {
+        // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
+        widget.controller.scrollController =
+            PrimaryScrollController.of(context);
       }
       body = CustomScrollView(
         // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
-          controller: scrollController,
-          cacheExtent: cacheExtent,
-          key: key,
-          scrollDirection: scrollDirection ?? Axis.vertical,
-          semanticChildCount: semanticChildCount,
-          primary: primary,
-          physics: _getScrollPhysics(conf).applyTo(physics ?? AlwaysScrollableScrollPhysics()),
-          slivers: slivers,
-          dragStartBehavior: dragStartBehavior ?? DragStartBehavior.start,
-          reverse: reverse ?? false,
+        controller: scrollController,
+        cacheExtent: cacheExtent,
+        key: key,
+        scrollDirection: scrollDirection ?? Axis.vertical,
+        semanticChildCount: semanticChildCount,
+        primary: primary,
+        physics: _getScrollPhysics(conf)
+            .applyTo(physics ?? AlwaysScrollableScrollPhysics()),
+        slivers: slivers,
+        dragStartBehavior: dragStartBehavior ?? DragStartBehavior.start,
+        reverse: reverse ?? false,
       );
-    }
-    else if(childView is Scrollable){
+    } else if (childView is Scrollable) {
       body = Scrollable(
         physics: _getScrollPhysics(conf)
             .applyTo(childView.physics ?? AlwaysScrollableScrollPhysics()),

@@ -35,7 +35,7 @@
 ```yaml
 
    dependencies:
-     pull_to_refresh: ^1.5.4
+     pull_to_refresh: ^1.5.5
 
 ```
 
@@ -93,6 +93,9 @@
             else if(mode == LoadStatus.failed){
               body = Text("加载失败！点击重试！");
             }
+            else if(mode == LoadStatus.canLoad){
+               body = Text("松手,加载更多!");
+            }
             else{
               body = Text("没有更多数据了!");
             }
@@ -139,6 +142,7 @@
          enableScrollWhenRefreshCompleted: true, //这个属性不兼容PageView和TabBarView,如果你特别需要TabBarView左右滑动,你需要把它设置为true
          enableLoadingWhenFailed : true, //在加载失败的状态下,用户仍然可以通过手势上拉来触发加载更多
          hideFooterWhenNotFull: false, // Viewport不满一屏时,禁用上拉加载更多功能
+         enableBallisticLoad: true, // 可以通过惯性滑动触发加载更多
         child: MaterialApp(
             ........
         )
@@ -251,8 +255,6 @@
 34316,33367,29264,这个问题只能等待flutter修复。
 * SmartRefresher不具有向子树下的ScrollView注入刷新功能,也就是如果直接把AnimatedList,RecordableListView放在child结点是不行的,这个问题我尝试过很多个方法都失败了,由于实现原理,我必须得在slivers头部和尾部追加,事实上,这个问题也不大是我组件的问题,比如说AnimatedList,假如我要结合AnimatedList和GridView一起使用是没办法的,唯有把AnimatedList转换为SliverAnimatedList才能解决。目前呢,面对这种问题的话,我已经有临时的解决方案,但有点麻烦,要重写它内部的代码,然后在ScrollView外部
 增加SmartRefresher,详见我这两个例子[例子1](example/lib/other/refresh_animatedlist.dart)和[例子2](example/lib/other/refresh_recordable_listview.dart)
-* 关于主动请求刷新不允许用户拖动问题,具体描述:当主动请求刷新列表往上滚动时,应该要拦截用户拖动的手势,防止用户拖动阻断了请求刷新的操作。
-这个问题目前我还没有很好的解决办法,我知道ScrollableState里setCanDrag可以阻止它,但是这个方法不是说随时都可以调用,一旦调用时机不对,就会奔溃。
 
 
 ## 感谢

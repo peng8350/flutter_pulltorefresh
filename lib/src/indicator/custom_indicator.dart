@@ -186,7 +186,7 @@ class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
   @override
   Future readyToLoad() {
     // TODO: implement readyToLoad
-    if(widget.readyLoading!=null){
+    if (widget.readyLoading != null) {
       return widget.readyLoading();
     }
     return super.readyToLoad();
@@ -195,7 +195,7 @@ class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
   @override
   Future endLoading() {
     // TODO: implement endLoading
-    if(widget.endLoading!=null){
+    if (widget.endLoading != null) {
       return widget.endLoading();
     }
     return super.endLoading();
