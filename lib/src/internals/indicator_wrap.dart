@@ -359,7 +359,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     if (!floating) {
       return;
     }
-    if(_position.outOfRange){
+    if (_position.outOfRange) {
       endLoading().then((_) {
         if (!mounted) {
           return;
@@ -369,14 +369,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
           floating = false;
         });
       });
-    }
-    else{
+    } else {
       setState(() {
         floating = false;
       });
     }
-
-
   }
 
   bool _checkIfCanLoading() {
@@ -459,12 +456,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   void _listenScrollEnd() {
-
     if (!_position.isScrollingNotifier.value) {
       // when user release gesture from screen
-      if (_isHide ||
-          mode == LoadStatus.loading ||
-          mode == LoadStatus.noMore ) {
+      if (_isHide || mode == LoadStatus.loading || mode == LoadStatus.noMore) {
         return;
       }
 

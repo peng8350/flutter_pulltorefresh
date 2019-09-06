@@ -5,6 +5,7 @@
 */
 
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
@@ -339,33 +340,38 @@ class SmartRefresherState extends State<SmartRefresher> {
     return slivers;
   }
 
-  ScrollPhysics _getScrollPhysics(RefreshConfiguration conf,ScrollPhysics physics) {
+  ScrollPhysics _getScrollPhysics(
+      RefreshConfiguration conf, ScrollPhysics physics) {
     final bool isBouncingPhysics = physics is BouncingScrollPhysics ||
         (physics is AlwaysScrollableScrollPhysics &&
-            ScrollConfiguration.of(context)?.getScrollPhysics(context).runtimeType == BouncingScrollPhysics);
+            ScrollConfiguration.of(context)
+                    ?.getScrollPhysics(context)
+                    .runtimeType ==
+                BouncingScrollPhysics);
     return _physics = RefreshPhysics(
-        dragSpeedRatio: conf?.dragSpeedRatio ?? 1,
-        springDescription: conf?.springDescription ??
-            const SpringDescription(
-              mass: 2.2,
-              stiffness: 150,
-              damping: 16,
-            ),
-        controller: widget.controller,
-        enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? true,
-        updateFlag: _updatePhysics ? 0 : 1,
-        enableScrollWhenRefreshCompleted:
-            conf?.enableScrollWhenRefreshCompleted ?? false,
-        maxUnderScrollExtent: conf?.maxUnderScrollExtent ?? (isBouncingPhysics
-            ? double.infinity
-            : 0.0),
-        maxOverScrollExtent: conf?.maxOverScrollExtent ?? (isBouncingPhysics ? double.infinity
-            : 60.0),
-        topHitBoundary:  conf?.topHitBoundary ?? (isBouncingPhysics ? double.infinity
-            : 0.0), // need to fix default value by ios or android later
-        bottomHitBoundary: conf?.bottomHitBoundary ?? (isBouncingPhysics ? double.infinity
-            : 0.0)
-    ).applyTo(physics);
+            dragSpeedRatio: conf?.dragSpeedRatio ?? 1,
+            springDescription: conf?.springDescription ??
+                const SpringDescription(
+                  mass: 2.2,
+                  stiffness: 150,
+                  damping: 16,
+                ),
+            controller: widget.controller,
+            enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? true,
+            updateFlag: _updatePhysics ? 0 : 1,
+            enableScrollWhenRefreshCompleted:
+                conf?.enableScrollWhenRefreshCompleted ?? false,
+            maxUnderScrollExtent: conf?.maxUnderScrollExtent ??
+                (isBouncingPhysics ? double.infinity : 0.0),
+            maxOverScrollExtent: conf?.maxOverScrollExtent ??
+                (isBouncingPhysics ? double.infinity : 60.0),
+            topHitBoundary: conf?.topHitBoundary ??
+                (isBouncingPhysics
+                    ? double.infinity
+                    : 0.0), // need to fix default value by ios or android later
+            bottomHitBoundary: conf?.bottomHitBoundary ??
+                (isBouncingPhysics ? double.infinity : 0.0))
+        .applyTo(physics);
   }
 
   // build the customScrollView
@@ -410,14 +416,16 @@ class SmartRefresherState extends State<SmartRefresher> {
         scrollDirection: scrollDirection ?? Axis.vertical,
         semanticChildCount: semanticChildCount,
         primary: primary,
-        physics: _getScrollPhysics(conf,physics ?? AlwaysScrollableScrollPhysics()),
+        physics:
+            _getScrollPhysics(conf, physics ?? AlwaysScrollableScrollPhysics()),
         slivers: slivers,
         dragStartBehavior: dragStartBehavior ?? DragStartBehavior.start,
         reverse: reverse ?? false,
       );
     } else if (childView is Scrollable) {
       body = Scrollable(
-        physics: _getScrollPhysics(conf,childView.physics ?? AlwaysScrollableScrollPhysics()),
+        physics: _getScrollPhysics(
+            conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
         controller: childView.controller,
         axisDirection: childView.axisDirection,
         semanticChildCount: childView.semanticChildCount,
@@ -453,7 +461,8 @@ class SmartRefresherState extends State<SmartRefresher> {
     }
 
     if (conf.topHitBoundary != _physics.topHitBoundary ||
-        _physics.bottomHitBoundary != conf.bottomHitBoundary ||conf.maxOverScrollExtent != _physics.maxOverScrollExtent ||
+        _physics.bottomHitBoundary != conf.bottomHitBoundary ||
+        conf.maxOverScrollExtent != _physics.maxOverScrollExtent ||
         _physics.maxUnderScrollExtent != conf.maxUnderScrollExtent ||
         _physics.dragSpeedRatio != conf.dragSpeedRatio ||
         _physics.enableScrollWhenTwoLevel != conf.enableScrollWhenTwoLevel ||
@@ -499,7 +508,8 @@ class SmartRefresherState extends State<SmartRefresher> {
     Widget body;
     widget.controller._configuration = configuration;
     if (widget.builder != null)
-      body = widget.builder(context, _getScrollPhysics(configuration,AlwaysScrollableScrollPhysics()));
+      body = widget.builder(context,
+          _getScrollPhysics(configuration, AlwaysScrollableScrollPhysics()));
     else {
       List<Widget> slivers =
           _buildSliversByChild(context, widget.child, configuration);
@@ -792,35 +802,35 @@ class RefreshConfiguration extends InheritedWidget {
   /// The boundary is located at the bottom edge and stops when inertia rolls under the boundary distance
   final double bottomHitBoundary;
 
-  RefreshConfiguration({
-    @required this.child,
-    this.headerBuilder,
-    this.footerBuilder,
-    this.dragSpeedRatio: 1.0,
-    this.shouldFooterFollowWhenNotFull,
-    this.enableScrollWhenTwoLevel: true,
-    this.enableBallisticRefresh: false,
-    this.springDescription: const SpringDescription(
-      mass: 2.2,
-      stiffness: 150,
-      damping: 16,
-    ),
-    this.enableScrollWhenRefreshCompleted: false,
-    this.headerOffset: 0.0,
-    this.enableLoadingWhenFailed: true,
-    this.twiceTriggerDistance: 150.0,
-    this.closeTwoLevelDistance: 80.0,
-    this.skipCanRefresh: false,
-    this.autoLoad: true,
-    this.maxOverScrollExtent,
-    this.enableBallisticLoad: true,
-    this.maxUnderScrollExtent,
-    this.headerTriggerDistance: 80.0,
-    this.footerTriggerDistance: 15.0,
-    this.hideFooterWhenNotFull: false,
-    this.topHitBoundary,
-    this.bottomHitBoundary
-  })  : assert(child != null),
+  RefreshConfiguration(
+      {@required this.child,
+      this.headerBuilder,
+      this.footerBuilder,
+      this.dragSpeedRatio: 1.0,
+      this.shouldFooterFollowWhenNotFull,
+      this.enableScrollWhenTwoLevel: true,
+      this.enableBallisticRefresh: false,
+      this.springDescription: const SpringDescription(
+        mass: 2.2,
+        stiffness: 150,
+        damping: 16,
+      ),
+      this.enableScrollWhenRefreshCompleted: false,
+      this.headerOffset: 0.0,
+      this.enableLoadingWhenFailed: true,
+      this.twiceTriggerDistance: 150.0,
+      this.closeTwoLevelDistance: 80.0,
+      this.skipCanRefresh: false,
+      this.autoLoad: true,
+      this.maxOverScrollExtent,
+      this.enableBallisticLoad: true,
+      this.maxUnderScrollExtent,
+      this.headerTriggerDistance: 80.0,
+      this.footerTriggerDistance: 15.0,
+      this.hideFooterWhenNotFull: false,
+      this.topHitBoundary,
+      this.bottomHitBoundary})
+      : assert(child != null),
         assert(headerTriggerDistance > 0),
         assert(twiceTriggerDistance > 0),
         assert(closeTwoLevelDistance > 0),
@@ -880,8 +890,10 @@ class RefreshConfiguration extends InheritedWidget {
             RefreshConfiguration.of(context).maxOverScrollExtent,
         maxUnderScrollExtent = maxUnderScrollExtent ??
             RefreshConfiguration.of(context).maxUnderScrollExtent,
-        topHitBoundary = topHitBoundary ?? RefreshConfiguration.of(context).topHitBoundary,
-        bottomHitBoundary = bottomHitBoundary ?? RefreshConfiguration.of(context).bottomHitBoundary,
+        topHitBoundary =
+            topHitBoundary ?? RefreshConfiguration.of(context).topHitBoundary,
+        bottomHitBoundary = bottomHitBoundary ??
+            RefreshConfiguration.of(context).bottomHitBoundary,
         skipCanRefresh =
             skipCanRefresh ?? RefreshConfiguration.of(context).skipCanRefresh,
         enableScrollWhenRefreshCompleted = enableScrollWhenRefreshCompleted ??
@@ -921,6 +933,8 @@ class RefreshConfiguration extends InheritedWidget {
         maxUnderScrollExtent != oldWidget.maxUnderScrollExtent ||
         oldWidget.maxOverScrollExtent != maxOverScrollExtent ||
         enableBallisticRefresh != oldWidget.enableBallisticRefresh ||
-        enableLoadingWhenFailed != oldWidget.enableLoadingWhenFailed|| topHitBoundary!=oldWidget.topHitBoundary||bottomHitBoundary!=oldWidget.bottomHitBoundary;
+        enableLoadingWhenFailed != oldWidget.enableLoadingWhenFailed ||
+        topHitBoundary != oldWidget.topHitBoundary ||
+        bottomHitBoundary != oldWidget.bottomHitBoundary;
   }
 }

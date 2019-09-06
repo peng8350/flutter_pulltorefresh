@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 import 'package:flutter/widgets.dart';
+import '../../pull_to_refresh.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 import 'package:flutter/cupertino.dart';
@@ -63,14 +64,14 @@ class ClassicHeader extends RefreshIndicator {
     Duration completeDuration: const Duration(milliseconds: 600),
     this.outerBuilder,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
-    this.releaseText: 'Refresh when release',
-    this.refreshingText: 'Refreshing...',
+    this.releaseText,
+    this.refreshingText,
     this.canTwoLevelIcon,
     this.twoLevelView,
-    this.canTwoLevelText: 'release to enter secondfloor',
-    this.completeText: 'Refresh complete',
-    this.failedText: 'Refresh failed',
-    this.idleText: 'Pull down to refresh',
+    this.canTwoLevelText,
+    this.completeText,
+    this.failedText,
+    this.idleText,
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
     this.refreshingIcon,
@@ -94,19 +95,20 @@ class ClassicHeader extends RefreshIndicator {
 
 class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
   Widget _buildText(mode) {
+    RefreshString  strings = RefreshLocalizations.of(context).currentLocalization ?? EnRefreshString();
     return Text(
         mode == RefreshStatus.canRefresh
-            ? widget.releaseText
+            ? widget.releaseText ??  strings.canRefreshText
             : mode == RefreshStatus.completed
-                ? widget.completeText
+                ? widget.completeText ?? strings.refreshCompleteText
                 : mode == RefreshStatus.failed
-                    ? widget.failedText
+                    ? widget.failedText ?? strings.refreshFailedText
                     : mode == RefreshStatus.refreshing
-                        ? widget.refreshingText
+                        ? widget.refreshingText??  strings.refreshingText
                         : mode == RefreshStatus.idle
-                            ? widget.idleText
+                          ? widget.idleText ?? strings.idleRefreshText
                             : mode == RefreshStatus.canTwoLevel
-                                ? widget.canTwoLevelText
+                                ?widget.canTwoLevelText ?? strings.canTwoLevelText
                                 : "",
         style: widget.textStyle);
   }
@@ -210,12 +212,12 @@ class ClassicFooter extends LoadIndicator {
     double height: 60.0,
     this.outerBuilder,
     this.textStyle: const TextStyle(color: const Color(0xff555555)),
-    this.loadingText: 'Loading...',
-    this.noDataText: 'No more data',
+    this.loadingText,
+    this.noDataText,
     this.noMoreIcon,
-    this.idleText: 'Load More..',
-    this.failedText: 'Load Failed,Click Retry!',
-    this.canLoadingText: 'Release to load more..',
+    this.idleText,
+    this.failedText,
+    this.canLoadingText,
     this.failedIcon: const Icon(Icons.error, color: Colors.grey),
     this.iconPos: IconPosition.left,
     this.spacing: 15.0,
@@ -240,16 +242,17 @@ class ClassicFooter extends LoadIndicator {
 
 class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
   Widget _buildText(LoadStatus mode) {
+    RefreshString  strings = RefreshLocalizations.of(context).currentLocalization ?? EnRefreshString();
     return Text(
         mode == LoadStatus.loading
-            ? widget.loadingText
+            ? widget.loadingText ?? strings.loadingText
             : LoadStatus.noMore == mode
-                ? widget.noDataText
+                ? widget.noDataText ??strings.noMoreText
                 : LoadStatus.failed == mode
-                    ? widget.failedText
+                    ? widget.failedText ?? strings.loadFailedText
                     : LoadStatus.canLoading == mode
-                        ? widget.canLoadingText
-                        : widget.idleText,
+                        ? widget.canLoadingText ?? strings.canLoadingText
+                        : widget.idleText ?? strings.idleLoadingText,
         style: widget.textStyle);
   }
 

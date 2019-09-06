@@ -185,7 +185,10 @@ class _OnlyListViewState extends State<OnlyListView> {
       controller: _refreshController,
       enablePullUp: true,
       child: buildCtn(),
-      footer: ClassicFooter(loadStyle: LoadStyle.ShowAlways,completeDuration: Duration(milliseconds: 500),),
+      footer: ClassicFooter(
+        loadStyle: LoadStyle.ShowAlways,
+        completeDuration: Duration(milliseconds: 500),
+      ),
       header: WaterDropHeader(),
       onRefresh: () async {
         //monitor fetch data from network

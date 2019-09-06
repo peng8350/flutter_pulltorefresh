@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'ui/indicator/base/IndicatorActivity.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() => runApp(MyApp());
 
@@ -32,6 +33,16 @@ class MyApp extends StatelessWidget {
           // counter didn't reset back to zero; the application is not restarted.
           primarySwatch: Colors.blue,
         ),
+        localizationsDelegates: [
+          RefreshLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate
+        ],
+        locale: const Locale('zh'),
+        supportedLocales: [
+          const Locale('en'),
+          const Locale('zh'),
+        ],
         home: MainActivity(title: 'Pulltorefresh'),
         routes: {
           "sec": (BuildContext context) {

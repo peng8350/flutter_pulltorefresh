@@ -11,8 +11,7 @@ class Test3 extends StatefulWidget {
   Test3State createState() => Test3State();
 }
 
-class Test3State extends State<Test3>
-    with  TickerProviderStateMixin {
+class Test3State extends State<Test3> with TickerProviderStateMixin {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
   ValueNotifier<double> topOffsetLis = ValueNotifier(0.0);
@@ -194,7 +193,7 @@ class Test3State extends State<Test3>
         },
         child: ListView.builder(
           physics: ClampingScrollPhysics(),
-          itemBuilder: (c,i) => Container(
+          itemBuilder: (c, i) => Container(
             color: Colors.lightGreen,
           ),
           itemCount: 100,
