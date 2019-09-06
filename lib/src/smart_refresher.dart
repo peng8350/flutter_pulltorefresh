@@ -339,7 +339,10 @@ class SmartRefresherState extends State<SmartRefresher> {
     return slivers;
   }
 
-  ScrollPhysics _getScrollPhysics(RefreshConfiguration conf) {
+  ScrollPhysics _getScrollPhysics(RefreshConfiguration conf,ScrollPhysics physics) {
+    final bool isBouncingPhysics = physics is BouncingScrollPhysics ||
+        (physics is AlwaysScrollableScrollPhysics &&
+            ScrollConfiguration.of(context)?.getScrollPhysics(context).runtimeType == BouncingScrollPhysics);
     return _physics = RefreshPhysics(
         dragSpeedRatio: conf?.dragSpeedRatio ?? 1,
         springDescription: conf?.springDescription ??
@@ -353,11 +356,16 @@ class SmartRefresherState extends State<SmartRefresher> {
         updateFlag: _updatePhysics ? 0 : 1,
         enableScrollWhenRefreshCompleted:
             conf?.enableScrollWhenRefreshCompleted ?? false,
-        maxOverScrollExtent: conf?.maxOverScrollExtent,
-        maxUnderScrollExtent: conf?.maxUnderScrollExtent,
-        topHitBoundary:  conf?.topHitBoundary ?? 0, // need to fix default value by ios or android later
-        bottomHitBoundary: conf?.bottomHitBoundary ?? 0
-    );
+        maxUnderScrollExtent: conf?.maxOverScrollExtent ?? (isBouncingPhysics
+            ? double.infinity
+            : 0.0),
+        maxOverScrollExtent: conf?.maxUnderScrollExtent ?? (isBouncingPhysics ? double.infinity
+            : 60.0),
+        topHitBoundary:  conf?.topHitBoundary ?? (isBouncingPhysics ? double.infinity
+            : 0.0), // need to fix default value by ios or android later
+        bottomHitBoundary: conf?.bottomHitBoundary ?? (isBouncingPhysics ? double.infinity
+            : 0.0)
+    ).applyTo(physics);
   }
 
   // build the customScrollView
@@ -402,16 +410,14 @@ class SmartRefresherState extends State<SmartRefresher> {
         scrollDirection: scrollDirection ?? Axis.vertical,
         semanticChildCount: semanticChildCount,
         primary: primary,
-        physics: _getScrollPhysics(conf)
-            .applyTo(physics ?? AlwaysScrollableScrollPhysics()),
+        physics: _getScrollPhysics(conf,physics ?? AlwaysScrollableScrollPhysics()),
         slivers: slivers,
         dragStartBehavior: dragStartBehavior ?? DragStartBehavior.start,
         reverse: reverse ?? false,
       );
     } else if (childView is Scrollable) {
       body = Scrollable(
-        physics: _getScrollPhysics(conf)
-            .applyTo(childView.physics ?? AlwaysScrollableScrollPhysics()),
+        physics: _getScrollPhysics(conf,childView.physics ?? AlwaysScrollableScrollPhysics()),
         controller: childView.controller,
         axisDirection: childView.axisDirection,
         semanticChildCount: childView.semanticChildCount,
@@ -446,7 +452,8 @@ class SmartRefresherState extends State<SmartRefresher> {
       return false;
     }
 
-    if (conf.maxOverScrollExtent != _physics.maxOverScrollExtent ||
+    if (conf.topHitBoundary != _physics.topHitBoundary ||
+        _physics.bottomHitBoundary != conf.bottomHitBoundary ||conf.maxOverScrollExtent != _physics.maxOverScrollExtent ||
         _physics.maxUnderScrollExtent != conf.maxUnderScrollExtent ||
         _physics.dragSpeedRatio != conf.dragSpeedRatio ||
         _physics.enableScrollWhenTwoLevel != conf.enableScrollWhenTwoLevel ||
@@ -492,7 +499,7 @@ class SmartRefresherState extends State<SmartRefresher> {
     Widget body;
     widget.controller._configuration = configuration;
     if (widget.builder != null)
-      body = widget.builder(context, _getScrollPhysics(configuration));
+      body = widget.builder(context, _getScrollPhysics(configuration,AlwaysScrollableScrollPhysics()));
     else {
       List<Widget> slivers =
           _buildSliversByChild(context, widget.child, configuration);
@@ -914,6 +921,6 @@ class RefreshConfiguration extends InheritedWidget {
         maxUnderScrollExtent != oldWidget.maxUnderScrollExtent ||
         oldWidget.maxOverScrollExtent != maxOverScrollExtent ||
         enableBallisticRefresh != oldWidget.enableBallisticRefresh ||
-        enableLoadingWhenFailed != oldWidget.enableLoadingWhenFailed;
+        enableLoadingWhenFailed != oldWidget.enableLoadingWhenFailed|| topHitBoundary!=oldWidget.topHitBoundary||bottomHitBoundary!=oldWidget.bottomHitBoundary;
   }
 }

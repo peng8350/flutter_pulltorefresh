@@ -63,18 +63,9 @@ class RefreshPhysics extends ScrollPhysics {
         bottomHitBoundary: bottomHitBoundary,
         controller: controller,
         enableScrollWhenRefreshCompleted: enableScrollWhenRefreshCompleted,
-        maxUnderScrollExtent: maxUnderScrollExtent ??
-            (ancestor is ClampingScrollPhysics ||
-                    (ancestor is AlwaysScrollableScrollPhysics &&
-                        defaultTargetPlatform != TargetPlatform.iOS)
-                ? 0.0
-                : double.infinity),
-        maxOverScrollExtent: maxOverScrollExtent ??
-            (ancestor is ClampingScrollPhysics ||
-                    (ancestor is AlwaysScrollableScrollPhysics &&
-                        defaultTargetPlatform != TargetPlatform.iOS)
-                ? 60.0
-                : double.infinity));
+        maxUnderScrollExtent: maxUnderScrollExtent,
+        maxOverScrollExtent: maxOverScrollExtent)
+            ;
   }
 
   RenderViewport findViewport(BuildContext context) {
@@ -243,22 +234,22 @@ class RefreshPhysics extends ScrollPhysics {
         position.minScrollExtent - maxOverScrollExtent - topExtra;
     final double bottomBoundary =
         position.maxScrollExtent + maxUnderScrollExtent + bottomExtra;
-    if(topHitBoundary!=double.infinity) {
-      if (
-          value < topHitBoundary &&
-          topHitBoundary < position.pixels) // hit top edge
-        return value - topHitBoundary;
-    }
-    if(bottomHitBoundary!=double.infinity) {
-      if (
-          position.pixels < bottomHitBoundary+position.maxScrollExtent &&
-          bottomHitBoundary+position.maxScrollExtent < value) {
-        // hit bottom edge
-        return value - bottomHitBoundary-position.maxScrollExtent;
+    if(scrollPosition.activity is BallisticScrollActivity) {
+      if (topHitBoundary != double.infinity) {
+        if (
+        value < topHitBoundary &&
+            topHitBoundary < position.pixels) // hit top edge
+          return value - topHitBoundary;
       }
-
+      if (bottomHitBoundary != double.infinity) {
+        if (
+        position.pixels < bottomHitBoundary + position.maxScrollExtent &&
+            bottomHitBoundary + position.maxScrollExtent < value) {
+          // hit bottom edge
+          return value - bottomHitBoundary - position.maxScrollExtent;
+        }
+      }
     }
-
 
     if (maxOverScrollExtent != double.infinity &&
         value < topBoundary &&
