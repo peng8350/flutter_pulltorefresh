@@ -356,10 +356,10 @@ class SmartRefresherState extends State<SmartRefresher> {
         updateFlag: _updatePhysics ? 0 : 1,
         enableScrollWhenRefreshCompleted:
             conf?.enableScrollWhenRefreshCompleted ?? false,
-        maxUnderScrollExtent: conf?.maxOverScrollExtent ?? (isBouncingPhysics
+        maxUnderScrollExtent: conf?.maxUnderScrollExtent ?? (isBouncingPhysics
             ? double.infinity
             : 0.0),
-        maxOverScrollExtent: conf?.maxUnderScrollExtent ?? (isBouncingPhysics ? double.infinity
+        maxOverScrollExtent: conf?.maxOverScrollExtent ?? (isBouncingPhysics ? double.infinity
             : 60.0),
         topHitBoundary:  conf?.topHitBoundary ?? (isBouncingPhysics ? double.infinity
             : 0.0), // need to fix default value by ios or android later

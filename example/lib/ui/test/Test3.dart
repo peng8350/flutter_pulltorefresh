@@ -12,7 +12,7 @@ class Test3 extends StatefulWidget {
 }
 
 class Test3State extends State<Test3>
-    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
+    with  TickerProviderStateMixin {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
   ValueNotifier<double> topOffsetLis = ValueNotifier(0.0);
@@ -159,64 +159,54 @@ class Test3State extends State<Test3>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: RefreshConfiguration.copyAncestor(
-            context: context,
-            child: SmartRefresher(
-              enablePullUp: true,
-              enablePullDown: true,
-              controller: _refreshController,
-              header: TwoLevelHeader(
-                twoLevelWidget: Center(
-                  child: Container(
-                    color: Colors.green,
-                    width: double.infinity,
-                    child: Text("twoLevel"),
-                    height: 60,
-                  ),
-                ),
-              ),
-              footer: null,
-              onRefresh: () async {
-                print("onRefresh");
-                await Future.delayed(const Duration(milliseconds: 3000));
-                data.add(Container(
-                  child: Card(),
-                  height: 100.0,
-                ));
-                if (mounted) setState(() {});
-                _refreshController.refreshCompleted();
+    return RefreshConfiguration.copyAncestor(
+      context: context,
+      child: SmartRefresher(
+        enablePullUp: true,
+        enablePullDown: true,
+        controller: _refreshController,
+        footer: ClassicFooter(
+          loadStyle: LoadStyle.ShowWhenLoading,
+        ),
+        header: TwoLevelHeader(
+          twoLevelWidget: Center(
+            child: Container(
+              color: Colors.green,
+              width: double.infinity,
+              child: Text("twoLevel"),
+              height: 60,
+            ),
+          ),
+        ),
+        onRefresh: () async {
+          print("onRefresh");
+          await Future.delayed(const Duration(milliseconds: 3000));
+          data.add(Container(
+            child: Card(),
+            height: 100.0,
+          ));
+          if (mounted) setState(() {});
+          _refreshController.refreshCompleted();
 //        Future.delayed(const Duration(milliseconds: 2009)).then((val) {
 //          data.add(Card());
 //
 //        });
-              },
-              child: ListView(
-                physics: ClampingScrollPhysics(),
-                children: <Widget>[
-                  Text("Asdsad"),
-                  Text("Asdsad"),
-                  Text("Asdsad"),
-                  Text("Asdsad"),
-                  Text("Asdsad"),
-                  Text("Asdsad"),
-                  Text("Asdsad"),
-                  Text("Asdsad"),
-                  Text("Asdsad"),
-                ],
-              ),
-              onLoading: () async {
-                await Future.delayed(const Duration(milliseconds: 1000));
-                print("onLoading");
-                _refreshController.loadComplete();
-              },
-            ),
-            dragSpeedRatio: 0.9,
+        },
+        child: ListView.builder(
+          physics: ClampingScrollPhysics(),
+          itemBuilder: (c,i) => Container(
+            color: Colors.lightGreen,
           ),
-        )
-      ],
+          itemCount: 100,
+          itemExtent: 5,
+        ),
+        onLoading: () async {
+          await Future.delayed(const Duration(milliseconds: 1000));
+          print("onLoading");
+          _refreshController.loadComplete();
+        },
+      ),
+      dragSpeedRatio: 0.9,
     );
   }
 

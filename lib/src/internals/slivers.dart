@@ -360,7 +360,7 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     markNeedsLayout();
   }
 
-  bool _computeIfFull(SliverConstraints cons) {
+  bool _computeIfFull(SliverConstraints cons,double layoutExtent) {
     final RenderViewport viewport = parent;
     RenderSliver sliverP = viewport.firstChild;
     double totalScrollExtent = cons.precedingScrollExtent;
@@ -371,14 +371,15 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       }
       sliverP = viewport.childAfter(sliverP);
     }
-    return totalScrollExtent >= cons.viewportMainAxisExtent;
+    // consider about footer layoutExtent,it should be subtracted it's height
+    return totalScrollExtent >= cons.viewportMainAxisExtent-layoutExtent;
   }
 
   //  many sitiuation: 1. reverse 2. not reverse
   // 3. follow content 4. unfollow content
   //5. not full 6. full
-  double computePaintOrigin(double layoutExtent, bool reverse) {
-    if (_computeIfFull(constraints) || shouldFollowContent) {
+  double computePaintOrigin(double layoutExtent, bool reverse,bool follow) {
+    if (follow) {
       if (reverse) {
         return layoutExtent;
       }
@@ -407,9 +408,8 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       return;
     }
     bool active;
-
     if (hideWhenNotFull && mode != LoadStatus.noMore) {
-      active = _computeIfFull(constraints);
+      active = _computeIfFull(constraints,layoutExtent);
     } else {
       active = true;
     }
@@ -432,17 +432,17 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     if (active) {
       // consider reverse loading and HideAlways==loadStyle
       geometry = SliverGeometry(
-        scrollExtent: !_hasLayoutExtent || !_computeIfFull(constraints)
+        scrollExtent: !_hasLayoutExtent || !_computeIfFull(constraints,layoutExtent)
             ? 0.0
             : layoutExtent,
         paintExtent: paintedChildSize,
         // this need to fix later
         paintOrigin: computePaintOrigin(
-            !_hasLayoutExtent || !_computeIfFull(constraints)
+            !_hasLayoutExtent || !_computeIfFull(constraints,layoutExtent)
                 ? layoutExtent
                 : 0.0,
             constraints.axisDirection == AxisDirection.up ||
-                constraints.axisDirection == AxisDirection.left),
+                constraints.axisDirection == AxisDirection.left,_computeIfFull(constraints,layoutExtent) || shouldFollowContent),
         cacheExtent: cacheExtent,
         maxPaintExtent: childExtent,
         hitTestExtent: paintedChildSize,
