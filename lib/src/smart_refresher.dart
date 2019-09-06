@@ -354,7 +354,10 @@ class SmartRefresherState extends State<SmartRefresher> {
         enableScrollWhenRefreshCompleted:
             conf?.enableScrollWhenRefreshCompleted ?? false,
         maxOverScrollExtent: conf?.maxOverScrollExtent,
-        maxUnderScrollExtent: conf?.maxUnderScrollExtent);
+        maxUnderScrollExtent: conf?.maxUnderScrollExtent,
+        topHitBoundary:  conf?.topHitBoundary ?? 0, // need to fix default value by ios or android later
+        bottomHitBoundary: conf?.bottomHitBoundary ?? 0
+    );
   }
 
   // build the customScrollView
@@ -776,6 +779,12 @@ class RefreshConfiguration extends InheritedWidget {
   /// 	max underScroll distance when out of edge
   final double maxUnderScrollExtent;
 
+  /// The boundary is located at the top edge and stops when inertia rolls over the boundary distance
+  final double topHitBoundary;
+
+  /// The boundary is located at the bottom edge and stops when inertia rolls under the boundary distance
+  final double bottomHitBoundary;
+
   RefreshConfiguration({
     @required this.child,
     this.headerBuilder,
@@ -802,6 +811,8 @@ class RefreshConfiguration extends InheritedWidget {
     this.headerTriggerDistance: 80.0,
     this.footerTriggerDistance: 15.0,
     this.hideFooterWhenNotFull: false,
+    this.topHitBoundary,
+    this.bottomHitBoundary
   })  : assert(child != null),
         assert(headerTriggerDistance > 0),
         assert(twiceTriggerDistance > 0),
@@ -832,6 +843,8 @@ class RefreshConfiguration extends InheritedWidget {
     bool autoLoad,
     double maxOverScrollExtent,
     double maxUnderScrollExtent,
+    double topHitBoundary,
+    double bottomHitBoundary,
     double headerTriggerDistance,
     double footerTriggerDistance,
     bool hideFooterWhenNotFull,
@@ -860,6 +873,8 @@ class RefreshConfiguration extends InheritedWidget {
             RefreshConfiguration.of(context).maxOverScrollExtent,
         maxUnderScrollExtent = maxUnderScrollExtent ??
             RefreshConfiguration.of(context).maxUnderScrollExtent,
+        topHitBoundary = topHitBoundary ?? RefreshConfiguration.of(context).topHitBoundary,
+        bottomHitBoundary = bottomHitBoundary ?? RefreshConfiguration.of(context).bottomHitBoundary,
         skipCanRefresh =
             skipCanRefresh ?? RefreshConfiguration.of(context).skipCanRefresh,
         enableScrollWhenRefreshCompleted = enableScrollWhenRefreshCompleted ??

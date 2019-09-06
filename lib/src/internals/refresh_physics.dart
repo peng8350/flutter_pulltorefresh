@@ -25,6 +25,7 @@ import 'package:pull_to_refresh/src/internals/slivers.dart';
 // ignore: MUST_BE_IMMUTABLE
 class RefreshPhysics extends ScrollPhysics {
   final double maxOverScrollExtent, maxUnderScrollExtent;
+  final double topHitBoundary,bottomHitBoundary;
   final SpringDescription springDescription;
   final double dragSpeedRatio;
   final bool enableScrollWhenTwoLevel, enableScrollWhenRefreshCompleted;
@@ -43,6 +44,8 @@ class RefreshPhysics extends ScrollPhysics {
       this.springDescription,
       this.controller,
       this.dragSpeedRatio,
+        this.topHitBoundary,
+        this.bottomHitBoundary,
       this.enableScrollWhenRefreshCompleted,
       this.enableScrollWhenTwoLevel,
       this.maxOverScrollExtent})
@@ -56,6 +59,8 @@ class RefreshPhysics extends ScrollPhysics {
         springDescription: springDescription,
         dragSpeedRatio: dragSpeedRatio,
         enableScrollWhenTwoLevel: enableScrollWhenTwoLevel,
+        topHitBoundary: topHitBoundary,
+        bottomHitBoundary: bottomHitBoundary,
         controller: controller,
         enableScrollWhenRefreshCompleted: enableScrollWhenRefreshCompleted,
         maxUnderScrollExtent: maxUnderScrollExtent ??
@@ -194,6 +199,7 @@ class RefreshPhysics extends ScrollPhysics {
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
+    final ScrollPosition scrollPosition = position;
     viewportRender ??=
         findViewport(controller.position?.context?.storageContext);
     bool notFull = position.minScrollExtent == position.maxScrollExtent;
@@ -237,14 +243,23 @@ class RefreshPhysics extends ScrollPhysics {
         position.minScrollExtent - maxOverScrollExtent - topExtra;
     final double bottomBoundary =
         position.maxScrollExtent + maxUnderScrollExtent + bottomExtra;
-    if (maxOverScrollExtent != double.infinity &&
-        value < position.pixels &&
-        position.pixels <= topBoundary) // underscroll
-      return value - position.pixels;
-    if (maxUnderScrollExtent != double.infinity &&
-        bottomBoundary <= position.pixels &&
-        position.pixels < value) // overscroll
-      return value - position.pixels;
+    if(topHitBoundary!=double.infinity) {
+      if (
+          value < topHitBoundary &&
+          topHitBoundary < position.pixels) // hit top edge
+        return value - topHitBoundary;
+    }
+    if(bottomHitBoundary!=double.infinity) {
+      if (
+          position.pixels < bottomHitBoundary+position.maxScrollExtent &&
+          bottomHitBoundary+position.maxScrollExtent < value) {
+        // hit bottom edge
+        return value - bottomHitBoundary-position.maxScrollExtent;
+      }
+
+    }
+
+
     if (maxOverScrollExtent != double.infinity &&
         value < topBoundary &&
         topBoundary < position.pixels) // hit top edge
@@ -255,6 +270,16 @@ class RefreshPhysics extends ScrollPhysics {
       // hit bottom edge
       return value - bottomBoundary;
     }
+
+    if (maxOverScrollExtent != double.infinity &&
+        value < position.pixels &&
+        position.pixels <= topBoundary) // underscroll
+      return value - position.pixels;
+    if (maxUnderScrollExtent != double.infinity &&
+        bottomBoundary <= position.pixels &&
+        position.pixels < value) // overscroll
+      return value - position.pixels;
+
     return 0.0;
   }
 
