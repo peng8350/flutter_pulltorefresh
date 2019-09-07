@@ -9,6 +9,30 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+/// Implementation of localized strings for the [ClassicHeader],[ClassicFooter],[TwoLevelHeader]
+///
+///
+/// Supported languages:now only add Chinese and English
+/// If you need to add other languages,please give me a pr
+///
+/// ## Sample code
+///
+/// To include the localizations provided by this class in a [MaterialApp],
+/// add [RefreshLocalizations.delegates] to
+/// [MaterialApp.localizationsDelegates], and specify the locales your
+/// app supports with [MaterialApp.supportedLocales]:
+///
+/// ```dart
+/// new MaterialApp(
+///   localizationsDelegates: RefreshLocalizations.delegates,
+///   supportedLocales: [
+///     const Locale('en'), // American English
+///     const Locale('zh'), // Israeli Hebrew
+///     // ...
+///   ],
+///   // ...
+/// )
+/// ```
 class RefreshLocalizations{
 
   final Locale locale;
@@ -17,22 +41,20 @@ class RefreshLocalizations{
     this.locale
   );
 
-  Map<String,RefreshString> _values = {
+  Map<String,RefreshString> values = {
     'en':EnRefreshString(),
     'zh':ChRefreshString()
   };
 
   RefreshString get currentLocalization {
-    if(_values.containsKey(locale.languageCode)) {
-      return _values[locale.languageCode];
+    if(values.containsKey(locale.languageCode)) {
+      return values[locale.languageCode];
     }
-    return _values["en"];
+    return values["en"];
   }
 
   static const RefreshLocalizationsDelegate delegate = RefreshLocalizationsDelegate();
 
-  ///通过 Localizations 加载当前的 GSYLocalizations
-  ///获取对应的 GSYStringBase
   static RefreshLocalizations of(BuildContext context) {
     return Localizations.of(context, RefreshLocalizations);
   }
@@ -59,35 +81,36 @@ class RefreshLocalizationsDelegate extends LocalizationsDelegate<RefreshLocaliza
     return false;
   }
 
-  static RefreshLocalizationsDelegate delegate = const RefreshLocalizationsDelegate();
 }
 
+/// interface implements different language
 abstract class RefreshString{
-  // pull down refresh idle text
+  /// pull down refresh idle text
   String idleRefreshText;
-  //  tips user to release gesture to refresh at time
+  ///  tips user to release gesture to refresh at time
   String canRefreshText;
-  // refreshing state text
+  /// refreshing state text
   String refreshingText;
-  // refresh completed text
+  /// refresh completed text
   String refreshCompleteText;
-  //refresh failed text
+  /// refresh failed text
   String refreshFailedText;
-  // enable open twoLevel and tips user to release gesture to enter two level
+  /// enable open twoLevel and tips user to release gesture to enter two level
   String canTwoLevelText;
-  // pull down load idle text
+  /// pull down load idle text
   String idleLoadingText;
-  // tips user to release gesture to load more at time
+  /// tips user to release gesture to load more at time
   String canLoadingText;
-  // loading state text
+  /// loading state text
   String loadingText;
-  // load failed text
+  /// load failed text
   String loadFailedText;
-  // no more data text
+  /// no more data text
   String noMoreText;
 
 }
 
+/// Chinese
 class ChRefreshString implements RefreshString{
   @override
   String canLoadingText = "松手开始加载数据";
@@ -124,21 +147,22 @@ class ChRefreshString implements RefreshString{
 
 }
 
+/// English
 class EnRefreshString implements RefreshString{
   @override
-  String canLoadingText="release to load more";
+  String canLoadingText="Release to load more";
 
   @override
-  String canRefreshText = "Refresh when release";
+  String canRefreshText = "Release to refresh";
 
   @override
-  String canTwoLevelText = "release to enter secondfloor";
+  String canTwoLevelText = "Release to enter secondfloor";
 
   @override
-  String idleLoadingText = "Load More";
+  String idleLoadingText = "Pull up Load more";
 
   @override
-  String idleRefreshText="Pull down to refresh";
+  String idleRefreshText="Pull down Refresh";
 
   @override
   String loadFailedText = "Load Failed";

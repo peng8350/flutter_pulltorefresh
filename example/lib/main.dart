@@ -38,11 +38,15 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalMaterialLocalizations.delegate
         ],
-        locale: const Locale('zh'),
+        locale: null,
         supportedLocales: [
           const Locale('en'),
           const Locale('zh'),
         ],
+        localeResolutionCallback:        (Locale locale, Iterable<Locale> supportedLocales) {
+          print("change language");
+      return locale;
+      },
         home: MainActivity(title: 'Pulltorefresh'),
         routes: {
           "sec": (BuildContext context) {
