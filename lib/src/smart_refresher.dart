@@ -601,21 +601,19 @@ class RefreshController {
 
   /// make the header enter refreshing state,and callback onRefresh
   Future<void> requestRefresh(
-      {bool needMove:true,Duration duration: const Duration(milliseconds: 500),
+      {bool needMove: true,
+      Duration duration: const Duration(milliseconds: 500),
       Curve curve: Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (isRefresh) return Future.value();
     headerMode.value = RefreshStatus.refreshing;
-    if(needMove) {
+    if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
-        await position?.animateTo(
-            position.minScrollExtent,
-            duration: duration,
-            curve: curve);
+        await position?.animateTo(position.minScrollExtent,
+            duration: duration, curve: curve);
       });
-    }
-    else{
+    } else {
       return Future.value();
     }
   }
@@ -627,31 +625,27 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     headerMode.value = RefreshStatus.twoLevelOpening;
-      return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
-        await position?.animateTo(
-            position.minScrollExtent,
-            duration: duration,
-            curve: curve);
-      });
+    return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
+      await position?.animateTo(position.minScrollExtent,
+          duration: duration, curve: curve);
+    });
   }
 
   /// make the footer enter loading state,and callback onLoading
   Future<void> requestLoading(
-      {bool needMove:true,Duration duration: const Duration(milliseconds: 300),
+      {bool needMove: true,
+      Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
     assert(position != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (isLoading) return Future.value();
     footerMode.value = LoadStatus.loading;
-    if(needMove) {
+    if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
-        await position?.animateTo(
-            position.maxScrollExtent,
-            duration: duration,
-            curve: curve);
+        await position?.animateTo(position.maxScrollExtent,
+            duration: duration, curve: curve);
       });
-    }
-    else{
+    } else {
       return Future.value();
     }
   }

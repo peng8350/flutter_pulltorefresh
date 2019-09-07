@@ -236,8 +236,7 @@ void main() {
   });
 
   testWidgets("verity headerTriggerDistance", (tester) async {
-    final RefreshController _refreshController =
-        RefreshController();
+    final RefreshController _refreshController = RefreshController();
     await tester.pumpWidget(Directionality(
       textDirection: TextDirection.ltr,
       child: RefreshConfiguration(

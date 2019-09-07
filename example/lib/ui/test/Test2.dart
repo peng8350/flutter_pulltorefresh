@@ -58,7 +58,7 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
 //        _controller.requestRefresh().then((_){
 //          print("request complete");
 //        });
-        _controller.requestRefresh(needMove: false).then((_){
+        _controller.requestRefresh(needMove: false).then((_) {
           print("request complete");
         });
       },

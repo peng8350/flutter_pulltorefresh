@@ -97,7 +97,6 @@ class _BiliBiliScreenState extends State<BiliBiliScreen>
               });
             },
           ),
-
         ),
       ),
       theme: ThemeData(

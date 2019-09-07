@@ -187,13 +187,13 @@ class Test4State extends State<Test4>
                       children: <Widget>[
                         RaisedButton(
                           child: Text("主动刷新(移动)"),
-                          onPressed: (){
+                          onPressed: () {
                             _refreshController.requestRefresh();
                           },
                         ),
                         RaisedButton(
                           child: Text("主动加载"),
-                          onPressed: (){
+                          onPressed: () {
                             _refreshController.requestLoading();
                           },
                         ),

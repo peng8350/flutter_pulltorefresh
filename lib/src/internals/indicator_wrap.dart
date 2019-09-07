@@ -35,7 +35,7 @@ abstract class RefreshIndicator extends StatefulWidget {
   const RefreshIndicator(
       {Key key,
       this.height: 60.0,
-        this.offset:0.0,
+      this.offset: 0.0,
       this.completeDuration: const Duration(milliseconds: 500),
       this.refreshStyle: RefreshStyle.Follow})
       : super(key: key);

@@ -38,13 +38,13 @@ class MaterialClassicHeader extends RefreshIndicator {
     this.semanticsLabel,
     this.semanticsValue,
     this.color,
-    double offset:0,
+    double offset: 0,
     this.distance: 50.0,
     this.backgroundColor,
   }) : super(
           key: key,
           refreshStyle: RefreshStyle.Front,
-          offset:offset,
+          offset: offset,
           height: height,
         );
 
@@ -64,7 +64,7 @@ class _MaterialClassicHeaderState
   AnimationController _scaleFactor;
   AnimationController _positionController;
   AnimationController _valueAni;
-  
+
   @override
   void initState() {
     // TODO: implement initState
@@ -95,8 +95,8 @@ class _MaterialClassicHeaderState
     // TODO: implement buildContent
     return _buildIndicator(widget.backgroundColor ?? Colors.white);
   }
-  
-  Widget _buildIndicator(Color outerColor){
+
+  Widget _buildIndicator(Color outerColor) {
     return SlideTransition(
       child: ScaleTransition(
         scale: _scaleFactor,
@@ -140,8 +140,16 @@ class _MaterialClassicHeaderState
     final ThemeData theme = Theme.of(context);
     _valueColor = _positionController.drive(
       ColorTween(
-        begin: (widget.color ?? theme?.primaryColor ?? CupertinoTheme.of(context)?.primaryColor ?? Colors.blueAccent).withOpacity(0.0),
-        end: (widget.color ?? theme?.primaryColor ?? CupertinoTheme.of(context)?.primaryColor ?? Colors.blueAccent).withOpacity(1.0),
+        begin: (widget.color ??
+                theme?.primaryColor ??
+                CupertinoTheme.of(context)?.primaryColor ??
+                Colors.blueAccent)
+            .withOpacity(0.0),
+        end: (widget.color ??
+                theme?.primaryColor ??
+                CupertinoTheme.of(context)?.primaryColor ??
+                Colors.blueAccent)
+            .withOpacity(1.0),
       ).chain(
           CurveTween(curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit))),
     );
@@ -176,7 +184,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
     Key key,
     String semanticsLabel,
     double distance: 60.0,
-    double offset:0,
+    double offset: 0,
     String semanticsValue,
     Color color: Colors.white,
     Color backgroundColor,
@@ -185,7 +193,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
             height: 80.0,
             color: color,
             distance: distance,
-            offset:offset,
+            offset: offset,
             backgroundColor: backgroundColor,
             semanticsValue: semanticsValue,
             semanticsLabel: semanticsLabel);
@@ -293,15 +301,25 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
         children: <Widget>[
           CustomPaint(
             painter: _BezierPainter(
-                listener: _bezierController, color: widget.backgroundColor ?? Theme.of(context)?.primaryColor ?? CupertinoTheme.of(context)?.primaryColor ?? Colors.blueAccent),
+                listener: _bezierController,
+                color: widget.backgroundColor ??
+                    Theme.of(context)?.primaryColor ??
+                    CupertinoTheme.of(context)?.primaryColor ??
+                    Colors.blueAccent),
             child: Container(),
           ),
           CustomPaint(
-            child: _buildIndicator(widget.backgroundColor ?? Theme.of(context)?.primaryColor ?? CupertinoTheme.of(context)?.primaryColor ?? Colors.blueAccent),
+            child: _buildIndicator(widget.backgroundColor ??
+                Theme.of(context)?.primaryColor ??
+                CupertinoTheme.of(context)?.primaryColor ??
+                Colors.blueAccent),
             painter: _showWater
                 ? _WaterPainter(
                     ratio: widget.distance / widget.height,
-                    color: widget.backgroundColor ?? Theme.of(context)?.primaryColor ?? CupertinoTheme.of(context)?.primaryColor ?? Colors.blueAccent,
+                    color: widget.backgroundColor ??
+                        Theme.of(context)?.primaryColor ??
+                        CupertinoTheme.of(context)?.primaryColor ??
+                        Colors.blueAccent,
                     listener: _positionFactor)
                 : null,
           )
