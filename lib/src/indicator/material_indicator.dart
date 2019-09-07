@@ -4,6 +4,7 @@
  * Time: 2019/5/19 下午9:23
  */
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 import 'package:flutter/widgets.dart';
@@ -63,7 +64,7 @@ class _MaterialClassicHeaderState
   AnimationController _scaleFactor;
   AnimationController _positionController;
   AnimationController _valueAni;
-
+  
   @override
   void initState() {
     // TODO: implement initState
@@ -92,6 +93,10 @@ class _MaterialClassicHeaderState
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
+    return _buildIndicator(widget.backgroundColor ?? Colors.white);
+  }
+  
+  Widget _buildIndicator(Color outerColor){
     return SlideTransition(
       child: ScaleTransition(
         scale: _scaleFactor,
@@ -104,7 +109,7 @@ class _MaterialClassicHeaderState
             semanticsValue: widget?.semanticsValue,
             value: floating ? null : _valueAni.value,
             valueColor: _valueColor,
-            backgroundColor: widget.backgroundColor,
+            backgroundColor: outerColor,
           ),
         ),
       ),
@@ -135,8 +140,8 @@ class _MaterialClassicHeaderState
     final ThemeData theme = Theme.of(context);
     _valueColor = _positionController.drive(
       ColorTween(
-        begin: (widget.color ?? theme.accentColor).withOpacity(0.0),
-        end: (widget.color ?? theme.accentColor).withOpacity(1.0),
+        begin: (widget.color ?? theme?.primaryColor ?? CupertinoTheme.of(context)?.primaryColor ?? Colors.blueAccent).withOpacity(0.0),
+        end: (widget.color ?? theme?.primaryColor ?? CupertinoTheme.of(context)?.primaryColor ?? Colors.blueAccent).withOpacity(1.0),
       ).chain(
           CurveTween(curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit))),
     );
@@ -174,7 +179,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
     double offset:0,
     String semanticsValue,
     Color color: Colors.white,
-    Color backgroundColor: Colors.blueAccent,
+    Color backgroundColor,
   }) : super(
             key: key,
             height: 80.0,
@@ -214,6 +219,19 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
         value: 0.0);
     _positionFactor = _positionController
         .drive(Tween<Offset>(begin: Offset(0.0, -0.5), end: Offset(0.0, 1.5)));
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    _valueColor = _positionController.drive(
+      ColorTween(
+        begin: (Colors.white).withOpacity(0.0),
+        end: (Colors.white).withOpacity(1.0),
+      ).chain(
+          CurveTween(curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit))),
+    );
   }
 
   @override
@@ -275,15 +293,15 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
         children: <Widget>[
           CustomPaint(
             painter: _BezierPainter(
-                listener: _bezierController, color: widget.backgroundColor),
+                listener: _bezierController, color: widget.backgroundColor ?? Theme.of(context)?.primaryColor ?? CupertinoTheme.of(context)?.primaryColor ?? Colors.blueAccent),
             child: Container(),
           ),
           CustomPaint(
-            child: super.buildContent(context, mode),
+            child: _buildIndicator(widget.backgroundColor ?? Theme.of(context)?.primaryColor ?? CupertinoTheme.of(context)?.primaryColor ?? Colors.blueAccent),
             painter: _showWater
                 ? _WaterPainter(
                     ratio: widget.distance / widget.height,
-                    color: widget.backgroundColor,
+                    color: widget.backgroundColor ?? Theme.of(context)?.primaryColor ?? CupertinoTheme.of(context)?.primaryColor ?? Colors.blueAccent,
                     listener: _positionFactor)
                 : null,
           )

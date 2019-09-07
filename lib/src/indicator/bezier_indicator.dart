@@ -5,6 +5,7 @@
  */
 
 import 'package:flutter/animation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart'
@@ -46,7 +47,7 @@ class BezierHeader extends RefreshIndicator {
       this.onResetValue,
       this.dismissType: BezierDismissType.RectSpread,
       this.rectHeight: 70,
-      this.bezierColor: Colors.blueAccent})
+      this.bezierColor})
       : super(refreshStyle: RefreshStyle.UnFollow, height: rectHeight);
 
   @override
@@ -152,7 +153,7 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
                     child: ClipPath(
                       child: Container(
                         height: widget.rectHeight + 30,
-                        color: widget.bezierColor,
+                        color: widget.bezierColor ?? Theme.of(context)?.primaryColor ?? CupertinoTheme.of(context)?.primaryColor ?? widget.bezierColor,
                       ),
                       clipper: _BezierPainter(
                           value: _beizerBounceCtl.value,
@@ -304,7 +305,7 @@ class BezierCircleHeader extends StatefulWidget {
   final BezierDismissType dismissType;
 
   BezierCircleHeader(
-      {this.bezierColor: Colors.blueAccent,
+      {this.bezierColor,
       this.rectHeight: 70,
       this.circleColor: Colors.white,
       this.enableChildOverflow: false,

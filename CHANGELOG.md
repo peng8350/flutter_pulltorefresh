@@ -316,3 +316,4 @@ other:
 * fix physics check error when theme use other platform
 * add topHitBoundary,bottomHitBoundary in RefreshConfiguration
 * In Android systems,default change: fast fling will be stopped in 0 pixels
+* Optimized part indicator,auto attach primaryColor from Theme,text style adjust etc..
