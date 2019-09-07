@@ -95,20 +95,23 @@ class ClassicHeader extends RefreshIndicator {
 
 class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
   Widget _buildText(mode) {
-    RefreshString  strings = RefreshLocalizations.of(context).currentLocalization ?? EnRefreshString();
+    RefreshString strings =
+        RefreshLocalizations.of(context)?.currentLocalization ??
+            EnRefreshString();
     return Text(
         mode == RefreshStatus.canRefresh
-            ? widget.releaseText ??  strings.canRefreshText
+            ? widget.releaseText ?? strings.canRefreshText
             : mode == RefreshStatus.completed
                 ? widget.completeText ?? strings.refreshCompleteText
                 : mode == RefreshStatus.failed
                     ? widget.failedText ?? strings.refreshFailedText
                     : mode == RefreshStatus.refreshing
-                        ? widget.refreshingText??  strings.refreshingText
+                        ? widget.refreshingText ?? strings.refreshingText
                         : mode == RefreshStatus.idle
-                          ? widget.idleText ?? strings.idleRefreshText
+                            ? widget.idleText ?? strings.idleRefreshText
                             : mode == RefreshStatus.canTwoLevel
-                                ?widget.canTwoLevelText ?? strings.canTwoLevelText
+                                ? widget.canTwoLevelText ??
+                                    strings.canTwoLevelText
                                 : "",
         style: widget.textStyle);
   }
@@ -242,12 +245,14 @@ class ClassicFooter extends LoadIndicator {
 
 class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
   Widget _buildText(LoadStatus mode) {
-    RefreshString  strings = RefreshLocalizations.of(context).currentLocalization ?? EnRefreshString();
+    RefreshString strings =
+        RefreshLocalizations.of(context)?.currentLocalization ??
+            EnRefreshString();
     return Text(
         mode == LoadStatus.loading
             ? widget.loadingText ?? strings.loadingText
             : LoadStatus.noMore == mode
-                ? widget.noDataText ??strings.noMoreText
+                ? widget.noDataText ?? strings.noMoreText
                 : LoadStatus.failed == mode
                     ? widget.failedText ?? strings.loadFailedText
                     : LoadStatus.canLoading == mode

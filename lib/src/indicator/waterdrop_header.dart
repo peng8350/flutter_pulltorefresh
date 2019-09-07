@@ -123,7 +123,9 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                 width: 15.0,
               ),
               Text(
-                RefreshLocalizations.of(context).currentLocalization.refreshCompleteText,
+                (RefreshLocalizations.of(context)?.currentLocalization ??
+                        EnRefreshString())
+                    .refreshCompleteText,
                 style: TextStyle(color: Colors.grey),
               )
             ],
@@ -140,7 +142,11 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
               Container(
                 width: 15.0,
               ),
-              Text(RefreshLocalizations.of(context).currentLocalization.refreshFailedText, style: TextStyle(color: Colors.grey))
+              Text(
+                  (RefreshLocalizations.of(context)?.currentLocalization ??
+                          EnRefreshString())
+                      .refreshFailedText,
+                  style: TextStyle(color: Colors.grey))
             ],
           );
     } else if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {

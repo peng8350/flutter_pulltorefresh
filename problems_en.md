@@ -42,12 +42,6 @@ RefreshConfiguration's shouldFooterFollowWhenNotFull can solve
 Because SingleChildView uses SingleChild as its internal Viewport, while other Viewports are basically MultipleChild, so I can't get sliver from its Viewport internally.
 You can't add header and footer. just put it into SmartRefresher's child instead.
 
-
-
 14. Why can't dragging to the maximum distance trigger refresh? Why load more without triggering?
 This kind of problem usually occurs on Android systems, mostly because maxOverScrollExtent and maxUnderScrollExtent limit the height of the maximum drag. You need to make sure that it is larger than triggerDistance because it's internal.
 Not automatically identifying and judging for you
-
-15.about fast sliding up or down ,viewport flipped out of area
-This problem usually happens on Android platform, mostly because maxoverScrollExtent and maxunderscrollExtent are double. infite. You need to give a limited value in RefreshConfiguration.
-At present, why do some default values misjudge ?I haven't found out why the problem is.If you found,please give issue

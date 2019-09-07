@@ -3,7 +3,8 @@
     Email: peng8350@gmail.com
     createTime:2018-05-02 14:39
  */
-
+// ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
+// ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
 import 'package:flutter/foundation.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
@@ -233,11 +234,14 @@ class RefreshPhysics extends ScrollPhysics {
         position.minScrollExtent - maxOverScrollExtent - topExtra;
     final double bottomBoundary =
         position.maxScrollExtent + maxUnderScrollExtent + bottomExtra;
+
     if (scrollPosition.activity is BallisticScrollActivity) {
       if (topHitBoundary != double.infinity) {
-        if (value < topHitBoundary &&
-            topHitBoundary < position.pixels) // hit top edge
-          return value - topHitBoundary;
+
+        if (value < -topHitBoundary && -topHitBoundary < position.pixels) {
+          // hit top edge
+          return value + topHitBoundary;
+        }
       }
       if (bottomHitBoundary != double.infinity) {
         if (position.pixels < bottomHitBoundary + position.maxScrollExtent &&

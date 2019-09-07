@@ -307,3 +307,12 @@ other:
 * add requestTwoLevel method in RefreshController
 * add endLoading,readyToLoad for CustomFooter
 * add ScrollView's props to SmartRefresher,mostly for SingleChildView not ScrollView
+
+
+## 1.5.6
+
+* add new feature:refresh localizations
+* The footer layout size should be added to calculate whether the Viewport is full of a screen
+* fix physics check error when theme use other platform
+* add topHitBoundary,bottomHitBoundary in RefreshConfiguration
+* In Android systems,default change: fast fling will be stopped in 0 pixels

@@ -83,46 +83,44 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new Scaffold(
-        appBar: new AppBar(
-          title: const Text('SliverAnimatedList'),
-          actions: <Widget>[
-            new IconButton(
-              icon: const Icon(Icons.add_circle),
-              onPressed: _insert,
-              tooltip: 'insert a new item',
-            ),
-            new IconButton(
-              icon: const Icon(Icons.remove_circle),
-              onPressed: _remove,
-              tooltip: 'remove the selected item',
-            ),
+    return Scaffold(
+      appBar: new AppBar(
+        title: const Text('SliverAnimatedList'),
+        actions: <Widget>[
+          new IconButton(
+            icon: const Icon(Icons.add_circle),
+            onPressed: _insert,
+            tooltip: 'insert a new item',
+          ),
+          new IconButton(
+            icon: const Icon(Icons.remove_circle),
+            onPressed: _remove,
+            tooltip: 'remove the selected item',
+          ),
+        ],
+      ),
+      body: SmartRefresher(
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverAnimatedList(
+              key: _listKey,
+              initialItemCount: _list.length,
+              itemBuilder: _buildItem,
+            )
           ],
         ),
-        body: SmartRefresher(
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverAnimatedList(
-                key: _listKey,
-                initialItemCount: _list.length,
-                itemBuilder: _buildItem,
-              )
-            ],
-          ),
-          onRefresh: () async {
-            await Future.delayed(Duration(milliseconds: 500));
-            _list.insert(0, 0);
-            _refreshController.refreshFailed();
-          },
-          onLoading: () async {
-            await Future.delayed(Duration(milliseconds: 500));
-            _list.insert(_list.length, _list.length);
-            _refreshController.loadComplete();
-          },
-          enablePullUp: true,
-          controller: _refreshController,
-        ),
+        onRefresh: () async {
+          await Future.delayed(Duration(milliseconds: 500));
+          _list.insert(0, 0);
+          _refreshController.refreshFailed();
+        },
+        onLoading: () async {
+          await Future.delayed(Duration(milliseconds: 500));
+          _list.insert(_list.length, _list.length);
+          _refreshController.loadComplete();
+        },
+        enablePullUp: true,
+        controller: _refreshController,
       ),
     );
   }

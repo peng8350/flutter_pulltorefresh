@@ -46,7 +46,8 @@ class _BiliBiliScreenState extends State<BiliBiliScreen>
         body: RefreshConfiguration(
           child: SmartRefresher(
             header: WaterDropMaterialHeader(
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.pink,
+              offset: MediaQuery.of(context).padding.top + 56.0,
             ),
             child: CustomScrollView(
               physics: ClampingScrollPhysics(),
@@ -96,7 +97,7 @@ class _BiliBiliScreenState extends State<BiliBiliScreen>
               });
             },
           ),
-          headerOffset: MediaQuery.of(context).padding.top + 56.0,
+
         ),
       ),
       theme: ThemeData(

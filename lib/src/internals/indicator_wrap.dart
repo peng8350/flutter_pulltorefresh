@@ -26,12 +26,16 @@ abstract class RefreshIndicator extends StatefulWidget {
   /// the visual extent indicator
   final double height;
 
+  //layout offset
+  final double offset;
+
   /// the stopped time when refresh complete or fail
   final Duration completeDuration;
 
   const RefreshIndicator(
       {Key key,
       this.height: 60.0,
+        this.offset:0.0,
       this.completeDuration: const Duration(milliseconds: 500),
       this.refreshStyle: RefreshStyle.Follow})
       : super(key: key);
@@ -308,7 +312,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   @override
   Widget build(BuildContext context) {
     return SliverRefresh(
-        paintOffsetY: configuration.headerOffset,
+        paintOffsetY: widget.offset,
         child: RotatedBox(
           child: buildContent(context, mode),
           quarterTurns:
@@ -387,7 +391,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       if (!configuration.enableLoadingWhenFailed && mode == LoadStatus.failed) {
         return false;
       }
-      // this check to ScrollDirection.forward ,because in NestedScrollView return idle,I don't knot why design to idle
       if (mode != LoadStatus.canLoading &&
           _position.userScrollDirection == ScrollDirection.forward) {
         return false;

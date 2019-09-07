@@ -33,15 +33,17 @@ class MaterialClassicHeader extends RefreshIndicator {
 
   const MaterialClassicHeader({
     Key key,
-    height: 80.0,
+    double height: 80.0,
     this.semanticsLabel,
     this.semanticsValue,
     this.color,
+    double offset:0,
     this.distance: 50.0,
     this.backgroundColor,
   }) : super(
           key: key,
           refreshStyle: RefreshStyle.Front,
+          offset:offset,
           height: height,
         );
 
@@ -169,6 +171,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
     Key key,
     String semanticsLabel,
     double distance: 60.0,
+    double offset:0,
     String semanticsValue,
     Color color: Colors.white,
     Color backgroundColor: Colors.blueAccent,
@@ -177,6 +180,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
             height: 80.0,
             color: color,
             distance: distance,
+            offset:offset,
             backgroundColor: backgroundColor,
             semanticsValue: semanticsValue,
             semanticsLabel: semanticsLabel);

@@ -360,7 +360,7 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     markNeedsLayout();
   }
 
-  bool _computeIfFull(SliverConstraints cons, double layoutExtent) {
+  bool _computeIfFull(SliverConstraints cons) {
     final RenderViewport viewport = parent;
     RenderSliver sliverP = viewport.firstChild;
     double totalScrollExtent = cons.precedingScrollExtent;
@@ -409,7 +409,7 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     }
     bool active;
     if (hideWhenNotFull && mode != LoadStatus.noMore) {
-      active = _computeIfFull(constraints, layoutExtent);
+      active = _computeIfFull(constraints);
     } else {
       active = true;
     }
@@ -432,19 +432,18 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     if (active) {
       // consider reverse loading and HideAlways==loadStyle
       geometry = SliverGeometry(
-        scrollExtent:
-            !_hasLayoutExtent || !_computeIfFull(constraints, layoutExtent)
-                ? 0.0
-                : layoutExtent,
+        scrollExtent: !_hasLayoutExtent || !_computeIfFull(constraints)
+            ? 0.0
+            : layoutExtent,
         paintExtent: paintedChildSize,
         // this need to fix later
         paintOrigin: computePaintOrigin(
-            !_hasLayoutExtent || !_computeIfFull(constraints, layoutExtent)
+            !_hasLayoutExtent || !_computeIfFull(constraints)
                 ? layoutExtent
                 : 0.0,
             constraints.axisDirection == AxisDirection.up ||
                 constraints.axisDirection == AxisDirection.left,
-            _computeIfFull(constraints, layoutExtent) || shouldFollowContent),
+            _computeIfFull(constraints) || shouldFollowContent),
         cacheExtent: cacheExtent,
         maxPaintExtent: childExtent,
         hitTestExtent: paintedChildSize,

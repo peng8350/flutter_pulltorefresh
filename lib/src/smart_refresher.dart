@@ -754,9 +754,6 @@ class RefreshConfiguration extends InheritedWidget {
   /// when listView data small(not enough one page) , it should be hide
   final bool hideFooterWhenNotFull;
 
-  /// header offset Y for layout
-  final double headerOffset;
-
   /// whether footer can trigger load by reaching footerDistance when idle
   final bool autoLoad;
 
@@ -816,7 +813,6 @@ class RefreshConfiguration extends InheritedWidget {
         damping: 16,
       ),
       this.enableScrollWhenRefreshCompleted: false,
-      this.headerOffset: 0.0,
       this.enableLoadingWhenFailed: true,
       this.twiceTriggerDistance: 150.0,
       this.closeTwoLevelDistance: 80.0,
@@ -852,7 +848,6 @@ class RefreshConfiguration extends InheritedWidget {
     bool enableBallisticLoad,
     SpringDescription springDescription,
     bool enableScrollWhenRefreshCompleted,
-    double headerOffset,
     bool enableLoadingWhenFailed,
     double twiceTriggerDistance,
     double closeTwoLevelDistance,
@@ -882,8 +877,6 @@ class RefreshConfiguration extends InheritedWidget {
             RefreshConfiguration.of(context).footerTriggerDistance,
         springDescription = springDescription ??
             RefreshConfiguration.of(context).springDescription,
-        headerOffset =
-            headerOffset ?? RefreshConfiguration.of(context).headerOffset,
         hideFooterWhenNotFull = hideFooterWhenNotFull ??
             RefreshConfiguration.of(context).hideFooterWhenNotFull,
         maxOverScrollExtent = maxOverScrollExtent ??
@@ -920,7 +913,6 @@ class RefreshConfiguration extends InheritedWidget {
     return autoLoad != oldWidget.autoLoad ||
         skipCanRefresh != oldWidget.skipCanRefresh ||
         hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||
-        headerOffset != oldWidget.headerOffset ||
         dragSpeedRatio != oldWidget.dragSpeedRatio ||
         enableScrollWhenRefreshCompleted !=
             oldWidget.enableScrollWhenRefreshCompleted ||

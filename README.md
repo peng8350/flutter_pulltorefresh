@@ -153,6 +153,29 @@ attributes that are not empty.
 
 ```
 
+1.5.6 add new feather: localization ,you can add following code in MaterialApp or CupertinoApp:
+
+```dart
+
+    MaterialApp(
+            localizationsDelegates: [
+              // this line is important
+              RefreshLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate
+            ],
+            supportedLocales: [
+              const Locale('en'),
+              const Locale('zh'),
+            ],
+            localeResolutionCallback:
+                (Locale locale, Iterable<Locale> supportedLocales) {
+              //print("change language");
+              return locale;
+            },
+    )
+
+```
 
 
 ## ScreenShots
@@ -254,7 +277,7 @@ Similarly, you may need to work with components like NotificationListener, Scrol
 
 
 ## More
-- [Property Document](refresher_controller_en.md) or [Api/Doc](https://pub.dev/documentation/pull_to_refresh/latest/pulltorefresh/SmartRefresher-class.html)
+- [Property Document](propertys_en.md) or [Api/Doc](https://pub.dev/documentation/pull_to_refresh/latest/pulltorefresh/SmartRefresher-class.html)
 - [Custom Indicator](custom_indicator_en.md)
 - [Inner Attribute Of Indicators](indicator_attribute_en.md)
 - [Update Log](CHANGELOG.md)

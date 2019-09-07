@@ -4,7 +4,6 @@
  * Time:  2019-09-06 23:18
  */
 
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -33,85 +32,90 @@ import 'package:flutter/widgets.dart';
 ///   // ...
 /// )
 /// ```
-class RefreshLocalizations{
-
+class RefreshLocalizations {
   final Locale locale;
 
-  RefreshLocalizations(
-    this.locale
-  );
+  RefreshLocalizations(this.locale);
 
-  Map<String,RefreshString> values = {
-    'en':EnRefreshString(),
-    'zh':ChRefreshString()
+  Map<String, RefreshString> values = {
+    'en': EnRefreshString(),
+    'zh': ChRefreshString()
   };
 
   RefreshString get currentLocalization {
-    if(values.containsKey(locale.languageCode)) {
+    if (values.containsKey(locale.languageCode)) {
       return values[locale.languageCode];
     }
     return values["en"];
   }
 
-  static const RefreshLocalizationsDelegate delegate = RefreshLocalizationsDelegate();
+  static const RefreshLocalizationsDelegate delegate =
+      RefreshLocalizationsDelegate();
 
   static RefreshLocalizations of(BuildContext context) {
     return Localizations.of(context, RefreshLocalizations);
   }
-
 }
 
-
-class RefreshLocalizationsDelegate extends LocalizationsDelegate<RefreshLocalizations>{
-
+class RefreshLocalizationsDelegate
+    extends LocalizationsDelegate<RefreshLocalizations> {
   const RefreshLocalizationsDelegate();
 
   @override
   bool isSupported(Locale locale) {
-    return ['en','zh'].contains(locale.languageCode);
+    return ['en', 'zh'].contains(locale.languageCode);
   }
 
   @override
   Future<RefreshLocalizations> load(Locale locale) {
-    return SynchronousFuture<RefreshLocalizations>(RefreshLocalizations(locale));
+    return SynchronousFuture<RefreshLocalizations>(
+        RefreshLocalizations(locale));
   }
 
   @override
   bool shouldReload(LocalizationsDelegate<RefreshLocalizations> old) {
     return false;
   }
-
 }
 
 /// interface implements different language
-abstract class RefreshString{
+abstract class RefreshString {
   /// pull down refresh idle text
   String idleRefreshText;
+
   ///  tips user to release gesture to refresh at time
   String canRefreshText;
+
   /// refreshing state text
   String refreshingText;
+
   /// refresh completed text
   String refreshCompleteText;
+
   /// refresh failed text
   String refreshFailedText;
+
   /// enable open twoLevel and tips user to release gesture to enter two level
   String canTwoLevelText;
+
   /// pull down load idle text
   String idleLoadingText;
+
   /// tips user to release gesture to load more at time
   String canLoadingText;
+
   /// loading state text
   String loadingText;
+
   /// load failed text
   String loadFailedText;
+
   /// no more data text
   String noMoreText;
-
 }
 
 /// Chinese
-class ChRefreshString implements RefreshString{
+class ChRefreshString implements RefreshString {
   @override
   String canLoadingText = "松手开始加载数据";
 
@@ -144,13 +148,12 @@ class ChRefreshString implements RefreshString{
 
   @override
   String refreshingText = "刷新中...";
-
 }
 
 /// English
-class EnRefreshString implements RefreshString{
+class EnRefreshString implements RefreshString {
   @override
-  String canLoadingText="Release to load more";
+  String canLoadingText = "Release to load more";
 
   @override
   String canRefreshText = "Release to refresh";
@@ -162,7 +165,7 @@ class EnRefreshString implements RefreshString{
   String idleLoadingText = "Pull up Load more";
 
   @override
-  String idleRefreshText="Pull down Refresh";
+  String idleRefreshText = "Pull down Refresh";
 
   @override
   String loadFailedText = "Load Failed";
@@ -177,9 +180,8 @@ class EnRefreshString implements RefreshString{
   String refreshCompleteText = "Refresh completed";
 
   @override
-  String refreshFailedText="Refresh failed";
+  String refreshFailedText = "Refresh failed";
 
   @override
   String refreshingText = "Refreshing...";
-
 }

@@ -156,6 +156,7 @@ class _RefreshListViewState extends State<RefreshListView> {
       onRefresh: _onRefresh,
       onLoading: _onLoading,
       child: ListView.builder(
+        physics: ClampingScrollPhysics(),
         itemBuilder: (c, i) => Card(child: Center(child: Text(items[i]))),
         itemExtent: 100.0,
         itemCount: items.length,

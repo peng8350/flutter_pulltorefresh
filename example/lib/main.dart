@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
           // "hot reload" (press "r" in the console where you ran "flutter run",
           // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
           // counter didn't reset back to zero; the application is not restarted.
+          platform: TargetPlatform.android,
           primarySwatch: Colors.blue,
         ),
         localizationsDelegates: [
@@ -38,15 +39,16 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalMaterialLocalizations.delegate
         ],
-        locale: null,
         supportedLocales: [
           const Locale('en'),
           const Locale('zh'),
+          const Locale('fr'),
         ],
-        localeResolutionCallback:        (Locale locale, Iterable<Locale> supportedLocales) {
-          print("change language");
-      return locale;
-      },
+        localeResolutionCallback:
+            (Locale locale, Iterable<Locale> supportedLocales) {
+          //print("change language");
+          return locale;
+        },
         home: MainActivity(title: 'Pulltorefresh'),
         routes: {
           "sec": (BuildContext context) {
