@@ -69,13 +69,12 @@
 | headerTriggerDistance | 触发下拉刷新的越界距离     | double | 80.0 | 可选 |
 | maxOverScrollExtent | 最大顶部越界距离(拖动时)  | double | ios:inf,android:60 | 可选 |
 | skipCanRefresh | 直接跳过canRefresh状态进入刷新   | bool | false | 可选 |
-| headerOffset | 头部指示器布局的偏差Y坐标,多用于FrontStyle,  | double | 0.0 | 可选 |
 | enableScrollWhenTwoLevel | 当进入二楼时,是否允许上下滑动   | bool | false | 可选 |
 | twiceTriggerDistance | 触发进入二楼的越界距离   | double | 150.0 | 可选 |
 | closeTwoLevelDistance | 关闭二楼底部的底部越界距离,前提enableScrollWhenTwoLevel要为true  | double | 80.0 | 可选 |
 | enableBallisticRefresh | 是否可以通过惯性来触发刷新  | bool | false | 可选 |
 | enableScrollWhenRefreshCompleted |是否允许用户手势滑动当刷新完毕准备回弹回去时 | bool | true | 可选 |
-| topHitBoundary | 当快速惯性滑动时,顶部位置应该要在哪个位置停下来   | double | ios:inf,android:0 | 可选 |
+| topHitBoundary | 当快速惯性滑动时,顶部位置应该要在哪个位置停下来  | double | ios:inf,android:0 | 可选 |
 
 
 加载更多全局设置(footer):

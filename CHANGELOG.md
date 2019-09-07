@@ -310,10 +310,11 @@ other:
 
 
 ## 1.5.6
-
 * add new feature:refresh localizations
 * The footer layout size should be added to calculate whether the Viewport is full of a screen
 * fix physics check error when theme use other platform
 * add topHitBoundary,bottomHitBoundary in RefreshConfiguration
+* move headerOffset from RefreshConfiguration,move to indicator setting
 * In Android systems,default change: fast fling will be stopped in 0 pixels
 * Optimized part indicator,auto attach primaryColor from Theme,text style adjust etc..
+* Optimize requestRefresh() and requestLoading(),avoid spring back when far from target point,add one parameter controll whether to move down or top

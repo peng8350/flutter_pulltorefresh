@@ -15,7 +15,7 @@ void main() {
   group("trigger refresh function test", () {
     testWidgets("not enough to tigger refresh ", (tester) async {
       final RefreshController _refreshController =
-          RefreshController(initialRefresh: true);
+          RefreshController(initialRefresh: false);
       await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
         child: SmartRefresher(
@@ -44,7 +44,7 @@ void main() {
     testWidgets("strick to check triggerDistance,even if 0.00001",
         (tester) async {
       final RefreshController _refreshController =
-          RefreshController(initialRefresh: true);
+          RefreshController(initialRefresh: false);
       await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
         child: SmartRefresher(
@@ -73,7 +73,7 @@ void main() {
     });
     testWidgets("from 0.0 pull down,reach triggerDistance", (tester) async {
       final RefreshController _refreshController =
-          RefreshController(initialRefresh: true);
+          RefreshController(initialRefresh: false);
       await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
         child: SmartRefresher(
@@ -102,7 +102,7 @@ void main() {
     });
     testWidgets("from 100.0 pull down,reach triggerdistance", (tester) async {
       final RefreshController _refreshController =
-          RefreshController(initialRefresh: true);
+          RefreshController(initialRefresh: false);
       await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
         child: SmartRefresher(
@@ -135,7 +135,7 @@ void main() {
         "when user flip with ballistic,it should not be tigger rrerfresh ",
         (tester) async {
       final RefreshController _refreshController =
-          RefreshController(initialRefresh: true);
+          RefreshController(initialRefresh: false);
       await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
         child: SmartRefresher(
@@ -166,7 +166,7 @@ void main() {
         " when user flip with ballistic from 0.0,it should not be tigger rrerfresh also",
         (tester) async {
       final RefreshController _refreshController =
-          RefreshController(initialRefresh: true);
+          RefreshController(initialRefresh: false);
       await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
         child: SmartRefresher(
@@ -197,7 +197,7 @@ void main() {
         "consider about another situation,if user trriiger refresh, and then drag down(cannot see the header)",
         (tester) async {
       final RefreshController _refreshController =
-          RefreshController(initialRefresh: true);
+          RefreshController(initialRefresh: false);
       await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
         child: SmartRefresher(
@@ -237,7 +237,7 @@ void main() {
 
   testWidgets("verity headerTriggerDistance", (tester) async {
     final RefreshController _refreshController =
-        RefreshController(initialRefresh: true);
+        RefreshController();
     await tester.pumpWidget(Directionality(
       textDirection: TextDirection.ltr,
       child: RefreshConfiguration(

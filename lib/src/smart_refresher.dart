@@ -506,7 +506,6 @@ class SmartRefresherState extends State<SmartRefresher> {
   Widget build(BuildContext context) {
     final RefreshConfiguration configuration = RefreshConfiguration.of(context);
     Widget body;
-    widget.controller._configuration = configuration;
     if (widget.builder != null)
       body = widget.builder(context,
           _getScrollPhysics(configuration, AlwaysScrollableScrollPhysics()));
@@ -545,7 +544,6 @@ class RefreshController {
   /// notice that: position is null before build,
   /// the value is get when the header or footer callback onPositionUpdated
   ScrollPosition position;
-  RefreshConfiguration _configuration;
 
   /// deprecated member,not suggest to use it,it contain share position bug
   @Deprecated(
@@ -603,54 +601,59 @@ class RefreshController {
 
   /// make the header enter refreshing state,and callback onRefresh
   Future<void> requestRefresh(
-      {Duration duration: const Duration(milliseconds: 500),
+      {bool needMove:true,Duration duration: const Duration(milliseconds: 500),
       Curve curve: Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (isRefresh) return Future.value();
-    return position?.animateTo(
-        -((_configuration?.headerTriggerDistance ?? 80) + 20),
-        duration: duration,
-        curve: curve);
+    headerMode.value = RefreshStatus.refreshing;
+    if(needMove) {
+      return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
+        await position?.animateTo(
+            position.minScrollExtent,
+            duration: duration,
+            curve: curve);
+      });
+    }
+    else{
+      return Future.value();
+    }
   }
 
   /// make the header enter refreshing state,and callback onRefresh
   Future<void> requestTwoLevel(
-      {Duration duration: const Duration(milliseconds: 200),
+      {Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    return position?.animateTo(
-        -((_configuration?.twiceTriggerDistance ?? 150) + 20),
-        duration: duration,
-        curve: curve);
+    headerMode.value = RefreshStatus.twoLevelOpening;
+      return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
+        await position?.animateTo(
+            position.minScrollExtent,
+            duration: duration,
+            curve: curve);
+      });
   }
 
   /// make the footer enter loading state,and callback onLoading
   Future<void> requestLoading(
-      {Duration duration: const Duration(milliseconds: 300),
+      {bool needMove:true,Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
     assert(position != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (isLoading) return Future.value();
-    if (_configuration.footerTriggerDistance < 0) {
-      return position
-          ?.animateTo(
-              position.maxScrollExtent -
-                  (_configuration?.footerTriggerDistance ?? 15) +
-                  20,
-              duration: duration,
-              curve: curve)
-          ?.whenComplete(() {
-        footerMode.value = LoadStatus.loading;
+    footerMode.value = LoadStatus.loading;
+    if(needMove) {
+      return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
+        await position?.animateTo(
+            position.maxScrollExtent,
+            duration: duration,
+            curve: curve);
       });
-    } else
-      return position
-          ?.animateTo(position.maxScrollExtent,
-              duration: duration, curve: curve)
-          ?.whenComplete(() {
-        footerMode.value = LoadStatus.loading;
-      });
+    }
+    else{
+      return Future.value();
+    }
   }
 
   /// request complete,the header will enter complete state,

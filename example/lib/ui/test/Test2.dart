@@ -55,7 +55,12 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
       ),
       onTap: () {
         print("tap");
-        _controller.requestRefresh();
+//        _controller.requestRefresh().then((_){
+//          print("request complete");
+//        });
+        _controller.requestRefresh(needMove: false).then((_){
+          print("request complete");
+        });
       },
     );
   }
@@ -103,7 +108,7 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
       enablePullUp: true,
       controller: _controller,
       onRefresh: _onRefresh,
-      header: ClassicHeader(),
+      header: MaterialClassicHeader(),
       onLoading: _onLoading,
       onOffsetChange: _onOffsetCallback,
       child: GridView.builder(

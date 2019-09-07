@@ -64,12 +64,12 @@ Refresh(header):
 | headerTriggerDistance | overScroll distance of  trigger refresh     | double | 80.0 | 可选 |
 | maxOverScrollExtent | max overScroll distance   | double | ios:inf,android:60 | 可选 |
 | skipCanRefresh | if skip canRefresh state,enter refreshing state directly  | bool | false | 可选 |
-| headerOffset | Head indicator layout deviation Y coordinates, mostly for FrontStyle  | double | 0.0 | 可选 |
 | enableScrollWhenTwoLevel | whether enable scroll when into twoLevel   | bool | false | 可选 |
 | twiceTriggerDistance | the overScroll distance of trigger twoLevel  | double | 150.0 | 可选 |
 | closeTwoLevelDistance | Close the bottom crossing distance on the second floor, premise:enableScrollWhenTwoLevel is true  | double | 80.0 | 可选 |
 | enableBallisticRefresh | whether trigger refresh by BallisticScrollActivity(it mean use is not dragging on the screen)  | bool | false | 可选 |
 | enableScrollWhenRefreshCompleted | Whether the user is allowed to slide scrollable when the refresh is complete and ready to bounce back  | bool | true | 可选 |
+| topHitBoundary | When fast fling to top, setting a top boundary make the bouncing stop     | double | ios:inf,android:0 | 可选 |
 
 
 Load more(footer):
@@ -84,3 +84,4 @@ Load more(footer):
 | enableLoadingWhenFailed |  whether allowed to use gesture pull-up trigger to load more  | bool | false| 可选 |
 | enableBallisticRefresh | whether trigger loading by BallisticScrollActivity(it mean use is not dragging on the screen)  | bool | true | 可选 |
 | shouldFooterFollowWhenNotFull | When not full one page,If it should follow content for different status,premise: hideFooterWhenNotFull = false | (LoadStatus) => bool | () => false | 可选 |
+| bottomHitBoundary | When fast fling to bottom, setting a bottom boundary make the bouncing stop     | double | ios:inf,android:0 | 可选 |

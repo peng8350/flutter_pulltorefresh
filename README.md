@@ -52,7 +52,7 @@ simple example,In addition, you should pay attention to the differences in what 
 
 ```dart
 
-    
+
   List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -204,14 +204,14 @@ attributes that are not empty.
 
 | refresh style |   |pull up load style| |
 |:---:|:---:|:---:|:---:|
-| ![Follow](example/images/refreshstyle1.gif)| ![不跟随](example/images/refreshstyle2.gif)| ![永远显示](example/images/loadstyle1.gif) | ![永远隐藏](example/images/loadstyle2.gif)|
-| ![背部](example/images/refreshstyle3.gif)| ![前面悬浮](example/images/refreshstyle4.gif)| ![当加载中才显示,其它隐藏](example/images/loadstyle3.gif) | |
+| RefreshStyle.Follow <br>![Follow](example/images/refreshstyle1.gif)|RefreshStyle.UnFollow <br> ![不跟随](example/images/refreshstyle2.gif)| LoadStyle.ShowAlways <br>  ![永远显示](example/images/loadstyle1.gif) | LoadStyle.HideAlways<br> ![永远隐藏](example/images/loadstyle2.gif)|
+| RefreshStyle.Behind <br> ![背部](example/images/refreshstyle3.gif)| RefreshStyle.Front <br> ![前面悬浮](example/images/refreshstyle4.gif)| LoadStyle.ShowWhenLoading<br>  ![当加载中才显示,其它隐藏](example/images/loadstyle3.gif) | |
 
 |Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) | [MaterialClassicHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) |
 |:---:|:---:|:---:|:---:|
 || ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) | ![](example/images/material_classic.gif) |
 
-|Style|  [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [Bezier+circle](example/lib/ui/example/customindicator/shimmer_indicator.dart) |[Bezier+Circle](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/bezier_indicator.dart) |
+|Style|  [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [Shimmer Indicator](example/lib/ui/example/customindicator/shimmer_indicator.dart) |[Bezier+Circle](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/bezier_indicator.dart) |
 |:---:|:---:|:---:|:---:|
 ||  ![](example/images/material_waterdrop.gif) |![](example/images/shimmerindicator.gif) | ![](example/images/bezier.gif) |
 
@@ -287,11 +287,11 @@ Similarly, you may need to work with components like NotificationListener, Scrol
 
 ## Exist Problems
 * about NestedScrollView,When you slide down and then slide up quickly, it will return back. The main reason is that
- NestedScrollView does not consider the problem of cross-border elasticity under 
- bouncingScrollPhysics. Relevant flutter issues: 34316, 33367, 29264. This problem 
+ NestedScrollView does not consider the problem of cross-border elasticity under
+ bouncingScrollPhysics. Relevant flutter issues: 34316, 33367, 29264. This problem
  can only wait for flutter to fix this.
 * SmartRefresher does not have refresh injection into ScrollView under the subtree, that is, if you put AnimatedList or RecordableListView in the child
- is impossible. I have tried many ways to solve this problem and failed. Because of the 
+ is impossible. I have tried many ways to solve this problem and failed. Because of the
  principle of implementation, I have to append it to the head and tail of slivers. In fact, the problem is not that much of my
 Component issues, such as AnimatedList, can't be used with AnimatedList and GridView unless
  I convert AnimatedList to SliverAnimatedList is the solution. At the moment,

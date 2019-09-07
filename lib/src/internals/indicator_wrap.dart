@@ -274,6 +274,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       }
       if (refresher.onRefresh != null) refresher.onRefresh();
     } else if (mode == RefreshStatus.twoLevelOpening) {
+      floating = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         activity.resetActivity();
@@ -404,6 +405,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     if (!mounted || _isHide) {
       return;
     }
+
     update();
     if (mode == LoadStatus.idle || mode == LoadStatus.failed) {
       lastMode = mode;

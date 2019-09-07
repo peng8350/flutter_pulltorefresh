@@ -251,7 +251,6 @@ class RefreshPhysics extends ScrollPhysics {
         }
       }
     }
-
     if (maxOverScrollExtent != double.infinity &&
         value < topBoundary &&
         topBoundary < position.pixels) // hit top edge

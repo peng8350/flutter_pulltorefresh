@@ -16,6 +16,9 @@ enum TwoLevelDisplayAlignment { fromTop, fromCenter, fromBottom }
 /// the behaviour just like TaoBao,XieCheng(携程) App TwoLevel
 ///
 /// just a example
+///
+/// ```dart
+///
 ///TwoLevelHeader(
 ///  textStyle: TextStyle(color: Colors.white),
 ///  displayAlignment: TwoLevelDisplayAlignment.fromTop,
@@ -49,6 +52,8 @@ enum TwoLevelDisplayAlignment { fromTop, fromCenter, fromBottom }
 ///),
 ///),
 ///);
+///
+/// ```
 class TwoLevelHeader extends StatelessWidget {
   /// this  attr mostly put image or color
   final BoxDecoration decoration;
