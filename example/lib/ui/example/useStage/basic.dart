@@ -58,94 +58,70 @@ class _BasicExampleState extends State<BasicExample>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return ScrollConfiguration(
-      child: RefreshConfiguration.copyAncestor(
-        enableLoadingWhenFailed: true,
-        context: context,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: TabBar(
-              isScrollable: true,
-              controller: _tabController,
-              tabs: <Widget>[
-                Tab(
-                  text: "ListView",
-                ),
-                Tab(
-                  text: "GridView",
-                ),
-                Tab(
-                  text: "非滚动组件",
-                ),
-                Tab(
-                  text: "SliverAppBar+list",
-                ),
-                Tab(
-                  text: "GridView+ListView",
-                ),
-                Tab(
-                  text: "水平组件+listView",
-                ),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            physics: NeverScrollableScrollPhysics(),
+    return RefreshConfiguration.copyAncestor(
+      enableLoadingWhenFailed: true,
+      context: context,
+      child: Scaffold(
+        appBar: AppBar(
+          bottom: TabBar(
+            isScrollable: true,
             controller: _tabController,
-            children: <Widget>[
-              Scrollbar(
-                child: OnlyListView(),
+            tabs: <Widget>[
+              Tab(
+                text: "ListView",
               ),
-              Scrollbar(
-                child: OnlyGridView(),
+              Tab(
+                text: "GridView",
               ),
-              Scrollbar(
-                child: NoScrollable(),
+              Tab(
+                text: "非滚动组件",
               ),
-              Scrollbar(
-                child: SliverAppBarWithList(),
+              Tab(
+                text: "SliverAppBar+list",
               ),
-              Scrollbar(
-                child: GridAndList(),
+              Tab(
+                text: "GridView+ListView",
               ),
-              Scrollbar(
-                child: SwiperAndList(),
-              )
+              Tab(
+                text: "水平组件+listView",
+              ),
             ],
           ),
         ),
-        headerBuilder: () => WaterDropMaterialHeader(
-          backgroundColor: Theme.of(context).primaryColor,
+        body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: _tabController,
+          children: <Widget>[
+            Scrollbar(
+              child: OnlyListView(),
+            ),
+            Scrollbar(
+              child: OnlyGridView(),
+            ),
+            Scrollbar(
+              child: NoScrollable(),
+            ),
+            Scrollbar(
+              child: SliverAppBarWithList(),
+            ),
+            Scrollbar(
+              child: GridAndList(),
+            ),
+            Scrollbar(
+              child: SwiperAndList(),
+            )
+          ],
         ),
-        footerTriggerDistance: 30.0,
       ),
-      behavior: RefreshScrollBehavior(),
+      headerBuilder: () => WaterDropMaterialHeader(
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      footerTriggerDistance: 30.0,
     );
   }
 }
 
-class RefreshScrollBehavior extends ScrollBehavior {
-  @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
-    // When modifying this function, consider modifying the implementation in
-    // _MaterialScrollBehavior as well.
-    switch (getPlatform(context)) {
-      case TargetPlatform.iOS:
-        return child;
-      case TargetPlatform.android:
-      case TargetPlatform.fuchsia:
-        return GlowingOverscrollIndicator(
-          child: child,
-          // this will disable top Bouncing OverScroll Indicator showing in Android
-          showLeading: false,
-          axisDirection: axisDirection,
-          color: Theme.of(context).primaryColor,
-        );
-    }
-    return null;
-  }
-}
+
 
 //only ListView
 class OnlyListView extends StatefulWidget {

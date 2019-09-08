@@ -1,3 +1,4 @@
+import 'package:example/other/refresh_glowindicator.dart';
 import 'package:example/ui/MainActivity.dart';
 import 'package:example/ui/SecondActivity.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +23,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Pulltorefresh Demo',
         debugShowCheckedModeBanner: false,
+        builder: (context,child){
+          return ScrollConfiguration(
+            child: child,
+            behavior: RefreshScrollBehavior(),
+          );
+        },
         theme: ThemeData(
             // This is the theme of your application.
             //s
