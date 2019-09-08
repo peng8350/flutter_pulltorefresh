@@ -39,7 +39,8 @@ class RefreshLocalizations {
 
   Map<String, RefreshString> values = {
     'en': EnRefreshString(),
-    'zh': ChRefreshString()
+    'zh': ChRefreshString(),
+    'fr': FrRefreshString()
   };
 
   RefreshString get currentLocalization {
@@ -63,7 +64,7 @@ class RefreshLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'zh'].contains(locale.languageCode);
+    return ['en', 'zh','fr'].contains(locale.languageCode);
   }
 
   @override
@@ -184,4 +185,40 @@ class EnRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Refreshing...";
+}
+
+/// French
+class FrRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Relâchez pour charger davantage";
+
+  @override
+  String canRefreshText = "Relâchez pour rafraîchir";
+
+  @override
+  String canTwoLevelText = "Relâchez pour entrer secondfloor";
+
+  @override
+  String idleLoadingText = "Tirez pour charger davantage";
+
+  @override
+  String idleRefreshText = "Tirez pour rafraîchir";
+
+  @override
+  String loadFailedText = "Chargement échoué";
+
+  @override
+  String loadingText = "Chargement…";
+
+  @override
+  String noMoreText = "Aucune autre donnée";
+
+  @override
+  String refreshCompleteText = "Rafraîchissement terminé";
+
+  @override
+  String refreshFailedText = "Rafraîchissement échoué";
+
+  @override
+  String refreshingText = "Rafraîchissement…";
 }

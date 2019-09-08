@@ -10,6 +10,7 @@
 	<string>6.0</string>
 	<key>CFBundleLocalizations</key>
 	<array>
+		<string>fr</string>
 		<string>zh_CN</string>
 		<string>en</string>
 	</array>
