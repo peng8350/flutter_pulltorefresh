@@ -82,6 +82,69 @@ class GifHeader1State extends RefreshIndicatorState<GifHeader1>
   }
 }
 
+class GifFooter1 extends StatefulWidget {
+
+  GifFooter1() : super();
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _GifFooter1State();
+  }
+}
+
+class _GifFooter1State extends State<GifFooter1>
+    with SingleTickerProviderStateMixin {
+  GifController _gifController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    // init frame is 2
+    _gifController = GifController(
+      vsync: this,
+      value: 1,
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return CustomFooter(
+      height: 80,
+      builder: (context,mode){
+        return GifImage(
+          image: AssetImage("images/gifindicator1.gif"),
+          controller: _gifController,
+          height: 80.0,
+          width: 537.0,
+        );
+      },
+      loadStyle: LoadStyle.ShowWhenLoading,
+      onModeChange: (mode){
+        if (mode == LoadStatus.loading) {
+          _gifController.repeat(
+              min: 0, max: 29, period: Duration(milliseconds: 500));
+        }
+      },
+      endLoading: () async {
+
+        _gifController.value = 30;
+        return _gifController.animateTo(59, duration: Duration(milliseconds: 500));
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _gifController.dispose();
+    super.dispose();
+  }
+}
+
+
 class GifIndicatorExample1 extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -95,19 +158,31 @@ class GifIndicatorExample1State extends State<GifIndicatorExample1> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return SmartRefresher(
-      controller: _controller,
-      enablePullUp: true,
-      header: GifHeader1(),
-      onRefresh: () async {
-        await Future.delayed(Duration(milliseconds: 2000));
-        _controller.refreshCompleted();
-      },
-      child: ListView.builder(
-        itemBuilder: (c, q) => Card(),
-        itemCount: 10,
-        itemExtent: 100.0,
+    return RefreshConfiguration.copyAncestor(
+      context: context,
+      // two attrs enable footer implements the effect in header default
+      enableBallisticLoad: false,
+      footerTriggerDistance: -80,
+      child: SmartRefresher(
+        controller: _controller,
+        enablePullUp: true,
+        header: GifHeader1(),
+        footer: GifFooter1(),
+        onRefresh: () async {
+          await Future.delayed(Duration(milliseconds: 2000));
+          _controller.refreshCompleted();
+        },
+          onLoading: () async {
+            await Future.delayed(Duration(milliseconds: 2000));
+            _controller.loadFailed();
+          },
+        child: ListView.builder(
+          itemBuilder: (c, q) => Card(),
+          itemCount: 10,
+          itemExtent: 100.0,
+        ),
       ),
+
     );
   }
 }
