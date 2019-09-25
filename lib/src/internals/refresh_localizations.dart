@@ -40,7 +40,8 @@ class RefreshLocalizations {
   Map<String, RefreshString> values = {
     'en': EnRefreshString(),
     'zh': ChRefreshString(),
-    'fr': FrRefreshString()
+    'fr': FrRefreshString(),
+    'ru': RuRefreshString()
   };
 
   RefreshString get currentLocalization {
@@ -64,7 +65,7 @@ class RefreshLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'zh','fr'].contains(locale.languageCode);
+    return ['en', 'zh', 'fr', 'ru'].contains(locale.languageCode);
   }
 
   @override
@@ -221,4 +222,40 @@ class FrRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Rafraîchissement…";
+}
+
+/// Russian
+class RuRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Отпустите, чтобы загрузить больше";
+
+  @override
+  String canRefreshText = "Отпустите, чтобы обновить";
+
+  @override
+  String canTwoLevelText = "Отпустите, чтобы войти на второй уровень";
+
+  @override
+  String idleLoadingText = "Тянуть вверх, чтобы загрузить больше";
+
+  @override
+  String idleRefreshText = "Тянуть вниз, чтобы обновить";
+
+  @override
+  String loadFailedText = "Ошибка загрузки";
+
+  @override
+  String loadingText = "Загрузка...";
+
+  @override
+  String noMoreText = "Больше данных нет";
+
+  @override
+  String refreshCompleteText = "Обновление завершено";
+
+  @override
+  String refreshFailedText = "Не удалось обновить";
+
+  @override
+  String refreshingText = "Обновление...";
 }
