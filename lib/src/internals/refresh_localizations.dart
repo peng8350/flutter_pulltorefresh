@@ -41,7 +41,8 @@ class RefreshLocalizations {
     'en': EnRefreshString(),
     'zh': ChRefreshString(),
     'fr': FrRefreshString(),
-    'ru': RuRefreshString()
+    'ru': RuRefreshString(),
+    'ua': UaRefreshString()
   };
 
   RefreshString get currentLocalization {
@@ -65,7 +66,7 @@ class RefreshLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'zh', 'fr', 'ru'].contains(locale.languageCode);
+    return ['en', 'zh', 'fr', 'ru', 'ua'].contains(locale.languageCode);
   }
 
   @override
@@ -258,4 +259,40 @@ class RuRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Обновление...";
+}
+
+// Ukrainian
+class UaRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Відпустіть, щоб завантажити більше";
+
+  @override
+  String canRefreshText = "Відпустіть, щоб оновити";
+
+  @override
+  String canTwoLevelText = "Відпустіть, щоб увійти на другий рівень";
+
+  @override
+  String idleLoadingText = "Тягнути вгору, щоб завантажити більше";
+
+  @override
+  String idleRefreshText = "Тягнути вниз, щоб оновити";
+
+  @override
+  String loadFailedText = "Помилка завантаження";
+
+  @override
+  String loadingText = "Завантаження...";
+
+  @override
+  String noMoreText = "Більше даних немає";
+
+  @override
+  String refreshCompleteText = "Оновлення завершено";
+
+  @override
+  String refreshFailedText = "Не вдалося оновити";
+
+  @override
+  String refreshingText = "Оновлення...";
 }
