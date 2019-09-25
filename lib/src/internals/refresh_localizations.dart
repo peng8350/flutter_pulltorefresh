@@ -42,7 +42,7 @@ class RefreshLocalizations {
     'zh': ChRefreshString(),
     'fr': FrRefreshString(),
     'ru': RuRefreshString(),
-    'ua': UaRefreshString()
+    'uk': UkRefreshString()
   };
 
   RefreshString get currentLocalization {
@@ -66,7 +66,7 @@ class RefreshLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'zh', 'fr', 'ru', 'ua'].contains(locale.languageCode);
+    return ['en', 'zh', 'fr', 'ru', 'uk'].contains(locale.languageCode);
   }
 
   @override
@@ -262,7 +262,7 @@ class RuRefreshString implements RefreshString {
 }
 
 // Ukrainian
-class UaRefreshString implements RefreshString {
+class UkRefreshString implements RefreshString {
   @override
   String canLoadingText = "Відпустіть, щоб завантажити більше";
 
