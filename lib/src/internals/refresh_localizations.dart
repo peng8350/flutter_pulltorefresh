@@ -40,7 +40,9 @@ class RefreshLocalizations {
   Map<String, RefreshString> values = {
     'en': EnRefreshString(),
     'zh': ChRefreshString(),
-    'fr': FrRefreshString()
+    'fr': FrRefreshString(),
+    'ru': RuRefreshString(),
+    'uk': UkRefreshString()
   };
 
   RefreshString get currentLocalization {
@@ -64,7 +66,7 @@ class RefreshLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'zh','fr'].contains(locale.languageCode);
+    return ['en', 'zh', 'fr', 'ru', 'uk'].contains(locale.languageCode);
   }
 
   @override
@@ -221,4 +223,76 @@ class FrRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Rafraîchissement…";
+}
+
+/// Russian
+class RuRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Отпустите, чтобы загрузить больше";
+
+  @override
+  String canRefreshText = "Отпустите, чтобы обновить";
+
+  @override
+  String canTwoLevelText = "Отпустите, чтобы войти на второй уровень";
+
+  @override
+  String idleLoadingText = "Тянуть вверх, чтобы загрузить больше";
+
+  @override
+  String idleRefreshText = "Тянуть вниз, чтобы обновить";
+
+  @override
+  String loadFailedText = "Ошибка загрузки";
+
+  @override
+  String loadingText = "Загрузка...";
+
+  @override
+  String noMoreText = "Больше данных нет";
+
+  @override
+  String refreshCompleteText = "Обновление завершено";
+
+  @override
+  String refreshFailedText = "Не удалось обновить";
+
+  @override
+  String refreshingText = "Обновление...";
+}
+
+// Ukrainian
+class UkRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Відпустіть, щоб завантажити більше";
+
+  @override
+  String canRefreshText = "Відпустіть, щоб оновити";
+
+  @override
+  String canTwoLevelText = "Відпустіть, щоб увійти на другий рівень";
+
+  @override
+  String idleLoadingText = "Тягнути вгору, щоб завантажити більше";
+
+  @override
+  String idleRefreshText = "Тягнути вниз, щоб оновити";
+
+  @override
+  String loadFailedText = "Помилка завантаження";
+
+  @override
+  String loadingText = "Завантаження...";
+
+  @override
+  String noMoreText = "Більше даних немає";
+
+  @override
+  String refreshCompleteText = "Оновлення завершено";
+
+  @override
+  String refreshFailedText = "Не вдалося оновити";
+
+  @override
+  String refreshingText = "Оновлення...";
 }
