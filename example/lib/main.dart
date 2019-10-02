@@ -19,6 +19,12 @@ class MyApp extends StatelessWidget {
       dragSpeedRatio: 0.91,
       headerBuilder: () => MaterialClassicHeader(),
       footerBuilder: () => ClassicFooter(),
+      enableLoadingWhenNoData: false,
+      shouldFooterFollowWhenNotFull: (state)
+      {
+        // If you want load more with noMoreData state ,may be you should return false
+        return false;
+      },
       autoLoad: true,
       child: MaterialApp(
         title: 'Pulltorefresh Demo',
@@ -38,8 +44,8 @@ class MyApp extends StatelessWidget {
             // "hot reload" (press "r" in the console where you ran "flutter run",
             // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
             // counter didn't reset back to zero; the application is not restarted.
-            platform: TargetPlatform.android,
             primarySwatch: Colors.blue,
+            platform: TargetPlatform.android,
             primaryColor: Colors.greenAccent),
         localizationsDelegates: [
           RefreshLocalizations.delegate,

@@ -124,7 +124,7 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
 //    });
     _getDatas();
     _refreshController = RefreshController(
-        initialRefresh: false, initialLoadStatus: LoadStatus.idle);
+        initialRefresh: false, initialLoadStatus: LoadStatus.noMore);
     _animationController = AnimationController(vsync: this);
     super.initState();
   }
@@ -196,8 +196,8 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
           itemBuilder: (c, i) => Container(
             color: Colors.lightGreen,
           ),
-          itemCount: 100,
-          itemExtent: 5,
+          itemCount: 50,
+          itemExtent: 50,
         ),
         onLoading: () async {
           await Future.delayed(const Duration(milliseconds: 1000));

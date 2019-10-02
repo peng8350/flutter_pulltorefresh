@@ -769,6 +769,9 @@ class RefreshConfiguration extends InheritedWidget {
   /// whether footer can trigger load by reaching footerDistance when failed state
   final bool enableLoadingWhenFailed;
 
+  /// whether footer can trigger load by reaching footerDistance when inNoMore state
+  final bool enableLoadingWhenNoData;
+
   /// overScroll distance of trigger refresh
   final double headerTriggerDistance;
 
@@ -803,6 +806,7 @@ class RefreshConfiguration extends InheritedWidget {
       this.dragSpeedRatio: 1.0,
       this.shouldFooterFollowWhenNotFull,
       this.enableScrollWhenTwoLevel: true,
+        this.enableLoadingWhenNoData:false,
       this.enableBallisticRefresh: false,
       this.springDescription: const SpringDescription(
         mass: 2.2,
@@ -843,6 +847,7 @@ class RefreshConfiguration extends InheritedWidget {
     bool enableScrollWhenTwoLevel,
     bool enableBallisticRefresh,
     bool enableBallisticLoad,
+    bool enableLoadingWhenNoData,
     SpringDescription springDescription,
     bool enableScrollWhenRefreshCompleted,
     bool enableLoadingWhenFailed,
@@ -894,6 +899,7 @@ class RefreshConfiguration extends InheritedWidget {
             RefreshConfiguration.of(context).enableBallisticRefresh,
         enableBallisticLoad = enableBallisticLoad ??
             RefreshConfiguration.of(context).enableBallisticLoad,
+        enableLoadingWhenNoData = enableLoadingWhenNoData?? RefreshConfiguration.of(context).enableLoadingWhenNoData,
         enableLoadingWhenFailed = enableLoadingWhenFailed ??
             RefreshConfiguration.of(context).enableLoadingWhenFailed,
         closeTwoLevelDistance = closeTwoLevelDistance ??

@@ -110,17 +110,17 @@ void main() {
 
     _refreshController.footerMode.value = LoadStatus.loading;
     _refreshController.loadComplete();
-    await tester.pump(Duration(milliseconds: 200));
+    await tester.pump();
     expect(_refreshController.footerMode.value, LoadStatus.idle);
 
     _refreshController.footerMode.value = LoadStatus.loading;
     _refreshController.loadFailed();
-    await tester.pump(Duration(milliseconds: 200));
+    await tester.pump();
     expect(_refreshController.footerMode.value, LoadStatus.failed);
 
     _refreshController.footerMode.value = LoadStatus.loading;
     _refreshController.loadNoData();
-    await tester.pump(Duration(milliseconds: 200));
+    await tester.pump();
     expect(_refreshController.footerMode.value, LoadStatus.noMore);
   });
 

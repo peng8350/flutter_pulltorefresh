@@ -387,6 +387,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       if (!configuration.enableLoadingWhenFailed && mode == LoadStatus.failed) {
         return false;
       }
+      if (!configuration.enableLoadingWhenNoData && mode == LoadStatus.noMore) {
+        return false;
+      }
       if (mode != LoadStatus.canLoading &&
           _position.userScrollDirection == ScrollDirection.forward) {
         return false;
@@ -402,7 +405,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     }
 
     update();
-    if (mode == LoadStatus.idle || mode == LoadStatus.failed) {
+    if (mode == LoadStatus.idle || mode == LoadStatus.failed || mode == LoadStatus.noMore) {
       lastMode = mode;
       finishLoading();
     }
@@ -425,7 +428,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   void _dispatchModeByOffset(double offset) {
     if (!mounted ||
         _isHide ||
-        LoadStatus.noMore == mode ||
         LoadStatus.loading == mode ||
         floating) {
       return;
@@ -480,6 +482,13 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     _position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
     newPosition?.isScrollingNotifier?.addListener(_listenScrollEnd);
     super._onPositionUpdated(newPosition);
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    lastMode = mode;
   }
 
   @override
