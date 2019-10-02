@@ -211,11 +211,11 @@ class Test4State extends State<Test4>
           ]);
         },
         onRefresh: () async {
-          await Future.delayed(Duration(milliseconds: 1000));
+          await Future.delayed(Duration(milliseconds: 300));
           _refreshController.refreshCompleted();
         },
         onLoading: () async {
-          await Future.delayed(Duration(milliseconds: 1000));
+          await Future.delayed(Duration(milliseconds: 300));
           _refreshController.loadComplete();
         },
         controller: _refreshController,

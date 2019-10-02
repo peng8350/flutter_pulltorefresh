@@ -4,6 +4,8 @@
     createTime:2018-05-01 11:39
 */
 
+import 'dart:typed_data';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/physics.dart';
@@ -590,6 +592,28 @@ class RefreshController {
     position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
   }
 
+  StatefulElement _findIndicator(BuildContext context,  Type elementType) {
+    if (context == null) {
+      return null;
+    }
+    StatefulElement result;
+    context.visitChildElements((Element e) {
+      if(elementType == RefreshIndicator){
+        if(e.widget is RefreshIndicator) {
+          result = e;
+        }
+      }
+      else{
+        if(e.widget is LoadIndicator) {
+          result = e;
+        }
+      }
+
+      result ??= _findIndicator(e, elementType);
+    });
+    return result;
+  }
+
   /// when bounce out of edge and stopped by overScroll or underScroll, it should be SpringBack to 0.0
   /// but ScrollPhysics didn't provide one way to spring back when outOfEdge(stopped by applyBouncingCondition return != 0.0)
   /// so for making it spring back, it should be trigger goBallistic make it spring back
@@ -607,15 +631,26 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (isRefresh) return Future.value();
-    headerMode.value = RefreshStatus.refreshing;
-    if (needMove) {
-      return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
-        await position?.animateTo(position.minScrollExtent,
-            duration: duration, curve: curve);
-      });
-    } else {
-      return Future.value();
-    }
+    StatefulElement indicatorElement = _findIndicator(position.context.storageContext,RefreshIndicator);
+    (indicatorElement.state as RefreshIndicatorState).setState((){
+      (indicatorElement.state as RefreshIndicatorState).floating = true;
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      if (needMove) {
+        return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
+          await position?.animateTo(position.minScrollExtent,
+              duration: duration, curve: curve)?.then((_){
+            headerMode.value = RefreshStatus.refreshing;
+          });
+        });
+      } else {
+        return Future.value().then((_){
+          headerMode.value = RefreshStatus.refreshing;
+        });
+      }
+    });
+
   }
 
   /// make the header enter refreshing state,and callback onRefresh
@@ -639,14 +674,22 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (isLoading) return Future.value();
-    footerMode.value = LoadStatus.loading;
+    StatefulElement indicatorElement = _findIndicator(position.context.storageContext,LoadIndicator);
+    (indicatorElement.state as LoadIndicatorState).setState((){
+      (indicatorElement.state as LoadIndicatorState).floating = true;
+    });
+
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         await position?.animateTo(position.maxScrollExtent,
-            duration: duration, curve: curve);
+            duration: duration, curve: curve)?.then((_){
+          footerMode.value = LoadStatus.loading;
+        });
       });
     } else {
-      return Future.value();
+      return Future.value().then((_){
+        footerMode.value = LoadStatus.loading;
+      });
     }
   }
 
