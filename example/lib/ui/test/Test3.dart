@@ -165,6 +165,7 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
         enablePullDown: true,
         controller: _refreshController,
         footer: ClassicFooter(
+          height: 60,
           loadStyle: LoadStyle.ShowWhenLoading,
         ),
         header: TwoLevelHeader(
@@ -192,7 +193,6 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
 //        });
         },
         child: ListView.builder(
-          physics: ClampingScrollPhysics(),
           itemBuilder: (c, i) => Container(
             color: Colors.lightGreen,
           ),
@@ -202,7 +202,7 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
         onLoading: () async {
           await Future.delayed(const Duration(milliseconds: 1000));
           print("onLoading");
-          _refreshController.loadComplete();
+          _refreshController.loadNoData();
         },
       ),
       dragSpeedRatio: 0.9,

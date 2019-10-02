@@ -368,7 +368,10 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       if (!mounted) {
         return;
       }
-      if (_position.outOfRange) {activity.delegate.goBallistic(0);}
+      _enableLoading = false;
+      WidgetsBinding.instance.addPostFrameCallback((_){
+        if (_position.outOfRange) {activity.delegate.goBallistic(0);}
+      });
       setState(() {
         floating = false;
       });

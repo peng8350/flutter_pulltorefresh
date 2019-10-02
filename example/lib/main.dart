@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       dragSpeedRatio: 0.91,
       headerBuilder: () => MaterialClassicHeader(),
       footerBuilder: () => ClassicFooter(),
-      enableLoadingWhenNoData: false,
+      enableLoadingWhenNoData: true,
       shouldFooterFollowWhenNotFull: (state)
       {
         // If you want load more with noMoreData state ,may be you should return false
@@ -30,11 +30,11 @@ class MyApp extends StatelessWidget {
         title: 'Pulltorefresh Demo',
         debugShowCheckedModeBanner: false,
         builder: (context,child){
-          return ScrollConfiguration(
-            child: child,
-            behavior: RefreshScrollBehavior(),
-          );
-        },
+        return ScrollConfiguration(
+          child: child,
+          behavior: RefreshScrollBehavior(),
+        );
+      },
         theme: ThemeData(
             // This is the theme of your application.
             //s
@@ -45,7 +45,6 @@ class MyApp extends StatelessWidget {
             // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
             // counter didn't reset back to zero; the application is not restarted.
             primarySwatch: Colors.blue,
-            platform: TargetPlatform.android,
             primaryColor: Colors.greenAccent),
         localizationsDelegates: [
           RefreshLocalizations.delegate,

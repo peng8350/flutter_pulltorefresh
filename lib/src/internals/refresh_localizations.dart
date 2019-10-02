@@ -31,6 +31,35 @@ import 'package:flutter/widgets.dart';
 ///   ],
 ///   // ...
 /// )
+///
+/// If you don't have the language you need here and you want to add it, you can give me a pr.
+///
+/// Steps:
+/// 1. custom a class XXRefreshString implements  RefreshString ,and then translate them
+/// 2. add it into values
+/// ```dart
+///   Map<String, RefreshString> values = {
+///    'en': EnRefreshString(),
+///    'zh': ChRefreshString(),
+///    'fr': FrRefreshString(),
+///    'ru': RuRefreshString(),
+///    'uk': UkRefreshString(),
+///    'xx':XXRefreshString(), // xx indicate your country code
+///  };
+/// 3. update delegate a method "isSupported"
+/// ```dart
+///   @override
+//  bool isSupported(Locale locale) {
+//    return ['en', 'zh', 'fr', 'ru', 'uk','xx'].contains(locale.languageCode);
+//  }
+/// ```
+///
+/// see #175 to find more details
+///
+///
+/// ```
+///
+///
 /// ```
 class RefreshLocalizations {
   final Locale locale;

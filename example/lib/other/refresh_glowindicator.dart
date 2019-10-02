@@ -23,6 +23,7 @@ class RefreshScrollBehavior extends ScrollBehavior {
     // _MaterialScrollBehavior as well.
     switch (getPlatform(context)) {
       case TargetPlatform.iOS:
+        return child;
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
         return GlowingOverscrollIndicator(
