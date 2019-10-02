@@ -34,10 +34,10 @@ abstract class RefreshIndicator extends StatefulWidget {
 
   const RefreshIndicator(
       {Key key,
-      this.height: 60.0,
-      this.offset: 0.0,
-      this.completeDuration: const Duration(milliseconds: 500),
-      this.refreshStyle: RefreshStyle.Follow})
+        this.height: 60.0,
+        this.offset: 0.0,
+        this.completeDuration: const Duration(milliseconds: 500),
+        this.refreshStyle: RefreshStyle.Follow})
       : super(key: key);
 }
 
@@ -54,9 +54,9 @@ abstract class LoadIndicator extends StatefulWidget {
 
   const LoadIndicator(
       {Key key,
-      this.onClick,
-      this.loadStyle: LoadStyle.ShowAlways,
-      this.height: 60.0})
+        this.onClick,
+        this.loadStyle: LoadStyle.ShowAlways,
+        this.height: 60.0})
       : super(key: key);
 }
 
@@ -138,12 +138,12 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   double _calculateScrollOffset() {
     return (floating
-            ? (mode == RefreshStatus.twoLeveling ||
-                    mode == RefreshStatus.twoLevelOpening ||
-                    mode == RefreshStatus.twoLevelClosing
-                ? SmartRefresher.ofState(context).viewportExtent
-                : widget.height)
-            : 0.0) -
+        ? (mode == RefreshStatus.twoLeveling ||
+        mode == RefreshStatus.twoLevelOpening ||
+        mode == RefreshStatus.twoLevelClosing
+        ? SmartRefresher.ofState(context).viewportExtent
+        : widget.height)
+        : 0.0) -
         _position?.pixels;
   }
 
@@ -280,8 +280,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         activity.resetActivity();
         _position
             .animateTo(0.0,
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.linear)
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.linear)
             .whenComplete(() {
           mode = RefreshStatus.twoLeveling;
         });
@@ -317,12 +317,12 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         child: RotatedBox(
           child: buildContent(context, mode),
           quarterTurns:
-              Scrollable.of(context).axisDirection == AxisDirection.up ? 10 : 0,
+          Scrollable.of(context).axisDirection == AxisDirection.up ? 10 : 0,
         ),
         floating: floating,
         refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||
-                mode == RefreshStatus.twoLevelOpening ||
-                mode == RefreshStatus.twoLevelClosing
+            mode == RefreshStatus.twoLevelOpening ||
+            mode == RefreshStatus.twoLevelClosing
             ? SmartRefresher.ofState(context).viewportExtent
             : widget.height,
         refreshStyle: widget.refreshStyle);
@@ -338,7 +338,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   double _calculateScrollOffset() {
     final double overScrollPastEnd =
-        math.max(_position.pixels - _position.maxScrollExtent, 0.0);
+    math.max(_position.pixels - _position.maxScrollExtent, 0.0);
     return overScrollPastEnd;
   }
 
@@ -364,26 +364,21 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     if (!floating) {
       return;
     }
-    if (_position.outOfRange) {
-      endLoading().then((_) {
-        if (!mounted) {
-          return;
-        }
-        if (_position.outOfRange) activity.delegate.goBallistic(0);
-        setState(() {
-          floating = false;
-        });
-      });
-    } else {
+    endLoading().then((_) {
+      if (!mounted) {
+        return;
+      }
+      if (_position.outOfRange) {activity.delegate.goBallistic(0);}
       setState(() {
         floating = false;
       });
-    }
+    });
+
   }
 
   bool _checkIfCanLoading() {
     if (_position.maxScrollExtent - _position.pixels <=
-            configuration.footerTriggerDistance &&
+        configuration.footerTriggerDistance &&
         _position.extentBefore > 2.0 &&
         _enableLoading) {
       if (!configuration.autoLoad && mode == LoadStatus.idle) {
