@@ -95,7 +95,7 @@ simple example,In addition, you should pay attention to the differences in what 
             else if(mode == LoadStatus.failed){
               body = Text("Load Failed!Click retry!");
             }
-            else if(mode == LoadStatus.canLoad){
+            else if(mode == LoadStatus.canLoading){
                 body = Text("release to load more");
             }
             else{

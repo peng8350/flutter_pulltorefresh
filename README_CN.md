@@ -93,7 +93,7 @@
             else if(mode == LoadStatus.failed){
               body = Text("加载失败！点击重试！");
             }
-            else if(mode == LoadStatus.canLoad){
+            else if(mode == LoadStatus.canLoading){
                body = Text("松手,加载更多!");
             }
             else{
