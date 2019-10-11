@@ -173,7 +173,7 @@ class Test4State extends State<Test4>
         enablePullDown: true,
         builder: (context, physics) {
           return CustomScrollView(physics: physics, slivers: [
-            ClassicHeader(),
+            WaterDropHeader(),
             SliverAppBar(),
             SliverToBoxAdapter(
               child: Column(
@@ -211,11 +211,12 @@ class Test4State extends State<Test4>
           ]);
         },
         onRefresh: () async {
-          await Future.delayed(Duration(milliseconds: 300));
+          print("onRefresh");
+          await Future.delayed(Duration(milliseconds: 1300));
           _refreshController.refreshCompleted();
         },
         onLoading: () async {
-          await Future.delayed(Duration(milliseconds: 300));
+          await Future.delayed(Duration(milliseconds: 1300));
           _refreshController.loadComplete();
         },
         controller: _refreshController,

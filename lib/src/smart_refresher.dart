@@ -290,6 +290,7 @@ class SmartRefresherState extends State<SmartRefresher> {
   RefreshPhysics _physics;
   bool _updatePhysics = false;
   double viewportExtent = 0;
+  bool _canDrag = true;
 
   final RefreshIndicator defaultHeader =
       defaultTargetPlatform == TargetPlatform.iOS
@@ -373,7 +374,7 @@ class SmartRefresherState extends State<SmartRefresher> {
                     : 0.0), // need to fix default value by ios or android later
             bottomHitBoundary: conf?.bottomHitBoundary ??
                 (isBouncingPhysics ? double.infinity : 0.0))
-        .applyTo(physics);
+        .applyTo(!_canDrag ? NeverScrollableScrollPhysics():physics);
   }
 
   // build the customScrollView
@@ -473,6 +474,15 @@ class SmartRefresherState extends State<SmartRefresher> {
       return true;
     }
     return false;
+  }
+
+  void setCanDrag(bool canDrag){
+    if(_canDrag ==canDrag){
+      return;
+    }
+    setState(() {
+      _canDrag = canDrag;
+    });
   }
 
   @override
@@ -632,15 +642,16 @@ class RefreshController {
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (isRefresh) return Future.value();
     StatefulElement indicatorElement = _findIndicator(position.context.storageContext,RefreshIndicator);
-    (indicatorElement.state as RefreshIndicatorState).setState((){
-      (indicatorElement.state as RefreshIndicatorState).floating = true;
-    });
-
+      (indicatorElement.state as RefreshIndicatorState)?.floating = true;
+      if(needMove)
+    SmartRefresher.ofState(position.context.storageContext).setCanDrag(false);
     WidgetsBinding.instance.addPostFrameCallback((_){
+
       if (needMove) {
         return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
           await position?.animateTo(position.minScrollExtent,
               duration: duration, curve: curve)?.then((_){
+            SmartRefresher.ofState(position.context.storageContext)?.setCanDrag(true);
             headerMode.value = RefreshStatus.refreshing;
           });
         });
@@ -675,14 +686,15 @@ class RefreshController {
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (isLoading) return Future.value();
     StatefulElement indicatorElement = _findIndicator(position.context.storageContext,LoadIndicator);
-    (indicatorElement.state as LoadIndicatorState).setState((){
-      (indicatorElement.state as LoadIndicatorState).floating = true;
-    });
 
+      (indicatorElement.state as LoadIndicatorState)?.floating = true;
+    if(needMove)
+      SmartRefresher.ofState(position.context.storageContext).setCanDrag(false);
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         await position?.animateTo(position.maxScrollExtent,
             duration: duration, curve: curve)?.then((_){
+          SmartRefresher.ofState(position.context.storageContext).setCanDrag(true);
           footerMode.value = LoadStatus.loading;
         });
       });
