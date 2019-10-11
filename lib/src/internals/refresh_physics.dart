@@ -5,7 +5,6 @@
  */
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-import 'package:flutter/foundation.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -221,8 +220,11 @@ class RefreshPhysics extends ScrollPhysics {
     if (enablePullUp) {
       final RenderSliverLoading sliverFooter = viewportRender.lastChild;
       bottomExtra = sliverFooter.geometry.scrollExtent != 0.0 ||
-              (notFull && controller.footerStatus == LoadStatus.noMore&& !RefreshConfiguration.of(
-                  controller.position.context.storageContext).enableLoadingWhenNoData) ||
+              (notFull &&
+                  controller.footerStatus == LoadStatus.noMore &&
+                  !RefreshConfiguration.of(
+                          controller.position.context.storageContext)
+                      .enableLoadingWhenNoData) ||
               (notFull &&
                   (RefreshConfiguration.of(
                               controller.position.context.storageContext)

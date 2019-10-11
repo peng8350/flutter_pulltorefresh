@@ -20,8 +20,7 @@ class MyApp extends StatelessWidget {
       headerBuilder: () => MaterialClassicHeader(),
       footerBuilder: () => ClassicFooter(),
       enableLoadingWhenNoData: true,
-      shouldFooterFollowWhenNotFull: (state)
-      {
+      shouldFooterFollowWhenNotFull: (state) {
         // If you want load more with noMoreData state ,may be you should return false
         return false;
       },
@@ -29,12 +28,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Pulltorefresh Demo',
         debugShowCheckedModeBanner: false,
-        builder: (context,child){
-        return ScrollConfiguration(
-          child: child,
-          behavior: RefreshScrollBehavior(),
-        );
-      },
+        builder: (context, child) {
+          return ScrollConfiguration(
+            child: child,
+            behavior: RefreshScrollBehavior(),
+          );
+        },
         theme: ThemeData(
             // This is the theme of your application.
             //s

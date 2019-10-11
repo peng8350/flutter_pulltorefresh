@@ -35,7 +35,7 @@
 ```yaml
 
    dependencies:
-     pull_to_refresh: ^1.5.6
+     pull_to_refresh: ^1.5.7
 
 ```
 

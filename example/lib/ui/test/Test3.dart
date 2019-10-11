@@ -160,6 +160,9 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return RefreshConfiguration.copyAncestor(
       context: context,
+      footerTriggerDistance: -80,
+      maxUnderScrollExtent: 60,
+      enableLoadingWhenNoData: true,
       child: SmartRefresher(
         enablePullUp: true,
         enablePullDown: true,

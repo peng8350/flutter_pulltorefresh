@@ -318,3 +318,9 @@ other:
 * In Android systems,default change: fast fling will be stopped in 0 pixels
 * Optimized part indicator,auto attach primaryColor from Theme,text style adjust etc..
 * Optimize requestRefresh() and requestLoading(),avoid spring back when far from target point,add one parameter controll whether to move down or top
+
+## 1.5.7
+* add three national language: French,Russian,...
+* fix endLoading logic error in callback
+* add enableLoadMoreWhenNoMoreData,enable switch to decide whether auto load more when footer state is noMore
+* fix requestRefresh callback onRefresh immediately

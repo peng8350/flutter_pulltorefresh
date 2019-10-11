@@ -121,8 +121,6 @@ class _BasicExampleState extends State<BasicExample>
   }
 }
 
-
-
 //only ListView
 class OnlyListView extends StatefulWidget {
   @override

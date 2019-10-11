@@ -4,10 +4,8 @@
     createTime:2018-05-01 11:39
 */
 
-import 'dart:typed_data';
 
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
@@ -374,7 +372,7 @@ class SmartRefresherState extends State<SmartRefresher> {
                     : 0.0), // need to fix default value by ios or android later
             bottomHitBoundary: conf?.bottomHitBoundary ??
                 (isBouncingPhysics ? double.infinity : 0.0))
-        .applyTo(!_canDrag ? NeverScrollableScrollPhysics():physics);
+        .applyTo(!_canDrag ? NeverScrollableScrollPhysics() : physics);
   }
 
   // build the customScrollView
@@ -476,8 +474,8 @@ class SmartRefresherState extends State<SmartRefresher> {
     return false;
   }
 
-  void setCanDrag(bool canDrag){
-    if(_canDrag ==canDrag){
+  void setCanDrag(bool canDrag) {
+    if (_canDrag == canDrag) {
       return;
     }
     setState(() {
@@ -602,19 +600,18 @@ class RefreshController {
     position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
   }
 
-  StatefulElement _findIndicator(BuildContext context,  Type elementType) {
+  StatefulElement _findIndicator(BuildContext context, Type elementType) {
     if (context == null) {
       return null;
     }
     StatefulElement result;
     context.visitChildElements((Element e) {
-      if(elementType == RefreshIndicator){
-        if(e.widget is RefreshIndicator) {
+      if (elementType == RefreshIndicator) {
+        if (e.widget is RefreshIndicator) {
           result = e;
         }
-      }
-      else{
-        if(e.widget is LoadIndicator) {
+      } else {
+        if (e.widget is LoadIndicator) {
           result = e;
         }
       }
@@ -641,27 +638,29 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (isRefresh) return Future.value();
-    StatefulElement indicatorElement = _findIndicator(position.context.storageContext,RefreshIndicator);
-      (indicatorElement.state as RefreshIndicatorState)?.floating = true;
-      if(needMove)
-    SmartRefresher.ofState(position.context.storageContext).setCanDrag(false);
-    WidgetsBinding.instance.addPostFrameCallback((_){
-
+    StatefulElement indicatorElement =
+        _findIndicator(position.context.storageContext, RefreshIndicator);
+    (indicatorElement.state as RefreshIndicatorState)?.floating = true;
+    if (needMove)
+      SmartRefresher.ofState(position.context.storageContext).setCanDrag(false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (needMove) {
         return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
-          await position?.animateTo(position.minScrollExtent,
-              duration: duration, curve: curve)?.then((_){
-            SmartRefresher.ofState(position.context.storageContext)?.setCanDrag(true);
+          await position
+              ?.animateTo(position.minScrollExtent,
+                  duration: duration, curve: curve)
+              ?.then((_) {
+            SmartRefresher.ofState(position.context.storageContext)
+                ?.setCanDrag(true);
             headerMode.value = RefreshStatus.refreshing;
           });
         });
       } else {
-        return Future.value().then((_){
+        return Future.value().then((_) {
           headerMode.value = RefreshStatus.refreshing;
         });
       }
     });
-
   }
 
   /// make the header enter refreshing state,and callback onRefresh
@@ -685,21 +684,25 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (isLoading) return Future.value();
-    StatefulElement indicatorElement = _findIndicator(position.context.storageContext,LoadIndicator);
+    StatefulElement indicatorElement =
+        _findIndicator(position.context.storageContext, LoadIndicator);
 
-      (indicatorElement.state as LoadIndicatorState)?.floating = true;
-    if(needMove)
+    (indicatorElement.state as LoadIndicatorState)?.floating = true;
+    if (needMove)
       SmartRefresher.ofState(position.context.storageContext).setCanDrag(false);
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
-        await position?.animateTo(position.maxScrollExtent,
-            duration: duration, curve: curve)?.then((_){
-          SmartRefresher.ofState(position.context.storageContext)?.setCanDrag(true);
+        await position
+            ?.animateTo(position.maxScrollExtent,
+                duration: duration, curve: curve)
+            ?.then((_) {
+          SmartRefresher.ofState(position.context.storageContext)
+              ?.setCanDrag(true);
           footerMode.value = LoadStatus.loading;
         });
       });
     } else {
-      return Future.value().then((_){
+      return Future.value().then((_) {
         footerMode.value = LoadStatus.loading;
       });
     }
@@ -861,7 +864,7 @@ class RefreshConfiguration extends InheritedWidget {
       this.dragSpeedRatio: 1.0,
       this.shouldFooterFollowWhenNotFull,
       this.enableScrollWhenTwoLevel: true,
-        this.enableLoadingWhenNoData:false,
+      this.enableLoadingWhenNoData: false,
       this.enableBallisticRefresh: false,
       this.springDescription: const SpringDescription(
         mass: 2.2,
@@ -954,7 +957,8 @@ class RefreshConfiguration extends InheritedWidget {
             RefreshConfiguration.of(context).enableBallisticRefresh,
         enableBallisticLoad = enableBallisticLoad ??
             RefreshConfiguration.of(context).enableBallisticLoad,
-        enableLoadingWhenNoData = enableLoadingWhenNoData?? RefreshConfiguration.of(context).enableLoadingWhenNoData,
+        enableLoadingWhenNoData = enableLoadingWhenNoData ??
+            RefreshConfiguration.of(context).enableLoadingWhenNoData,
         enableLoadingWhenFailed = enableLoadingWhenFailed ??
             RefreshConfiguration.of(context).enableLoadingWhenFailed,
         closeTwoLevelDistance = closeTwoLevelDistance ??

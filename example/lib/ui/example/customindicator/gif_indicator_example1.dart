@@ -83,7 +83,6 @@ class GifHeader1State extends RefreshIndicatorState<GifHeader1>
 }
 
 class GifFooter1 extends StatefulWidget {
-
   GifFooter1() : super();
 
   @override
@@ -113,7 +112,7 @@ class _GifFooter1State extends State<GifFooter1>
     // TODO: implement build
     return CustomFooter(
       height: 80,
-      builder: (context,mode){
+      builder: (context, mode) {
         return GifImage(
           image: AssetImage("images/gifindicator1.gif"),
           controller: _gifController,
@@ -122,16 +121,16 @@ class _GifFooter1State extends State<GifFooter1>
         );
       },
       loadStyle: LoadStyle.ShowWhenLoading,
-      onModeChange: (mode){
+      onModeChange: (mode) {
         if (mode == LoadStatus.loading) {
           _gifController.repeat(
               min: 0, max: 29, period: Duration(milliseconds: 500));
         }
       },
       endLoading: () async {
-
         _gifController.value = 30;
-        return _gifController.animateTo(59, duration: Duration(milliseconds: 500));
+        return _gifController.animateTo(59,
+            duration: Duration(milliseconds: 500));
       },
     );
   }
@@ -143,7 +142,6 @@ class _GifFooter1State extends State<GifFooter1>
     super.dispose();
   }
 }
-
 
 class GifIndicatorExample1 extends StatefulWidget {
   @override
@@ -172,17 +170,16 @@ class GifIndicatorExample1State extends State<GifIndicatorExample1> {
           await Future.delayed(Duration(milliseconds: 2000));
           _controller.refreshCompleted();
         },
-          onLoading: () async {
-            await Future.delayed(Duration(milliseconds: 2000));
-            _controller.loadFailed();
-          },
+        onLoading: () async {
+          await Future.delayed(Duration(milliseconds: 2000));
+          _controller.loadFailed();
+        },
         child: ListView.builder(
           itemBuilder: (c, q) => Card(),
           itemCount: 10,
           itemExtent: 100.0,
         ),
       ),
-
     );
   }
 }

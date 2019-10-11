@@ -4,12 +4,7 @@
  * Time:  2019-09-08 14:44
  */
 
-
-
-
-
 import 'package:flutter/material.dart';
-
 
 // 在不自定义的默认情况下,当你拖到顶端不能再拖的时候会出现光晕,假如你只想在撞击顶部时看到光晕的情况
 // 以下例子就是可以解决这种问题
@@ -29,13 +24,13 @@ class RefreshScrollBehavior extends ScrollBehavior {
         return GlowingOverscrollIndicator(
           child: child,
           // this will disable top Bouncing OverScroll Indicator showing in Android
-          showLeading: true,//顶部水波纹是否展示
-          showTrailing: true,//底部水波纹是否展示
+          showLeading: true, //顶部水波纹是否展示
+          showTrailing: true, //底部水波纹是否展示
           axisDirection: axisDirection,
-          notificationPredicate: (notification){
-            if(notification.depth==0){
+          notificationPredicate: (notification) {
+            if (notification.depth == 0) {
               // 越界了拖动触发overScroll的话就没必要展示水波纹
-              if(notification.metrics.outOfRange){
+              if (notification.metrics.outOfRange) {
                 return false;
               }
               return true;

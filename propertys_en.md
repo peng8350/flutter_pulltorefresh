@@ -79,9 +79,11 @@ Load more(footer):
 | footerBuilder      | the footer indicator builder   | () =>  ? extends LoadIndicator  |   null |  可选 |
 | hideWhenNotFull | whether to hide footer when scrollview not enough one page   | bool | true | 可选 |
 | autoLoad | Autoload more, if false, sliding bottom will not trigger, but provide more click loading methods  | bool | true | 可选 |
+| enableLoadingWhenFailed |  whether allowed to use gesture pull-up trigger to load more when failed state  | bool | true| 可选 |
+| enableLoadingWhenNoData |  whether allowed to use gesture pull-up trigger to load more when no more data state  | bool | false| 可选 |
 | maxUnderScrollExtent | max underScroll distance  | double | ios:inf,android:0 | 可选 |
 | footerTriggerDistance |   the extentAfter distance of  trigger loading  | double | 15.0 | 可选 |
-| enableLoadingWhenFailed |  whether allowed to use gesture pull-up trigger to load more  | bool | false| 可选 |
+
 | enableBallisticRefresh | whether trigger loading by BallisticScrollActivity(it mean use is not dragging on the screen)  | bool | true | 可选 |
 | shouldFooterFollowWhenNotFull | When not full one page,If it should follow content for different status,premise: hideFooterWhenNotFull = false | (LoadStatus) => bool | () => false | 可选 |
 | bottomHitBoundary | When fast fling to bottom, setting a bottom boundary make the bouncing stop     | double | ios:inf,android:0 | 可选 |

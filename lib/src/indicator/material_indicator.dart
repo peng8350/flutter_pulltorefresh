@@ -90,7 +90,6 @@ class _MaterialClassicHeaderState
     super.initState();
   }
 
-
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
@@ -130,7 +129,7 @@ class _MaterialClassicHeaderState
   @override
   void onModeChange(RefreshStatus mode) {
     // TODO: implement onModeChange
-    if(mode==RefreshStatus.refreshing) {
+    if (mode == RefreshStatus.refreshing) {
       _positionController.value = widget.distance / widget.height;
       _scaleFactor.value = 1;
     }
@@ -240,7 +239,6 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
         .drive(Tween<Offset>(begin: Offset(0.0, -0.5), end: Offset(0.0, 1.5)));
   }
 
-
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -253,7 +251,6 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
           CurveTween(curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit))),
     );
   }
-
 
   @override
   Future<void> readyToRefresh() {
