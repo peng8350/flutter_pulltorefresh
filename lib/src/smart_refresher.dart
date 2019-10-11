@@ -272,11 +272,11 @@ class SmartRefresher extends StatefulWidget {
         super(key: key);
 
   static SmartRefresher of(BuildContext context) {
-    return context.ancestorWidgetOfExactType(SmartRefresher);
+    return context?.ancestorWidgetOfExactType(SmartRefresher);
   }
 
   static SmartRefresherState ofState(BuildContext context) {
-    return context.ancestorStateOfType(TypeMatcher<SmartRefresherState>());
+    return context?.ancestorStateOfType(TypeMatcher<SmartRefresherState>());
   }
 
   @override
@@ -694,7 +694,7 @@ class RefreshController {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         await position?.animateTo(position.maxScrollExtent,
             duration: duration, curve: curve)?.then((_){
-          SmartRefresher.ofState(position.context.storageContext).setCanDrag(true);
+          SmartRefresher.ofState(position.context.storageContext)?.setCanDrag(true);
           footerMode.value = LoadStatus.loading;
         });
       });

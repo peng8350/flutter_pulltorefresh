@@ -38,7 +38,7 @@ void main() {
     await tester.drag(find.byType(Scrollable), const Offset(0, -100.0));
 //    await tester.pump();
 //    expect(_refreshController.footerStatus, LoadStatus.idle);
-    await tester.pump(Duration(milliseconds: 100));
+    await tester.pumpAndSettle(Duration(milliseconds: 100));
     expect(_refreshController.footerStatus, LoadStatus.loading);
   });
 

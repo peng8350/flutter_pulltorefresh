@@ -90,6 +90,7 @@ class _MaterialClassicHeaderState
     super.initState();
   }
 
+
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
@@ -124,6 +125,16 @@ class _MaterialClassicHeaderState
       _valueAni.value = offset / configuration.headerTriggerDistance;
       _positionController.value = offset / configuration.headerTriggerDistance;
     }
+  }
+
+  @override
+  void onModeChange(RefreshStatus mode) {
+    // TODO: implement onModeChange
+    if(mode==RefreshStatus.refreshing) {
+      _positionController.value = widget.distance / widget.height;
+      _scaleFactor.value = 1;
+    }
+    super.onModeChange(mode);
   }
 
   @override
@@ -229,6 +240,7 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
         .drive(Tween<Offset>(begin: Offset(0.0, -0.5), end: Offset(0.0, 1.5)));
   }
 
+
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -242,6 +254,7 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     );
   }
 
+
   @override
   Future<void> readyToRefresh() {
     // TODO: implement readyToRefresh
@@ -249,7 +262,6 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     _showWater = true;
     _bezierController.animateTo(1.5,
         curve: Curves.bounceOut, duration: Duration(milliseconds: 550));
-
     return _positionController
         .animateTo(widget.distance / widget.height,
             curve: Curves.bounceOut, duration: Duration(milliseconds: 550))
