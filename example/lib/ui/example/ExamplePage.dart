@@ -5,6 +5,7 @@
  */
 import 'package:example/ui/example/customindicator/footer_underscroll.dart';
 import 'package:example/ui/example/customindicator/shimmer_indicator.dart';
+import 'package:example/ui/example/useStage/force_full_one_page.dart';
 import 'package:flutter/material.dart';
 import 'otherwidget/refresh_staggered_and_sticky.dart';
 import 'package:example/ui/example/useStage/empty_view.dart';
@@ -135,6 +136,16 @@ class _ExamplePageState extends State<ExamplePage>
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return TwoLevelExample();
+            }));
+          }),
+      ExampleItem(
+          title: "强制填满一屏",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return Scaffold(
+                body: ForceFullExample(),
+                appBar: AppBar(),
+              );
             }));
           }),
     ];
