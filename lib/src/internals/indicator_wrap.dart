@@ -370,7 +370,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       }
       _enableLoading = false;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_position.outOfRange) {
+        if (mounted && _position?.outOfRange == true) {
           activity.delegate.goBallistic(0);
         }
       });
