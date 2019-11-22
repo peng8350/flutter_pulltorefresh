@@ -167,7 +167,7 @@ class ChRefreshString implements RefreshString {
   String loadFailedText = "加载失败";
 
   @override
-  String loadingText = "加载中...";
+  String loadingText = "加载中…";
 
   @override
   String noMoreText = "没有更多数据了";
@@ -179,7 +179,7 @@ class ChRefreshString implements RefreshString {
   String refreshFailedText = "刷新失败";
 
   @override
-  String refreshingText = "刷新中...";
+  String refreshingText = "刷新中…";
 }
 
 /// English
@@ -203,7 +203,7 @@ class EnRefreshString implements RefreshString {
   String loadFailedText = "Load Failed";
 
   @override
-  String loadingText = "Loading...";
+  String loadingText = "Loading…";
 
   @override
   String noMoreText = "No more data";
@@ -215,7 +215,7 @@ class EnRefreshString implements RefreshString {
   String refreshFailedText = "Refresh failed";
 
   @override
-  String refreshingText = "Refreshing...";
+  String refreshingText = "Refreshing…";
 }
 
 /// French
@@ -275,7 +275,7 @@ class RuRefreshString implements RefreshString {
   String loadFailedText = "Ошибка загрузки";
 
   @override
-  String loadingText = "Загрузка...";
+  String loadingText = "Загрузка…";
 
   @override
   String noMoreText = "Больше данных нет";
@@ -287,7 +287,7 @@ class RuRefreshString implements RefreshString {
   String refreshFailedText = "Не удалось обновить";
 
   @override
-  String refreshingText = "Обновление...";
+  String refreshingText = "Обновление…";
 }
 
 // Ukrainian
@@ -311,7 +311,7 @@ class UkRefreshString implements RefreshString {
   String loadFailedText = "Помилка завантаження";
 
   @override
-  String loadingText = "Завантаження...";
+  String loadingText = "Завантаження…";
 
   @override
   String noMoreText = "Більше даних немає";
@@ -323,5 +323,5 @@ class UkRefreshString implements RefreshString {
   String refreshFailedText = "Не вдалося оновити";
 
   @override
-  String refreshingText = "Оновлення...";
+  String refreshingText = "Оновлення…";
 }
