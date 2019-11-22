@@ -71,7 +71,8 @@ class RefreshLocalizations {
     'zh': ChRefreshString(),
     'fr': FrRefreshString(),
     'ru': RuRefreshString(),
-    'uk': UkRefreshString()
+    'uk': UkRefreshString(),
+    'it': ItRefreshString()
   };
 
   RefreshString get currentLocalization {
@@ -324,4 +325,40 @@ class UkRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Оновлення...";
+}
+
+/// Italian
+class ItRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Rilascia per caricare altro";
+
+  @override
+  String canRefreshText = "Rilascia per aggiornare";
+
+  @override
+  String canTwoLevelText = "Rilascia per accedere a secondfloor";
+
+  @override
+  String idleLoadingText = "Tira per caricare altro";
+
+  @override
+  String idleRefreshText = "Tira giù per aggiornare";
+
+  @override
+  String loadFailedText = "Caricamento fallito";
+
+  @override
+  String loadingText = "Caricamento…";
+
+  @override
+  String noMoreText = "Nessun altro elemento";
+
+  @override
+  String refreshCompleteText = "Aggiornamento completato";
+
+  @override
+  String refreshFailedText = "Aggiornamento fallito";
+
+  @override
+  String refreshingText = "Aggiornamento…";
 }
