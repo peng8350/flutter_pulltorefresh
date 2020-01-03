@@ -327,7 +327,7 @@ class UkRefreshString implements RefreshString {
   String refreshingText = "Оновлення...";
 }
 
-/// Japanses
+/// Japanese
 class JpRefreshString implements RefreshString {
   @override
   String canLoadingText = "指を離して更に読み込む";
