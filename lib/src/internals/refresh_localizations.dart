@@ -71,7 +71,8 @@ class RefreshLocalizations {
     'zh': ChRefreshString(),
     'fr': FrRefreshString(),
     'ru': RuRefreshString(),
-    'uk': UkRefreshString()
+    'uk': UkRefreshString(),
+    'ja': JpRefreshString(),
   };
 
   RefreshString get currentLocalization {
@@ -95,7 +96,7 @@ class RefreshLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'zh', 'fr', 'ru', 'uk'].contains(locale.languageCode);
+    return ['en', 'zh', 'fr', 'ru', 'uk', 'ja'].contains(locale.languageCode);
   }
 
   @override
@@ -324,4 +325,40 @@ class UkRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Оновлення...";
+}
+
+/// Japanses
+class JpRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "指を離して更に読み込む";
+
+  @override
+  String canRefreshText = "指を離して更新";
+
+  @override
+  String canTwoLevelText = "指を離して2段目を表示";
+
+  @override
+  String idleLoadingText = "上方スワイプで更に読み込む";
+
+  @override
+  String idleRefreshText = "下方スワイプでデータを更新";
+
+  @override
+  String loadFailedText = "読み込みが失敗しました";
+
+  @override
+  String loadingText = "読み込み中";
+
+  @override
+  String noMoreText = "データはありません";
+
+  @override
+  String refreshCompleteText = "更新完了";
+
+  @override
+  String refreshFailedText = "更新が失敗しました";
+
+  @override
+  String refreshingText = "更新中";
 }
