@@ -270,11 +270,12 @@ class SmartRefresher extends StatefulWidget {
         super(key: key);
 
   static SmartRefresher of(BuildContext context) {
-    return context?.ancestorWidgetOfExactType(SmartRefresher);
+    return context?.findAncestorWidgetOfExactType<SmartRefresher>();
   }
 
   static SmartRefresherState ofState(BuildContext context) {
-    return context?.ancestorStateOfType(TypeMatcher<SmartRefresherState>());
+    print(context?.findAncestorStateOfType<SmartRefresherState>());
+    return context?.findAncestorStateOfType<SmartRefresherState>();
   }
 
   @override
