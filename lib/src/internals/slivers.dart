@@ -389,7 +389,7 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
 
     if (follow) {
       if (reverse) {
-        return layoutExtent;
+        return ( !_hasLayoutExtent?_layoutExtent:0);
       }
       return 0.0;
     } else {
@@ -398,7 +398,7 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
             constraints.viewportMainAxisExtent -
                 constraints.precedingScrollExtent,
             0.0) +
-            layoutExtent;
+            ( !_hasLayoutExtent?_layoutExtent:0);
       } else {
         return Math.max(
             constraints.viewportMainAxisExtent -
@@ -437,26 +437,25 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
         calculateCacheOffset(constraints, from: 0.0, to: childExtent);
 
     final double layoutOffset =computePaintOrigin(
-        !_hasLayoutExtent || !_computeIfFull(constraints)
+        _hasLayoutExtent || !_computeIfFull(constraints)
             ? layoutExtent
-            : 0.0,
+            : 0,
         constraints.axisDirection == AxisDirection.up ||
             constraints.axisDirection == AxisDirection.left,
         _computeIfFull(constraints) || shouldFollowContent);
 
-    final double effectPaintExtent = Math.max(0,Math.min(paintedChildSize, constraints.remainingPaintExtent-layoutOffset));
     assert(paintedChildSize.isFinite);
     assert(paintedChildSize >= 0.0);
 
     if (active) {
       // consider reverse loading and HideAlways==loadStyle
+
       geometry = SliverGeometry(
-        scrollExtent: !_hasLayoutExtent || !_computeIfFull(constraints)
-            ? 0.0
-            : layoutExtent,
-        paintExtent:  effectPaintExtent,
+        scrollExtent: _hasLayoutExtent || !_computeIfFull(constraints)
+            ? layoutExtent
+            : 0,
         // this need to fix later
-        paintOrigin: effectPaintExtent==0?constraints.remainingPaintExtent:layoutOffset,
+        paintOrigin: Math.min(constraints.remainingPaintExtent,layoutOffset),
         cacheExtent: cacheExtent,
         maxPaintExtent: childExtent,
         hitTestExtent: paintedChildSize,

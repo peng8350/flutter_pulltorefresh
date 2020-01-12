@@ -81,21 +81,21 @@ void main() {
       // behind the bottom ,if else ,it is render error
       expect(
           sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(0, 600));
-      // flutter 1.13.6 breaking change: this fix will cause reverse mode have some problems
-//      // up
-//      await buildNotFullList(tester, true, Axis.vertical, footer: footer);
-//
-//      sliver = tester.renderObject(find.byType(SliverLoading));
-//      expect(
-//          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(0, -60.0));
-//
-//      // left
-//      await buildNotFullList(tester, true, Axis.horizontal, footer: footer);
-//
-//      sliver = tester.renderObject(find.byType(SliverLoading));
-//      // behind the bottom ,if else ,it is render error
-//      expect(
-//          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(-60.0, 0));
+
+      // up
+      await buildNotFullList(tester, true, Axis.vertical, footer: footer);
+
+      sliver = tester.renderObject(find.byType(SliverLoading));
+      expect(
+          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(0, -60.0));
+
+      // left
+      await buildNotFullList(tester, true, Axis.horizontal, footer: footer);
+
+      sliver = tester.renderObject(find.byType(SliverLoading));
+      // behind the bottom ,if else ,it is render error
+      expect(
+          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(-60.0, 0));
 
       // right
       await buildNotFullList(tester, false, Axis.horizontal, footer: footer);

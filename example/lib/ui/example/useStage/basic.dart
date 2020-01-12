@@ -137,7 +137,7 @@ class _OnlyListViewState extends State<OnlyListView> {
 
   Widget buildCtn() {
     return ListView.separated(
-      reverse: true,
+      reverse: false,
       padding: EdgeInsets.only(left: 5, right: 5),
       itemBuilder: (c, i) => Item(
         title: data[i],
@@ -168,11 +168,11 @@ class _OnlyListViewState extends State<OnlyListView> {
         //monitor fetch data from network
         await Future.delayed(Duration(milliseconds: 1000));
 
-        if (data.length == 0) {
+
           for (int i = 0; i < 10; i++) {
             data.add("Item $i");
           }
-        }
+
         if (mounted) setState(() {});
         _refreshController.refreshCompleted();
 

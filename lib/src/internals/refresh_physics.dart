@@ -219,7 +219,7 @@ class RefreshPhysics extends ScrollPhysics {
     }
     if (enablePullUp) {
       final RenderSliverLoading sliverFooter = viewportRender.lastChild;
-      bottomExtra = sliverFooter.geometry.scrollExtent != 0.0 ||
+      bottomExtra =
               (notFull &&
                   controller.footerStatus == LoadStatus.noMore &&
                   !RefreshConfiguration.of(
