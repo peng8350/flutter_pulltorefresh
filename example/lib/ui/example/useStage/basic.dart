@@ -137,7 +137,6 @@ class _OnlyListViewState extends State<OnlyListView> {
 
   Widget buildCtn() {
     return ListView.separated(
-      reverse: false,
       padding: EdgeInsets.only(left: 5, right: 5),
       itemBuilder: (c, i) => Item(
         title: data[i],
@@ -160,7 +159,7 @@ class _OnlyListViewState extends State<OnlyListView> {
       enablePullUp: true,
       child: buildCtn(),
       footer: ClassicFooter(
-        loadStyle: LoadStyle.ShowAlways,
+        loadStyle: LoadStyle.ShowWhenLoading,
         completeDuration: Duration(milliseconds: 500),
       ),
       header: WaterDropHeader(),

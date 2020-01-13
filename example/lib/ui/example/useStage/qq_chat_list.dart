@@ -119,7 +119,7 @@ class _QQChatListState extends State<QQChatList> {
                       _refreshController.loadComplete();
                     },
                     footer: CustomFooter(
-                      loadStyle: LoadStyle.HideAlways,
+                      loadStyle: LoadStyle.ShowAlways,
                       builder: (context, mode) {
                         if (mode == LoadStatus.loading) {
                           return Container(
