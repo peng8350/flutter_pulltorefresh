@@ -72,6 +72,7 @@ class RefreshLocalizations {
     'fr': FrRefreshString(),
     'ru': RuRefreshString(),
     'uk': UkRefreshString(),
+    'it': ItRefreshString(),
     'ja': JpRefreshString(),
   };
 
@@ -327,6 +328,42 @@ class UkRefreshString implements RefreshString {
   String refreshingText = "Оновлення...";
 }
 
+/// Italian
+class ItRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Rilascia per caricare altro";
+
+  @override
+  String canRefreshText = "Rilascia per aggiornare";
+
+  @override
+  String canTwoLevelText = "Rilascia per accedere a secondfloor";
+
+  @override
+  String idleLoadingText = "Tira per caricare altro";
+
+  @override
+  String idleRefreshText = "Tira giù per aggiornare";
+
+  @override
+  String loadFailedText = "Caricamento fallito";
+
+  @override
+  String loadingText = "Caricamento…";
+
+  @override
+  String noMoreText = "Nessun altro elemento";
+
+  @override
+  String refreshCompleteText = "Aggiornamento completato";
+
+  @override
+  String refreshFailedText = "Aggiornamento fallito";
+
+  @override
+  String refreshingText = "Aggiornamento…";
+}
+
 /// Japanese
 class JpRefreshString implements RefreshString {
   @override
@@ -362,3 +399,4 @@ class JpRefreshString implements RefreshString {
   @override
   String refreshingText = "更新中";
 }
+
