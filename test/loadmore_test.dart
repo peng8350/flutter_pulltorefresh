@@ -35,10 +35,10 @@ void main() {
     ));
     _refreshController.position
         .jumpTo(_refreshController.position.maxScrollExtent - 30);
-    await tester.drag(find.byType(Scrollable), const Offset(0, -100.0));
-//    await tester.pump();
+    await tester.drag(find.byType(Scrollable), const Offset(0, -30.0));
+    await tester.pump();
 //    expect(_refreshController.footerStatus, LoadStatus.idle);
-    await tester.pumpAndSettle(Duration(milliseconds: 100));
+    await tester.pumpAndSettle(Duration(milliseconds: 500));
     expect(_refreshController.footerStatus, LoadStatus.loading);
   });
 
@@ -493,7 +493,7 @@ void main() {
     expect(_refreshController.position.pixels,
         _refreshController.position.maxScrollExtent - 30.0);
     await tester.drag(find.byType(Scrollable), const Offset(0, -100.0));
-    await tester.pump(Duration(milliseconds: 200));
+    await tester.pumpAndSettle(Duration(milliseconds: 500));
     expect(_refreshController.footerStatus, LoadStatus.loading);
 
     _refreshController.loadComplete();

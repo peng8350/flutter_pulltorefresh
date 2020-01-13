@@ -12,7 +12,17 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../Item.dart';
 
-class ConvertFooter extends StatelessWidget {
+class ConvertFooter extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _ConvertFooterState();
+  }
+
+}
+
+
+class _ConvertFooterState extends State<ConvertFooter>{
   RefreshController _refreshController = RefreshController();
 
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -51,11 +61,12 @@ class ConvertFooter extends StatelessWidget {
           child: buildCtn(),
           onLoading: () async {
             await Future.delayed(Duration(milliseconds: 1000));
-//            for(int i =0 ;i<5;i++)
-//            data.add("1");
-//            SmartRefresher.ofState(context).setState((){
-//
-//            });
+            for(int i =0 ;i<5;i++)
+              data.add("1");
+
+            setState(() {
+
+            });
             _refreshController.loadFailed();
           },
           controller: _refreshController,

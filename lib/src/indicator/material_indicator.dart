@@ -244,10 +244,19 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+    final ThemeData theme = Theme.of(context);
     _valueColor = _positionController.drive(
       ColorTween(
-        begin: (Colors.white).withOpacity(0.0),
-        end: (Colors.white).withOpacity(1.0),
+        begin: (widget.color ??
+            theme?.primaryColor ??
+            CupertinoTheme.of(context)?.primaryColor ??
+            Colors.blueAccent)
+            .withOpacity(0.0),
+        end: (widget.color ??
+            theme?.primaryColor ??
+            CupertinoTheme.of(context)?.primaryColor ??
+            Colors.blueAccent)
+            .withOpacity(1.0),
       ).chain(
           CurveTween(curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit))),
     );
