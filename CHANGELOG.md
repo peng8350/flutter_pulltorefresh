@@ -324,3 +324,10 @@ other:
 * fix endLoading logic error in callback
 * add enableLoadMoreWhenNoMoreData,enable switch to decide whether auto load more when footer state is noMore
 * fix requestRefresh callback onRefresh immediately
+
+## 1.5.8
+* fix breaking change crash error after flutter 1.13.6 upgrade
+* add other language
+* fix material header frequently setState slow down the performance
+* fix bug:loadFinish throw error when dispose widget(short time to trigger)
+* fix WaterDropMaterialHeader "color" invalid

@@ -42,11 +42,11 @@ class MaterialClassicHeader extends RefreshIndicator {
     this.distance: 50.0,
     this.backgroundColor,
   }) : super(
-    key: key,
-    refreshStyle: RefreshStyle.Front,
-    offset: offset,
-    height: height,
-  );
+          key: key,
+          refreshStyle: RefreshStyle.Front,
+          offset: offset,
+          height: height,
+        );
 
   @override
   State<StatefulWidget> createState() {
@@ -76,7 +76,8 @@ class _MaterialClassicHeaderState
         duration: Duration(milliseconds: 500));
     _valueAni.addListener(() {
       // frequently setState will decline the performance
-      if (mounted&&Scrollable.of(context).position.pixels<=0) setState(() {});
+      if (mounted && Scrollable.of(context).position.pixels <= 0)
+        setState(() {});
     });
     _positionController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
@@ -152,14 +153,14 @@ class _MaterialClassicHeaderState
     _valueColor = _positionController.drive(
       ColorTween(
         begin: (widget.color ??
-            theme?.primaryColor ??
-            CupertinoTheme.of(context)?.primaryColor ??
-            Colors.blueAccent)
+                theme?.primaryColor ??
+                CupertinoTheme.of(context)?.primaryColor ??
+                Colors.blueAccent)
             .withOpacity(0.0),
         end: (widget.color ??
-            theme?.primaryColor ??
-            CupertinoTheme.of(context)?.primaryColor ??
-            Colors.blueAccent)
+                theme?.primaryColor ??
+                CupertinoTheme.of(context)?.primaryColor ??
+                Colors.blueAccent)
             .withOpacity(1.0),
       ).chain(
           CurveTween(curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit))),
@@ -200,14 +201,14 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
     Color color: Colors.white,
     Color backgroundColor,
   }) : super(
-      key: key,
-      height: 80.0,
-      color: color,
-      distance: distance,
-      offset: offset,
-      backgroundColor: backgroundColor,
-      semanticsValue: semanticsValue,
-      semanticsLabel: semanticsLabel);
+            key: key,
+            height: 80.0,
+            color: color,
+            distance: distance,
+            offset: offset,
+            backgroundColor: backgroundColor,
+            semanticsValue: semanticsValue,
+            semanticsLabel: semanticsLabel);
 
   @override
   State<StatefulWidget> createState() {
@@ -248,14 +249,14 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     _valueColor = _positionController.drive(
       ColorTween(
         begin: (widget.color ??
-            theme?.primaryColor ??
-            CupertinoTheme.of(context)?.primaryColor ??
-            Colors.blueAccent)
+                theme?.primaryColor ??
+                CupertinoTheme.of(context)?.primaryColor ??
+                Colors.blueAccent)
             .withOpacity(0.0),
         end: (widget.color ??
-            theme?.primaryColor ??
-            CupertinoTheme.of(context)?.primaryColor ??
-            Colors.blueAccent)
+                theme?.primaryColor ??
+                CupertinoTheme.of(context)?.primaryColor ??
+                Colors.blueAccent)
             .withOpacity(1.0),
       ).chain(
           CurveTween(curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit))),
@@ -271,7 +272,7 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
         curve: Curves.bounceOut, duration: Duration(milliseconds: 550));
     return _positionController
         .animateTo(widget.distance / widget.height,
-        curve: Curves.bounceOut, duration: Duration(milliseconds: 550))
+            curve: Curves.bounceOut, duration: Duration(milliseconds: 550))
         .then((_) {
       _showWater = false;
     });
@@ -308,7 +309,7 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
       _valueAni.value = _bezierController.value;
       _positionController.value = _bezierController.value * 0.3;
       _scaleFactor.value =
-      offset < 40.0 ? 0.0 : (_bezierController.value - 0.5) * 2 + 0.5;
+          offset < 40.0 ? 0.0 : (_bezierController.value - 0.5) * 2 + 0.5;
     }
   }
 
@@ -334,12 +335,12 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
                 Colors.blueAccent),
             painter: _showWater
                 ? _WaterPainter(
-                ratio: widget.distance / widget.height,
-                color: widget.backgroundColor ??
-                    Theme.of(context)?.primaryColor ??
-                    CupertinoTheme.of(context)?.primaryColor ??
-                    Colors.blueAccent,
-                listener: _positionFactor)
+                    ratio: widget.distance / widget.height,
+                    color: widget.backgroundColor ??
+                        Theme.of(context)?.primaryColor ??
+                        CupertinoTheme.of(context)?.primaryColor ??
+                        Colors.blueAccent,
+                    listener: _positionFactor)
                 : null,
           )
         ],

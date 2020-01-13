@@ -270,7 +270,7 @@ class _ExamplePageState extends State<ExamplePage>
                 text: "使用场景",
               ),
               Tab(
-                text: "配合特殊组件",//字符串
+                text: "配合特殊组件", //字符串
               ),
               Tab(
                 text: "自定义指示器",

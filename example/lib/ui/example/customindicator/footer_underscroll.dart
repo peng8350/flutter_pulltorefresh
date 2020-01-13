@@ -18,11 +18,9 @@ class ConvertFooter extends StatefulWidget {
     // TODO: implement createState
     return _ConvertFooterState();
   }
-
 }
 
-
-class _ConvertFooterState extends State<ConvertFooter>{
+class _ConvertFooterState extends State<ConvertFooter> {
   RefreshController _refreshController = RefreshController();
 
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -61,12 +59,9 @@ class _ConvertFooterState extends State<ConvertFooter>{
           child: buildCtn(),
           onLoading: () async {
             await Future.delayed(Duration(milliseconds: 1000));
-            for(int i =0 ;i<5;i++)
-              data.add("1");
+            for (int i = 0; i < 5; i++) data.add("1");
 
-            setState(() {
-
-            });
+            setState(() {});
             _refreshController.loadFailed();
           },
           controller: _refreshController,

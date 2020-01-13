@@ -167,10 +167,9 @@ class _OnlyListViewState extends State<OnlyListView> {
         //monitor fetch data from network
         await Future.delayed(Duration(milliseconds: 1000));
 
-
-          for (int i = 0; i < 10; i++) {
-            data.add("Item $i");
-          }
+        for (int i = 0; i < 10; i++) {
+          data.add("Item $i");
+        }
 
         if (mounted) setState(() {});
         _refreshController.refreshCompleted();

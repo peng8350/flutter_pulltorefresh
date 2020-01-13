@@ -97,7 +97,8 @@ class RefreshLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'zh', 'fr', 'ru', 'uk', 'ja','it'].contains(locale.languageCode);
+    return ['en', 'zh', 'fr', 'ru', 'uk', 'ja', 'it']
+        .contains(locale.languageCode);
   }
 
   @override
@@ -399,4 +400,3 @@ class JpRefreshString implements RefreshString {
   @override
   String refreshingText = "更新中…";
 }
-

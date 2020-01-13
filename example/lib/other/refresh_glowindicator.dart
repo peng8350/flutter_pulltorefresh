@@ -21,26 +21,25 @@ class RefreshScrollBehavior extends ScrollBehavior {
         return child;
       case TargetPlatform.macOS:
       case TargetPlatform.android:
-      return GlowingOverscrollIndicator(
-        child: child,
-        // this will disable top Bouncing OverScroll Indicator showing in Android
-        showLeading: true, //顶部水波纹是否展示
-        showTrailing: true, //底部水波纹是否展示
-        axisDirection: axisDirection,
-        notificationPredicate: (notification) {
-          if (notification.depth == 0) {
-            // 越界了拖动触发overScroll的话就没必要展示水波纹
-            if (notification.metrics.outOfRange) {
-              return false;
+        return GlowingOverscrollIndicator(
+          child: child,
+          // this will disable top Bouncing OverScroll Indicator showing in Android
+          showLeading: true, //顶部水波纹是否展示
+          showTrailing: true, //底部水波纹是否展示
+          axisDirection: axisDirection,
+          notificationPredicate: (notification) {
+            if (notification.depth == 0) {
+              // 越界了拖动触发overScroll的话就没必要展示水波纹
+              if (notification.metrics.outOfRange) {
+                return false;
+              }
+              return true;
             }
-            return true;
-          }
-          return false;
-        },
-        color: Theme.of(context).primaryColor,
-      );
+            return false;
+          },
+          color: Theme.of(context).primaryColor,
+        );
       case TargetPlatform.fuchsia:
-
     }
     return null;
   }
