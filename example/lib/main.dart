@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
           const Locale('ru'),
           const Locale('fr'),
         ],
-        locale: const Locale('ja'),
+        locale: const Locale('zh'),
         localeResolutionCallback:
             (Locale locale, Iterable<Locale> supportedLocales) {
           //print("change language");

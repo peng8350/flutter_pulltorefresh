@@ -137,6 +137,7 @@ class _OnlyListViewState extends State<OnlyListView> {
 
   Widget buildCtn() {
     return ListView.separated(
+      reverse: true,
       padding: EdgeInsets.only(left: 5, right: 5),
       itemBuilder: (c, i) => Item(
         title: data[i],
@@ -162,7 +163,6 @@ class _OnlyListViewState extends State<OnlyListView> {
         loadStyle: LoadStyle.ShowWhenLoading,
         completeDuration: Duration(milliseconds: 500),
       ),
-      header: WaterDropHeader(),
       onRefresh: () async {
         //monitor fetch data from network
         await Future.delayed(Duration(milliseconds: 1000));

@@ -312,12 +312,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   @override
   Widget build(BuildContext context) {
+
     return SliverRefresh(
         paintOffsetY: widget.offset,
         child: RotatedBox(
           child: buildContent(context, mode),
           quarterTurns:
-              Scrollable.of(context).axisDirection == AxisDirection.up ? 10 : 0,
+          needReverseAll()&&Scrollable.of(context).axisDirection == AxisDirection.up ? 10 : 0,
         ),
         floating: floating,
         refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||

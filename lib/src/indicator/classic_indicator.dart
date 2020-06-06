@@ -145,6 +145,12 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
   }
 
   @override
+  bool needReverseAll() {
+    // TODO: implement needReverseAll
+    return false;
+  }
+
+  @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
     Widget textWidget = _buildText(mode);
