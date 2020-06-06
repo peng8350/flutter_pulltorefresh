@@ -176,7 +176,7 @@ class GifIndicatorExample1State extends State<GifIndicatorExample1> {
         },
         child: ListView.builder(
           itemBuilder: (c, q) => Card(),
-          itemCount: 10,
+          itemCount: 50,
           itemExtent: 100.0,
         ),
       ),

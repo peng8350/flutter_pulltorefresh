@@ -27,9 +27,11 @@ class MyApp extends StatelessWidget {
       autoLoad: true,
       child: MaterialApp(
         title: 'Pulltorefresh Demo',
+
         debugShowCheckedModeBanner: false,
         builder: (context, child) {
           return ScrollConfiguration(
+
             child: child,
             behavior: RefreshScrollBehavior(),
           );
@@ -48,7 +50,8 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: [
           RefreshLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate
         ],
         supportedLocales: [
           const Locale('en'),
@@ -59,6 +62,7 @@ class MyApp extends StatelessWidget {
           const Locale('ru'),
           const Locale('fr'),
         ],
+
         locale: const Locale('zh'),
         localeResolutionCallback:
             (Locale locale, Iterable<Locale> supportedLocales) {
