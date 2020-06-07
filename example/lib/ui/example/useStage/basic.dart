@@ -159,6 +159,7 @@ class _OnlyListViewState extends State<OnlyListView> {
       controller: _refreshController,
       enablePullUp: true,
       child: buildCtn(),
+      physics: BouncingScrollPhysics(),
       footer: ClassicFooter(
         loadStyle: LoadStyle.ShowWhenLoading,
         completeDuration: Duration(milliseconds: 500),
@@ -182,10 +183,10 @@ class _OnlyListViewState extends State<OnlyListView> {
       },
       onLoading: () async {
         //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 1000));
-//        for (int i = 0; i < 10; i++) {
-//          data.add("Item $i");
-//        }
+        await Future.delayed(Duration(milliseconds: 200));
+        for (int i = 0; i < 10; i++) {
+          data.add("Item $i");
+        }
         if (mounted) setState(() {});
         _refreshController.loadFailed();
       },

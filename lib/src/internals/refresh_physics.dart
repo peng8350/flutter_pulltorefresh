@@ -284,6 +284,7 @@ class RefreshPhysics extends ScrollPhysics {
     // TODO: implement createBallisticSimulation
     viewportRender ??=
         findViewport(controller.position?.context?.storageContext);
+
     final bool enablePullDown = viewportRender == null
         ? false
         : viewportRender.firstChild is RenderSliverRefresh;

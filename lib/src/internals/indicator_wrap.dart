@@ -335,7 +335,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   // use to update between one page and above one page
   bool _isHide = false;
   bool _enableLoading = false;
-  LoadStatus lastMode = LoadStatus.idle;
+  LoadStatus _lastMode = LoadStatus.idle;
 
   double _calculateScrollOffset() {
     final double overScrollPastEnd =
@@ -413,7 +413,13 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     if (mode == LoadStatus.idle ||
         mode == LoadStatus.failed ||
         mode == LoadStatus.noMore) {
-      lastMode = mode;
+      // #292,#265,#208
+      // stop the slow bouncing when load more too fast
+      if(_position.activity.velocity<0&&_lastMode==LoadStatus.loading) {
+        (_position as ScrollPositionWithSingleContext).goIdle();
+      }
+
+
       finishLoading();
     }
     if (mode == LoadStatus.loading) {
@@ -429,6 +435,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     } else {
       if (activity is! DragScrollActivity) _enableLoading = false;
     }
+    _lastMode = mode;
     onModeChange(mode);
   }
 
@@ -440,7 +447,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       if (_checkIfCanLoading()) {
         mode = LoadStatus.canLoading;
       } else {
-        mode = lastMode;
+        mode = _lastMode;
       }
     }
     if (activity is BallisticScrollActivity) {
@@ -453,6 +460,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   void _handleOffsetChange() {
+
     if (_isHide) {
       return;
     }
@@ -492,7 +500,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    lastMode = mode;
+    _lastMode = mode;
   }
 
   @override
