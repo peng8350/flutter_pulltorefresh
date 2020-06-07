@@ -625,8 +625,8 @@ class RefreshController {
   /// but ScrollPhysics didn't provide one way to spring back when outOfEdge(stopped by applyBouncingCondition return != 0.0)
   /// so for making it spring back, it should be trigger goBallistic make it spring back
   void _listenScrollEnd() {
-    if (position.outOfRange) {
-      position.activity.applyNewDimensions();
+    if (position!=null&&position.outOfRange) {
+      position?.activity?.applyNewDimensions();
     }
   }
 
@@ -640,9 +640,10 @@ class RefreshController {
     if (isRefresh) return Future.value();
     StatefulElement indicatorElement =
         _findIndicator(position.context.storageContext, RefreshIndicator);
+    if(indicatorElement==null)return null;
     (indicatorElement.state as RefreshIndicatorState)?.floating = true;
     if (needMove)
-      SmartRefresher.ofState(position.context.storageContext).setCanDrag(false);
+      SmartRefresher.ofState(position.context.storageContext)?.setCanDrag(false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (needMove) {
         return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
@@ -687,15 +688,15 @@ class RefreshController {
     if (isLoading) return Future.value();
     StatefulElement indicatorElement =
         _findIndicator(position.context.storageContext, LoadIndicator);
-
+    if(indicatorElement==null)return null;
     (indicatorElement.state as LoadIndicatorState)?.floating = true;
     if (needMove)
-      SmartRefresher.ofState(position.context.storageContext).setCanDrag(false);
+      SmartRefresher.ofState(position.context.storageContext)?.setCanDrag(false);
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         await position
             ?.animateTo(position.maxScrollExtent,
-                duration: duration, curve: curve)
+            duration: duration, curve: curve)
             ?.then((_) {
           SmartRefresher.ofState(position.context.storageContext)
               ?.setCanDrag(true);
@@ -707,6 +708,8 @@ class RefreshController {
         footerMode.value = LoadStatus.loading;
       });
     }
+
+
   }
 
   /// request complete,the header will enter complete state,
