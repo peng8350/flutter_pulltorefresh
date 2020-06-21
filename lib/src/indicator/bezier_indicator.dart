@@ -144,7 +144,6 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
     return AnimatedBuilder(
       builder: (_, __) {
         return Stack(
-          overflow: Overflow.visible,
           children: <Widget>[
             Positioned(
               child: AnimatedBuilder(
