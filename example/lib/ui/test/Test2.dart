@@ -18,10 +18,10 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
 
   void _fetch() {
     HTTP
-        .get('http://gank.io/api/data/福利/10/$indexPage')
+        .get('https://gank.io/api/v2/data/category/Girl/type/Girl/page/$indexPage/count/10')
         .then((HTTP.Response response) {
       Map map = json.decode(response.body);
-      return map["results"];
+      return map["data"];
     }).then((array) {
       for (var item in array) {
         data.add(item["url"]);
