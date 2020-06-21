@@ -45,3 +45,7 @@ You can't add header and footer. just put it into SmartRefresher's child instead
 14. Why can't dragging to the maximum distance trigger refresh? Why load more without triggering?
 This kind of problem usually occurs on Android systems, mostly because maxOverScrollExtent and maxUnderScrollExtent limit the height of the maximum drag. You need to make sure that it is larger than triggerDistance because it's internal.
 Not automatically identifying and judging for you
+
+15.Why performance become more and more slow with the large amount of data?
+this situation is mostly because the setting shrinkWrap=true and physic:NeverScrollPhysics,ScrollView must be as SmartRefresher's child。
+

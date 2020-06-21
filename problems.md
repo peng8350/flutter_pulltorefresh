@@ -48,3 +48,5 @@ RefreshConfiguration配置属性footerTriggerDistance,屏幕一半你可以借�
 这类问题一般发生在Android系统，绝大数情况是因为maxOverScrollExtent和maxUnderScrollExtent限制了最大拖动的高度问题,你需要确保它要大于triggerDistance,因为内部
 没有帮你自动识别判断
 
+15.为什么引用库后,随着数据量大时越来越卡顿?
+这种情况绝大多数都是因为开启了shrinkWrap=true和设置physic:NeverScrollPhysics,ScrollView一定要作为SmartRefresher's child,不可分开。
