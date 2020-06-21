@@ -23,6 +23,7 @@ import 'package:example/ui/example/useStage/twolevel_refresh.dart';
 import 'useStage/qq_chat_list.dart';
 import 'otherwidget/refresh_recordable_listview_example.dart';
 import 'otherwidget/draggable_bottomsheet_loadmore.dart';
+import 'useStage/tapbutton_refresh.dart';
 
 class ExamplePage extends StatefulWidget {
   @override
@@ -105,6 +106,13 @@ class _ExamplePageState extends State<ExamplePage>
                 body: HorizontalRefresh(),
                 appBar: AppBar(),
               );
+            }));
+          }),
+      ExampleItem(
+          title: "点击按钮触发刷新",
+          onClick: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return TapButtonRefreshExample();
             }));
           }),
       ExampleItem(
