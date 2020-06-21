@@ -312,13 +312,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   @override
   Widget build(BuildContext context) {
-
     return SliverRefresh(
         paintOffsetY: widget.offset,
         child: RotatedBox(
           child: buildContent(context, mode),
-          quarterTurns:
-          needReverseAll()&&Scrollable.of(context).axisDirection == AxisDirection.up ? 10 : 0,
+          quarterTurns: needReverseAll() &&
+                  Scrollable.of(context).axisDirection == AxisDirection.up
+              ? 10
+              : 0,
         ),
         floating: floating,
         refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||
@@ -415,10 +416,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         mode == LoadStatus.noMore) {
       // #292,#265,#208
       // stop the slow bouncing when load more too fast
-      if(_position.activity.velocity<0&&_lastMode==LoadStatus.loading) {
+      if (_position.activity.velocity < 0 && _lastMode == LoadStatus.loading) {
         (_position as ScrollPositionWithSingleContext).goIdle();
       }
-
 
       finishLoading();
     }
@@ -460,7 +460,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   void _handleOffsetChange() {
-
     if (_isHide) {
       return;
     }

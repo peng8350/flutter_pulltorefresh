@@ -331,3 +331,9 @@ other:
 * fix material header frequently setState slow down the performance
 * fix bug:loadFinish throw error when dispose widget(short time to trigger)
 * fix WaterDropMaterialHeader "color" invalid
+
+## 1.6.0
+* fix slow bounce back when load more too fast
+* fix footer renderError with reverse:true,behaviour return to 1.5.7
+* add check null in requestRefresh()
+* fix refreshText reverse error(ClassicHeader) when reverse:true

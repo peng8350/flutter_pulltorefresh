@@ -25,9 +25,8 @@ class TapButtonRefreshExample extends StatefulWidget {
 class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
   List<String> data = [];
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
   bool _enablePullDown = false;
-
 
   Widget buildEmpty() {
     // there are two ways
@@ -64,18 +63,14 @@ class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
     // TODO: implement initState
     super.initState();
     _refreshController.headerMode.addListener(() {
-      if(_refreshController.headerMode.value == RefreshStatus.idle){
-
-        Future.delayed(const Duration(milliseconds: 20)).then((value)  {
-        _enablePullDown = false;
-            setState(() {
-
-        });
+      if (_refreshController.headerMode.value == RefreshStatus.idle) {
+        Future.delayed(const Duration(milliseconds: 20)).then((value) {
+          _enablePullDown = false;
+          setState(() {});
         });
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -102,23 +97,25 @@ class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
         child: data.length == 0
             ? buildEmpty()
             : ListView.builder(
-          itemBuilder: (c, i) => Text(data[i]),
-          itemCount: data.length,
-          itemExtent: 100.0,
-        ),
+                itemBuilder: (c, i) => Text(data[i]),
+                itemCount: data.length,
+                itemExtent: 100.0,
+              ),
       ),
       appBar: AppBar(
         title: Text("点击按钮刷新"),
-        actions: [GestureDetector(
-          onTap: (){
-            _enablePullDown = true;
-            setState(() {
-
-            });
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) { _refreshController.requestRefresh();});
-          },
-          child: Icon(Icons.refresh),
-        )],
+        actions: [
+          GestureDetector(
+            onTap: () {
+              _enablePullDown = true;
+              setState(() {});
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                _refreshController.requestRefresh();
+              });
+            },
+            child: Icon(Icons.refresh),
+          )
+        ],
       ),
     );
   }

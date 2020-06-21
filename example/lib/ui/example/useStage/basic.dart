@@ -183,7 +183,7 @@ class _OnlyListViewState extends State<OnlyListView> {
       },
       onLoading: () async {
         //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 200));
+        await Future.delayed(Duration(milliseconds: 180));
         for (int i = 0; i < 10; i++) {
           data.add("Item $i");
         }
@@ -227,7 +227,7 @@ class _OnlyGridViewState extends State<OnlyGridView> {
       controller: _refreshController,
       enablePullUp: true,
       child: buildCtn(),
-      header: WaterDropHeader(),
+      header: ClassicHeader(),
       onRefresh: () async {
         //monitor fetch data from network
         await Future.delayed(Duration(milliseconds: 1000));
