@@ -10,8 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 /*
-  this example will show you how to use PageView as child in SmartRefresher
-  notice:You should give PageView BoxConstraints height
+  this example will show you how to use vertical PageView as child in SmartRefresher(vertical refresh)
  */
 class PageViewExample extends StatefulWidget {
   PageViewExample({Key key}) : super(key: key);
@@ -23,47 +22,14 @@ class PageViewExample extends StatefulWidget {
 class PageViewExampleState extends State<PageViewExample>
     with TickerProviderStateMixin {
   RefreshController _refreshController;
-
+  int _lastReportedPage =0;
   List<Widget> data = [];
 
-//  final PageController _pageController = PageController();
+  final PageController _pageController = PageController();
 
-  //test #68
+
   bool _enablePullUp = true, _enablePullDown = true;
 
-  void _getDatas() {
-    data.add(Row(
-      children: <Widget>[
-        FlatButton(
-            onPressed: () {
-              _refreshController.requestRefresh();
-            },
-            child: Text("请求刷新")),
-        FlatButton(
-            onPressed: () {
-              _refreshController.requestLoading();
-            },
-            child: Text("请求加载数据"))
-      ],
-    ));
-    for (int i = 0; i < 13; i++) {
-      data.add(GestureDetector(
-        child: Container(
-          color: Color.fromARGB(255, 250, 250, 250),
-          child: Card(
-            margin:
-                EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-            child: Center(
-              child: Text('Data $i'),
-            ),
-          ),
-        ),
-        onTap: () {
-          _refreshController.requestRefresh();
-        },
-      ));
-    }
-  }
 
   void enterRefresh() {
     _refreshController.requestLoading();
@@ -72,7 +38,6 @@ class PageViewExampleState extends State<PageViewExample>
   @override
   void initState() {
     // TODO: implement initState
-    _getDatas();
     _refreshController = RefreshController(initialRefresh: true);
     super.initState();
   }
@@ -86,43 +51,47 @@ class PageViewExampleState extends State<PageViewExample>
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (i, c) {
-        double height = c.biggest.height;
-        return SmartRefresher(
-          enablePullUp: _enablePullDown,
-          enablePullDown: _enablePullUp,
-          controller: _refreshController,
-          header: MaterialClassicHeader(),
-          onRefresh: () async {
-            print("onRefresh");
-            await Future.delayed(const Duration(milliseconds: 4000));
-            data.add(Container(
-              child: Card(),
-              height: 100.0,
-            ));
-            if (mounted) setState(() {});
-            _refreshController.refreshFailed();
-          },
-          child: PageView(
-            physics: ClampingScrollPhysics(),
-            children: <Widget>[
-              Text("页面一"),
-              Text("页面二"),
-              Text("页面三"),
-              Text("页面四"),
-            ],
-          ),
-          onLoading: () {
-            print("onload");
-            Future.delayed(const Duration(milliseconds: 2000)).then((val) {
-              data.add(Card());
-              if (mounted) setState(() {});
-              _refreshController.loadComplete();
-            });
-          },
-        );
+    return NotificationListener(
+      onNotification: (ScrollNotification notification) {
+        if (notification.depth == 0  && notification is ScrollUpdateNotification) {
+          final PageMetrics metrics = notification.metrics as PageMetrics;
+          final int currentPage = metrics.page.round();
+          if (currentPage != _lastReportedPage) {
+            _lastReportedPage = currentPage;
+            // this will callback onPageChange()
+            print("onPageChange + $currentPage");
+          }
+        }
+        return false;
       },
+      child: SmartRefresher(
+        enablePullUp: true,
+        enablePullDown: true,
+        footer: ClassicFooter(loadStyle: LoadStyle.ShowWhenLoading,),
+        controller: _refreshController,
+        header: MaterialClassicHeader(),
+        onRefresh: () async {
+          print("onRefresh");
+          await Future.delayed(const Duration(milliseconds: 4000));
+
+          if (mounted) setState(() {});
+          _refreshController.refreshFailed();
+        },
+        child: CustomScrollView(
+          physics: PageScrollPhysics(),
+          controller: _pageController,
+          slivers: <Widget>[
+            SliverFillViewport(delegate: SliverChildListDelegate([Center(child:Text("第一页")),Center(child:Text("第二页")),Center(child:Text("第三页")),Center(child:Text("第四页"))]))
+          ],
+        ),
+        onLoading: () {
+          print("onload");
+          Future.delayed(const Duration(milliseconds: 2000)).then((val) {
+
+            _refreshController.loadComplete();
+          });
+        },
+      ),
     );
   }
 }

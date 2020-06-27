@@ -195,12 +195,11 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
 //
 //        });
         },
-        child: ListView.builder(
-          itemBuilder: (c, i) => Container(
-            color: Colors.lightGreen,
-          ),
-          itemCount: 50,
-          itemExtent: 50,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverFillViewport(delegate: SliverChildListDelegate([Text("第一页"),Text("第一页"),Text("第一页"),Text("第一页")]))
+          ],
+          physics: PageScrollPhysics(),
         ),
         onLoading: () async {
           await Future.delayed(const Duration(milliseconds: 1000));

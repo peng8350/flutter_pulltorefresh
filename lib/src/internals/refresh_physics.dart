@@ -167,7 +167,6 @@ class RefreshPhysics extends ScrollPhysics {
           _applyFriction(overscrollPast, offset.abs(), friction) *
           (dragSpeedRatio ?? 1.0);
     }
-
     return super.applyPhysicsToUserOffset(position, offset);
   }
 
