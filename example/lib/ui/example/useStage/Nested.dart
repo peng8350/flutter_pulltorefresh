@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../Item.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart' hide RefreshIndicator;
 
 /*
@@ -45,7 +44,7 @@ class NestedRefreshState extends State<NestedRefresh>
   void initState() {
     // TODO: implement initState
     _getDatas();
-    _refreshController = RefreshController();
+    _refreshController = RefreshController(initialRefresh: true);
     super.initState();
   }
 
@@ -108,7 +107,7 @@ class RefreshListView extends StatefulWidget {
 class _RefreshListViewState extends State<RefreshListView> {
   List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
   RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: true);
 
   void _onRefresh() async {
     // monitor network fetch
