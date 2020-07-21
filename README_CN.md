@@ -47,7 +47,7 @@
 
 ```
 
-简单例子如下,另外你要注意SmartRefresher里child存放什么组件有哪些区别,目前出现很多这类的issue。如果你不清楚,请看<a href="#child">这里</a>
+简单例子如下,***这里一定要注意的是,ListView一定要作为SmartRefresher的child,不能与其分开,详细原因看 <a href="child">下面</a>***
 
 ```dart
 

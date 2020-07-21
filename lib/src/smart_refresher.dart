@@ -650,7 +650,7 @@ class RefreshController {
         return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
           // - 0.0001 is for NestedScrollView.
           await position
-              ?.animateTo(position.minScrollExtent-0.0001,
+              ?.animateTo(position.minScrollExtent - 0.0001,
                   duration: duration, curve: curve)
               ?.then((_) {
             SmartRefresher.ofState(position.context.storageContext)

@@ -22,14 +22,12 @@ class PageViewExample extends StatefulWidget {
 class PageViewExampleState extends State<PageViewExample>
     with TickerProviderStateMixin {
   RefreshController _refreshController;
-  int _lastReportedPage =0;
+  int _lastReportedPage = 0;
   List<Widget> data = [];
 
   final PageController _pageController = PageController();
 
-
   bool _enablePullUp = true, _enablePullDown = true;
-
 
   void enterRefresh() {
     _refreshController.requestLoading();
@@ -53,7 +51,8 @@ class PageViewExampleState extends State<PageViewExample>
   Widget build(BuildContext context) {
     return NotificationListener(
       onNotification: (ScrollNotification notification) {
-        if (notification.depth == 0  && notification is ScrollUpdateNotification) {
+        if (notification.depth == 0 &&
+            notification is ScrollUpdateNotification) {
           final PageMetrics metrics = notification.metrics as PageMetrics;
           final int currentPage = metrics.page.round();
           if (currentPage != _lastReportedPage) {
@@ -67,7 +66,9 @@ class PageViewExampleState extends State<PageViewExample>
       child: SmartRefresher(
         enablePullUp: true,
         enablePullDown: true,
-        footer: ClassicFooter(loadStyle: LoadStyle.ShowWhenLoading,),
+        footer: ClassicFooter(
+          loadStyle: LoadStyle.ShowWhenLoading,
+        ),
         controller: _refreshController,
         header: MaterialClassicHeader(),
         onRefresh: () async {
@@ -81,13 +82,18 @@ class PageViewExampleState extends State<PageViewExample>
           physics: PageScrollPhysics(),
           controller: _pageController,
           slivers: <Widget>[
-            SliverFillViewport(delegate: SliverChildListDelegate([Center(child:Text("第一页")),Center(child:Text("第二页")),Center(child:Text("第三页")),Center(child:Text("第四页"))]))
+            SliverFillViewport(
+                delegate: SliverChildListDelegate([
+              Center(child: Text("第一页")),
+              Center(child: Text("第二页")),
+              Center(child: Text("第三页")),
+              Center(child: Text("第四页"))
+            ]))
           ],
         ),
         onLoading: () {
           print("onload");
           Future.delayed(const Duration(milliseconds: 2000)).then((val) {
-
             _refreshController.loadComplete();
           });
         },

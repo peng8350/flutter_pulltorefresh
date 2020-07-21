@@ -47,8 +47,7 @@ import package
 
 ```
 
-simple example,In addition, you should pay attention to the differences in what components SmartRefresher children store,
-               and there are many such issues. If you are not sure child usage, see <a href="#child"> here</a>
+simple example,***It must be noted here that ListView must be the child of SmartRefresher and cannot be separated from it. For detailed reasons, see <a href="child">here</a>***
 
 ```dart
 

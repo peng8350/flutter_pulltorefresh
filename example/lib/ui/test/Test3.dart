@@ -197,7 +197,9 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
         },
         child: CustomScrollView(
           slivers: <Widget>[
-            SliverFillViewport(delegate: SliverChildListDelegate([Text("第一页"),Text("第一页"),Text("第一页"),Text("第一页")]))
+            SliverFillViewport(
+                delegate: SliverChildListDelegate(
+                    [Text("第一页"), Text("第一页"), Text("第一页"), Text("第一页")]))
           ],
           physics: PageScrollPhysics(),
         ),
