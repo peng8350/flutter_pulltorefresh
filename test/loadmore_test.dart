@@ -418,6 +418,46 @@ void main() {
       }
       expect(time, 1);
     });
+
+    testWidgets("load more with 0 trigger distance", (tester) async {
+      final RefreshController _refreshController = RefreshController();
+      int time = 0;
+      await tester.pumpWidget(Directionality(
+        textDirection: TextDirection.ltr,
+        child: RefreshConfiguration(
+          footerTriggerDistance: 0,
+          child: SmartRefresher(
+            header: TestHeader(),
+            footer: TestFooter(),
+            enablePullUp: true,
+            enablePullDown: true,
+            onLoading: ()  async{
+              await Future.delayed(const Duration(milliseconds: 180));
+              _refreshController.loadComplete();
+              time++;
+            },
+            child: ListView.builder(
+              itemBuilder: (c, i) => Center(
+                child: Text(data[i]),
+              ),
+              itemCount: 20,
+              itemExtent: 100,
+            ),
+            controller: _refreshController,
+          ),
+        ),
+      ));
+
+      _refreshController.position
+          .jumpTo(_refreshController.position.maxScrollExtent - 100);
+      await tester.drag(find.byType(Scrollable), const Offset(0, -150.0));
+      while (tester.binding.transientCallbackCount > 0) {
+        await tester.pump(const Duration(milliseconds: 20));
+      }
+      expect(time, 1);
+
+
+    });
   });
 
   testWidgets("when autoLoad = false or enableLoadingWhenFailed = true",
