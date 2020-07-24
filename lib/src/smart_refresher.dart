@@ -484,6 +484,16 @@ class SmartRefresherState extends State<SmartRefresher> {
   }
 
   @override
+  void didUpdateWidget(SmartRefresher oldWidget) {
+    // TODO: implement didUpdateWidget
+    if(widget.controller!=oldWidget.controller){
+      widget.controller.headerMode.value = oldWidget.controller.headerMode.value;
+      widget.controller.footerMode.value = oldWidget.controller.footerMode.value;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
