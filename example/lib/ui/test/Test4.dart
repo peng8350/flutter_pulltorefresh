@@ -1,12 +1,7 @@
 import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../../other/expanded_viewport.dart';
-import 'dart:async';
-import 'dart:ui' as ui show Image, Codec, FrameInfo;
 
 class Test4 extends StatefulWidget {
   Test4({Key key}) : super(key: key);
@@ -15,19 +10,14 @@ class Test4 extends StatefulWidget {
   Test4State createState() => Test4State();
 }
 
-class Test4State extends State<Test4>
-    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
+class Test4State extends State<Test4> with TickerProviderStateMixin {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
   ValueNotifier<double> topOffsetLis = ValueNotifier(0.0);
   ValueNotifier<double> bottomOffsetLis = ValueNotifier(0.0);
   RefreshController _refreshController;
-  ScrollController _scrollController;
 
   List<Widget> data = [];
-
-  //test #68
-  bool _enablePullUp = true, _enablePullDown = true;
 
   void _getDatas() {
     data.add(Row(
@@ -65,18 +55,6 @@ class Test4State extends State<Test4>
 
   void enterRefresh() {
     _refreshController.requestLoading();
-  }
-
-  void _onOffsetCallback(bool isUp, double offset) {
-    // if you want change some widgets state ,you should rewrite the callback
-    if (mounted) setState(() {});
-    if (isUp) {
-      print(offset);
-      bottomOffsetLis.value = offset;
-    } else {
-      print(offset);
-      topOffsetLis.value = offset;
-    }
   }
 
   @override
@@ -144,21 +122,11 @@ class Test4State extends State<Test4>
     super.initState();
   }
 
-  Widget _headerCreate(BuildContext context, RefreshStatus mode) {
-    return Image.asset(
-      "images/animate.gif",
-      fit: BoxFit.fitWidth,
-      alignment: Alignment.topCenter,
-    );
-  }
-
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
   }
-
-  ScrollController _controller;
 
   @override
   Widget build(BuildContext context) {

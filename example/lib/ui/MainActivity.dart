@@ -3,10 +3,8 @@
  * Email: peng8350@gmail.com
  * Time: 2019/5/3 下午6:13
  */
-import 'package:example/ui/screen/ScreenPage.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:residemenu/residemenu.dart';
 import 'example/ExamplePage.dart';
 import 'test/TestPage.dart';
@@ -59,7 +57,6 @@ class _MainActivityState extends State<MainActivity>
       IndicatorPage(title: "指示器界面"),
       ExamplePage(),
       TestPage(title: "测试界面"),
-      ScreenPage(),
     ];
   }
 
@@ -144,14 +141,6 @@ class _MainActivityState extends State<MainActivity>
             });
             _menuController.closeMenu();
             _pageController.jumpToPage(2);
-          }),
-          buildItem("App界面",
-              Icon(Icons.format_underlined, size: 18, color: Colors.grey), () {
-            setState(() {
-              _tabIndex = 4;
-            });
-            _menuController.closeMenu();
-            _pageController.jumpToPage(4);
           }),
         ],
       ),

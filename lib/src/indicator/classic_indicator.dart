@@ -1,7 +1,7 @@
-/**
-    Author: Jpeng
-    Email: peng8350@gmail.com
-    createTime:2018-05-14 17:39
+/*
+ *   Author: Jpeng
+ *   Email: peng8350@gmail.com
+ *   createTime:2018-05-14 17:39
  */
 
 import 'package:flutter/material.dart'

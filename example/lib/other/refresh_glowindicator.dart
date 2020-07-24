@@ -40,6 +40,8 @@ class RefreshScrollBehavior extends ScrollBehavior {
           color: Theme.of(context).primaryColor,
         );
       case TargetPlatform.fuchsia:
+      case TargetPlatform.linux:
+      case TargetPlatform.windows:
     }
     return null;
   }

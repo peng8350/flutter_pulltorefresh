@@ -5,7 +5,7 @@
  */
 
 import 'dart:async';
-import 'dart:convert' show json, base64Decode;
+import 'dart:convert' show json;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../Item.dart';
@@ -22,7 +22,7 @@ class HorizontalRefresh extends StatefulWidget {
 }
 
 class _HorizontalRefreshState extends State<HorizontalRefresh>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+    with TickerProviderStateMixin {
   RefreshController _controller1 = RefreshController();
   RefreshController _controller2 = RefreshController();
   int indexPage = 0;

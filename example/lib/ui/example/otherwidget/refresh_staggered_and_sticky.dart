@@ -138,7 +138,6 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
     ));
     return LayoutBuilder(
       builder: (i, c) {
-        double height = c.biggest.height;
         return SmartRefresher(
           enablePullUp: true,
           enablePullDown: true,

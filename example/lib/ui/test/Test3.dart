@@ -17,12 +17,8 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
   ValueNotifier<double> topOffsetLis = ValueNotifier(0.0);
   ValueNotifier<double> bottomOffsetLis = ValueNotifier(0.0);
   RefreshController _refreshController;
-  ScrollController _scrollController;
 
   List<Widget> data = [];
-
-  //test #68
-  bool _enablePullUp = true, _enablePullDown = true;
 
   void _getDatas() {
     data.add(Row(
@@ -60,18 +56,6 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
 
   void enterRefresh() {
     _refreshController.requestLoading();
-  }
-
-  void _onOffsetCallback(bool isUp, double offset) {
-    // if you want change some widgets state ,you should rewrite the callback
-    if (mounted) setState(() {});
-    if (isUp) {
-      print(offset);
-      bottomOffsetLis.value = offset;
-    } else {
-      print(offset);
-      topOffsetLis.value = offset;
-    }
   }
 
   @override
@@ -125,19 +109,8 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
     _getDatas();
     _refreshController = RefreshController(
         initialRefresh: false, initialLoadStatus: LoadStatus.noMore);
-    _animationController = AnimationController(vsync: this);
     super.initState();
   }
-
-  Widget _headerCreate(BuildContext context, RefreshStatus mode) {
-    return Image.asset(
-      "images/animate.gif",
-      fit: BoxFit.fitWidth,
-      alignment: Alignment.topCenter,
-    );
-  }
-
-  ScrollController _controller = ScrollController();
 
   @override
   void dispose() {
@@ -145,15 +118,10 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  AnimationController _animationController;
-
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      print(_refreshController.scrollController);
-    });
   }
 
   @override
@@ -212,10 +180,6 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
       dragSpeedRatio: 0.9,
     );
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => false;
 }
 
 class CirclePainter extends CustomClipper<Path> {

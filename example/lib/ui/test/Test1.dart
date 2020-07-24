@@ -144,30 +144,3 @@ class _ItemState extends State<Item> {
     super.dispose();
   }
 }
-
-class _SliverDelegate extends SliverPersistentHeaderDelegate {
-  final Widget child;
-
-  _SliverDelegate({this.child});
-
-  @override
-  // TODO: implement minExtent
-  double get minExtent => 50.0;
-
-  @override
-  // TODO: implement maxExtent
-  double get maxExtent => 100.0;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    // TODO: implement build
-    return child;
-  }
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
-    // TODO: implement shouldRebuild
-    return false;
-  }
-}

@@ -49,7 +49,7 @@ void main() {
   testWidgets(
       "footer rendering in four direction with different styles(unfollow content)",
       (tester) async {
-    final List<CustomFooter> footer_data = [
+    final List<CustomFooter> footerData = [
       CustomFooter(
         builder: (_, c) => Container(
           height: 60.0,
@@ -72,7 +72,7 @@ void main() {
         loadStyle: LoadStyle.HideAlways,
       ),
     ];
-    for (CustomFooter footer in footer_data) {
+    for (CustomFooter footer in footerData) {
       // down
       await buildNotFullList(tester, false, Axis.vertical, footer: footer);
 
@@ -110,7 +110,7 @@ void main() {
   testWidgets(
       "footer rendering in four direction with different styles(unfollow content),loadingstate",
       (tester) async {
-    final List<CustomFooter> footer_data = [
+    final List<CustomFooter> footerData = [
       CustomFooter(
         builder: (_, c) => Container(
           height: 60.0,
@@ -133,7 +133,7 @@ void main() {
         loadStyle: LoadStyle.HideAlways,
       ),
     ];
-    for (CustomFooter footer in footer_data) {
+    for (CustomFooter footer in footerData) {
       // down
       await buildNotFullList(tester, false, Axis.vertical,
           footer: footer, initload: true);

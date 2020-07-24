@@ -359,8 +359,8 @@ void main() {
   testWidgets("test RefreshConfiguration new Constructor valid",
       (tester) async {
     final RefreshController _refreshController = RefreshController();
-    int time = 0;
-    BuildContext context1, context2;
+
+    BuildContext context2;
     await tester.pumpWidget(RefreshConfiguration(
       hideFooterWhenNotFull: true,
       dragSpeedRatio: 0.8,
@@ -372,7 +372,7 @@ void main() {
         builder: (c1) {
           return MaterialApp(
             home: RefreshConfiguration.copyAncestor(
-              context: context1 = c1,
+              context: c1,
               enableScrollWhenRefreshCompleted: false,
               hideFooterWhenNotFull: true,
               maxUnderScrollExtent: 100,
@@ -394,16 +394,10 @@ void main() {
                         width: 60.0,
                         color: Colors.transparent,
                       ),
-                      onTap: () {
-                        time++;
-                      },
+                      onTap: () {},
                     ),
-                    onRefresh: () async {
-                      time++;
-                    },
-                    onLoading: () async {
-                      time++;
-                    },
+                    onRefresh: () async {},
+                    onLoading: () async {},
                     controller: _refreshController,
                   );
                 },

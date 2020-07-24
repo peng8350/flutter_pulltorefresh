@@ -27,13 +27,8 @@ class _TestPageState extends State<TestPage>
   int tabIndex = 0;
   PageController _pageController;
   List<Widget> views;
-  TabController _tabController;
   GlobalKey<Test3State> example3Key = GlobalKey();
   GlobalKey<Test1State> example1Key = GlobalKey();
-
-  void _changePage() {
-    Navigator.of(context).pushNamed("sec");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +107,6 @@ class _TestPageState extends State<TestPage>
   @override
   void initState() {
     // TODO: implement initState
-    _tabController = TabController(length: 4, vsync: this);
     _pageController = PageController();
     views = [
       Test1(key: example1Key),

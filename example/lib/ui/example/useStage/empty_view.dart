@@ -44,7 +44,7 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
         Text("没数据,请下拉刷新")
       ],
     );
-    // second way
+    /* second way
     return ListView(
       children: [
         Image.asset(
@@ -55,6 +55,8 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
       physics: BouncingScrollPhysics(),
       cacheExtent: 100.0,
     );
+
+     */
   }
 
   @override

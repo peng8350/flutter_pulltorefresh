@@ -27,8 +27,6 @@ class PageViewExampleState extends State<PageViewExample>
 
   final PageController _pageController = PageController();
 
-  bool _enablePullUp = true, _enablePullDown = true;
-
   void enterRefresh() {
     _refreshController.requestLoading();
   }

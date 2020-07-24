@@ -3,7 +3,6 @@ import 'package:example/ui/MainActivity.dart';
 import 'package:example/ui/SecondActivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'ui/indicator/base/IndicatorActivity.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

@@ -75,21 +75,20 @@ class _RenderExpandedViewport extends RenderViewport {
     RenderSliver expand;
     RenderSliver p = firstChild;
     double totalLayoutExtent = 0;
-    double BehindExtent = 0.0, FrontExtent = 0.0;
+    double frontExtent = 0.0;
     while (p != null) {
       totalLayoutExtent += p.geometry.scrollExtent;
       if (p is _RenderExpanded) {
         expand = p;
-        FrontExtent = totalLayoutExtent;
+        frontExtent = totalLayoutExtent;
       }
 
       p = childAfter(p);
     }
-    double count = 0;
-    BehindExtent = totalLayoutExtent - FrontExtent;
+
     if (expand != null && size.height > totalLayoutExtent) {
       _attemptLayout(expand, size.height, size.width,
-          offset.pixels - FrontExtent - (size.height - totalLayoutExtent));
+          offset.pixels - frontExtent - (size.height - totalLayoutExtent));
     }
   }
 
@@ -113,8 +112,6 @@ class _RenderExpandedViewport extends RenderViewport {
         (mainAxisExtent - centerOffset).clamp(0.0, mainAxisExtent);
     final double fullCacheExtent = mainAxisExtent + 2 * cacheExtent;
     final double centerCacheOffset = centerOffset + cacheExtent;
-    final double reverseDirectionRemainingCacheExtent =
-        centerCacheOffset.clamp(0.0, fullCacheExtent);
     final double forwardDirectionRemainingCacheExtent =
         (fullCacheExtent - centerCacheOffset).clamp(0.0, fullCacheExtent);
 

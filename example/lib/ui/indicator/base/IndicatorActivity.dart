@@ -6,9 +6,7 @@
 
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
-import 'package:flutter/material.dart' as prefix0;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:flutter/scheduler.dart';
 import '../../Item.dart';
 
 class IndicatorActivity extends StatefulWidget {
@@ -114,12 +112,6 @@ class _IndicatorActivityState extends State<IndicatorActivity> {
   _onLoading(BuildContext context) {
     print("onLoading");
     Future.delayed(Duration(milliseconds: 1000)).then((_) {
-      int index = items.length;
-//      if (mounted) setState(() {});
-//      items.add(Item(
-//        title: "Data$index",
-//      ));
-//      ;
       _refreshController.loadComplete();
     });
   }

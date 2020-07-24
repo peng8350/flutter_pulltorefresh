@@ -149,17 +149,17 @@ class ListModel<E> {
   final dynamic removedItemBuilder;
   final List<E> _items;
 
-  SliverAnimatedListState get _SliverAnimatedList => listKey.currentState;
+  SliverAnimatedListState get _sliverAnimatedList => listKey.currentState;
 
   void insert(int index, E item) {
     _items.insert(index, item);
-    _SliverAnimatedList.insertItem(index);
+    _sliverAnimatedList.insertItem(index);
   }
 
   E removeAt(int index) {
     final E removedItem = _items.removeAt(index);
     if (removedItem != null) {
-      _SliverAnimatedList.removeItem(index,
+      _sliverAnimatedList.removeItem(index,
           (BuildContext context, Animation<double> animation) {
         return removedItemBuilder(removedItem, context, animation);
       });
@@ -197,7 +197,7 @@ class CardItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.display1;
+    TextStyle textStyle = Theme.of(context).textTheme.bodyText1;
     if (selected)
       textStyle = textStyle.copyWith(color: Colors.lightGreenAccent[400]);
     return new Padding(

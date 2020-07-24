@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:convert' show json, base64Decode;
+import 'dart:convert' show json;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as HTTP;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Test2 extends StatefulWidget {
   @override
@@ -72,26 +71,10 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
     } else {}
   }
 
-  Widget _headerCreate(BuildContext context, RefreshStatus mode) {
-    if (mode == RefreshStatus.refreshing) {
-      return SpinKitCircle(color: Colors.greenAccent);
-    } else {
-      return SpinKitDualRing(color: Colors.greenAccent);
-    }
-  }
-
-  Widget _footerCreate(BuildContext context, LoadStatus mode) {
-    return Image.memory(base64Decode(
-        "R0lGODlhFAAUALMAAGaZADOZzP8zM5mZmczMzNra2t7e3uLi4uXl5enp6e3t7fHx8fb29vn5+f7+/gAAACH/C05FVFNDQVBFMi4wAwEAAAAh/g9Qb3dlcmVkIGJ5IEFGRUkAIfkECRQADwAsAAAAABQAFAAABJLwkUmrpdLpzfue2jA4YliKowOmZBtu6drMQ1PbM96oBJnXwF+O52CIjEiU8UhcOJ/Q6KIpDQSkU5Biy1VYtwAAl5gomxPWcthMLgsE5XRiXSYi7u+79R6+I4gHgW+BVoFhgQdEBotvi1aLYYsGiowCjgGQAJJEBZ1vnVadYZ0FnJ4CoAGiAKREHq8cBBIXtBUPEQAh+QQJFAAPACwAAAAAFAAUAAAEjPCRSaul0unN+57aMDhiWIqjA6ZkG27p2sxDU9sz3qgEmdfAX47nYIiMSJTxSFw4n9DooimtOomKrECQ7XqzxIR4Ky6bxeGx4JwAAMpEhHwrryPcdeJhv937D25+RAaEW4QBAYRuhAaDhQKHiQaLhEQFl1uXiJdulwWWmAKaAZwAnkQeqRwEEheuFQ8RADs="));
-  }
-
-  ScrollController _scrollController;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _scrollController = ScrollController(keepScrollOffset: true);
     _controller = RefreshController(initialLoadStatus: LoadStatus.failed);
     _fetch();
   }

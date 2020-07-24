@@ -45,7 +45,7 @@ class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
         Text("没数据,请点击按钮刷新")
       ],
     );
-    // second way
+    /* second way
     return ListView(
       children: [
         Image.asset(
@@ -56,6 +56,7 @@ class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
       physics: BouncingScrollPhysics(),
       cacheExtent: 100.0,
     );
+     */
   }
 
   @override
