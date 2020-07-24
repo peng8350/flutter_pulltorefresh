@@ -882,9 +882,9 @@ class RefreshConfiguration extends InheritedWidget {
       this.enableLoadingWhenNoData: false,
       this.enableBallisticRefresh: false,
       this.springDescription: const SpringDescription(
-        mass: 2.2,
-        stiffness: 150,
-        damping: 16,
+        mass: 0.5,
+        stiffness: 100,
+        damping: 15.6,
       ),
       this.enableScrollWhenRefreshCompleted: false,
       this.enableLoadingWhenFailed: true,

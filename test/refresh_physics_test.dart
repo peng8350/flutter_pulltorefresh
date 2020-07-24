@@ -191,7 +191,7 @@ void main() {
       expect(
           _refreshController.position.pixels -
               _refreshController.position.maxScrollExtent,
-          lessThanOrEqualTo(300.0));
+          lessThanOrEqualTo(320.0));
       await tester.pump(const Duration(milliseconds: 20));
     }
   });
