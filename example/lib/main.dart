@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshConfiguration(
-      footerTriggerDistance: -15,
+      footerTriggerDistance: 15,
       dragSpeedRatio: 0.91,
       headerBuilder: () => MaterialClassicHeader(),
       footerBuilder: () => ClassicFooter(),
@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
         // If you want load more with noMoreData state ,may be you should return false
         return false;
       },
-      autoLoad: true,
       child: MaterialApp(
         title: 'Pulltorefresh Demo',
         debugShowCheckedModeBanner: false,

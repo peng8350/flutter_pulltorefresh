@@ -431,7 +431,7 @@ void main() {
             footer: TestFooter(),
             enablePullUp: true,
             enablePullDown: true,
-            onLoading: ()  async{
+            onLoading: () async {
               await Future.delayed(const Duration(milliseconds: 180));
               _refreshController.loadComplete();
               time++;
@@ -455,8 +455,6 @@ void main() {
         await tester.pump(const Duration(milliseconds: 20));
       }
       expect(time, 1);
-
-
     });
   });
 

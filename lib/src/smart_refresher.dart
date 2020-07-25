@@ -424,6 +424,7 @@ class SmartRefresherState extends State<SmartRefresher> {
         reverse: reverse ?? false,
       );
     } else if (childView is Scrollable) {
+
       body = Scrollable(
         physics: _getScrollPhysics(
             conf, childView.physics ?? AlwaysScrollableScrollPhysics()),

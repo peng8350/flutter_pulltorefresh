@@ -337,3 +337,10 @@ other:
 * fix footer renderError with reverse:true,behaviour return to 1.5.7
 * add check null in requestRefresh()
 * fix refreshText reverse error(ClassicHeader) when reverse:true
+
+## 1.6.1
+* fix NestedScrollView requetRefresh error
+* fix NestedScollView cast error
+* fix twiceloadng when no data return
+* add support for update refreshcontroller
+* add other language
