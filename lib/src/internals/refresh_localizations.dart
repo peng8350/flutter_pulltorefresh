@@ -75,6 +75,7 @@ class RefreshLocalizations {
     'it': ItRefreshString(),
     'ja': JpRefreshString(),
     'de': DeRefreshString(),
+    'nl': NlRefreshString(),
   };
 
   RefreshString get currentLocalization {
@@ -98,7 +99,7 @@ class RefreshLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'zh', 'fr', 'ru', 'uk', 'ja', 'it', 'de']
+    return ['en', 'zh', 'fr', 'ru', 'uk', 'ja', 'it', 'de', 'nl']
         .contains(locale.languageCode);
   }
 
@@ -436,4 +437,40 @@ class DeRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Aktualisiere…";
+}
+
+/// Dutch
+class NlRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Laat los om meer te laden";
+
+  @override
+  String canRefreshText = "Laat los om te vernieuwen";
+
+  @override
+  String canTwoLevelText = "Laat los om naar tweede verdieping te gaan";
+
+  @override
+  String idleLoadingText = "Trek omhoog om meer te laden";
+
+  @override
+  String idleRefreshText = "Trek onlaag om te vernieuwen";
+
+  @override
+  String loadFailedText = "Laden mislukt";
+
+  @override
+  String loadingText = "Laden…";
+
+  @override
+  String noMoreText = "Geen data meer";
+
+  @override
+  String refreshCompleteText = "Vernieuwen voltooid";
+
+  @override
+  String refreshFailedText = "Vernieuwen mislukt";
+
+  @override
+  String refreshingText = "Vernieuwen…";
 }
