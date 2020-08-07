@@ -424,7 +424,7 @@ class SmartRefresherState extends State<SmartRefresher> {
         reverse: reverse ?? false,
       );
     } else if (childView is Scrollable) {
-
+      
       body = Scrollable(
         physics: _getScrollPhysics(
             conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
@@ -512,7 +512,9 @@ class SmartRefresherState extends State<SmartRefresher> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         //  if mounted,it avoid one situation: when init done,then dispose the widget before build.
         //  this   situation mostly TabBarView
-        if (mounted) widget.controller.requestRefresh();
+        if (mounted)
+          widget.controller.requestRefresh(
+              moveAnimate: widget.controller.initialRefreshPullAnimation);
       });
     }
     super.initState();
@@ -588,13 +590,18 @@ class RefreshController {
 
   final bool initialRefresh;
 
+  final bool initialRefreshPullAnimation;
+
   /// initialRefresh:When SmartRefresher is init,it will call requestRefresh at once
+  ///
+  /// initialRefreshPullAnimation: enable init refresh animation
   ///
   /// initialRefreshStatus: headerMode default value
   ///
   /// initialLoadStatus: footerMode default value
   RefreshController(
       {this.initialRefresh: false,
+      this.initialRefreshPullAnimation: true,
       RefreshStatus initialRefreshStatus,
       LoadStatus initialLoadStatus}) {
     this.headerMode = ValueNotifier(initialRefreshStatus ?? RefreshStatus.idle);
@@ -646,6 +653,7 @@ class RefreshController {
   /// make the header enter refreshing state,and callback onRefresh
   Future<void> requestRefresh(
       {bool needMove: true,
+      bool moveAnimate: true,
       Duration duration: const Duration(milliseconds: 500),
       Curve curve: Curves.linear}) {
     assert(position != null,
@@ -661,15 +669,23 @@ class RefreshController {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (needMove) {
         return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
-          // - 0.0001 is for NestedScrollView.
-          await position
-              ?.animateTo(position.minScrollExtent - 0.0001,
-                  duration: duration, curve: curve)
-              ?.then((_) {
+          if (moveAnimate) {
+            // - 0.0001 is for NestedScrollView.
+            await position
+                ?.animateTo(position.minScrollExtent - 0.0001,
+                    duration: duration, curve: curve)
+                ?.then((_) {
+              SmartRefresher.ofState(position.context.storageContext)
+                  ?.setCanDrag(true);
+              headerMode.value = RefreshStatus.refreshing;
+            });
+          } else {
+            position.jumpTo(position.minScrollExtent - 0.0001);
+
             SmartRefresher.ofState(position.context.storageContext)
                 ?.setCanDrag(true);
             headerMode.value = RefreshStatus.refreshing;
-          });
+          }
         });
       } else {
         return Future.value().then((_) {
