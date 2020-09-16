@@ -236,12 +236,18 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     update();
     if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
       floating = false;
+
       resetValue();
+
+      if (mode == RefreshStatus.idle)
+        SmartRefresher.ofState(context).setCanDrag(true);
     }
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
       endRefresh().then((_) {
         if (!mounted) return;
         floating = false;
+
+        SmartRefresher.ofState(context).setCanDrag(configuration.enableScrollWhenRefreshCompleted);
         update();
         /*
           handle two Situation:
@@ -275,6 +281,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (refresher.onRefresh != null) refresher.onRefresh();
     } else if (mode == RefreshStatus.twoLevelOpening) {
       floating = true;
+      SmartRefresher.ofState(context).setCanDrag(false);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         activity.resetActivity();
@@ -289,7 +296,12 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       });
     } else if (mode == RefreshStatus.twoLevelClosing) {
       floating = false;
+      SmartRefresher.ofState(context).setCanDrag(false);
       update();
+    }
+    else if (mode == RefreshStatus.twoLeveling) {
+
+      SmartRefresher.ofState(context).setCanDrag(configuration.enableScrollWhenTwoLevel);
     }
     onModeChange(mode);
   }
