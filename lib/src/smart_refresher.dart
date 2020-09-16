@@ -942,7 +942,7 @@ class RefreshConfiguration extends InheritedWidget {
         assert(RefreshConfiguration.of(context) != null,
             "search RefreshConfiguration anscestor return null,please  Make sure that RefreshConfiguration is the ancestor of that element"),
         autoLoad = autoLoad ?? RefreshConfiguration.of(context).autoLoad,
-        headerBuilder = RefreshConfiguration.of(context).headerBuilder,
+        headerBuilder = headerBuilder ?? RefreshConfiguration.of(context).headerBuilder,
         footerBuilder =
             footerBuilder ?? RefreshConfiguration.of(context).footerBuilder,
         dragSpeedRatio =
