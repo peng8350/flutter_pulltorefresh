@@ -737,17 +737,18 @@ class RefreshController {
   }
 
   /// end twoLeveling,will return back first floor
-  void twoLevelComplete(
+  Future<void> twoLevelComplete(
       {Duration duration: const Duration(milliseconds: 500),
       Curve curve: Curves.linear}) {
     headerMode?.value = RefreshStatus.twoLevelClosing;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      position
+      return position
           .animateTo(0.0, duration: duration, curve: curve)
           .whenComplete(() {
         headerMode.value = RefreshStatus.idle;
       });
     });
+    return null;
   }
 
   /// request failed,the header display failed state

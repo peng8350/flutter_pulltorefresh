@@ -384,6 +384,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         return;
       }
 
+      // this line for patch bug temporary:indicator disappears fastly when load more complete
+      if(mounted)
+        Scrollable.of(context).position.correctBy(0.00001);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _position?.outOfRange == true) {
           activity.delegate.goBallistic(0);
