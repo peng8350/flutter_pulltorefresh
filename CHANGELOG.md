@@ -344,3 +344,6 @@ other:
 * fix twiceloadng when no data return
 * add support for update refreshcontroller
 * add other language
+
+## 1.6.2
+* fix "_pendingDimenssion is not true" error with the breaking change
