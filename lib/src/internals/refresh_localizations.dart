@@ -457,7 +457,7 @@ class SvRefreshString implements RefreshString {
   String idleRefreshText = "Dra ner för att uppdatera";
 
   @override
-  String loadFailedText = "Kunde inte ladda";
+  String loadFailedText = "Hämtningen misslyckades";
 
   @override
   String loadingText = "Laddar…";
@@ -466,7 +466,7 @@ class SvRefreshString implements RefreshString {
   String noMoreText = "Ingen mer data";
 
   @override
-  String refreshCompleteText = "UppdateradRefresh completed";
+  String refreshCompleteText = "Uppdaterad";
 
   @override
   String refreshFailedText = "Kunde inte uppdatera";
