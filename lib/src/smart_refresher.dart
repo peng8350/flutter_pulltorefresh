@@ -381,7 +381,6 @@ class SmartRefresherState extends State<SmartRefresher> {
     Widget body;
     if (childView is! Scrollable) {
       bool primary = widget.primary;
-      Key key = widget.key;
       double cacheExtent = widget.cacheExtent;
       Axis scrollDirection = widget.scrollDirection;
       int semanticChildCount = widget.semanticChildCount;
@@ -393,7 +392,6 @@ class SmartRefresherState extends State<SmartRefresher> {
       if (childView is ScrollView) {
         primary = primary ?? childView.primary;
         cacheExtent = cacheExtent ?? childView.cacheExtent;
-        key = key ?? childView.key;
         semanticChildCount = semanticChildCount ?? childView.semanticChildCount;
         reverse = reverse ?? childView.reverse;
         dragStartBehavior = dragStartBehavior ?? childView.dragStartBehavior;
@@ -413,7 +411,6 @@ class SmartRefresherState extends State<SmartRefresher> {
         // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
         controller: scrollController,
         cacheExtent: cacheExtent,
-        key: key,
         scrollDirection: scrollDirection ?? Axis.vertical,
         semanticChildCount: semanticChildCount,
         primary: primary,
