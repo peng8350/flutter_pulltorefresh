@@ -454,7 +454,7 @@ class NlRefreshString implements RefreshString {
   String idleLoadingText = "Trek omhoog om meer te laden";
 
   @override
-  String idleRefreshText = "Trek onlaag om te vernieuwen";
+  String idleRefreshText = "Trek omlaag om te vernieuwen";
 
   @override
   String loadFailedText = "Laden mislukt";
