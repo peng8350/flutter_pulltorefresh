@@ -246,8 +246,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       endRefresh().then((_) {
         if (!mounted) return;
         floating = false;
-
-        SmartRefresher.ofState(context).setCanDrag(configuration.enableScrollWhenRefreshCompleted);
+        if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
+          SmartRefresher.ofState(context).setCanDrag(
+              configuration.enableScrollWhenRefreshCompleted);
+        }
         update();
         /*
           handle two Situation:
