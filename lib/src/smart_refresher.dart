@@ -381,7 +381,7 @@ class SmartRefresherState extends State<SmartRefresher> {
     Widget body;
     if (childView is! Scrollable) {
       bool primary = widget.primary;
-      Key key = widget.key;
+      Key key ;
       double cacheExtent = widget.cacheExtent;
       Axis scrollDirection = widget.scrollDirection;
       int semanticChildCount = widget.semanticChildCount;
