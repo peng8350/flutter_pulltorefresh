@@ -281,7 +281,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         floating = true;
         readyToRefresh();
       }
-      if (configuration.enableRefreshVibrate) {
+      if (configuration.enableRefreshVibrate ?? false) {
         HapticFeedback.vibrate();
       }
       if (refresher.onRefresh != null) refresher.onRefresh();
@@ -450,7 +450,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       if (!floating) {
         enterLoading();
       }
-      if (configuration.enableLoadMoreVibrate) {
+      if (configuration.enableLoadMoreVibrate ?? false) {
         HapticFeedback.vibrate();
       }
       if (refresher.onLoading != null) {

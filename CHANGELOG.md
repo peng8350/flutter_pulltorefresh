@@ -1,4 +1,9 @@
-<!-- Next version changes should go here --> 
+## 1.6.3
+* fix bug:gesture disabled after refresh complete in an error refreshState
+* fix problem:Footer hide back suddenly(this cause by the flutter breaking change)
+* add vibrate option to enable vibrate when trigger onRefresh or onLoading
+* fix SmartRefresher key in mutiple widgets
+* add other languages
 
 ## 1.6.2
 * fix "_pendingDimenssion is not true" error with the breaking change
