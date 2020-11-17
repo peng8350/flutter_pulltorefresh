@@ -134,9 +134,13 @@ class _OnlyListViewState extends State<OnlyListView> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  GlobalKey _contentKey = GlobalKey();
+  GlobalKey _refresherKey = GlobalKey();
+
 
   Widget buildCtn() {
     return ListView.separated(
+      key: _contentKey,
       reverse: true,
       padding: EdgeInsets.only(left: 5, right: 5),
       itemBuilder: (c, i) => Item(
@@ -156,6 +160,7 @@ class _OnlyListViewState extends State<OnlyListView> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return SmartRefresher(
+      key: _refresherKey,
       controller: _refreshController,
       enablePullUp: true,
       child: buildCtn(),
