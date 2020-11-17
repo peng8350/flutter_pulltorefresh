@@ -76,6 +76,10 @@ class RefreshLocalizations {
     'ja': JpRefreshString(),
     'de': DeRefreshString(),
     'es': EsRefreshString()
+    'nl': NlRefreshString(),
+    'sv': SvRefreshString(),
+    'pt': PtRefreshString(),
+    'kr': KrRefreshString(),
   };
 
   RefreshString get currentLocalization {
@@ -99,7 +103,7 @@ class RefreshLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'zh', 'fr', 'ru', 'uk', 'ja', 'it', 'de', 'es']
+    return ['en', 'zh', 'fr', 'ru', 'uk', 'ja', 'it', 'de', 'kr', 'pt', 'sv', 'nl', 'es']
         .contains(locale.languageCode);
   }
 
@@ -473,4 +477,150 @@ class EsRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Actualizando…";
+
+
+/// Dutch
+class NlRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Laat los om meer te laden";
+
+  @override
+  String canRefreshText = "Laat los om te vernieuwen";
+
+  @override
+  String canTwoLevelText = "Laat los om naar tweede verdieping te gaan";
+
+  @override
+  String idleLoadingText = "Trek omhoog om meer te laden";
+
+  @override
+  String idleRefreshText = "Trek omlaag om te vernieuwen";
+
+  @override
+  String loadFailedText = "Laden mislukt";
+
+  @override
+  String loadingText = "Laden…";
+
+  @override
+  String noMoreText = "Geen data meer";
+
+  @override
+  String refreshCompleteText = "Vernieuwen voltooid";
+
+  @override
+  String refreshFailedText = "Vernieuwen mislukt";
+
+  @override
+  String refreshingText = "Vernieuwen…";
+
+
+/// Swedish
+class SvRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Släpp för att ladda mer";
+
+  @override
+  String canRefreshText = "Släpp för att uppdatera";
+
+  @override
+  String canTwoLevelText = "Släpp för att gå till andra våningen";
+
+  @override
+  String idleLoadingText = "Dra upp för att ladda mer";
+
+  @override
+  String idleRefreshText = "Dra ner för att uppdatera";
+
+  @override
+  String loadFailedText = "Hämtningen misslyckades";
+
+  @override
+  String loadingText = "Laddar…";
+
+  @override
+  String noMoreText = "Ingen mer data";
+
+  @override
+  String refreshCompleteText = "Uppdaterad";
+
+  @override
+  String refreshFailedText = "Kunde inte uppdatera";
+
+  @override
+  String refreshingText = "Uppdaterar…";
+
+
+// Portuguese - Brazil
+class PtRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Solte para carregar mais";
+
+  @override
+  String canRefreshText = "Solte para atualizar";
+
+  @override
+  String canTwoLevelText = "Solte para entrar no segundo andar";
+
+  @override
+  String idleLoadingText = "Puxe para cima para carregar mais";
+
+  @override
+  String idleRefreshText = "Puxe para baixo para atualizar";
+
+  @override
+  String loadFailedText = "Falha ao carregar";
+
+  @override
+  String loadingText = "Carregando…";
+
+  @override
+  String noMoreText = "Não há mais dados";
+
+  @override
+  String refreshCompleteText = "Atualização completada";
+
+  @override
+  String refreshFailedText = "Falha ao atualizar";
+
+  @override
+  String refreshingText = "Atualizando…";
+
+/// Korean
+class KrRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "당겨서 불러오기";
+
+  @override
+  String canRefreshText = "당겨서 새로 고침";
+
+  @override
+  String canTwoLevelText = "두 번째 레벨로 이동";
+
+  @override
+  String idleLoadingText = "위로 당겨서 불러오기";
+
+  @override
+  String idleRefreshText = "아래로 당겨서 새로 고침";
+
+  @override
+  String loadFailedText = "로딩에 실패했습니다.";
+
+  @override
+  String loadingText = "로딩 중…";
+
+  @override
+  String noMoreText = "데이터가 더 이상 없습니다.";
+
+  @override
+  String refreshCompleteText = "새로 고침 완료";
+
+  @override
+  String refreshFailedText = "새로 고침에 실패했습니다.";
+
+  @override
+  String refreshingText = "새로 고침 중…";
+
+
+
 }
