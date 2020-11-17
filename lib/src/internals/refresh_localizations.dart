@@ -75,6 +75,7 @@ class RefreshLocalizations {
     'it': ItRefreshString(),
     'ja': JpRefreshString(),
     'de': DeRefreshString(),
+    'es': EsRefreshString()
     'nl': NlRefreshString(),
     'sv': SvRefreshString(),
     'pt': PtRefreshString(),
@@ -102,7 +103,7 @@ class RefreshLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'zh', 'fr', 'ru', 'uk', 'ja', 'it', 'de', 'kr', 'pt', 'sv', 'nl']
+    return ['en', 'zh', 'fr', 'ru', 'uk', 'ja', 'it', 'de', 'kr', 'pt', 'sv', 'nl', 'es']
         .contains(locale.languageCode);
   }
 
@@ -442,6 +443,41 @@ class DeRefreshString implements RefreshString {
   String refreshingText = "Aktualisiere…";
 }
 
+/// Spanish
+class EsRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Suelte para cargar más";
+
+  @override
+  String canRefreshText = "Suelte para actualizar";
+
+  @override
+  String canTwoLevelText = "Suelte para entrar al segundo nivel";
+
+  @override
+  String idleLoadingText = "Tire hacia arriba para cargar más";
+
+  @override
+  String idleRefreshText = "Tire hacia abajo para refrescar";
+
+  @override
+  String loadFailedText = "Error de carga";
+
+  @override
+  String loadingText = "Cargando…";
+
+  @override
+  String noMoreText = "No hay más datos disponibles";
+
+  @override
+  String refreshCompleteText = "Actualización completada";
+
+  @override
+  String refreshFailedText = "Error al actualizar";
+
+  @override
+  String refreshingText = "Actualizando…";
+
 
 /// Dutch
 class NlRefreshString implements RefreshString {
@@ -584,6 +620,7 @@ class KrRefreshString implements RefreshString {
 
   @override
   String refreshingText = "새로 고침 중…";
+
 
 
 }
