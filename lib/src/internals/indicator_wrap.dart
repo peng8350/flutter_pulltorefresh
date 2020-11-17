@@ -7,6 +7,7 @@
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 import '../smart_refresher.dart';
@@ -246,8 +247,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       endRefresh().then((_) {
         if (!mounted) return;
         floating = false;
-
-        SmartRefresher.ofState(context).setCanDrag(configuration.enableScrollWhenRefreshCompleted);
+        if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
+          SmartRefresher.ofState(context).setCanDrag(
+              configuration.enableScrollWhenRefreshCompleted);
+        }
         update();
         /*
           handle two Situation:
@@ -277,6 +280,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (!floating) {
         floating = true;
         readyToRefresh();
+      }
+      if(configuration.enableRefreshVibrate){
+        HapticFeedback.vibrate();
       }
       if (refresher.onRefresh != null) refresher.onRefresh();
     } else if (mode == RefreshStatus.twoLevelOpening) {
@@ -445,6 +451,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     if (mode == LoadStatus.loading) {
       if (!floating) {
         enterLoading();
+      }
+      if(configuration.enableLoadMoreVibrate){
+        HapticFeedback.vibrate();
       }
       if (refresher.onLoading != null) {
         refresher.onLoading();
