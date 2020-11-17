@@ -381,7 +381,7 @@ class SmartRefresherState extends State<SmartRefresher> {
     Widget body;
     if (childView is! Scrollable) {
       bool primary = widget.primary;
-      Key key = widget.key;
+      Key key ;
       double cacheExtent = widget.cacheExtent;
       Axis scrollDirection = widget.scrollDirection;
       int semanticChildCount = widget.semanticChildCount;
@@ -737,17 +737,18 @@ class RefreshController {
   }
 
   /// end twoLeveling,will return back first floor
-  void twoLevelComplete(
+  Future<void> twoLevelComplete(
       {Duration duration: const Duration(milliseconds: 500),
       Curve curve: Curves.linear}) {
     headerMode?.value = RefreshStatus.twoLevelClosing;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      position
+      return position
           .animateTo(0.0, duration: duration, curve: curve)
           .whenComplete(() {
         headerMode.value = RefreshStatus.idle;
       });
     });
+    return null;
   }
 
   /// request failed,the header display failed state
@@ -875,6 +876,11 @@ class RefreshConfiguration extends InheritedWidget {
   /// The boundary is located at the bottom edge and stops when inertia rolls under the boundary distance
   final double bottomHitBoundary;
 
+  /// toggle of  refresh vibrate
+  final bool enableRefreshVibrate;
+  /// toggle of  loadmore vibrate
+  final bool enableLoadMoreVibrate;
+
   RefreshConfiguration(
       {@required this.child,
       this.headerBuilder,
@@ -901,6 +907,8 @@ class RefreshConfiguration extends InheritedWidget {
       this.headerTriggerDistance: 80.0,
       this.footerTriggerDistance: 15.0,
       this.hideFooterWhenNotFull: false,
+        this.enableRefreshVibrate:false,
+        this.enableLoadMoreVibrate:false,
       this.topHitBoundary,
       this.bottomHitBoundary})
       : assert(child != null),
@@ -937,12 +945,14 @@ class RefreshConfiguration extends InheritedWidget {
     double bottomHitBoundary,
     double headerTriggerDistance,
     double footerTriggerDistance,
+    bool enableRefreshVibrate,
+    bool enableLoadMoreVibrate,
     bool hideFooterWhenNotFull,
   })  : assert(context != null, child != null),
         assert(RefreshConfiguration.of(context) != null,
             "search RefreshConfiguration anscestor return null,please  Make sure that RefreshConfiguration is the ancestor of that element"),
         autoLoad = autoLoad ?? RefreshConfiguration.of(context).autoLoad,
-        headerBuilder = RefreshConfiguration.of(context).headerBuilder,
+        headerBuilder = headerBuilder ?? RefreshConfiguration.of(context).headerBuilder,
         footerBuilder =
             footerBuilder ?? RefreshConfiguration.of(context).footerBuilder,
         dragSpeedRatio =
@@ -981,6 +991,10 @@ class RefreshConfiguration extends InheritedWidget {
             RefreshConfiguration.of(context).enableLoadingWhenFailed,
         closeTwoLevelDistance = closeTwoLevelDistance ??
             RefreshConfiguration.of(context).closeTwoLevelDistance,
+        enableRefreshVibrate = enableRefreshVibrate ??
+            RefreshConfiguration.of(context).enableRefreshVibrate,
+        enableLoadMoreVibrate = enableLoadMoreVibrate ??
+            RefreshConfiguration.of(context).enableLoadMoreVibrate,
         shouldFooterFollowWhenNotFull = shouldFooterFollowWhenNotFull ??
             RefreshConfiguration.of(context).shouldFooterFollowWhenNotFull;
 
@@ -1007,6 +1021,8 @@ class RefreshConfiguration extends InheritedWidget {
         enableBallisticRefresh != oldWidget.enableBallisticRefresh ||
         enableLoadingWhenFailed != oldWidget.enableLoadingWhenFailed ||
         topHitBoundary != oldWidget.topHitBoundary ||
+        enableRefreshVibrate != oldWidget.enableRefreshVibrate||
+        enableLoadMoreVibrate !=oldWidget.enableLoadMoreVibrate||
         bottomHitBoundary != oldWidget.bottomHitBoundary;
   }
 }

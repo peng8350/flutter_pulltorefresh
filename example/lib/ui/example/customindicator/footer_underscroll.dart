@@ -8,6 +8,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_gifimage/flutter_gifimage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../Item.dart';

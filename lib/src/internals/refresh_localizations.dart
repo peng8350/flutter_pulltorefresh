@@ -76,6 +76,7 @@ class RefreshLocalizations {
     'ja': JpRefreshString(),
     'de': DeRefreshString(),
     'pt': PtRefreshString(),
+    'kr': KrRefreshString(),
   };
 
   RefreshString get currentLocalization {
@@ -99,7 +100,7 @@ class RefreshLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'zh', 'fr', 'ru', 'uk', 'ja', 'it', 'de', 'pt']
+    return ['en', 'zh', 'fr', 'ru', 'uk', 'ja', 'it', 'de', 'kr', 'pt']
         .contains(locale.languageCode);
   }
 
@@ -439,6 +440,7 @@ class DeRefreshString implements RefreshString {
   String refreshingText = "Aktualisiere…";
 }
 
+
 // Portuguese - Brazil
 class PtRefreshString implements RefreshString {
   @override
@@ -473,4 +475,40 @@ class PtRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Atualizando…";
+
+/// Korean
+class KrRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "당겨서 불러오기";
+
+  @override
+  String canRefreshText = "당겨서 새로 고침";
+
+  @override
+  String canTwoLevelText = "두 번째 레벨로 이동";
+
+  @override
+  String idleLoadingText = "위로 당겨서 불러오기";
+
+  @override
+  String idleRefreshText = "아래로 당겨서 새로 고침";
+
+  @override
+  String loadFailedText = "로딩에 실패했습니다.";
+
+  @override
+  String loadingText = "로딩 중…";
+
+  @override
+  String noMoreText = "데이터가 더 이상 없습니다.";
+
+  @override
+  String refreshCompleteText = "새로 고침 완료";
+
+  @override
+  String refreshFailedText = "새로 고침에 실패했습니다.";
+
+  @override
+  String refreshingText = "새로 고침 중…";
+
 }

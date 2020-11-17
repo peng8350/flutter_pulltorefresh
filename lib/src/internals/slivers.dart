@@ -185,8 +185,9 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   @override
   void performLayout() {
     if (_updateFlag) {
-      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
-      Scrollable.of(context).position.applyNewDimensions();
+      // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
+      // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
+      Scrollable.of(context).position.activity.applyNewDimensions();
       _updateFlag = false;
     }
     // The new layout extent this sliver should now have.
@@ -200,6 +201,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
         geometry = SliverGeometry(
           scrollOffsetCorrection: layoutExtent - layoutExtentOffsetCompensation,
         );
+
         layoutExtentOffsetCompensation = layoutExtent;
         return;
       }
@@ -481,7 +483,7 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       // consider reverse loading and HideAlways==loadStyle
       geometry = SliverGeometry(
         scrollExtent: !_hasLayoutExtent || !_computeIfFull(constraints)
-            ? 0.0
+            ? 0
             : layoutExtent,
         paintExtent: paintedChildSize,
         // this need to fix later

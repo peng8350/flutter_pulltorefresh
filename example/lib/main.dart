@@ -19,6 +19,8 @@ class MyApp extends StatelessWidget {
       headerBuilder: () => MaterialClassicHeader(),
       footerBuilder: () => ClassicFooter(),
       enableLoadingWhenNoData: false,
+      enableRefreshVibrate: true,
+      enableLoadMoreVibrate: true,
       shouldFooterFollowWhenNotFull: (state) {
         // If you want load more with noMoreData state ,may be you should return false
         return false;

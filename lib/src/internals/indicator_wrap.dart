@@ -7,6 +7,7 @@
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 import '../smart_refresher.dart';
@@ -236,12 +237,20 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     update();
     if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
       floating = false;
+
       resetValue();
+
+      if (mode == RefreshStatus.idle)
+        SmartRefresher.ofState(context).setCanDrag(true);
     }
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
       endRefresh().then((_) {
         if (!mounted) return;
         floating = false;
+        if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
+          SmartRefresher.ofState(context).setCanDrag(
+              configuration.enableScrollWhenRefreshCompleted);
+        }
         update();
         /*
           handle two Situation:
@@ -272,9 +281,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         floating = true;
         readyToRefresh();
       }
+      if(configuration.enableRefreshVibrate){
+        HapticFeedback.vibrate();
+      }
       if (refresher.onRefresh != null) refresher.onRefresh();
     } else if (mode == RefreshStatus.twoLevelOpening) {
       floating = true;
+      SmartRefresher.ofState(context).setCanDrag(false);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         activity.resetActivity();
@@ -289,7 +302,12 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       });
     } else if (mode == RefreshStatus.twoLevelClosing) {
       floating = false;
+      SmartRefresher.ofState(context).setCanDrag(false);
       update();
+    }
+    else if (mode == RefreshStatus.twoLeveling) {
+
+      SmartRefresher.ofState(context).setCanDrag(configuration.enableScrollWhenTwoLevel);
     }
     onModeChange(mode);
   }
@@ -372,6 +390,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         return;
       }
 
+      // this line for patch bug temporary:indicator disappears fastly when load more complete
+      if(mounted)
+        Scrollable.of(context).position.correctBy(0.00001);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _position?.outOfRange == true) {
           activity.delegate.goBallistic(0);
@@ -430,6 +451,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     if (mode == LoadStatus.loading) {
       if (!floating) {
         enterLoading();
+      }
+      if(configuration.enableLoadMoreVibrate){
+        HapticFeedback.vibrate();
       }
       if (refresher.onLoading != null) {
         refresher.onLoading();
