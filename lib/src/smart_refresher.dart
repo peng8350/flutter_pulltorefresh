@@ -381,7 +381,7 @@ class SmartRefresherState extends State<SmartRefresher> {
     Widget body;
     if (childView is! Scrollable) {
       bool primary = widget.primary;
-      Key key ;
+      Key key;
       double cacheExtent = widget.cacheExtent;
       Axis scrollDirection = widget.scrollDirection;
       int semanticChildCount = widget.semanticChildCount;
@@ -424,7 +424,6 @@ class SmartRefresherState extends State<SmartRefresher> {
         reverse: reverse ?? false,
       );
     } else if (childView is Scrollable) {
-
       body = Scrollable(
         physics: _getScrollPhysics(
             conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
@@ -878,6 +877,7 @@ class RefreshConfiguration extends InheritedWidget {
 
   /// toggle of  refresh vibrate
   final bool enableRefreshVibrate;
+
   /// toggle of  loadmore vibrate
   final bool enableLoadMoreVibrate;
 
@@ -907,8 +907,8 @@ class RefreshConfiguration extends InheritedWidget {
       this.headerTriggerDistance: 80.0,
       this.footerTriggerDistance: 15.0,
       this.hideFooterWhenNotFull: false,
-        this.enableRefreshVibrate:false,
-        this.enableLoadMoreVibrate:false,
+      this.enableRefreshVibrate: false,
+      this.enableLoadMoreVibrate: false,
       this.topHitBoundary,
       this.bottomHitBoundary})
       : assert(child != null),
@@ -952,7 +952,8 @@ class RefreshConfiguration extends InheritedWidget {
         assert(RefreshConfiguration.of(context) != null,
             "search RefreshConfiguration anscestor return null,please  Make sure that RefreshConfiguration is the ancestor of that element"),
         autoLoad = autoLoad ?? RefreshConfiguration.of(context).autoLoad,
-        headerBuilder = headerBuilder ?? RefreshConfiguration.of(context).headerBuilder,
+        headerBuilder =
+            headerBuilder ?? RefreshConfiguration.of(context).headerBuilder,
         footerBuilder =
             footerBuilder ?? RefreshConfiguration.of(context).footerBuilder,
         dragSpeedRatio =
@@ -1021,8 +1022,8 @@ class RefreshConfiguration extends InheritedWidget {
         enableBallisticRefresh != oldWidget.enableBallisticRefresh ||
         enableLoadingWhenFailed != oldWidget.enableLoadingWhenFailed ||
         topHitBoundary != oldWidget.topHitBoundary ||
-        enableRefreshVibrate != oldWidget.enableRefreshVibrate||
-        enableLoadMoreVibrate !=oldWidget.enableLoadMoreVibrate||
+        enableRefreshVibrate != oldWidget.enableRefreshVibrate ||
+        enableLoadMoreVibrate != oldWidget.enableLoadMoreVibrate ||
         bottomHitBoundary != oldWidget.bottomHitBoundary;
   }
 }

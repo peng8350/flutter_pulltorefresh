@@ -76,7 +76,9 @@ class _MainActivityState extends State<MainActivity>
                   ? "例子界面"
                   : _tabIndex == 2
                       ? "测试界面"
-                      : _tabIndex == 3 ? "样例界面" : "App界面"),
+                      : _tabIndex == 3
+                          ? "样例界面"
+                          : "App界面"),
           leading: GestureDetector(
             child: Icon(Icons.menu),
             onTap: () {

@@ -137,7 +137,6 @@ class _OnlyListViewState extends State<OnlyListView> {
   GlobalKey _contentKey = GlobalKey();
   GlobalKey _refresherKey = GlobalKey();
 
-
   Widget buildCtn() {
     return ListView.separated(
       key: _contentKey,

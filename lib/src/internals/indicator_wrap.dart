@@ -248,8 +248,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         if (!mounted) return;
         floating = false;
         if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
-          SmartRefresher.ofState(context).setCanDrag(
-              configuration.enableScrollWhenRefreshCompleted);
+          SmartRefresher.ofState(context)
+              .setCanDrag(configuration.enableScrollWhenRefreshCompleted);
         }
         update();
         /*
@@ -281,7 +281,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         floating = true;
         readyToRefresh();
       }
-      if(configuration.enableRefreshVibrate){
+      if (configuration.enableRefreshVibrate) {
         HapticFeedback.vibrate();
       }
       if (refresher.onRefresh != null) refresher.onRefresh();
@@ -304,10 +304,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       floating = false;
       SmartRefresher.ofState(context).setCanDrag(false);
       update();
-    }
-    else if (mode == RefreshStatus.twoLeveling) {
-
-      SmartRefresher.ofState(context).setCanDrag(configuration.enableScrollWhenTwoLevel);
+    } else if (mode == RefreshStatus.twoLeveling) {
+      SmartRefresher.ofState(context)
+          .setCanDrag(configuration.enableScrollWhenTwoLevel);
     }
     onModeChange(mode);
   }
@@ -391,8 +390,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       }
 
       // this line for patch bug temporary:indicator disappears fastly when load more complete
-      if(mounted)
-        Scrollable.of(context).position.correctBy(0.00001);
+      if (mounted) Scrollable.of(context).position.correctBy(0.00001);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _position?.outOfRange == true) {
           activity.delegate.goBallistic(0);
@@ -452,7 +450,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       if (!floating) {
         enterLoading();
       }
-      if(configuration.enableLoadMoreVibrate){
+      if (configuration.enableLoadMoreVibrate) {
         HapticFeedback.vibrate();
       }
       if (refresher.onLoading != null) {
@@ -545,7 +543,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         hideWhenNotFull: configuration.hideFooterWhenNotFull,
         floating: widget.loadStyle == LoadStyle.ShowAlways
             ? true
-            : widget.loadStyle == LoadStyle.HideAlways ? false : floating,
+            : widget.loadStyle == LoadStyle.HideAlways
+                ? false
+                : floating,
         shouldFollowContent: configuration.shouldFooterFollowWhenNotFull != null
             ? configuration.shouldFooterFollowWhenNotFull(mode)
             : mode == LoadStatus.noMore,

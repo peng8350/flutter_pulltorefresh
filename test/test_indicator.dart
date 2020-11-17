@@ -58,6 +58,8 @@ class _TestFooterState extends LoadIndicatorState<TestFooter> {
         ? "failed"
         : mode == LoadStatus.loading
             ? "loading"
-            : mode == LoadStatus.idle ? "idle" : "noData");
+            : mode == LoadStatus.idle
+                ? "idle"
+                : "noData");
   }
 }

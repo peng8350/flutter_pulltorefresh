@@ -75,11 +75,11 @@ class RefreshLocalizations {
     'it': ItRefreshString(),
     'ja': JpRefreshString(),
     'de': DeRefreshString(),
-    'es': EsRefreshString()
+    'es': EsRefreshString(),
     'nl': NlRefreshString(),
     'sv': SvRefreshString(),
     'pt': PtRefreshString(),
-    'kr': KrRefreshString(),
+    'ko': KrRefreshString(),
   };
 
   RefreshString get currentLocalization {
@@ -103,8 +103,21 @@ class RefreshLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'zh', 'fr', 'ru', 'uk', 'ja', 'it', 'de', 'kr', 'pt', 'sv', 'nl', 'es']
-        .contains(locale.languageCode);
+    return [
+      'en',
+      'zh',
+      'fr',
+      'ru',
+      'uk',
+      'ja',
+      'it',
+      'de',
+      'ko',
+      'pt',
+      'sv',
+      'nl',
+      'es'
+    ].contains(locale.languageCode);
   }
 
   @override
@@ -477,7 +490,7 @@ class EsRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Actualizando…";
-
+}
 
 /// Dutch
 class NlRefreshString implements RefreshString {
@@ -513,7 +526,7 @@ class NlRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Vernieuwen…";
-
+}
 
 /// Swedish
 class SvRefreshString implements RefreshString {
@@ -549,7 +562,7 @@ class SvRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Uppdaterar…";
-
+}
 
 // Portuguese - Brazil
 class PtRefreshString implements RefreshString {
@@ -585,6 +598,7 @@ class PtRefreshString implements RefreshString {
 
   @override
   String refreshingText = "Atualizando…";
+}
 
 /// Korean
 class KrRefreshString implements RefreshString {
@@ -620,7 +634,4 @@ class KrRefreshString implements RefreshString {
 
   @override
   String refreshingText = "새로 고침 중…";
-
-
-
 }
