@@ -383,12 +383,18 @@ class SmartRefresherState extends State<SmartRefresher> {
       bool primary = widget.primary;
       Key key;
       double cacheExtent = widget.cacheExtent;
+
       Axis scrollDirection = widget.scrollDirection;
       int semanticChildCount = widget.semanticChildCount;
       bool reverse = widget.reverse;
       ScrollController scrollController = widget.scrollController;
       DragStartBehavior dragStartBehavior = widget.dragStartBehavior;
       ScrollPhysics physics = widget.physics;
+      Key center;
+      double anchor;
+      ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
+      String restorationId;
+      Clip clipBehavior;
 
       if (childView is ScrollView) {
         primary = primary ?? childView.primary;
@@ -399,7 +405,13 @@ class SmartRefresherState extends State<SmartRefresher> {
         dragStartBehavior = dragStartBehavior ?? childView.dragStartBehavior;
         scrollDirection = scrollDirection ?? childView.scrollDirection;
         physics = physics ?? childView.physics;
+        center = center ?? childView.center;
+        anchor = anchor ?? childView.anchor;
+        keyboardDismissBehavior = keyboardDismissBehavior ?? childView.keyboardDismissBehavior;
+        restorationId = restorationId ?? childView.restorationId;
+        clipBehavior = clipBehavior ?? childView.clipBehavior;
         scrollController = scrollController ?? childView.controller;
+
         // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
         widget.controller.scrollController = scrollController ??
             childView.controller ??
@@ -417,6 +429,11 @@ class SmartRefresherState extends State<SmartRefresher> {
         scrollDirection: scrollDirection ?? Axis.vertical,
         semanticChildCount: semanticChildCount,
         primary: primary,
+        clipBehavior: clipBehavior ?? Clip.hardEdge,
+        keyboardDismissBehavior: keyboardDismissBehavior??ScrollViewKeyboardDismissBehavior.manual,
+        anchor: anchor??0.0,
+        restorationId: restorationId,
+        center: center,
         physics:
             _getScrollPhysics(conf, physics ?? AlwaysScrollableScrollPhysics()),
         slivers: slivers,
