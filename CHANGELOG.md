@@ -1,3 +1,8 @@
+## 1.6.4
+* fix error crash by deprecated function removed 
+* add extra ScrollView reference parameter
+
+
 ## 1.6.3
 * fix bug:gesture disabled after refresh complete in an error refreshState
 * fix problem:Footer hide back suddenly(this cause by the flutter breaking change)

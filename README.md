@@ -35,7 +35,7 @@ add this line to pubspec.yaml
 ```yaml
 
    dependencies:
-     pull_to_refresh: ^1.6.3
+     pull_to_refresh: ^1.6.4
 
 ```
 

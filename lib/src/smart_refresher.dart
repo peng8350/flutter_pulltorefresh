@@ -407,7 +407,8 @@ class SmartRefresherState extends State<SmartRefresher> {
         physics = physics ?? childView.physics;
         center = center ?? childView.center;
         anchor = anchor ?? childView.anchor;
-        keyboardDismissBehavior = keyboardDismissBehavior ?? childView.keyboardDismissBehavior;
+        keyboardDismissBehavior =
+            keyboardDismissBehavior ?? childView.keyboardDismissBehavior;
         restorationId = restorationId ?? childView.restorationId;
         clipBehavior = clipBehavior ?? childView.clipBehavior;
         scrollController = scrollController ?? childView.controller;
@@ -430,8 +431,9 @@ class SmartRefresherState extends State<SmartRefresher> {
         semanticChildCount: semanticChildCount,
         primary: primary,
         clipBehavior: clipBehavior ?? Clip.hardEdge,
-        keyboardDismissBehavior: keyboardDismissBehavior??ScrollViewKeyboardDismissBehavior.manual,
-        anchor: anchor??0.0,
+        keyboardDismissBehavior:
+            keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.manual,
+        anchor: anchor ?? 0.0,
         restorationId: restorationId,
         center: center,
         physics:
