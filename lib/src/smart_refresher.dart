@@ -204,6 +204,21 @@ class SmartRefresher extends StatefulWidget {
   /// copy from ScrollView,for setting in SingleChildView,not ScrollView
   final DragStartBehavior dragStartBehavior;
 
+  /// copy from ScrollView,for setting in SingleChildView,not ScrollView
+  final Key center;
+
+  /// copy from ScrollView,for setting in SingleChildView,not ScrollView
+  final double anchor;
+
+  /// copy from ScrollView,for setting in SingleChildView,not ScrollView
+  final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
+
+  /// copy from ScrollView,for setting in SingleChildView,not ScrollView
+  final String restorationId;
+
+  /// copy from ScrollView,for setting in SingleChildView,not ScrollView
+  final Clip clipBehavior;
+
   /// creates a widget help attach the refresh and load more function
   /// controller must not be null,
   /// child is your refresh content,Note that there's a big difference between children inheriting from ScrollView or not.
@@ -232,7 +247,12 @@ class SmartRefresher extends StatefulWidget {
       this.reverse,
       this.physics,
       this.scrollDirection,
-      this.scrollController})
+      this.scrollController,
+      this.center,
+      this.anchor,
+      this.keyboardDismissBehavior,
+      this.restorationId,
+      this.clipBehavior})
       : assert(controller != null),
         builder = null,
         super(key: key);
@@ -254,7 +274,12 @@ class SmartRefresher extends StatefulWidget {
       this.onRefresh,
       this.onLoading,
       this.onTwoLevel,
-      this.onOffsetChange})
+      this.onOffsetChange,
+      this.center,
+      this.anchor,
+      this.keyboardDismissBehavior,
+      this.restorationId,
+      this.clipBehavior})
       : assert(controller != null),
         header = null,
         footer = null,
@@ -390,11 +415,12 @@ class SmartRefresherState extends State<SmartRefresher> {
       ScrollController scrollController = widget.scrollController;
       DragStartBehavior dragStartBehavior = widget.dragStartBehavior;
       ScrollPhysics physics = widget.physics;
-      Key center;
-      double anchor;
-      ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
-      String restorationId;
-      Clip clipBehavior;
+      Key center = widget.center;
+      double anchor = widget.anchor;
+      ScrollViewKeyboardDismissBehavior keyboardDismissBehavior =
+          widget.keyboardDismissBehavior;
+      String restorationId = widget.restorationId;
+      Clip clipBehavior = widget.clipBehavior;
 
       if (childView is ScrollView) {
         primary = primary ?? childView.primary;
