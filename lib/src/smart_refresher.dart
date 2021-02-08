@@ -211,9 +211,6 @@ class SmartRefresher extends StatefulWidget {
   final double anchor;
 
   /// copy from ScrollView,for setting in SingleChildView,not ScrollView
-  final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
-
-  /// copy from ScrollView,for setting in SingleChildView,not ScrollView
   final String restorationId;
 
   /// copy from ScrollView,for setting in SingleChildView,not ScrollView
@@ -250,7 +247,6 @@ class SmartRefresher extends StatefulWidget {
       this.scrollController,
       this.center,
       this.anchor,
-      this.keyboardDismissBehavior,
       this.restorationId,
       this.clipBehavior})
       : assert(controller != null),
@@ -277,7 +273,6 @@ class SmartRefresher extends StatefulWidget {
       this.onOffsetChange,
       this.center,
       this.anchor,
-      this.keyboardDismissBehavior,
       this.restorationId,
       this.clipBehavior})
       : assert(controller != null),
@@ -417,8 +412,6 @@ class SmartRefresherState extends State<SmartRefresher> {
       ScrollPhysics physics = widget.physics;
       Key center = widget.center;
       double anchor = widget.anchor;
-      ScrollViewKeyboardDismissBehavior keyboardDismissBehavior =
-          widget.keyboardDismissBehavior;
       String restorationId = widget.restorationId;
       Clip clipBehavior = widget.clipBehavior;
 
@@ -433,8 +426,6 @@ class SmartRefresherState extends State<SmartRefresher> {
         physics = physics ?? childView.physics;
         center = center ?? childView.center;
         anchor = anchor ?? childView.anchor;
-        keyboardDismissBehavior =
-            keyboardDismissBehavior ?? childView.keyboardDismissBehavior;
         restorationId = restorationId ?? childView.restorationId;
         clipBehavior = clipBehavior ?? childView.clipBehavior;
         scrollController = scrollController ?? childView.controller;
@@ -457,8 +448,6 @@ class SmartRefresherState extends State<SmartRefresher> {
         semanticChildCount: semanticChildCount,
         primary: primary,
         clipBehavior: clipBehavior ?? Clip.hardEdge,
-        keyboardDismissBehavior:
-            keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.manual,
         anchor: anchor ?? 0.0,
         restorationId: restorationId,
         center: center,
