@@ -418,7 +418,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
         floating = true;
       }
     } else {
-      if (activity is! DragScrollActivity) _enableLoading = false;
+      if (activity is! DragScrollActivity && activity is! IdleScrollActivity) _enableLoading = false;
     }
     _lastMode = mode;
     onModeChange(mode);
