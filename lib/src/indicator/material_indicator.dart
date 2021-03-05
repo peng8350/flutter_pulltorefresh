@@ -18,22 +18,22 @@ const double _kDragSizeFactorLimit = 1.5;
 /// mostly use flutter inner's RefreshIndicator
 class MaterialClassicHeader extends RefreshIndicator {
   /// see flutter RefreshIndicator documents,the meaning same with that
-  final String semanticsLabel;
+  final String? semanticsLabel;
 
   /// see flutter RefreshIndicator documents,the meaning same with that
-  final String semanticsValue;
+  final String? semanticsValue;
 
   /// see flutter RefreshIndicator documents,the meaning same with that
-  final Color color;
+  final Color? color;
 
   /// Distance from the top when refreshing
   final double distance;
 
   /// see flutter RefreshIndicator documents,the meaning same with that
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   const MaterialClassicHeader({
-    Key key,
+    Key? key,
     double height: 80.0,
     this.semanticsLabel,
     this.semanticsValue,
@@ -59,11 +59,11 @@ class MaterialClassicHeader extends RefreshIndicator {
 class _MaterialClassicHeaderState
     extends RefreshIndicatorState<MaterialClassicHeader>
     with TickerProviderStateMixin {
-  Animation<Offset> _positionFactor;
-  Animation<Color> _valueColor;
-  AnimationController _scaleFactor;
-  AnimationController _positionController;
-  AnimationController _valueAni;
+  Animation<Offset>? _positionFactor;
+  Animation<Color?>? _valueColor;
+  late AnimationController _scaleFactor;
+  late AnimationController _positionController;
+  late AnimationController _valueAni;
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _MaterialClassicHeaderState
         duration: Duration(milliseconds: 500));
     _valueAni.addListener(() {
       // frequently setState will decline the performance
-      if (mounted && Scrollable.of(context).position.pixels <= 0)
+      if (mounted && Scrollable.of(context)!.position.pixels <= 0)
         setState(() {});
     });
     _positionController =
@@ -93,7 +93,7 @@ class _MaterialClassicHeaderState
   }
 
   @override
-  Widget buildContent(BuildContext context, RefreshStatus mode) {
+  Widget buildContent(BuildContext context, RefreshStatus? mode) {
     // TODO: implement buildContent
     return _buildIndicator(widget.backgroundColor ?? Colors.white);
   }
@@ -106,8 +106,7 @@ class _MaterialClassicHeaderState
           alignment: Alignment.topCenter,
           child: RefreshProgressIndicator(
             semanticsLabel: widget.semanticsLabel ??
-                MaterialLocalizations?.of(context)
-                    ?.refreshIndicatorSemanticLabel,
+                MaterialLocalizations?.of(context)?.refreshIndicatorSemanticLabel,
             semanticsValue: widget?.semanticsValue,
             value: floating ? null : _valueAni.value,
             valueColor: _valueColor,
@@ -115,7 +114,7 @@ class _MaterialClassicHeaderState
           ),
         ),
       ),
-      position: _positionFactor,
+      position: _positionFactor!,
     );
   }
 
@@ -123,13 +122,13 @@ class _MaterialClassicHeaderState
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
     if (!floating) {
-      _valueAni.value = offset / configuration.headerTriggerDistance;
-      _positionController.value = offset / configuration.headerTriggerDistance;
+      _valueAni.value = offset / configuration!.headerTriggerDistance;
+      _positionController.value = offset / configuration!.headerTriggerDistance;
     }
   }
 
   @override
-  void onModeChange(RefreshStatus mode) {
+  void onModeChange(RefreshStatus? mode) {
     // TODO: implement onModeChange
     if (mode == RefreshStatus.refreshing) {
       _positionController.value = widget.distance / widget.height;
@@ -193,13 +192,13 @@ class _MaterialClassicHeaderState
 /// attach the waterdrop effect to [MaterialClassicHeader]
 class WaterDropMaterialHeader extends MaterialClassicHeader {
   const WaterDropMaterialHeader({
-    Key key,
-    String semanticsLabel,
+    Key? key,
+    String? semanticsLabel,
     double distance: 60.0,
     double offset: 0,
-    String semanticsValue,
+    String? semanticsValue,
     Color color: Colors.white,
-    Color backgroundColor,
+    Color? backgroundColor,
   }) : super(
             key: key,
             height: 80.0,
@@ -218,7 +217,7 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
 }
 
 class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
-  AnimationController _bezierController;
+  AnimationController? _bezierController;
   bool _showWater = false;
 
   @override
@@ -266,9 +265,9 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
   @override
   Future<void> readyToRefresh() {
     // TODO: implement readyToRefresh
-    _bezierController.value = 1.01;
+    _bezierController!.value = 1.01;
     _showWater = true;
-    _bezierController.animateTo(1.5,
+    _bezierController!.animateTo(1.5,
         curve: Curves.bounceOut, duration: Duration(milliseconds: 550));
     return _positionController
         .animateTo(widget.distance / widget.height,
@@ -288,14 +287,14 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
   @override
   void resetValue() {
     // TODO: implement resetValue
-    _bezierController.reset();
+    _bezierController!.reset();
     super.resetValue();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    _bezierController.dispose();
+    _bezierController!.dispose();
     super.dispose();
   }
 
@@ -305,16 +304,16 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     offset = offset > 80.0 ? 80.0 : offset;
 
     if (!floating) {
-      _bezierController.value = (offset / configuration.headerTriggerDistance);
-      _valueAni.value = _bezierController.value;
-      _positionController.value = _bezierController.value * 0.3;
+      _bezierController!.value = (offset / configuration!.headerTriggerDistance);
+      _valueAni.value = _bezierController!.value;
+      _positionController.value = _bezierController!.value * 0.3;
       _scaleFactor.value =
-          offset < 40.0 ? 0.0 : (_bezierController.value - 0.5) * 2 + 0.5;
+          offset < 40.0 ? 0.0 : (_bezierController!.value - 0.5) * 2 + 0.5;
     }
   }
 
   @override
-  Widget buildContent(BuildContext context, RefreshStatus mode) {
+  Widget buildContent(BuildContext context, RefreshStatus? mode) {
     // TODO: implement buildContent
     return Container(
       child: Stack(
@@ -351,11 +350,11 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
 }
 
 class _WaterPainter extends CustomPainter {
-  final Color color;
-  final Animation<Offset> listener;
+  final Color? color;
+  final Animation<Offset>? listener;
 
-  Offset get offset => listener.value;
-  final double ratio;
+  Offset get offset => listener!.value;
+  final double? ratio;
 
   _WaterPainter({this.color, this.listener, this.ratio})
       : super(repaint: listener);
@@ -364,15 +363,15 @@ class _WaterPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // TODO: implement paint
     final Paint paint = Paint();
-    paint.color = color;
+    paint.color = color!;
     final Path path = Path();
     path.moveTo(size.width / 2 - 20.0, offset.dy * 100.0 + 20.0);
     path.conicTo(
         size.width / 2,
-        offset.dy * 100.0 - 70.0 * (ratio - offset.dy),
+        offset.dy * 100.0 - 70.0 * (ratio! - offset.dy),
         size.width / 2 + 20.0,
         offset.dy * 100.0 + 20.0,
-        10.0 * (ratio - offset.dy));
+        10.0 * (ratio! - offset.dy));
     canvas.drawPath(path, paint);
   }
 
@@ -384,10 +383,10 @@ class _WaterPainter extends CustomPainter {
 }
 
 class _BezierPainter extends CustomPainter {
-  final AnimationController listener;
-  final Color color;
+  final AnimationController? listener;
+  final Color? color;
 
-  double get value => listener.value;
+  double get value => listener!.value;
 
   _BezierPainter({this.listener, this.color}) : super(repaint: listener);
 
@@ -396,7 +395,7 @@ class _BezierPainter extends CustomPainter {
     // TODO: implement paint
     final double middleX = size.width / 2;
     final Paint paint = Paint();
-    paint.color = color;
+    paint.color = color!;
     if (value < 0.5) {
       final Path path = Path();
       path.moveTo(0.0, 0.0);

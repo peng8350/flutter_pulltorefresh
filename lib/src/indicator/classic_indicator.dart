@@ -36,14 +36,14 @@ class ClassicHeader extends RefreshIndicator {
   /// }
   /// ````
   /// In this example,it will help to add backgroundColor in indicator
-  final OuterBuilder outerBuilder;
-  final String releaseText,
+  final OuterBuilder? outerBuilder;
+  final String? releaseText,
       idleText,
       refreshingText,
       completeText,
       failedText,
       canTwoLevelText;
-  final Widget releaseIcon,
+  final Widget? releaseIcon,
       idleIcon,
       refreshingIcon,
       completeIcon,
@@ -58,7 +58,7 @@ class ClassicHeader extends RefreshIndicator {
   final TextStyle textStyle;
 
   const ClassicHeader({
-    Key key,
+    Key? key,
     RefreshStyle refreshStyle: RefreshStyle.Follow,
     double height: 60.0,
     Duration completeDuration: const Duration(milliseconds: 600),
@@ -100,24 +100,24 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
             EnRefreshString();
     return Text(
         mode == RefreshStatus.canRefresh
-            ? widget.releaseText ?? strings.canRefreshText
+            ? widget.releaseText ?? strings.canRefreshText!
             : mode == RefreshStatus.completed
-                ? widget.completeText ?? strings.refreshCompleteText
+                ? widget.completeText ?? strings.refreshCompleteText!
                 : mode == RefreshStatus.failed
-                    ? widget.failedText ?? strings.refreshFailedText
+                    ? widget.failedText ?? strings.refreshFailedText!
                     : mode == RefreshStatus.refreshing
-                        ? widget.refreshingText ?? strings.refreshingText
+                        ? widget.refreshingText ?? strings.refreshingText!
                         : mode == RefreshStatus.idle
-                            ? widget.idleText ?? strings.idleRefreshText
+                            ? widget.idleText ?? strings.idleRefreshText!
                             : mode == RefreshStatus.canTwoLevel
                                 ? widget.canTwoLevelText ??
-                                    strings.canTwoLevelText
+                                    strings.canTwoLevelText!
                                 : "",
         style: widget.textStyle);
   }
 
   Widget _buildIcon(mode) {
-    Widget icon = mode == RefreshStatus.canRefresh
+    Widget? icon = mode == RefreshStatus.canRefresh
         ? widget.releaseIcon
         : mode == RefreshStatus.idle
             ? widget.idleIcon
@@ -151,7 +151,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
   }
 
   @override
-  Widget buildContent(BuildContext context, RefreshStatus mode) {
+  Widget buildContent(BuildContext context, RefreshStatus? mode) {
     // TODO: implement buildContent
     Widget textWidget = _buildText(mode);
     Widget iconWidget = _buildIcon(mode);
@@ -173,7 +173,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
       children: children,
     );
     return widget.outerBuilder != null
-        ? widget.outerBuilder(container)
+        ? widget.outerBuilder!(container)
         : Container(
             child: Center(child: container),
             height: widget.height,
@@ -187,7 +187,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
 //
 // [ClassicHeader]
 class ClassicFooter extends LoadIndicator {
-  final String idleText, loadingText, noDataText, failedText, canLoadingText;
+  final String? idleText, loadingText, noDataText, failedText, canLoadingText;
 
   /// a builder for re wrap child,If you need to change the boxExtent or background,padding etc.you need outerBuilder to reWrap child
   /// example:
@@ -200,9 +200,9 @@ class ClassicFooter extends LoadIndicator {
   /// }
   /// ````
   /// In this example,it will help to add backgroundColor in indicator
-  final OuterBuilder outerBuilder;
+  final OuterBuilder? outerBuilder;
 
-  final Widget idleIcon, loadingIcon, noMoreIcon, failedIcon, canLoadingIcon;
+  final Widget? idleIcon, loadingIcon, noMoreIcon, failedIcon, canLoadingIcon;
 
   /// icon and text middle margin
   final double spacing;
@@ -215,8 +215,8 @@ class ClassicFooter extends LoadIndicator {
   final Duration completeDuration;
 
   const ClassicFooter({
-    Key key,
-    VoidCallback onClick,
+    Key? key,
+    VoidCallback? onClick,
     LoadStyle loadStyle: LoadStyle.ShowAlways,
     double height: 60.0,
     this.outerBuilder,
@@ -250,25 +250,25 @@ class ClassicFooter extends LoadIndicator {
 }
 
 class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
-  Widget _buildText(LoadStatus mode) {
+  Widget _buildText(LoadStatus? mode) {
     RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
             EnRefreshString();
     return Text(
         mode == LoadStatus.loading
-            ? widget.loadingText ?? strings.loadingText
+            ? widget.loadingText ?? strings.loadingText!
             : LoadStatus.noMore == mode
-                ? widget.noDataText ?? strings.noMoreText
+                ? widget.noDataText ?? strings.noMoreText!
                 : LoadStatus.failed == mode
-                    ? widget.failedText ?? strings.loadFailedText
+                    ? widget.failedText ?? strings.loadFailedText!
                     : LoadStatus.canLoading == mode
-                        ? widget.canLoadingText ?? strings.canLoadingText
-                        : widget.idleText ?? strings.idleLoadingText,
+                        ? widget.canLoadingText ?? strings.canLoadingText!
+                        : widget.idleText ?? strings.idleLoadingText!,
         style: widget.textStyle);
   }
 
-  Widget _buildIcon(LoadStatus mode) {
-    Widget icon = mode == LoadStatus.loading
+  Widget _buildIcon(LoadStatus? mode) {
+    Widget? icon = mode == LoadStatus.loading
         ? widget.loadingIcon ??
             SizedBox(
               width: 25.0,
@@ -294,7 +294,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
   }
 
   @override
-  Widget buildContent(BuildContext context, LoadStatus mode) {
+  Widget buildContent(BuildContext context, LoadStatus? mode) {
     // TODO: implement buildChild
     Widget textWidget = _buildText(mode);
     Widget iconWidget = _buildIcon(mode);
@@ -316,7 +316,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
       children: children,
     );
     return widget.outerBuilder != null
-        ? widget.outerBuilder(container)
+        ? widget.outerBuilder!(container)
         : Container(
             height: widget.height,
             child: Center(
