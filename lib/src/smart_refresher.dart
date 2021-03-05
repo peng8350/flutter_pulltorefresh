@@ -678,7 +678,7 @@ class RefreshController {
           ?.setCanDrag(false);
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (needMove) {
-        return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
+        Future.delayed(const Duration(milliseconds: 50)).then((_) async {
           // - 0.0001 is for NestedScrollView.
           await position
               ?.animateTo(position!.minScrollExtent - 0.0001,
@@ -690,7 +690,7 @@ class RefreshController {
           });
         });
       } else {
-        return Future.value().then((_) {
+        Future.value().then((_) {
           headerMode!.value = RefreshStatus.refreshing;
         });
       }
@@ -760,7 +760,7 @@ class RefreshController {
       Curve curve: Curves.linear}) {
     headerMode?.value = RefreshStatus.twoLevelClosing;
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      return position!
+      position!
           .animateTo(0.0, duration: duration, curve: curve)
           .whenComplete(() {
         headerMode!.value = RefreshStatus.idle;
@@ -901,7 +901,8 @@ class RefreshConfiguration extends InheritedWidget {
   final bool enableLoadMoreVibrate;
 
   RefreshConfiguration(
-      {required this.child,
+      {Key? key,
+      required this.child,
       this.headerBuilder,
       this.footerBuilder,
       this.dragSpeedRatio: 1.0,
@@ -934,13 +935,15 @@ class RefreshConfiguration extends InheritedWidget {
         assert(headerTriggerDistance > 0),
         assert(twiceTriggerDistance > 0),
         assert(closeTwoLevelDistance > 0),
-        assert(dragSpeedRatio > 0);
+        assert(dragSpeedRatio > 0),
+        super(key: key, child: child);
 
   /// Construct RefreshConfiguration to copy attributes from ancestor nodes
   /// If the parameter is null, it will automatically help you to absorb the attributes of your ancestor Refresh Configuration, instead of having to copy them manually by yourself.
   ///
   /// it mostly use in some stiuation is different the other SmartRefresher in App
   RefreshConfiguration.copyAncestor({
+    Key? key,
     required BuildContext context,
     required this.child,
     IndicatorBuilder? headerBuilder,
@@ -1016,7 +1019,8 @@ class RefreshConfiguration extends InheritedWidget {
         enableLoadMoreVibrate = enableLoadMoreVibrate ??
             RefreshConfiguration.of(context)!.enableLoadMoreVibrate,
         shouldFooterFollowWhenNotFull = shouldFooterFollowWhenNotFull ??
-            RefreshConfiguration.of(context)!.shouldFooterFollowWhenNotFull;
+            RefreshConfiguration.of(context)!.shouldFooterFollowWhenNotFull,
+        super(key: key, child: child);
 
   static RefreshConfiguration? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<RefreshConfiguration>();

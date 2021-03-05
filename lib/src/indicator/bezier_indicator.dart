@@ -59,7 +59,7 @@ class BezierHeader extends RefreshIndicator {
 
 class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
     with TickerProviderStateMixin {
-  AnimationController _beizerBounceCtl, _bezierDismissCtl;
+  late AnimationController _beizerBounceCtl, _bezierDismissCtl;
 
   @override
   void initState() {

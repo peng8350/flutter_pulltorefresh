@@ -145,7 +145,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
                 ? SmartRefresher.ofState(context)!.viewportExtent
                 : widget.height)
             : 0.0) -
-        _position?.pixels;
+        (_position?.pixels as num);
   }
 
   @override
