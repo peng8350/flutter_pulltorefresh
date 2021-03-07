@@ -132,7 +132,7 @@ abstract class LoadIndicator extends StatefulWidget {
 /// ```
 abstract class RefreshIndicatorState<T extends RefreshIndicator>
     extends State<T>
-    with IndicatorStateMixin<T, RefreshStatus?>, RefreshProcessor {
+    with IndicatorStateMixin<T, RefreshStatus>, RefreshProcessor {
   bool _inVisual() {
     return _position!.pixels < 0.0;
   }
@@ -349,7 +349,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 }
 
 abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
-    with IndicatorStateMixin<T, LoadStatus?>, LoadingProcessor {
+    with IndicatorStateMixin<T, LoadStatus>, LoadingProcessor {
   // use to update between one page and above one page
   bool _isHide = false;
   bool _enableLoading = false;
