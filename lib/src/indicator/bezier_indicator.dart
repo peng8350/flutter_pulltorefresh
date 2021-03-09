@@ -153,9 +153,7 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
                       child: Container(
                         height: widget.rectHeight + 30,
                         color: widget.bezierColor ??
-                            Theme.of(context)?.primaryColor ??
-                            CupertinoTheme.of(context)?.primaryColor ??
-                            widget.bezierColor,
+                            Theme.of(context).primaryColor,
                       ),
                       clipper: _BezierPainter(
                           value: _beizerBounceCtl.value,

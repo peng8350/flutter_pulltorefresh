@@ -18,9 +18,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
     this.floating = false,
     Widget? child,
     this.refreshStyle,
-  })  : assert(refreshIndicatorLayoutExtent != null),
-        assert(refreshIndicatorLayoutExtent >= 0.0),
-        assert(floating != null),
+  })  : assert(refreshIndicatorLayoutExtent >= 0.0),
         super(key: key, child: child);
 
   /// The amount of space the indicator should occupy in the sliver in a
@@ -72,9 +70,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
       RenderBox? child,
       this.paintOffsetY,
       this.refreshStyle})
-      : assert(refreshIndicatorExtent != null),
-        assert(refreshIndicatorExtent >= 0.0),
-        assert(hasLayoutExtent != null),
+      : assert(refreshIndicatorExtent >= 0.0),
         _refreshIndicatorExtent = refreshIndicatorExtent,
         _hasLayoutExtent = hasLayoutExtent {
     this.child = child;
@@ -94,7 +90,6 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   bool _updateFlag = false;
 
   set refreshIndicatorLayoutExtent(double value) {
-    assert(value != null);
     assert(value >= 0.0);
     if (value == _refreshIndicatorExtent) return;
     _refreshIndicatorExtent = value;
@@ -108,7 +103,6 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   bool _hasLayoutExtent;
 
   set hasLayoutExtent(bool value) {
-    assert(value != null);
     if (value == _hasLayoutExtent) return;
     if (!value) {
       _updateFlag = true;
@@ -285,6 +279,8 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
             hasVisualOverflow: true,
           );
           break;
+        case null:
+          break;
       }
       setChildParentData(child!, constraints, geometry!);
     } else {
@@ -379,7 +375,6 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   bool? _hasLayoutExtent;
 
   set hasLayoutExtent(bool value) {
-    assert(value != null);
     if (value == _hasLayoutExtent) return;
     _hasLayoutExtent = value;
     markNeedsLayout();
@@ -470,7 +465,6 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     double childExtent = constraints.axis == Axis.vertical
         ? child!.size.height
         : child!.size.width;
-    assert(childExtent != null);
     final double paintedChildSize =
         calculatePaintOffset(constraints, from: 0.0, to: childExtent);
     final double cacheExtent =
@@ -540,7 +534,6 @@ class RenderSliverRefreshBody extends RenderSliverSingleBoxAdapter {
         childExtent = child!.size.height;
         break;
     }
-    assert(childExtent != null);
     if (childExtent == 1111111) {
       child!.layout(
           constraints.asBoxConstraints(

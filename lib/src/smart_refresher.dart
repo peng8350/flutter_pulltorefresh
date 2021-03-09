@@ -233,8 +233,7 @@ class SmartRefresher extends StatefulWidget {
       this.physics,
       this.scrollDirection,
       this.scrollController})
-      : assert(controller != null),
-        builder = null,
+      : builder = null,
         super(key: key);
 
   /// creates a widget help attach the refresh and load more function
@@ -255,8 +254,7 @@ class SmartRefresher extends StatefulWidget {
       this.onLoading,
       this.onTwoLevel,
       this.onOffsetChange})
-      : assert(controller != null),
-        header = null,
+      : header = null,
         footer = null,
         child = null,
         scrollController = null,
@@ -270,11 +268,11 @@ class SmartRefresher extends StatefulWidget {
         super(key: key);
 
   static SmartRefresher? of(BuildContext context) {
-    return context?.findAncestorWidgetOfExactType<SmartRefresher>();
+    return context.findAncestorWidgetOfExactType<SmartRefresher>();
   }
 
   static SmartRefresherState? ofState(BuildContext context) {
-    return context?.findAncestorStateOfType<SmartRefresherState>();
+    return context.findAncestorStateOfType<SmartRefresherState>();
   }
 
   @override
@@ -346,7 +344,7 @@ class SmartRefresherState extends State<SmartRefresher> {
     final bool isBouncingPhysics = physics is BouncingScrollPhysics ||
         (physics is AlwaysScrollableScrollPhysics &&
             ScrollConfiguration.of(context)
-                    ?.getScrollPhysics(context)
+                    .getScrollPhysics(context)
                     .runtimeType ==
                 BouncingScrollPhysics);
     return _physics = RefreshPhysics(
@@ -621,20 +619,16 @@ class RefreshController {
 
   /// callback when the indicator is builded,and catch the scrollable's inner position
   void onPositionUpdated(ScrollPosition newPosition) {
-    assert(newPosition != null);
-    position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
+    position?.isScrollingNotifier.removeListener(_listenScrollEnd);
     position = newPosition;
     position!.isScrollingNotifier.addListener(_listenScrollEnd);
   }
 
   void _detachPosition() {
-    position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
+    position?.isScrollingNotifier.removeListener(_listenScrollEnd);
   }
 
   StatefulElement? _findIndicator(BuildContext context, Type elementType) {
-    if (context == null) {
-      return null;
-    }
     StatefulElement? result;
     context.visitChildElements((Element e) {
       if (elementType == RefreshIndicator) {
@@ -672,7 +666,7 @@ class RefreshController {
     StatefulElement? indicatorElement =
         _findIndicator(position!.context.storageContext, RefreshIndicator);
     if (indicatorElement == null) return null;
-    (indicatorElement.state as RefreshIndicatorState)?.floating = true;
+    (indicatorElement.state as RefreshIndicatorState).floating = true;
     if (needMove)
       SmartRefresher.ofState(position!.context.storageContext)
           ?.setCanDrag(false);
@@ -683,7 +677,7 @@ class RefreshController {
           await position
               ?.animateTo(position!.minScrollExtent - 0.0001,
                   duration: duration, curve: curve)
-              ?.then((_) {
+              .then((_) {
             SmartRefresher.ofState(position!.context.storageContext)
                 ?.setCanDrag(true);
             headerMode!.value = RefreshStatus.refreshing;
@@ -722,7 +716,7 @@ class RefreshController {
     StatefulElement? indicatorElement =
         _findIndicator(position!.context.storageContext, LoadIndicator);
     if (indicatorElement == null) return null;
-    (indicatorElement.state as LoadIndicatorState)?.floating = true;
+    (indicatorElement.state as LoadIndicatorState).floating = true;
     if (needMove)
       SmartRefresher.ofState(position!.context.storageContext)
           ?.setCanDrag(false);
@@ -731,7 +725,7 @@ class RefreshController {
         await position
             ?.animateTo(position!.maxScrollExtent,
                 duration: duration, curve: curve)
-            ?.then((_) {
+            .then((_) {
           SmartRefresher.ofState(position!.context.storageContext)
               ?.setCanDrag(true);
           footerMode!.value = LoadStatus.loading;
@@ -931,8 +925,7 @@ class RefreshConfiguration extends InheritedWidget {
       this.enableLoadMoreVibrate: false,
       this.topHitBoundary,
       this.bottomHitBoundary})
-      : assert(child != null),
-        assert(headerTriggerDistance > 0),
+      : assert(headerTriggerDistance > 0),
         assert(twiceTriggerDistance > 0),
         assert(closeTwoLevelDistance > 0),
         assert(dragSpeedRatio > 0),
@@ -970,8 +963,7 @@ class RefreshConfiguration extends InheritedWidget {
     bool? enableRefreshVibrate,
     bool? enableLoadMoreVibrate,
     bool? hideFooterWhenNotFull,
-  })  : assert(context != null, child != null),
-        assert(RefreshConfiguration.of(context) != null,
+  })  : assert(RefreshConfiguration.of(context) != null,
             "search RefreshConfiguration anscestor return null,please  Make sure that RefreshConfiguration is the ancestor of that element"),
         autoLoad = autoLoad ?? RefreshConfiguration.of(context)!.autoLoad,
         headerBuilder =

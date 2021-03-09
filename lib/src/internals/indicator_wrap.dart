@@ -281,7 +281,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         floating = true;
         readyToRefresh();
       }
-      if (configuration!.enableRefreshVibrate ?? false) {
+      if (configuration!.enableRefreshVibrate) {
         HapticFeedback.vibrate();
       }
       if (refresher!.onRefresh != null) refresher!.onRefresh!();
@@ -450,7 +450,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       if (!floating) {
         enterLoading();
       }
-      if (configuration!.enableLoadMoreVibrate ?? false) {
+      if (configuration!.enableLoadMoreVibrate) {
         HapticFeedback.vibrate();
       }
       if (refresher!.onLoading != null) {
@@ -478,7 +478,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       }
     }
     if (activity is BallisticScrollActivity) {
-      if (configuration!.enableBallisticLoad ?? true) {
+      if (configuration!.enableBallisticLoad) {
         if (_checkIfCanLoading()) enterLoading();
       } else if (mode == LoadStatus.canLoading) {
         enterLoading();
@@ -504,8 +504,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
       if (_checkIfCanLoading()) {
         if (activity is IdleScrollActivity) {
-          if ((configuration!.enableBallisticLoad ?? true) ||
-              ((!configuration!.enableBallisticLoad ?? true) &&
+          if ((configuration!.enableBallisticLoad) ||
+              ((!configuration!.enableBallisticLoad) &&
                   mode == LoadStatus.canLoading)) enterLoading();
         }
       }
@@ -517,8 +517,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   void _onPositionUpdated(ScrollPosition newPosition) {
-    _position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
-    newPosition?.isScrollingNotifier?.addListener(_listenScrollEnd);
+    _position?.isScrollingNotifier.removeListener(_listenScrollEnd);
+    newPosition.isScrollingNotifier.addListener(_listenScrollEnd);
     super._onPositionUpdated(newPosition);
   }
 
@@ -532,7 +532,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   @override
   void dispose() {
     // TODO: implement dispose
-    _position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
+    _position?.isScrollingNotifier.removeListener(_listenScrollEnd);
     super.dispose();
   }
 
@@ -648,7 +648,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   void initState() {
     // TODO: implement initState
     if (V == RefreshStatus) {
-      SmartRefresher.of(context)?.controller?.headerMode?.value =
+      SmartRefresher.of(context)?.controller.headerMode?.value =
           RefreshStatus.idle;
     }
     super.initState();

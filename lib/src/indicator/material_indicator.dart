@@ -106,8 +106,8 @@ class _MaterialClassicHeaderState
           alignment: Alignment.topCenter,
           child: RefreshProgressIndicator(
             semanticsLabel: widget.semanticsLabel ??
-                MaterialLocalizations?.of(context)?.refreshIndicatorSemanticLabel,
-            semanticsValue: widget?.semanticsValue,
+                MaterialLocalizations?.of(context).refreshIndicatorSemanticLabel,
+            semanticsValue: widget.semanticsValue,
             value: floating ? null : _valueAni.value,
             valueColor: _valueColor,
             backgroundColor: outerColor,
@@ -152,14 +152,10 @@ class _MaterialClassicHeaderState
     _valueColor = _positionController.drive(
       ColorTween(
         begin: (widget.color ??
-                theme?.primaryColor ??
-                CupertinoTheme.of(context)?.primaryColor ??
-                Colors.blueAccent)
+                theme.primaryColor)
             .withOpacity(0.0),
         end: (widget.color ??
-                theme?.primaryColor ??
-                CupertinoTheme.of(context)?.primaryColor ??
-                Colors.blueAccent)
+                theme.primaryColor)
             .withOpacity(1.0),
       ).chain(
           CurveTween(curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit))),
@@ -248,14 +244,10 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     _valueColor = _positionController.drive(
       ColorTween(
         begin: (widget.color ??
-                theme?.primaryColor ??
-                CupertinoTheme.of(context)?.primaryColor ??
-                Colors.blueAccent)
+                theme.primaryColor)
             .withOpacity(0.0),
         end: (widget.color ??
-                theme?.primaryColor ??
-                CupertinoTheme.of(context)?.primaryColor ??
-                Colors.blueAccent)
+                theme.primaryColor)
             .withOpacity(1.0),
       ).chain(
           CurveTween(curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit))),
@@ -322,23 +314,17 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
             painter: _BezierPainter(
                 listener: _bezierController,
                 color: widget.backgroundColor ??
-                    Theme.of(context)?.primaryColor ??
-                    CupertinoTheme.of(context)?.primaryColor ??
-                    Colors.blueAccent),
+                    Theme.of(context).primaryColor),
             child: Container(),
           ),
           CustomPaint(
             child: _buildIndicator(widget.backgroundColor ??
-                Theme.of(context)?.primaryColor ??
-                CupertinoTheme.of(context)?.primaryColor ??
-                Colors.blueAccent),
+                Theme.of(context).primaryColor),
             painter: _showWater
                 ? _WaterPainter(
                     ratio: widget.distance / widget.height,
                     color: widget.backgroundColor ??
-                        Theme.of(context)?.primaryColor ??
-                        CupertinoTheme.of(context)?.primaryColor ??
-                        Colors.blueAccent,
+                        Theme.of(context).primaryColor,
                     listener: _positionFactor)
                 : null,
           )
