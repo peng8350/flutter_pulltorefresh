@@ -13,7 +13,7 @@ import 'package:pull_to_refresh/src/internals/slivers.dart';
 import 'dataSource.dart';
 import 'test_indicator.dart';
 
-Future<void> buildNotFullList(tester, bool reverse, Axis direction,
+Future<void>? buildNotFullList(tester, bool reverse, Axis direction,
     {dynamic footer = const TestFooter(),
     dynamic header = const TestHeader(),
     bool initload: false}) {
@@ -80,14 +80,14 @@ void main() {
           tester.renderObject(find.byType(SliverLoading));
       // behind the bottom ,if else ,it is render error
       expect(
-          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(0, 600));
+          sliver.child!.localToGlobal(Offset(0.0, 0.0)), const Offset(0, 600));
 
       // up
       await buildNotFullList(tester, true, Axis.vertical, footer: footer);
 
       sliver = tester.renderObject(find.byType(SliverLoading));
       expect(
-          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(0, -60.0));
+          sliver.child!.localToGlobal(Offset(0.0, 0.0)), const Offset(0, -60.0));
 
       // left
       await buildNotFullList(tester, true, Axis.horizontal, footer: footer);
@@ -95,7 +95,7 @@ void main() {
       sliver = tester.renderObject(find.byType(SliverLoading));
       // behind the bottom ,if else ,it is render error
       expect(
-          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(-60.0, 0));
+          sliver.child!.localToGlobal(Offset(0.0, 0.0)), const Offset(-60.0, 0));
 
       // right
       await buildNotFullList(tester, false, Axis.horizontal, footer: footer);
@@ -103,7 +103,7 @@ void main() {
       sliver = tester.renderObject(find.byType(SliverLoading));
       // behind the bottom ,if else ,it is render error
       expect(
-          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(800.0, 0));
+          sliver.child!.localToGlobal(Offset(0.0, 0.0)), const Offset(800.0, 0));
     }
   });
 
@@ -142,7 +142,7 @@ void main() {
           tester.renderObject(find.byType(SliverLoading));
       // behind the bottom ,if else ,it is render error
       expect(
-          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(0, 600));
+          sliver.child!.localToGlobal(Offset(0.0, 0.0)), const Offset(0, 600));
 
 //      // up
 //      await buildNotFullList(tester, true, Axis.vertical,
@@ -171,7 +171,7 @@ void main() {
       // behind the bottom ,if else ,it is render error
 
       expect(
-          sliver.child.localToGlobal(Offset(0.0, 0.0)), const Offset(800.0, 0));
+          sliver.child!.localToGlobal(Offset(0.0, 0.0)), const Offset(800.0, 0));
     }
   });
 

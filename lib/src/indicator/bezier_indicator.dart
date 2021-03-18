@@ -25,11 +25,11 @@ enum BezierCircleType { Raidal, Progress }
 ///
 /// [BezierCircleHeader], bezier container +circle progress indicator
 class BezierHeader extends RefreshIndicator {
-  final OffsetCallBack onOffsetChange;
-  final ModeChangeCallBack onModeChange;
-  final VoidFutureCallBack readyRefresh, endRefresh;
-  final VoidCallback onResetValue;
-  final Color bezierColor;
+  final OffsetCallBack? onOffsetChange;
+  final ModeChangeCallBack? onModeChange;
+  final VoidFutureCallBack? readyRefresh, endRefresh;
+  final VoidCallback? onResetValue;
+  final Color? bezierColor;
   // decide how to behave when bezier is ready to dismiss
   final BezierDismissType dismissType;
   final bool enableChildOverflow;
@@ -59,7 +59,7 @@ class BezierHeader extends RefreshIndicator {
 
 class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
     with TickerProviderStateMixin {
-  AnimationController _beizerBounceCtl, _bezierDismissCtl;
+  late AnimationController _beizerBounceCtl, _bezierDismissCtl;
 
   @override
   void initState() {
@@ -74,17 +74,17 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
     if (widget.onOffsetChange != null) {
-      widget.onOffsetChange(offset);
+      widget.onOffsetChange!(offset);
     }
     if (!_beizerBounceCtl.isAnimating || (!floating))
       _beizerBounceCtl.value = math.max(0, offset - widget.rectHeight);
   }
 
   @override
-  void onModeChange(RefreshStatus mode) {
+  void onModeChange(RefreshStatus? mode) {
     // TODO: implement onModeChange
     if (widget.onModeChange != null) {
-      widget.onModeChange(mode);
+      widget.onModeChange!(mode);
     }
     super.onModeChange(mode);
   }
@@ -111,7 +111,7 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
         1000);
     _beizerBounceCtl.animateWith(simulation);
     if (widget.readyRefresh != null) {
-      return widget.readyRefresh();
+      return widget.readyRefresh!();
     }
     return super.readyToRefresh();
   }
@@ -120,7 +120,7 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
   Future<void> endRefresh() async {
     // TODO: implement endRefresh
     if (widget.endRefresh != null) {
-      await widget.endRefresh();
+      await widget.endRefresh!();
     }
     return _bezierDismissCtl.animateTo(1.0,
         duration: Duration(milliseconds: 200));
@@ -132,13 +132,13 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
     _bezierDismissCtl.reset();
     _beizerBounceCtl.value = 0;
     if (widget.onResetValue != null) {
-      widget.onResetValue();
+      widget.onResetValue!();
     }
     super.resetValue();
   }
 
   @override
-  Widget buildContent(BuildContext context, RefreshStatus mode) {
+  Widget buildContent(BuildContext context, RefreshStatus? mode) {
     // TODO: implement buildContent
 
     return AnimatedBuilder(
@@ -153,9 +153,7 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
                       child: Container(
                         height: widget.rectHeight + 30,
                         color: widget.bezierColor ??
-                            Theme.of(context)?.primaryColor ??
-                            CupertinoTheme.of(context)?.primaryColor ??
-                            widget.bezierColor,
+                            Theme.of(context).primaryColor,
                       ),
                       clipper: _BezierPainter(
                           value: _beizerBounceCtl.value,
@@ -201,9 +199,9 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
 }
 
 class _BezierDismissPainter extends CustomClipper<Path> {
-  final BezierDismissType dismissType;
+  final BezierDismissType? dismissType;
 
-  final double value;
+  final double? value;
 
   _BezierDismissPainter({this.dismissType, this.value});
 
@@ -222,21 +220,21 @@ class _BezierDismissPainter extends CustomClipper<Path> {
       Path path2 = Path();
       double halfWidth = size.width / 2;
       path1.moveTo(0, 0);
-      path1.lineTo(halfWidth - value * halfWidth, 0);
-      path1.lineTo(halfWidth - value * halfWidth, size.height);
+      path1.lineTo(halfWidth - value! * halfWidth, 0);
+      path1.lineTo(halfWidth - value! * halfWidth, size.height);
       path1.lineTo(0, size.height);
       path1.lineTo(0, 0);
 
       path2.moveTo(size.width, 0);
-      path2.lineTo(halfWidth + value * halfWidth, 0);
-      path2.lineTo(halfWidth + value * halfWidth, size.height);
+      path2.lineTo(halfWidth + value! * halfWidth, 0);
+      path2.lineTo(halfWidth + value! * halfWidth, size.height);
       path2.lineTo(size.width, size.height);
       path2.lineTo(size.width, 0);
       path.addPath(path1, Offset(0, 0));
       path.addPath(path2, Offset(0, 0));
     } else {
       final double maxExtent =
-          math.max(size.width, size.height) * (1.0 - value);
+          math.max(size.width, size.height) * (1.0 - value!);
       final double centerX = size.width / 2;
       final double centerY = size.height / 2;
       path.addOval(Rect.fromCircle(
@@ -253,9 +251,9 @@ class _BezierDismissPainter extends CustomClipper<Path> {
 }
 
 class _BezierPainter extends CustomClipper<Path> {
-  final double startOffsetY;
+  final double? startOffsetY;
 
-  final double value;
+  final double? value;
 
   _BezierPainter({this.value, this.startOffsetY});
 
@@ -263,10 +261,10 @@ class _BezierPainter extends CustomClipper<Path> {
   getClip(Size size) {
     // TODO: implement getClip
     Path path = Path();
-    path.lineTo(0, startOffsetY);
+    path.lineTo(0, startOffsetY!);
     path.quadraticBezierTo(
-        size.width / 2, startOffsetY + value * 2, size.width, startOffsetY);
-    path.moveTo(size.width, startOffsetY);
+        size.width / 2, startOffsetY! + value! * 2, size.width, startOffsetY!);
+    path.moveTo(size.width, startOffsetY!);
     path.lineTo(size.width, 0);
     path.lineTo(0, 0);
 
@@ -292,7 +290,7 @@ class _BezierPainter extends CustomClipper<Path> {
 ///)
 ///```
 class BezierCircleHeader extends StatefulWidget {
-  final Color bezierColor;
+  final Color? bezierColor;
   // two style:radial or progress
   final BezierCircleType circleType;
 
@@ -325,11 +323,11 @@ class BezierCircleHeader extends StatefulWidget {
 class _BezierCircleHeaderState extends State<BezierCircleHeader>
     with TickerProviderStateMixin {
   RefreshStatus mode = RefreshStatus.idle;
-  AnimationController _childMoveCtl;
-  Tween<AlignmentGeometry> _childMoveTween;
-  AnimationController _dismissCtrl;
-  Tween<Offset> _disMissTween;
-  AnimationController _radialCtrl;
+  late AnimationController _childMoveCtl;
+  late Tween<AlignmentGeometry?> _childMoveTween;
+  late AnimationController _dismissCtrl;
+  late Tween<Offset> _disMissTween;
+  late AnimationController _radialCtrl;
 
   @override
   void initState() {
@@ -426,7 +424,7 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
                   },
                   animation: _radialCtrl,
                 ),
-          alignment: _childMoveCtl.drive(_childMoveTween),
+          alignment: _childMoveCtl.drive(_childMoveTween as Animatable<AlignmentGeometry>),
         ),
       ),
     );
@@ -434,13 +432,13 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
 }
 
 class _RaidalPainter extends CustomPainter {
-  final double value;
+  final double? value;
 
-  final Color circleColor;
+  final Color? circleColor;
 
-  final double circleRadius;
+  final double? circleRadius;
 
-  final bool refreshing;
+  final bool? refreshing;
 
   _RaidalPainter(
       {this.value, this.circleColor, this.circleRadius, this.refreshing});
@@ -449,15 +447,15 @@ class _RaidalPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // TODO: implement paint
     Paint paint = Paint();
-    paint.color = circleColor;
+    paint.color = circleColor!;
     paint.strokeWidth = 2;
     paint.strokeCap = StrokeCap.round;
     paint.style = PaintingStyle.stroke;
-    if (refreshing) {
+    if (refreshing!) {
       canvas.drawArc(
           Rect.fromCircle(
               center: Offset(size.width / 2, size.height / 2),
-              radius: circleRadius + 3),
+              radius: circleRadius! + 3),
           -math.pi / 2,
           math.pi * 4,
           false,
@@ -467,7 +465,7 @@ class _RaidalPainter extends CustomPainter {
     canvas.drawArc(
         Rect.fromCircle(
             center: Offset(size.width / 2, size.height / 2),
-            radius: circleRadius),
+            radius: circleRadius!),
         -math.pi / 2,
         math.pi * 4,
         true,
@@ -476,19 +474,19 @@ class _RaidalPainter extends CustomPainter {
     canvas.drawArc(
         Rect.fromCircle(
             center: Offset(size.width / 2, size.height / 2),
-            radius: circleRadius),
+            radius: circleRadius!),
         -math.pi / 2,
-        math.pi * 4 * value,
+        math.pi * 4 * value!,
         true,
         paint);
     paint.style = PaintingStyle.stroke;
-    if (refreshing) {
+    if (refreshing!) {
       canvas.drawArc(
           Rect.fromCircle(
               center: Offset(size.width / 2, size.height / 2),
-              radius: circleRadius + 3),
+              radius: circleRadius! + 3),
           -math.pi / 2,
-          math.pi * 4 * value,
+          math.pi * 4 * value!,
           false,
           paint);
     }

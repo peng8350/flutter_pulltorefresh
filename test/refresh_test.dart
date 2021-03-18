@@ -63,7 +63,7 @@ void main() {
         ),
       ));
 
-      _refreshController.position.jumpTo(0.0);
+      _refreshController.position!.jumpTo(0.0);
       await tester.pump(Duration(milliseconds: 100));
       await tester.drag(find.byType(Scrollable), Offset(0, 79.999999999),
           touchSlopY: 0.0);
@@ -121,7 +121,7 @@ void main() {
         ),
       ));
 
-      _refreshController.position.jumpTo(100.0);
+      _refreshController.position!.jumpTo(100.0);
       await tester.pump(Duration(milliseconds: 100));
       await tester.drag(find.byType(Scrollable), Offset(0, 180.0),
           touchSlopY: 0.0);
@@ -154,7 +154,7 @@ void main() {
         ),
       ));
 
-      _refreshController.position.jumpTo(400.0);
+      _refreshController.position!.jumpTo(400.0);
       await tester.fling(find.byType(Viewport), Offset(0, 100.0), 2000.0);
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 20));
@@ -185,7 +185,7 @@ void main() {
         ),
       ));
 
-      _refreshController.position.jumpTo(0.0);
+      _refreshController.position!.jumpTo(0.0);
       await tester.fling(find.byType(Viewport), Offset(0, 100.0), 2000.0);
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 20));
@@ -216,7 +216,7 @@ void main() {
         ),
       ));
 
-      _refreshController.position.jumpTo(0.0);
+      _refreshController.position!.jumpTo(0.0);
       await tester.drag(find.byType(Viewport), Offset(0, 100.0),
           touchSlopY: 0.0);
       await tester.pump(); // refresh to canRefresh
@@ -225,10 +225,10 @@ void main() {
       expect(_refreshController.headerStatus, RefreshStatus.refreshing);
       await tester.drag(find.byType(Viewport), Offset(0, -90.0));
       await tester.pumpAndSettle();
-      final double positionRecord = _refreshController.position.pixels;
+      final double positionRecord = _refreshController.position!.pixels;
       _refreshController.refreshCompleted();
       await tester.pumpAndSettle(Duration(milliseconds: 600));
-      expect(_refreshController.position.pixels == positionRecord - 60.0,
+      expect(_refreshController.position!.pixels == positionRecord - 60.0,
           true); //60.0 is indicator  visual extent
       await tester.pump(Duration(milliseconds: 600));
       expect(_refreshController.headerStatus, RefreshStatus.idle);
@@ -259,7 +259,7 @@ void main() {
       ),
     ));
 
-    _refreshController.position.jumpTo(0.0);
+    _refreshController.position!.jumpTo(0.0);
     await tester.pump(Duration(milliseconds: 100));
     await tester.drag(find.byType(Scrollable), Offset(0, 99.999999999),
         touchSlopY: 0.0);
@@ -268,7 +268,7 @@ void main() {
     await tester.pumpAndSettle(Duration(milliseconds: 600));
     expect(_refreshController.headerStatus, RefreshStatus.idle);
 
-    _refreshController.position.jumpTo(0.0);
+    _refreshController.position!.jumpTo(0.0);
     await tester.pump(Duration(milliseconds: 100));
     await tester.drag(find.byType(Scrollable), Offset(0, 100.999999999),
         touchSlopY: 0.0);
@@ -305,7 +305,7 @@ void main() {
     await tester.drag(find.byType(Scrollable), Offset(0, 155.999999999),
         touchSlopY: 0.0);
     await tester.pump();
-    expect(_refreshController.position.pixels, -155.999999999);
+    expect(_refreshController.position!.pixels, -155.999999999);
     expect(_refreshController.headerStatus, RefreshStatus.canTwoLevel);
     await tester.pumpAndSettle();
     expect(_refreshController.headerStatus, RefreshStatus.twoLeveling);
@@ -316,6 +316,6 @@ void main() {
         touchSlopY: 0.0);
     await tester.pumpAndSettle();
     expect(_refreshController.headerStatus, RefreshStatus.idle);
-    expect(_refreshController.position.pixels, 0.0);
+    expect(_refreshController.position!.pixels, 0.0);
   });
 }
