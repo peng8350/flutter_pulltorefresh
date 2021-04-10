@@ -142,7 +142,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
             ? (mode == RefreshStatus.twoLeveling ||
                     mode == RefreshStatus.twoLevelOpening ||
                     mode == RefreshStatus.twoLevelClosing
-                ? SmartRefresher.ofState(context).viewportExtent
+                ? refresherState.viewportExtent
                 : widget.height)
             : 0.0) -
         _position?.pixels;
@@ -241,14 +241,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       resetValue();
 
       if (mode == RefreshStatus.idle)
-        SmartRefresher.ofState(context).setCanDrag(true);
+        refresherState.setCanDrag(true);
     }
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
       endRefresh().then((_) {
         if (!mounted) return;
         floating = false;
         if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
-          SmartRefresher.ofState(context)
+          refresherState
               .setCanDrag(configuration.enableScrollWhenRefreshCompleted);
         }
         update();
@@ -287,7 +287,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (refresher.onRefresh != null) refresher.onRefresh();
     } else if (mode == RefreshStatus.twoLevelOpening) {
       floating = true;
-      SmartRefresher.ofState(context).setCanDrag(false);
+      refresherState.setCanDrag(false);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         activity.resetActivity();
@@ -302,10 +302,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       });
     } else if (mode == RefreshStatus.twoLevelClosing) {
       floating = false;
-      SmartRefresher.ofState(context).setCanDrag(false);
+      refresherState.setCanDrag(false);
       update();
     } else if (mode == RefreshStatus.twoLeveling) {
-      SmartRefresher.ofState(context)
+      refresherState
           .setCanDrag(configuration.enableScrollWhenTwoLevel);
     }
     onModeChange(mode);
@@ -342,7 +342,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||
                 mode == RefreshStatus.twoLevelOpening ||
                 mode == RefreshStatus.twoLevelClosing
-            ? SmartRefresher.ofState(context).viewportExtent
+            ? refresherState.viewportExtent
             : widget.height,
         refreshStyle: widget.refreshStyle);
   }
@@ -578,6 +578,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   SmartRefresher refresher;
 
+  SmartRefresherState refresherState;
+
   RefreshConfiguration configuration;
 
   bool _floating = false;
@@ -627,6 +629,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   void _updateListener() {
     configuration = RefreshConfiguration.of(context);
     refresher = SmartRefresher.of(context);
+    refresherState = SmartRefresher.ofState(context);
     ValueNotifier<V> newMode = V == RefreshStatus
         ? refresher.controller.headerMode
         : refresher.controller.footerMode;

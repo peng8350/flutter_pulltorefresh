@@ -64,6 +64,7 @@ class _MaterialClassicHeaderState
   AnimationController _scaleFactor;
   AnimationController _positionController;
   AnimationController _valueAni;
+  ScrollPosition _position;
 
   @override
   void initState() {
@@ -76,7 +77,7 @@ class _MaterialClassicHeaderState
         duration: Duration(milliseconds: 500));
     _valueAni.addListener(() {
       // frequently setState will decline the performance
-      if (mounted && Scrollable.of(context).position.pixels <= 0)
+      if (mounted && _position.pixels <= 0)
         setState(() {});
     });
     _positionController =
@@ -91,6 +92,15 @@ class _MaterialClassicHeaderState
         begin: Offset(0.0, -1.0), end: Offset(0.0, widget.height / 44.0)));
     super.initState();
   }
+
+  @override
+  void didUpdateWidget(covariant MaterialClassicHeader oldWidget) {
+    // TODO: implement didUpdateWidget
+    _position = Scrollable.of(context).position;
+    super.didUpdateWidget(oldWidget);
+  }
+
+
 
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {
@@ -150,6 +160,7 @@ class _MaterialClassicHeaderState
   @override
   void didChangeDependencies() {
     final ThemeData theme = Theme.of(context);
+    _position = Scrollable.of(context).position;
     _valueColor = _positionController.drive(
       ColorTween(
         begin: (widget.color ??
