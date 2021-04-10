@@ -398,7 +398,7 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       sliverP = viewport.childAfter(sliverP);
     }
     // consider about footer layoutExtent,it should be subtracted it's height
-    return totalScrollExtent >= cons.viewportMainAxisExtent - layoutExtent;
+    return totalScrollExtent >= cons.viewportMainAxisExtent ;
   }
 
   //  many sitiuation: 1. reverse 2. not reverse
