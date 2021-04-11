@@ -240,8 +240,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
       resetValue();
 
-      if (mode == RefreshStatus.idle)
-        refresherState.setCanDrag(true);
+      if (mode == RefreshStatus.idle) refresherState.setCanDrag(true);
     }
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
       endRefresh().then((_) {
@@ -305,8 +304,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       refresherState.setCanDrag(false);
       update();
     } else if (mode == RefreshStatus.twoLeveling) {
-      refresherState
-          .setCanDrag(configuration.enableScrollWhenTwoLevel);
+      refresherState.setCanDrag(configuration.enableScrollWhenTwoLevel);
     }
     onModeChange(mode);
   }

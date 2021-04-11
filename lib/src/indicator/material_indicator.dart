@@ -77,8 +77,7 @@ class _MaterialClassicHeaderState
         duration: Duration(milliseconds: 500));
     _valueAni.addListener(() {
       // frequently setState will decline the performance
-      if (mounted && _position.pixels <= 0)
-        setState(() {});
+      if (mounted && _position.pixels <= 0) setState(() {});
     });
     _positionController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
@@ -99,8 +98,6 @@ class _MaterialClassicHeaderState
     _position = Scrollable.of(context).position;
     super.didUpdateWidget(oldWidget);
   }
-
-
 
   @override
   Widget buildContent(BuildContext context, RefreshStatus mode) {

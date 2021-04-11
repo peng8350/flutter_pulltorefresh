@@ -1,3 +1,7 @@
+## 1.6.5
+* fix check full page logic.
+* fix crash "locking up a deactive widget is unsafe".
+
 ## 1.6.4
 * fix error crash by deprecated function removed 
 * add extra ScrollView reference parameter

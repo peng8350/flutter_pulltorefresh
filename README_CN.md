@@ -3,7 +3,7 @@
   <img src="https://img.shields.io/pub/v/pull_to_refresh.svg"/>
 </a>
 <a href="https://flutter.dev/">
-  <img src="https://img.shields.io/badge/flutter-%3E%3D%201.2.1-green.svg"/>
+  <img src="https://img.shields.io/badge/flutter-%3E%3D%202.0.0-green.svg"/>
 </a>
 <a href="https://opensource.org/licenses/MIT">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg"/>
@@ -35,10 +35,10 @@
 ```yaml
 
    dependencies:
-    # stable version
-    pull_to_refresh: 1.6.3 
-    # other version
-    # pull_to_refresh: ^1.6.4
+
+    pull_to_refresh: ^1.6.5
+    # null-safety version
+    # pull_to_refresh: 1.6.4-nullsafety.0 
 
 ```
 

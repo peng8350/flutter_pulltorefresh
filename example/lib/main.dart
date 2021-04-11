@@ -13,7 +13,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return RefreshConfiguration(
       footerTriggerDistance: 15,
       dragSpeedRatio: 0.91,
