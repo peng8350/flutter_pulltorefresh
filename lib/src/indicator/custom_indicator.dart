@@ -155,7 +155,11 @@ class CustomFooter extends LoadIndicator {
     LoadStyle loadStyle: LoadStyle.ShowAlways,
     required this.builder,
     Function? onClick,
-  }) : super(key: key, onClick: onClick as void Function()?, loadStyle: loadStyle, height: height);
+  }) : super(
+            key: key,
+            onClick: onClick as void Function()?,
+            loadStyle: loadStyle,
+            height: height);
 
   @override
   State<StatefulWidget> createState() {

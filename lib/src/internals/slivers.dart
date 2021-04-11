@@ -127,7 +127,8 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   // TODO: implement centerOffsetAdjustment
   double get centerOffsetAdjustment {
     if (refreshStyle == RefreshStyle.Front) {
-      final RenderViewportBase renderViewport = parent as RenderViewportBase<ContainerParentDataMixin<RenderSliver>>;
+      final RenderViewportBase renderViewport =
+          parent as RenderViewportBase<ContainerParentDataMixin<RenderSliver>>;
       return Math.max(0.0, -renderViewport.offset.pixels);
     }
     return 0.0;
@@ -137,7 +138,8 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   void layout(Constraints constraints, {bool parentUsesSize = false}) {
     // TODO: implement layout
     if (refreshStyle == RefreshStyle.Front) {
-      final RenderViewportBase renderViewport = parent as RenderViewportBase<ContainerParentDataMixin<RenderSliver>>;
+      final RenderViewportBase renderViewport =
+          parent as RenderViewportBase<ContainerParentDataMixin<RenderSliver>>;
       super.layout(
           (constraints as SliverConstraints)
               .copyWith(overlap: Math.min(0.0, renderViewport.offset.pixels)),
@@ -290,7 +292,8 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
 
   @override
   void paint(PaintingContext paintContext, Offset offset) {
-    paintContext.paintChild(child!, Offset(offset.dx, offset.dy + paintOffsetY!));
+    paintContext.paintChild(
+        child!, Offset(offset.dx, offset.dy + paintOffsetY!));
   }
 
   @override
@@ -459,7 +462,8 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     if (active) {
       child!.layout(constraints.asBoxConstraints(), parentUsesSize: true);
     } else {
-      child!.layout(constraints.asBoxConstraints(maxExtent: 0.0, minExtent: 0.0),
+      child!.layout(
+          constraints.asBoxConstraints(maxExtent: 0.0, minExtent: 0.0),
           parentUsesSize: true);
     }
     double childExtent = constraints.axis == Axis.vertical

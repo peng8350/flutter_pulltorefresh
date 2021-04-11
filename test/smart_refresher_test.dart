@@ -240,7 +240,7 @@ void main() {
       count++;
       await tester.pump(Duration(milliseconds: 20));
     }
-    for (double i in logs ) {
+    for (double i in logs) {
       expect(i, greaterThanOrEqualTo(0));
     }
     logs.clear();
@@ -255,7 +255,7 @@ void main() {
       await tester.pump(Duration(milliseconds: 20));
     }
     expect(logs.length, greaterThan(0));
-    for (double i in logs ) {
+    for (double i in logs) {
       expect(i, greaterThanOrEqualTo(0));
     }
     logs.clear();

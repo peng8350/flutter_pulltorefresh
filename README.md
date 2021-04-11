@@ -35,10 +35,9 @@ add this line to pubspec.yaml
 ```yaml
 
    dependencies:
-    # stable version
-    pull_to_refresh: 1.6.3 
-    # other version
-    # pull_to_refresh: ^1.6.4
+
+    pull_to_refresh: 1.6.4-nullsafety.1
+
 
 ```
 

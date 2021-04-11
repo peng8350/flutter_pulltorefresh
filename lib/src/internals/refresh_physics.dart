@@ -192,13 +192,15 @@ class RefreshPhysics extends ScrollPhysics {
     double topExtra = 0.0;
     double? bottomExtra = 0.0;
     if (enablePullDown) {
-      final RenderSliverRefresh sliverHeader = viewportRender!.firstChild as RenderSliverRefresh;
+      final RenderSliverRefresh sliverHeader =
+          viewportRender!.firstChild as RenderSliverRefresh;
       topExtra = sliverHeader.hasLayoutExtent
           ? 0.0
           : sliverHeader.refreshIndicatorLayoutExtent;
     }
     if (enablePullUp) {
-      final RenderSliverLoading? sliverFooter = viewportRender!.lastChild as RenderSliverLoading?;
+      final RenderSliverLoading? sliverFooter =
+          viewportRender!.lastChild as RenderSliverLoading?;
       bottomExtra = (!notFull && sliverFooter!.geometry!.scrollExtent != 0) ||
               (notFull &&
                   controller!.footerStatus == LoadStatus.noMore &&
@@ -291,9 +293,10 @@ class RefreshPhysics extends ScrollPhysics {
         velocity: velocity * 0.91,
         // TODO(abarth): We should move this constant closer to the drag end.
         leadingExtent: position.minScrollExtent,
-        trailingExtent: controller!.headerMode.value == RefreshStatus.twoLeveling
-            ? 0.0
-            : position.maxScrollExtent,
+        trailingExtent:
+            controller!.headerMode.value == RefreshStatus.twoLeveling
+                ? 0.0
+                : position.maxScrollExtent,
         tolerance: tolerance,
       );
     }
