@@ -240,7 +240,7 @@ void main() {
       count++;
       await tester.pump(Duration(milliseconds: 20));
     }
-    for (double i in logs as Iterable<double>) {
+    for (double i in logs ) {
       expect(i, greaterThanOrEqualTo(0));
     }
     logs.clear();
@@ -255,7 +255,7 @@ void main() {
       await tester.pump(Duration(milliseconds: 20));
     }
     expect(logs.length, greaterThan(0));
-    for (double i in logs as Iterable<double>) {
+    for (double i in logs ) {
       expect(i, greaterThanOrEqualTo(0));
     }
     logs.clear();
@@ -301,7 +301,7 @@ void main() {
     await tester.fling(find.byType(Viewport), const Offset(0, -1000), 3000);
     await tester.pumpAndSettle();
     expect(_refreshController.footerStatus, LoadStatus.loading);
-    _refreshController.footerMode!.value = LoadStatus.idle;
+    _refreshController.footerMode.value = LoadStatus.idle;
     await tester.pumpAndSettle();
     // test drag up
     _refreshController.position!

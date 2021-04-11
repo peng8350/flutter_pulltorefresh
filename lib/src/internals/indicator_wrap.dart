@@ -648,7 +648,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   void initState() {
     // TODO: implement initState
     if (V == RefreshStatus) {
-      SmartRefresher.of(context)?.controller.headerMode?.value =
+      SmartRefresher.of(context)?.controller.headerMode.value =
           RefreshStatus.idle;
     }
     super.initState();
