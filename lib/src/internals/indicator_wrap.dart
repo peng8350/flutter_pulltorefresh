@@ -410,10 +410,12 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       if (!configuration!.autoLoad && mode == LoadStatus.idle) {
         return false;
       }
-      if (!configuration!.enableLoadingWhenFailed && mode == LoadStatus.failed) {
+      if (!configuration!.enableLoadingWhenFailed &&
+          mode == LoadStatus.failed) {
         return false;
       }
-      if (!configuration!.enableLoadingWhenNoData && mode == LoadStatus.noMore) {
+      if (!configuration!.enableLoadingWhenNoData &&
+          mode == LoadStatus.noMore) {
         return false;
       }
       if (mode != LoadStatus.canLoading &&
@@ -546,9 +548,10 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             : widget.loadStyle == LoadStyle.HideAlways
                 ? false
                 : floating,
-        shouldFollowContent: configuration!.shouldFooterFollowWhenNotFull != null
-            ? configuration!.shouldFooterFollowWhenNotFull!(mode)
-            : mode == LoadStatus.noMore,
+        shouldFollowContent:
+            configuration!.shouldFooterFollowWhenNotFull != null
+                ? configuration!.shouldFooterFollowWhenNotFull!(mode)
+                : mode == LoadStatus.noMore,
         layoutExtent: widget.height,
         mode: mode,
         child: LayoutBuilder(
@@ -648,7 +651,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   void initState() {
     // TODO: implement initState
     if (V == RefreshStatus) {
-      SmartRefresher.of(context)?.controller.headerMode?.value =
+      SmartRefresher.of(context)?.controller.headerMode.value =
           RefreshStatus.idle;
     }
     super.initState();

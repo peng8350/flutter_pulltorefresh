@@ -106,7 +106,8 @@ class _MaterialClassicHeaderState
           alignment: Alignment.topCenter,
           child: RefreshProgressIndicator(
             semanticsLabel: widget.semanticsLabel ??
-                MaterialLocalizations?.of(context).refreshIndicatorSemanticLabel,
+                MaterialLocalizations?.of(context)
+                    .refreshIndicatorSemanticLabel,
             semanticsValue: widget.semanticsValue,
             value: floating ? null : _valueAni.value,
             valueColor: _valueColor,
@@ -151,12 +152,8 @@ class _MaterialClassicHeaderState
     final ThemeData theme = Theme.of(context);
     _valueColor = _positionController.drive(
       ColorTween(
-        begin: (widget.color ??
-                theme.primaryColor)
-            .withOpacity(0.0),
-        end: (widget.color ??
-                theme.primaryColor)
-            .withOpacity(1.0),
+        begin: (widget.color ?? theme.primaryColor).withOpacity(0.0),
+        end: (widget.color ?? theme.primaryColor).withOpacity(1.0),
       ).chain(
           CurveTween(curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit))),
     );
@@ -243,12 +240,8 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     final ThemeData theme = Theme.of(context);
     _valueColor = _positionController.drive(
       ColorTween(
-        begin: (widget.color ??
-                theme.primaryColor)
-            .withOpacity(0.0),
-        end: (widget.color ??
-                theme.primaryColor)
-            .withOpacity(1.0),
+        begin: (widget.color ?? theme.primaryColor).withOpacity(0.0),
+        end: (widget.color ?? theme.primaryColor).withOpacity(1.0),
       ).chain(
           CurveTween(curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit))),
     );
@@ -296,7 +289,8 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     offset = offset > 80.0 ? 80.0 : offset;
 
     if (!floating) {
-      _bezierController!.value = (offset / configuration!.headerTriggerDistance);
+      _bezierController!.value =
+          (offset / configuration!.headerTriggerDistance);
       _valueAni.value = _bezierController!.value;
       _positionController.value = _bezierController!.value * 0.3;
       _scaleFactor.value =
@@ -313,13 +307,13 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
           CustomPaint(
             painter: _BezierPainter(
                 listener: _bezierController,
-                color: widget.backgroundColor ??
-                    Theme.of(context).primaryColor),
+                color:
+                    widget.backgroundColor ?? Theme.of(context).primaryColor),
             child: Container(),
           ),
           CustomPaint(
-            child: _buildIndicator(widget.backgroundColor ??
-                Theme.of(context).primaryColor),
+            child: _buildIndicator(
+                widget.backgroundColor ?? Theme.of(context).primaryColor),
             painter: _showWater
                 ? _WaterPainter(
                     ratio: widget.distance / widget.height,

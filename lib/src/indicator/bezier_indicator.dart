@@ -424,7 +424,8 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
                   },
                   animation: _radialCtrl,
                 ),
-          alignment: _childMoveCtl.drive(_childMoveTween as Animatable<AlignmentGeometry>),
+          alignment: _childMoveCtl
+              .drive(_childMoveTween as Animatable<AlignmentGeometry>),
         ),
       ),
     );
