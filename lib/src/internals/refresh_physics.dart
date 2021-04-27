@@ -220,7 +220,7 @@ class RefreshPhysics extends ScrollPhysics {
 
     if (scrollPosition.activity is BallisticScrollActivity) {
       if (topHitBoundary != double.infinity) {
-        if (value < -topHitBoundary && -topHitBoundary < position.pixels) {
+        if (value < -topHitBoundary && -topHitBoundary <= position.pixels) {
           // hit top edge
           return value + topHitBoundary;
         }
@@ -243,7 +243,6 @@ class RefreshPhysics extends ScrollPhysics {
       // hit bottom edge
       return value - bottomBoundary;
     }
-
     // check user is dragging,it is import,some devices may not bounce with different frame and time,bouncing return the different velocity
     if (scrollPosition.activity is DragScrollActivity) {
       if (maxOverScrollExtent != double.infinity &&
