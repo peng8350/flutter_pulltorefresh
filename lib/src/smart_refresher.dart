@@ -671,10 +671,12 @@ class RefreshController {
     if (isRefresh) return Future.value();
     StatefulElement indicatorElement =
         _findIndicator(position.context.storageContext, RefreshIndicator);
-    if (indicatorElement == null) return null;
+    SmartRefresherState refresherState = SmartRefresher.ofState(indicatorElement);
+    if (indicatorElement == null||refresherState==null) return null;
     (indicatorElement.state as RefreshIndicatorState)?.floating = true;
-    if (needMove)
-      SmartRefresher.ofState(position.context.storageContext)
+
+    if (needMove&&   refresherState.mounted)
+      refresherState
           ?.setCanDrag(false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (needMove) {
@@ -684,7 +686,8 @@ class RefreshController {
               ?.animateTo(position.minScrollExtent - 0.0001,
                   duration: duration, curve: curve)
               ?.then((_) {
-            SmartRefresher.ofState(position.context.storageContext)
+          if(refresherState.mounted)
+            refresherState
                 ?.setCanDrag(true);
             headerMode.value = RefreshStatus.refreshing;
           });
@@ -721,10 +724,11 @@ class RefreshController {
     if (isLoading) return Future.value();
     StatefulElement indicatorElement =
         _findIndicator(position.context.storageContext, LoadIndicator);
-    if (indicatorElement == null) return null;
+    SmartRefresherState refresherState = SmartRefresher.ofState(indicatorElement);
+    if (indicatorElement == null||refresherState==null) return null;
     (indicatorElement.state as LoadIndicatorState)?.floating = true;
-    if (needMove)
-      SmartRefresher.ofState(position.context.storageContext)
+    if (needMove&&refresherState.mounted)
+      refresherState
           ?.setCanDrag(false);
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
@@ -732,7 +736,9 @@ class RefreshController {
             ?.animateTo(position.maxScrollExtent,
                 duration: duration, curve: curve)
             ?.then((_) {
-          SmartRefresher.ofState(position.context.storageContext)
+              if((position.context as State).mounted)
+                if(refresherState.mounted)
+          refresherState
               ?.setCanDrag(true);
           footerMode.value = LoadStatus.loading;
         });
