@@ -296,8 +296,8 @@ class SmartRefresherState extends State<SmartRefresher> {
   final LoadIndicator defaultFooter = ClassicFooter();
 
   //build slivers from child Widget
-  List<Widget>? _buildSliversByChild(BuildContext context, Widget? child,
-      RefreshConfiguration? configuration) {
+  List<Widget>? _buildSliversByChild(
+      BuildContext context, Widget? child, RefreshConfiguration? configuration) {
     List<Widget>? slivers;
     if (child is ScrollView) {
       if (child is BoxScrollView) {
@@ -449,8 +449,7 @@ class SmartRefresherState extends State<SmartRefresher> {
         semanticChildCount: childView.semanticChildCount,
         dragStartBehavior: childView.dragStartBehavior,
         viewportBuilder: (context, offset) {
-          Viewport viewport =
-              childView.viewportBuilder(context, offset) as Viewport;
+          Viewport viewport = childView.viewportBuilder(context, offset) as Viewport;
           if (widget.enablePullDown) {
             viewport.children.insert(
                 0,
@@ -505,10 +504,10 @@ class SmartRefresherState extends State<SmartRefresher> {
   void didUpdateWidget(SmartRefresher oldWidget) {
     // TODO: implement didUpdateWidget
     if (widget.controller != oldWidget.controller) {
-      widget.controller.headerMode.value =
-          oldWidget.controller.headerMode.value;
-      widget.controller.footerMode.value =
-          oldWidget.controller.footerMode.value;
+      widget.controller.headerMode!.value =
+          oldWidget.controller.headerMode!.value;
+      widget.controller.footerMode!.value =
+          oldWidget.controller.footerMode!.value;
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -544,14 +543,11 @@ class SmartRefresherState extends State<SmartRefresher> {
 
   @override
   Widget build(BuildContext context) {
-    final RefreshConfiguration? configuration =
-        RefreshConfiguration.of(context);
+    final RefreshConfiguration? configuration = RefreshConfiguration.of(context);
     Widget? body;
     if (widget.builder != null)
-      body = widget.builder!(
-          context,
-          _getScrollPhysics(configuration, AlwaysScrollableScrollPhysics())
-              as RefreshPhysics);
+      body = widget.builder!(context,
+          _getScrollPhysics(configuration, AlwaysScrollableScrollPhysics()) as RefreshPhysics);
     else {
       List<Widget>? slivers =
           _buildSliversByChild(context, widget.child, configuration);
@@ -577,10 +573,10 @@ class SmartRefresherState extends State<SmartRefresher> {
 /// * [SmartRefresher],a widget help you attach refresh and load more function easily
 class RefreshController {
   /// header status mode controll
-  ValueNotifier<RefreshStatus> headerMode;
+  ValueNotifier<RefreshStatus>? headerMode;
 
   /// footer status mode controll
-  ValueNotifier<LoadStatus> footerMode;
+  ValueNotifier<LoadStatus>? footerMode;
 
   /// the scrollable inner's position
   ///
@@ -593,18 +589,18 @@ class RefreshController {
       'advice set ScrollController to child,use it directly will cause bug when call jumpTo() and animateTo()')
   ScrollController? scrollController;
 
-  RefreshStatus get headerStatus => headerMode.value;
+  RefreshStatus? get headerStatus => headerMode?.value;
 
-  LoadStatus get footerStatus => footerMode.value;
+  LoadStatus? get footerStatus => footerMode?.value;
 
-  bool get isRefresh => headerMode.value == RefreshStatus.refreshing;
+  bool get isRefresh => headerMode?.value == RefreshStatus.refreshing;
 
   bool get isTwoLevel =>
-      headerMode.value == RefreshStatus.twoLeveling ||
-      headerMode.value == RefreshStatus.twoLevelOpening ||
-      headerMode.value == RefreshStatus.twoLevelClosing;
+      headerMode?.value == RefreshStatus.twoLeveling ||
+      headerMode?.value == RefreshStatus.twoLevelOpening ||
+      headerMode?.value == RefreshStatus.twoLevelClosing;
 
-  bool get isLoading => footerMode.value == LoadStatus.loading;
+  bool get isLoading => footerMode?.value == LoadStatus.loading;
 
   final bool initialRefresh;
 
@@ -615,10 +611,11 @@ class RefreshController {
   /// initialLoadStatus: footerMode default value
   RefreshController(
       {this.initialRefresh: false,
-      RefreshStatus initialRefreshStatus: RefreshStatus.idle,
-      LoadStatus initialLoadStatus: LoadStatus.idle})
-      : this.headerMode = ValueNotifier(initialRefreshStatus),
-        this.footerMode = ValueNotifier(initialLoadStatus);
+      RefreshStatus? initialRefreshStatus,
+      LoadStatus? initialLoadStatus}) {
+    this.headerMode = ValueNotifier(initialRefreshStatus ?? RefreshStatus.idle);
+    this.footerMode = ValueNotifier(initialLoadStatus ?? LoadStatus.idle);
+  }
 
   /// callback when the indicator is builded,and catch the scrollable's inner position
   void onPositionUpdated(ScrollPosition newPosition) {
@@ -683,12 +680,12 @@ class RefreshController {
               .then((_) {
             SmartRefresher.ofState(position!.context.storageContext)
                 ?.setCanDrag(true);
-            headerMode.value = RefreshStatus.refreshing;
+            headerMode!.value = RefreshStatus.refreshing;
           });
         });
       } else {
         Future.value().then((_) {
-          headerMode.value = RefreshStatus.refreshing;
+          headerMode!.value = RefreshStatus.refreshing;
         });
       }
     });
@@ -701,7 +698,7 @@ class RefreshController {
       Curve curve: Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    headerMode.value = RefreshStatus.twoLevelOpening;
+    headerMode!.value = RefreshStatus.twoLevelOpening;
     return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
       await position?.animateTo(position!.minScrollExtent,
           duration: duration, curve: curve);
@@ -731,12 +728,12 @@ class RefreshController {
             .then((_) {
           SmartRefresher.ofState(position!.context.storageContext)
               ?.setCanDrag(true);
-          footerMode.value = LoadStatus.loading;
+          footerMode!.value = LoadStatus.loading;
         });
       });
     } else {
       return Future.value().then((_) {
-        footerMode.value = LoadStatus.loading;
+        footerMode!.value = LoadStatus.loading;
       });
     }
   }
@@ -745,7 +742,7 @@ class RefreshController {
   ///
   /// resetFooterState : it will set the footer state from noData to idle
   void refreshCompleted({bool resetFooterState: false}) {
-    headerMode.value = RefreshStatus.completed;
+    headerMode?.value = RefreshStatus.completed;
     if (resetFooterState) {
       resetNoData();
     }
@@ -755,12 +752,12 @@ class RefreshController {
   Future<void>? twoLevelComplete(
       {Duration duration: const Duration(milliseconds: 500),
       Curve curve: Curves.linear}) {
-    headerMode.value = RefreshStatus.twoLevelClosing;
+    headerMode?.value = RefreshStatus.twoLevelClosing;
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       position!
           .animateTo(0.0, duration: duration, curve: curve)
           .whenComplete(() {
-        headerMode.value = RefreshStatus.idle;
+        headerMode!.value = RefreshStatus.idle;
       });
     });
     return null;
@@ -768,19 +765,19 @@ class RefreshController {
 
   /// request failed,the header display failed state
   void refreshFailed() {
-    headerMode.value = RefreshStatus.failed;
+    headerMode?.value = RefreshStatus.failed;
   }
 
   /// not show success or failed, it will set header state to idle and spring back at once
   void refreshToIdle() {
-    headerMode.value = RefreshStatus.idle;
+    headerMode?.value = RefreshStatus.idle;
   }
 
   /// after data returned,set the footer state to idle
   void loadComplete() {
     // change state after ui update,else it will have a bug:twice loading
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      footerMode.value = LoadStatus.idle;
+      footerMode?.value = LoadStatus.idle;
     });
   }
 
@@ -788,28 +785,30 @@ class RefreshController {
   void loadFailed() {
     // change state after ui update,else it will have a bug:twice loading
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      footerMode.value = LoadStatus.failed;
+      footerMode?.value = LoadStatus.failed;
     });
   }
 
   /// load more success without error,but no data returned
   void loadNoData() {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      footerMode.value = LoadStatus.noMore;
+      footerMode?.value = LoadStatus.noMore;
     });
   }
 
   /// reset footer noData state  to idle
   void resetNoData() {
-    if (footerMode.value == LoadStatus.noMore) {
-      footerMode.value = LoadStatus.idle;
+    if (footerMode?.value == LoadStatus.noMore) {
+      footerMode!.value = LoadStatus.idle;
     }
   }
 
   /// for some special situation, you should call dispose() for safe,it may throw errors after parent widget dispose
   void dispose() {
-    headerMode.dispose();
-    footerMode.dispose();
+    headerMode!.dispose();
+    footerMode!.dispose();
+    headerMode = null;
+    footerMode = null;
   }
 }
 
