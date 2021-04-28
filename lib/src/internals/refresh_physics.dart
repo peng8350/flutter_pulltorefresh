@@ -220,7 +220,7 @@ class RefreshPhysics extends ScrollPhysics {
 
     if (scrollPosition.activity is BallisticScrollActivity) {
       if (topHitBoundary != double.infinity) {
-        if (value < -topHitBoundary && -topHitBoundary <= position.pixels) {
+        if (value < -topHitBoundary! && -topHitBoundary! <= position.pixels) {
           // hit top edge
           return value + topHitBoundary!;
         }

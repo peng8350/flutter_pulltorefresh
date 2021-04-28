@@ -142,7 +142,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
             ? (mode == RefreshStatus.twoLeveling ||
                     mode == RefreshStatus.twoLevelOpening ||
                     mode == RefreshStatus.twoLevelClosing
-                ? refresherState?.viewportExtent
+                ? refresherState!.viewportExtent
                 : widget.height)
             : 0.0) -
         (_position?.pixels as num);
@@ -240,7 +240,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
       resetValue();
 
-      if (mode == RefreshStatus.idle) refresherState.setCanDrag(true);
+      if (mode == RefreshStatus.idle) refresherState!.setCanDrag(true);
     }
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
       endRefresh().then((_) {
@@ -248,7 +248,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         floating = false;
         if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
           refresherState
-              .setCanDrag(configuration.enableScrollWhenRefreshCompleted);
+              !.setCanDrag(configuration!.enableScrollWhenRefreshCompleted);
         }
         update();
         /*
@@ -286,8 +286,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (refresher!.onRefresh != null) refresher!.onRefresh!();
     } else if (mode == RefreshStatus.twoLevelOpening) {
       floating = true;
-      refresherState.setCanDrag(false);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      refresherState!.setCanDrag(false);
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         if (!mounted) return;
         activity!.resetActivity();
         _position!
@@ -301,10 +301,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       });
     } else if (mode == RefreshStatus.twoLevelClosing) {
       floating = false;
-      refresherState.setCanDrag(false);
+      refresherState!.setCanDrag(false);
       update();
     } else if (mode == RefreshStatus.twoLeveling) {
-      refresherState.setCanDrag(configuration.enableScrollWhenTwoLevel);
+      refresherState!.setCanDrag(configuration!.enableScrollWhenTwoLevel);
     }
     onModeChange(mode);
   }
@@ -340,7 +340,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||
                 mode == RefreshStatus.twoLevelOpening ||
                 mode == RefreshStatus.twoLevelClosing
-            ? refresherState.viewportExtent
+            ? refresherState!.viewportExtent
             : widget.height,
         refreshStyle: widget.refreshStyle);
   }
@@ -580,9 +580,9 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   SmartRefresher? refresher;
 
   RefreshConfiguration? configuration;
-  SmartRefresherState refresherState;
+  SmartRefresherState? refresherState;
 
-  RefreshConfiguration configuration;
+
 
   bool _floating = false;
 
@@ -632,10 +632,10 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
     configuration = RefreshConfiguration.of(context);
     refresher = SmartRefresher.of(context);
     refresherState = SmartRefresher.ofState(context);
-    ValueNotifier<V> newMode = V == RefreshStatus
-        ? refresher.controller.headerMode
-        : refresher.controller.footerMode;
-    final ScrollPosition newPosition = Scrollable.of(context).position;
+    ValueNotifier<V>? newMode = V == RefreshStatus
+        ? refresher!.controller.headerMode as ValueNotifier<V>?
+        : refresher!.controller.footerMode as ValueNotifier<V>?;
+    final ScrollPosition newPosition = Scrollable.of(context)!.position;
     if (newMode != _mode) {
       _mode?.removeListener(_handleModeChange);
       _mode = newMode;

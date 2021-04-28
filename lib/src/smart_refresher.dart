@@ -267,12 +267,12 @@ class SmartRefresher extends StatefulWidget {
         primary = null,
         super(key: key);
 
-  static SmartRefresher? of(BuildContext context) {
-    return context.findAncestorWidgetOfExactType<SmartRefresher>();
+  static SmartRefresher? of(BuildContext? context) {
+    return context!.findAncestorWidgetOfExactType<SmartRefresher>();
   }
 
-  static SmartRefresherState? ofState(BuildContext context) {
-    return context.findAncestorStateOfType<SmartRefresherState>();
+  static SmartRefresherState? ofState(BuildContext? context) {
+    return context!.findAncestorStateOfType<SmartRefresherState>();
   }
 
   @override
@@ -663,15 +663,15 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (isRefresh) return Future.value();
-    StatefulElement indicatorElement =
-        _findIndicator(position.context.storageContext, RefreshIndicator);
-    SmartRefresherState refresherState = SmartRefresher.ofState(indicatorElement);
+    StatefulElement? indicatorElement =
+        _findIndicator(position!.context.storageContext, RefreshIndicator);
+    SmartRefresherState? refresherState = SmartRefresher.ofState(indicatorElement);
     if (indicatorElement == null||refresherState==null) return null;
-    (indicatorElement.state as RefreshIndicatorState)?.floating = true;
+    (indicatorElement.state as RefreshIndicatorState).floating = true;
 
     if (needMove&&   refresherState.mounted)
       refresherState
-          ?.setCanDrag(false);
+          .setCanDrag(false);
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (needMove) {
         Future.delayed(const Duration(milliseconds: 50)).then((_) async {
@@ -679,10 +679,10 @@ class RefreshController {
           await position
               ?.animateTo(position!.minScrollExtent - 0.0001,
                   duration: duration, curve: curve)
-              ?.then((_) {
+              .then((_) {
           if(refresherState.mounted)
             refresherState
-                ?.setCanDrag(true);
+                .setCanDrag(true);
             headerMode!.value = RefreshStatus.refreshing;
           });
         });
@@ -716,24 +716,24 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (isLoading) return Future.value();
-    StatefulElement indicatorElement =
-        _findIndicator(position.context.storageContext, LoadIndicator);
-    SmartRefresherState refresherState = SmartRefresher.ofState(indicatorElement);
+    StatefulElement? indicatorElement =
+        _findIndicator(position!.context.storageContext, LoadIndicator);
+    SmartRefresherState? refresherState = SmartRefresher.ofState(indicatorElement);
     if (indicatorElement == null||refresherState==null) return null;
-    (indicatorElement.state as LoadIndicatorState)?.floating = true;
+    (indicatorElement.state as LoadIndicatorState).floating = true;
     if (needMove&&refresherState.mounted)
       refresherState
-          ?.setCanDrag(false);
+          .setCanDrag(false);
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         await position
             ?.animateTo(position!.maxScrollExtent,
                 duration: duration, curve: curve)
-            ?.then((_) {
-              if((position.context as State).mounted)
+            .then((_) {
+
                 if(refresherState.mounted)
           refresherState
-              ?.setCanDrag(true);
+              .setCanDrag(true);
           footerMode!.value = LoadStatus.loading;
         });
       });

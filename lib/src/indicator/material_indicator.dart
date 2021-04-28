@@ -59,7 +59,7 @@ class MaterialClassicHeader extends RefreshIndicator {
 class _MaterialClassicHeaderState
     extends RefreshIndicatorState<MaterialClassicHeader>
     with TickerProviderStateMixin {
-  ScrollPosition _position;
+  ScrollPosition? _position;
   Animation<Offset>? _positionFactor;
   Animation<Color?>? _valueColor;
   late AnimationController _scaleFactor;
@@ -77,7 +77,7 @@ class _MaterialClassicHeaderState
         duration: Duration(milliseconds: 500));
     _valueAni.addListener(() {
       // frequently setState will decline the performance
-      if (mounted && _position.pixels <= 0) setState(() {});
+      if (mounted && _position!.pixels <= 0) setState(() {});
     });
     _positionController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
@@ -95,7 +95,7 @@ class _MaterialClassicHeaderState
   @override
   void didUpdateWidget(covariant MaterialClassicHeader oldWidget) {
     // TODO: implement didUpdateWidget
-    _position = Scrollable.of(context).position;
+    _position = Scrollable.of(context)!.position;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -157,7 +157,7 @@ class _MaterialClassicHeaderState
   @override
   void didChangeDependencies() {
     final ThemeData theme = Theme.of(context);
-    _position = Scrollable.of(context).position;
+    _position = Scrollable.of(context)!.position;
     _valueColor = _positionController.drive(
       ColorTween(
         begin: (widget.color ?? theme.primaryColor).withOpacity(0.0),
@@ -337,11 +337,9 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
   }}
 
 class _WaterPainter extends CustomPainter {
-  final Color color;
-  final Animation<Offset> listener;
-
   final Color? color;
   final Animation<Offset>? listener;
+
 
   Offset get offset => listener!.value;
   final double? ratio;

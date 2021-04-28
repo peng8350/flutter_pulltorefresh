@@ -490,7 +490,7 @@ void main() {
     await tester.pumpAndSettle(Duration(milliseconds: 500));
     expect(_refreshController.footerStatus, LoadStatus.idle);
 
-    _refreshController.footerMode.value = LoadStatus.failed;
+    _refreshController.footerMode!.value = LoadStatus.failed;
     _refreshController.position!
         .jumpTo(_refreshController.position!.maxScrollExtent - 30.0);
     expect(_refreshController.position!.pixels,
@@ -525,7 +525,7 @@ void main() {
       ),
     ));
 
-    _refreshController.footerMode.value = LoadStatus.failed;
+    _refreshController.footerMode!.value = LoadStatus.failed;
     _refreshController.position!
         .jumpTo(_refreshController.position!.maxScrollExtent - 30.0);
     expect(_refreshController.position!.pixels,
@@ -577,7 +577,7 @@ void main() {
     await tester.pumpAndSettle(Duration(milliseconds: 2));
     expect(_refreshController.footerStatus, LoadStatus.loading);
 
-    _refreshController.footerMode.value = LoadStatus.idle;
+    _refreshController.footerMode!.value = LoadStatus.idle;
     _refreshController.position!
         .jumpTo(_refreshController.position!.maxScrollExtent - 30.0);
     await tester.drag(find.byType(Scrollable), const Offset(0, -59.0));
