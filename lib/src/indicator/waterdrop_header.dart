@@ -17,13 +17,13 @@ import '../smart_refresher.dart';
 /// QQ ios refresh  header effect
 class WaterDropHeader extends RefreshIndicator {
   /// refreshing content
-  final Widget refresh;
+  final Widget? refresh;
 
   /// complete content
-  final Widget complete;
+  final Widget? complete;
 
   /// failed content
-  final Widget failed;
+  final Widget? failed;
 
   /// idle Icon center in waterCircle
   final Widget idleIcon;
@@ -32,7 +32,7 @@ class WaterDropHeader extends RefreshIndicator {
   final Color waterDropColor;
 
   const WaterDropHeader({
-    Key key,
+    Key? key,
     this.refresh,
     this.complete,
     Duration completeDuration: const Duration(milliseconds: 600),
@@ -58,8 +58,8 @@ class WaterDropHeader extends RefreshIndicator {
 
 class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
     with TickerProviderStateMixin {
-  AnimationController _animationController;
-  AnimationController _dismissCtl;
+  AnimationController? _animationController;
+  late AnimationController _dismissCtl;
 
   @override
   void onOffsetChange(double offset) {
@@ -67,15 +67,15 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
     final double realOffset =
         offset - 44.0; //55.0 mean circleHeight(24) + originH (20) in Painter
     // when readyTorefresh
-    if (!_animationController.isAnimating)
-      _animationController.value = realOffset;
+    if (!_animationController!.isAnimating)
+      _animationController!.value = realOffset;
   }
 
   @override
   Future<void> readyToRefresh() {
     // TODO: implement readyToRefresh
     _dismissCtl.animateTo(0.0);
-    return _animationController.animateTo(0.0);
+    return _animationController!.animateTo(0.0);
   }
 
   @override
@@ -98,9 +98,9 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   }
 
   @override
-  Widget buildContent(BuildContext context, RefreshStatus mode) {
+  Widget buildContent(BuildContext context, RefreshStatus? mode) {
     // TODO: implement buildContent
-    Widget child;
+    Widget? child;
     if (mode == RefreshStatus.refreshing) {
       child = widget.refresh ??
           SizedBox(
@@ -125,7 +125,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
               Text(
                 (RefreshLocalizations.of(context)?.currentLocalization ??
                         EnRefreshString())
-                    .refreshCompleteText,
+                    .refreshCompleteText!,
                 style: TextStyle(color: Colors.grey),
               )
             ],
@@ -145,7 +145,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
               Text(
                   (RefreshLocalizations.of(context)?.currentLocalization ??
                           EnRefreshString())
-                      .refreshFailedText,
+                      .refreshFailedText!,
                   style: TextStyle(color: Colors.grey))
             ],
           );
@@ -165,17 +165,17 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                     ),
                   ),
                   quarterTurns:
-                      Scrollable.of(context).axisDirection == AxisDirection.up
+                      Scrollable.of(context)!.axisDirection == AxisDirection.up
                           ? 10
                           : 0,
                 ),
                 Container(
                   alignment:
-                      Scrollable.of(context).axisDirection == AxisDirection.up
+                      Scrollable.of(context)!.axisDirection == AxisDirection.up
                           ? Alignment.bottomCenter
                           : Alignment.topCenter,
                   margin:
-                      Scrollable.of(context).axisDirection == AxisDirection.up
+                      Scrollable.of(context)!.axisDirection == AxisDirection.up
                           ? EdgeInsets.only(bottom: 12.0)
                           : EdgeInsets.only(top: 12.0),
                   child: widget.idleIcon,
@@ -197,7 +197,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   @override
   void resetValue() {
     // TODO: implement resetValue
-    _animationController.reset();
+    _animationController!.reset();
     _dismissCtl.value = 1.0;
   }
 
@@ -205,16 +205,16 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   void dispose() {
     // TODO: implement dispose
     _dismissCtl.dispose();
-    _animationController.dispose();
+    _animationController!.dispose();
     super.dispose();
   }
 }
 
 class _QqPainter extends CustomPainter {
-  final Color color;
-  final Animation<double> listener;
+  final Color? color;
+  final Animation<double>? listener;
 
-  double get value => listener.value;
+  double get value => listener!.value;
   final Paint painter = Paint();
 
   _QqPainter({this.color, this.listener}) : super(repaint: listener);
@@ -230,7 +230,7 @@ class _QqPainter extends CustomPainter {
 
     final double offset = value;
 
-    painter.color = color;
+    painter.color = color!;
     canvas.drawCircle(Offset(middleW, originH), circleSize, painter);
     Path path = Path();
     path.moveTo(middleW - circleSize, originH);

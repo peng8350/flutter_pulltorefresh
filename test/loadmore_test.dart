@@ -33,8 +33,8 @@ void main() {
         controller: _refreshController,
       ),
     ));
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent - 30);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent - 30);
     await tester.drag(find.byType(Scrollable), const Offset(0, -30.0));
     await tester.pump();
 //    expect(_refreshController.footerStatus, LoadStatus.idle);
@@ -62,8 +62,8 @@ void main() {
         controller: _refreshController,
       ),
     ));
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent - 216);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent - 216);
     await tester.drag(find.byType(Scrollable), const Offset(0, -200.0));
     await tester.pump();
     expect(_refreshController.footerStatus, LoadStatus.idle);
@@ -98,8 +98,8 @@ void main() {
     ));
 
     //fling to bottom
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent - 500);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent - 500);
 
     await tester.fling(find.byType(Scrollable), const Offset(0, -300.0), 2200);
     await tester.pump();
@@ -109,8 +109,8 @@ void main() {
     }
 
     // drag to bottom out of edge
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent);
     expect(_refreshController.footerStatus, LoadStatus.idle);
     await tester.drag(find.byType(Scrollable), const Offset(0, -90.0));
     expect(_refreshController.footerStatus, LoadStatus.canLoading);
@@ -120,8 +120,8 @@ void main() {
 
     _refreshController.loadFailed();
     //fling to bottom when mode = failed
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent - 500);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent - 500);
     await tester.fling(find.byType(Scrollable), const Offset(0, -300.0), 2200);
     await tester.pump();
     while (tester.binding.transientCallbackCount > 0) {
@@ -152,14 +152,14 @@ void main() {
         controller: _refreshController,
       ),
     ));
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent - 500);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent - 500);
     await tester.fling(find.byType(Scrollable), const Offset(0, -300.0), 2200);
     await tester.pump();
     expect(_refreshController.footerStatus, LoadStatus.idle);
     while (tester.binding.transientCallbackCount > 0) {
       //15.0 is default
-      if (_refreshController.position.extentAfter < 15) {
+      if (_refreshController.position!.extentAfter < 15) {
         expect(_refreshController.footerStatus, LoadStatus.loading);
       } else {
         expect(_refreshController.footerStatus, LoadStatus.idle);
@@ -189,16 +189,16 @@ void main() {
         controller: _refreshController,
       ),
     ));
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent - 216);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent - 216);
     await tester.drag(find.byType(Scrollable), const Offset(0, -400.0));
     await tester.pump();
     expect(_refreshController.footerStatus, LoadStatus.noMore);
     await tester.pump(Duration(milliseconds: 100));
     expect(_refreshController.footerStatus, LoadStatus.noMore);
 
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent - 500);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent - 500);
     await tester.fling(find.byType(Scrollable), const Offset(0, -300.0), 2200);
     await tester.pump();
     expect(_refreshController.footerStatus, LoadStatus.noMore);
@@ -236,12 +236,12 @@ void main() {
       expect(_refreshController.footerStatus, LoadStatus.idle);
       await tester.pumpAndSettle();
       // quickly fling with ballstic
-      expect(_refreshController.position.pixels, 0.0);
+      expect(_refreshController.position!.pixels, 0.0);
       await tester.fling(find.byType(Scrollable), const Offset(0, 100.0), 1000);
       await tester.pump(Duration(milliseconds: 400));
       expect(_refreshController.footerStatus, LoadStatus.idle);
       await tester.pumpAndSettle();
-      expect(_refreshController.position.pixels, 0.0);
+      expect(_refreshController.position!.pixels, 0.0);
       expect(_refreshController.footerStatus, LoadStatus.idle);
     });
 
@@ -273,13 +273,13 @@ void main() {
       expect(_refreshController.footerStatus, LoadStatus.loading);
       await tester.pumpAndSettle();
       // quickly fling with ballstic
-      expect(_refreshController.position.pixels, 0.0);
+      expect(_refreshController.position!.pixels, 0.0);
       await tester.fling(
           find.byType(Scrollable), const Offset(0, -100.0), 1000);
       await tester.pump(Duration(milliseconds: 400));
       expect(_refreshController.footerStatus, LoadStatus.loading);
       await tester.pumpAndSettle();
-      expect(_refreshController.position.pixels, 0.0);
+      expect(_refreshController.position!.pixels, 0.0);
       expect(_refreshController.footerStatus, LoadStatus.loading);
     });
   });
@@ -312,8 +312,8 @@ void main() {
         ),
       ));
 
-      _refreshController.position
-          .jumpTo(_refreshController.position.maxScrollExtent - 100);
+      _refreshController.position!
+          .jumpTo(_refreshController.position!.maxScrollExtent - 100);
       await tester.drag(find.byType(Scrollable), const Offset(0, -150.0));
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 20));
@@ -321,8 +321,8 @@ void main() {
       expect(time, 1);
 
       time = 0;
-      _refreshController.position
-          .jumpTo(_refreshController.position.maxScrollExtent - 100);
+      _refreshController.position!
+          .jumpTo(_refreshController.position!.maxScrollExtent - 100);
       await tester.fling(find.byType(Scrollable), const Offset(0, -80.0), 1000);
       expect(_refreshController.footerStatus, LoadStatus.idle);
       while (tester.binding.transientCallbackCount > 0) {
@@ -360,16 +360,16 @@ void main() {
         enableLoadingWhenFailed: false,
       ));
 
-      _refreshController.position
-          .jumpTo(_refreshController.position.maxScrollExtent - 100);
+      _refreshController.position!
+          .jumpTo(_refreshController.position!.maxScrollExtent - 100);
       await tester.drag(find.byType(Scrollable), const Offset(0, -150.0));
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 20));
       }
       expect(time, 1);
 
-      _refreshController.position
-          .jumpTo(_refreshController.position.maxScrollExtent - 100);
+      _refreshController.position!
+          .jumpTo(_refreshController.position!.maxScrollExtent - 100);
       await tester.fling(find.byType(Scrollable), const Offset(0, -80.0), 1000);
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 1));
@@ -402,16 +402,16 @@ void main() {
         ),
       ));
 
-      _refreshController.position
-          .jumpTo(_refreshController.position.maxScrollExtent - 100);
+      _refreshController.position!
+          .jumpTo(_refreshController.position!.maxScrollExtent - 100);
       await tester.drag(find.byType(Scrollable), const Offset(0, -150.0));
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 20));
       }
       expect(time, 1);
 
-      _refreshController.position
-          .jumpTo(_refreshController.position.maxScrollExtent - 100);
+      _refreshController.position!
+          .jumpTo(_refreshController.position!.maxScrollExtent - 100);
       await tester.fling(find.byType(Scrollable), const Offset(0, -80.0), 1000);
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 1));
@@ -448,8 +448,8 @@ void main() {
         ),
       ));
 
-      _refreshController.position
-          .jumpTo(_refreshController.position.maxScrollExtent - 100);
+      _refreshController.position!
+          .jumpTo(_refreshController.position!.maxScrollExtent - 100);
       await tester.drag(find.byType(Scrollable), const Offset(0, -150.0));
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 20));
@@ -483,18 +483,18 @@ void main() {
       ),
     ));
 
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent);
     await tester.drag(find.byType(Scrollable), const Offset(0, -150.0));
     expect(_refreshController.footerStatus, LoadStatus.idle);
     await tester.pumpAndSettle(Duration(milliseconds: 500));
     expect(_refreshController.footerStatus, LoadStatus.idle);
 
     _refreshController.footerMode.value = LoadStatus.failed;
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent - 30.0);
-    expect(_refreshController.position.pixels,
-        _refreshController.position.maxScrollExtent - 30.0);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent - 30.0);
+    expect(_refreshController.position!.pixels,
+        _refreshController.position!.maxScrollExtent - 30.0);
     expect(_refreshController.footerStatus, LoadStatus.failed);
     await tester.pump();
     await tester.drag(find.byType(Scrollable), const Offset(0, -100.0));
@@ -526,19 +526,19 @@ void main() {
     ));
 
     _refreshController.footerMode.value = LoadStatus.failed;
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent - 30.0);
-    expect(_refreshController.position.pixels,
-        _refreshController.position.maxScrollExtent - 30.0);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent - 30.0);
+    expect(_refreshController.position!.pixels,
+        _refreshController.position!.maxScrollExtent - 30.0);
     await tester.drag(find.byType(Scrollable), const Offset(0, -100.0));
     await tester.pumpAndSettle(Duration(milliseconds: 500));
     expect(_refreshController.footerStatus, LoadStatus.loading);
 
     _refreshController.loadComplete();
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent - 30.0);
-    expect(_refreshController.position.pixels,
-        _refreshController.position.maxScrollExtent - 30.0);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent - 30.0);
+    expect(_refreshController.position!.pixels,
+        _refreshController.position!.maxScrollExtent - 30.0);
     await tester.pumpAndSettle();
     expect(_refreshController.footerStatus, LoadStatus.idle);
     await tester.drag(find.byType(Scrollable), const Offset(0, -100.0));
@@ -570,16 +570,16 @@ void main() {
       ),
     ));
 
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent - 30.0);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent - 30.0);
     await tester.drag(find.byType(Scrollable), const Offset(0, -80.0));
     await tester.pump();
     await tester.pumpAndSettle(Duration(milliseconds: 2));
     expect(_refreshController.footerStatus, LoadStatus.loading);
 
     _refreshController.footerMode.value = LoadStatus.idle;
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent - 30.0);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent - 30.0);
     await tester.drag(find.byType(Scrollable), const Offset(0, -59.0));
     await tester.pumpAndSettle();
     expect(_refreshController.footerStatus, LoadStatus.idle);
@@ -610,7 +610,7 @@ void main() {
     ));
     await tester.drag(find.byType(Scrollable), const Offset(0, -200.0));
     await tester.pump();
-    expect(_refreshController.position.pixels, 0);
+    expect(_refreshController.position!.pixels, 0);
     await tester.pumpAndSettle();
     await tester.pumpWidget(RefreshConfiguration(
       maxUnderScrollExtent: 0,
@@ -636,7 +636,7 @@ void main() {
     ));
     await tester.drag(find.byType(Scrollable), const Offset(0, -200.0));
     await tester.pump();
-    expect(_refreshController.position.pixels, 0);
+    expect(_refreshController.position!.pixels, 0);
     await tester.pumpAndSettle();
 
     _refreshController.loadNoData();
@@ -664,6 +664,6 @@ void main() {
     ));
     await tester.drag(find.byType(Scrollable), const Offset(0, -200.0));
     await tester.pumpAndSettle();
-    expect(_refreshController.position.pixels, 0);
+    expect(_refreshController.position!.pixels, 0);
   });
 }

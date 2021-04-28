@@ -40,37 +40,37 @@ void main() {
       await tester.fling(find.byType(Viewport), const Offset(0, 100), 5200);
       while (tester.binding.transientCallbackCount > 0) {
         expect(
-            _refreshController.position.pixels, greaterThanOrEqualTo(-250.0));
+            _refreshController.position!.pixels, greaterThanOrEqualTo(-250.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
 
       // from bottom flip up
-      _refreshController.position
-          .jumpTo(_refreshController.position.maxScrollExtent);
+      _refreshController.position!
+          .jumpTo(_refreshController.position!.maxScrollExtent);
       await tester.fling(find.byType(Viewport), const Offset(0, 1000), 5200);
       while (tester.binding.transientCallbackCount > 0) {
         expect(
-            _refreshController.position.pixels, greaterThanOrEqualTo(-250.0));
+            _refreshController.position!.pixels, greaterThanOrEqualTo(-250.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
 
       await tester.fling(find.byType(Viewport), const Offset(0, -100), 5200);
       while (tester.binding.transientCallbackCount > 0) {
         expect(
-            _refreshController.position.pixels -
-                _refreshController.position.maxScrollExtent,
+            _refreshController.position!.pixels -
+                _refreshController.position!.maxScrollExtent,
             lessThanOrEqualTo(250.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
 
       // from bottom flip up
-      _refreshController.position
-          .jumpTo(_refreshController.position.maxScrollExtent);
+      _refreshController.position!
+          .jumpTo(_refreshController.position!.maxScrollExtent);
       await tester.fling(find.byType(Viewport), const Offset(0, -43000), 5200);
       while (tester.binding.transientCallbackCount > 0) {
         expect(
-            _refreshController.position.pixels -
-                _refreshController.position.maxScrollExtent,
+            _refreshController.position!.pixels -
+                _refreshController.position!.maxScrollExtent,
             lessThanOrEqualTo(250.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
@@ -96,12 +96,12 @@ void main() {
         ),
       ));
 
-      _refreshController.position.jumpTo(-100.0);
-      expect(_refreshController.position.pixels, -100.0);
+      _refreshController.position!.jumpTo(-100.0);
+      expect(_refreshController.position!.pixels, -100.0);
       while (tester.binding.transientCallbackCount > 0) {
         await tester.pump(const Duration(milliseconds: 20));
       }
-      expect(_refreshController.position.pixels, 0.0);
+      expect(_refreshController.position!.pixels, 0.0);
     });
 
     testWidgets("When clamping,enablePullDown = false,it shouldn't overscroll",
@@ -127,25 +127,25 @@ void main() {
 
       await tester.fling(find.byType(Viewport), Offset(0, 100.0), 1000);
       while (tester.binding.transientCallbackCount > 0) {
-        expect(_refreshController.position.pixels, 0.0);
+        expect(_refreshController.position!.pixels, 0.0);
         await tester.pump(const Duration(milliseconds: 20));
       }
-      expect(_refreshController.position.pixels, 0.0);
+      expect(_refreshController.position!.pixels, 0.0);
 
       // just little middle
-      _refreshController.position.jumpTo(200.0);
+      _refreshController.position!.jumpTo(200.0);
       await tester.fling(find.byType(Viewport), Offset(0, 100.0), 1000);
       while (tester.binding.transientCallbackCount > 0) {
-        expect(_refreshController.position.pixels, greaterThanOrEqualTo(0.0));
+        expect(_refreshController.position!.pixels, greaterThanOrEqualTo(0.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
 
       // the most doubt stiuation,from bottomest fliping to top
-      _refreshController.position
-          .jumpTo(_refreshController.position.maxScrollExtent);
+      _refreshController.position!
+          .jumpTo(_refreshController.position!.maxScrollExtent);
       await tester.fling(find.byType(Viewport), Offset(0, 1000.0), 5000);
       while (tester.binding.transientCallbackCount > 0) {
-        expect(_refreshController.position.pixels, greaterThanOrEqualTo(0.0));
+        expect(_refreshController.position!.pixels, greaterThanOrEqualTo(0.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
     });
@@ -178,18 +178,18 @@ void main() {
 
     await tester.drag(find.byType(Viewport), Offset(0, 300.0));
     while (tester.binding.transientCallbackCount > 0) {
-      expect(_refreshController.position.pixels, greaterThanOrEqualTo(-300));
+      expect(_refreshController.position!.pixels, greaterThanOrEqualTo(-300));
       await tester.pump(const Duration(milliseconds: 20));
     }
-    expect(_refreshController.position.pixels, 0.0);
+    expect(_refreshController.position!.pixels, 0.0);
 
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent);
     await tester.fling(find.byType(Viewport), Offset(0, -1000.0), 5000);
     while (tester.binding.transientCallbackCount > 0) {
       expect(
-          _refreshController.position.pixels -
-              _refreshController.position.maxScrollExtent,
+          _refreshController.position!.pixels -
+              _refreshController.position!.maxScrollExtent,
           lessThanOrEqualTo(300.0));
       await tester.pump(const Duration(milliseconds: 20));
     }
@@ -218,7 +218,7 @@ void main() {
       ),
     ));
     expect(
-        (refreshController.position.physics as RefreshPhysics).updateFlag, 1);
+        (refreshController.position!.physics as RefreshPhysics).updateFlag, 1);
     await tester.pumpWidget(MaterialApp(
       home: RefreshConfiguration(
         child: SmartRefresher(
@@ -240,9 +240,9 @@ void main() {
       ),
     ));
     expect(
-        (refreshController.position.physics as RefreshPhysics).updateFlag, 0);
+        (refreshController.position!.physics as RefreshPhysics).updateFlag, 0);
     expect(
-        (refreshController.position.physics as RefreshPhysics)
+        (refreshController.position!.physics as RefreshPhysics)
             .maxOverScrollExtent,
         150);
 
@@ -267,7 +267,7 @@ void main() {
       ),
     ));
     expect(
-        (refreshController.position.physics as RefreshPhysics).updateFlag, 1);
+        (refreshController.position!.physics as RefreshPhysics).updateFlag, 1);
     await tester.pumpWidget(MaterialApp(
       home: RefreshConfiguration(
         child: SmartRefresher(
@@ -289,7 +289,7 @@ void main() {
       ),
     ));
     expect(
-        (refreshController.position.physics as RefreshPhysics).updateFlag, 1);
+        (refreshController.position!.physics as RefreshPhysics).updateFlag, 1);
   });
 
   testWidgets("when viewport not full, pull up can trigger loading",
@@ -322,7 +322,7 @@ void main() {
     await tester.drag(find.byType(Scrollable), const Offset(0, -70.0));
     await tester.pumpAndSettle(Duration(milliseconds: 2));
     expect(_refreshController.footerStatus, LoadStatus.loading);
-    expect(_refreshController.position.pixels, greaterThanOrEqualTo(0.0));
+    expect(_refreshController.position!.pixels, greaterThanOrEqualTo(0.0));
 
     await tester.pumpWidget(Directionality(
       textDirection: TextDirection.ltr,
@@ -351,6 +351,6 @@ void main() {
     await tester.drag(find.byType(Scrollable), const Offset(0, -70.0));
     await tester.pumpAndSettle(Duration(milliseconds: 2));
     expect(_refreshController.footerStatus, LoadStatus.loading);
-    expect(_refreshController.position.pixels, greaterThanOrEqualTo(0.0));
+    expect(_refreshController.position!.pixels, greaterThanOrEqualTo(0.0));
   });
 }
