@@ -297,12 +297,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
             .whenComplete(() {
           mode = RefreshStatus.twoLeveling;
         });
-        if (refresher!.onTwoLevel != null) refresher!.onTwoLevel!();
+        if (refresher!.onTwoLevel != null) refresher!.onTwoLevel!(true);
       });
     } else if (mode == RefreshStatus.twoLevelClosing) {
       floating = false;
       refresherState!.setCanDrag(false);
       update();
+      if (refresher!.onTwoLevel != null) refresher!.onTwoLevel!(false);
     } else if (mode == RefreshStatus.twoLeveling) {
       refresherState!.setCanDrag(configuration!.enableScrollWhenTwoLevel);
     }

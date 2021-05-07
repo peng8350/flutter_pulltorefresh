@@ -19,6 +19,8 @@ import 'indicator/material_indicator.dart';
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
 // ignore_for_file: DEPRECATED_MEMBER_USE
 
+/// when viewport not full one page, for different state,whether it should follow the content
+typedef void OnTwoLevel(bool isOpen);
 
 /// when viewport not full one page, for different state,whether it should follow the content
 typedef bool ShouldFollowContent(LoadStatus? status);
@@ -165,7 +167,7 @@ class SmartRefresher extends StatefulWidget {
   /// callback when header ready to twoLevel
   ///
   /// If you want to close twoLevel,you should use [RefreshController.closeTwoLevel]
-  final VoidCallback? onTwoLevel;
+  final OnTwoLevel? onTwoLevel;
 
   /// Controll inner state
   final RefreshController controller;

@@ -129,7 +129,9 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                       await Future.delayed(Duration(milliseconds: 2000));
                       _refreshController1.refreshCompleted();
                     },
-                    onTwoLevel: () {},
+                    onTwoLevel: (bool isOpen) {
+                      print("twoLevel opening:"+isOpen.toString());
+                    },
                   );
                 },
               ),
@@ -161,19 +163,21 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                   await Future.delayed(Duration(milliseconds: 2000));
                   _refreshController2.refreshCompleted();
                 },
-                onTwoLevel: () {
-                  print("Asd");
-                  _refreshController2.position.hold(() {});
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(
-                          builder: (c) => Scaffold(
-                                appBar: AppBar(),
-                                body: Text("二楼刷新"),
-                              )))
-                      .whenComplete(() {
-                    _refreshController2.twoLevelComplete(
-                        duration: Duration(microseconds: 1));
-                  });
+                onTwoLevel: (bool isOpen) {
+                  if(isOpen){
+                    print("Asd");
+                    _refreshController2.position.hold(() {});
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                        builder: (c) => Scaffold(
+                          appBar: AppBar(),
+                          body: Text("二楼刷新"),
+                        )))
+                        .whenComplete(() {
+                      _refreshController2.twoLevelComplete(
+                          duration: Duration(microseconds: 1));
+                    });
+                  }
                 },
               ),
             )
