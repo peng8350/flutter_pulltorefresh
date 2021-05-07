@@ -94,7 +94,6 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
       onRefresh: _onRefresh,
       header: MaterialClassicHeader(),
       onLoading: _onLoading,
-      onOffsetChange: _onOffsetCallback,
       child: GridView.builder(
         primary: false,
         gridDelegate:

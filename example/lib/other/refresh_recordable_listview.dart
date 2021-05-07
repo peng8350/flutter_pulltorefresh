@@ -58,7 +58,6 @@ class RefreshReorderableListView extends StatefulWidget {
 
   final Function onRefresh, onLoading;
 
-  final Function onOffsetChange;
 
   final RefreshController refreshController;
 
@@ -77,7 +76,6 @@ class RefreshReorderableListView extends StatefulWidget {
     this.enablePullUp: false,
     this.onRefresh,
     this.onLoading,
-    this.onOffsetChange,
   })  : assert(scrollDirection != null),
         assert(onReorder != null),
         assert(children != null),
@@ -162,7 +160,6 @@ class _ReorderableListViewState extends State<RefreshReorderableListView> {
           enablePullUp: widget.enablePullUp,
           refreshFooter: widget.refreshFooter,
           refreshHeader: widget.refreshHeader,
-          onOffsetChange: widget.onOffsetChange,
           onLoading: widget.onLoading,
           onRefresh: widget.onRefresh,
         );
@@ -647,7 +644,6 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
         enablePullUp: widget.enablePullUp,
         footer: widget.refreshFooter,
         header: widget.refreshHeader,
-        onOffsetChange: widget.onOffsetChange,
         onLoading: widget.onLoading,
         onRefresh: widget.onRefresh,
       );

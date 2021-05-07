@@ -615,9 +615,6 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
     if (overscrollPast < 0.0) {
       return;
     }
-    if (refresher!.onOffsetChange != null) {
-      refresher!.onOffsetChange!(V == RefreshStatus, overscrollPast);
-    }
     _dispatchModeByOffset(overscrollPast);
   }
 

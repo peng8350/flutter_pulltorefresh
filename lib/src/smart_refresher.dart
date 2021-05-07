@@ -19,10 +19,6 @@ import 'indicator/material_indicator.dart';
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
 // ignore_for_file: DEPRECATED_MEMBER_USE
 
-/// callback when the indicator scroll out of edge
-/// up: indicate header or footer callback
-/// offset: the distance of indicator out of edge
-typedef void OnOffsetChange(bool up, double offset);
 
 /// when viewport not full one page, for different state,whether it should follow the content
 typedef bool ShouldFollowContent(LoadStatus? status);
@@ -171,9 +167,6 @@ class SmartRefresher extends StatefulWidget {
   /// If you want to close twoLevel,you should use [RefreshController.closeTwoLevel]
   final VoidCallback? onTwoLevel;
 
-  /// callback when the indicator scroll out of edge
-  final OnOffsetChange? onOffsetChange;
-
   /// Controll inner state
   final RefreshController controller;
 
@@ -224,7 +217,6 @@ class SmartRefresher extends StatefulWidget {
       this.onRefresh,
       this.onLoading,
       this.onTwoLevel,
-      this.onOffsetChange,
       this.dragStartBehavior,
       this.primary,
       this.cacheExtent,
@@ -253,7 +245,7 @@ class SmartRefresher extends StatefulWidget {
       this.onRefresh,
       this.onLoading,
       this.onTwoLevel,
-      this.onOffsetChange})
+      })
       : header = null,
         footer = null,
         child = null,
@@ -411,14 +403,7 @@ class SmartRefresherState extends State<SmartRefresher> {
         clipBehavior = clipBehavior ?? childView.clipBehavior;
         scrollController = scrollController ?? childView.controller;
 
-        // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
-        widget.controller.scrollController = scrollController ??
-            childView.controller ??
-            (childView.primary ? PrimaryScrollController.of(context) : null);
-      } else {
-        // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
-        widget.controller.scrollController =
-            PrimaryScrollController.of(context);
+
       }
       body = CustomScrollView(
         // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
@@ -583,11 +568,6 @@ class RefreshController {
   /// notice that: position is null before build,
   /// the value is get when the header or footer callback onPositionUpdated
   ScrollPosition? position;
-
-  /// deprecated member,not suggest to use it,it contain share position bug
-  @Deprecated(
-      'advice set ScrollController to child,use it directly will cause bug when call jumpTo() and animateTo()')
-  ScrollController? scrollController;
 
   RefreshStatus? get headerStatus => headerMode?.value;
 
