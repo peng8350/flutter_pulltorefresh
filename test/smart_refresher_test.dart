@@ -326,7 +326,6 @@ void main() {
       dragSpeedRatio: 0.8,
       closeTwoLevelDistance: 100,
       footerTriggerDistance: 150,
-      autoLoad: false,
       enableScrollWhenRefreshCompleted: true,
       child: Builder(
         builder: (c1) {

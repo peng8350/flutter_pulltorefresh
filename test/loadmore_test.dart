@@ -458,9 +458,10 @@ void main() {
     });
   });
 
-  testWidgets("when autoLoad = false or enableLoadingWhenFailed = true",
+  testWidgets("when enableLoadingWhenFailed = true",
       (tester) async {
-    final RefreshController _refreshController = RefreshController();
+
+    RefreshController _refreshController  = RefreshController();
     await tester.pumpWidget(Directionality(
       textDirection: TextDirection.ltr,
       child: RefreshConfiguration(
@@ -478,49 +479,7 @@ void main() {
           ),
           controller: _refreshController,
         ),
-        autoLoad: false,
-        enableLoadingWhenFailed: false,
-      ),
-    ));
 
-    _refreshController.position!
-        .jumpTo(_refreshController.position!.maxScrollExtent);
-    await tester.drag(find.byType(Scrollable), const Offset(0, -150.0));
-    expect(_refreshController.footerStatus, LoadStatus.idle);
-    await tester.pumpAndSettle(Duration(milliseconds: 500));
-    expect(_refreshController.footerStatus, LoadStatus.idle);
-
-    _refreshController.footerMode!.value = LoadStatus.failed;
-    _refreshController.position!
-        .jumpTo(_refreshController.position!.maxScrollExtent - 30.0);
-    expect(_refreshController.position!.pixels,
-        _refreshController.position!.maxScrollExtent - 30.0);
-    expect(_refreshController.footerStatus, LoadStatus.failed);
-    await tester.pump();
-    await tester.drag(find.byType(Scrollable), const Offset(0, -100.0));
-    await tester.pump();
-    expect(_refreshController.footerStatus, LoadStatus.failed);
-    await tester.pumpAndSettle(Duration(milliseconds: 200));
-    expect(_refreshController.footerStatus, LoadStatus.failed);
-
-    await tester.pumpWidget(Directionality(
-      textDirection: TextDirection.ltr,
-      child: RefreshConfiguration(
-        child: SmartRefresher(
-          header: TestHeader(),
-          footer: TestFooter(),
-          enablePullUp: true,
-          enablePullDown: true,
-          child: ListView.builder(
-            itemBuilder: (c, i) => Center(
-              child: Text(data[i]),
-            ),
-            itemCount: 20,
-            itemExtent: 100,
-          ),
-          controller: _refreshController,
-        ),
-        autoLoad: true,
         enableLoadingWhenFailed: true,
       ),
     ));

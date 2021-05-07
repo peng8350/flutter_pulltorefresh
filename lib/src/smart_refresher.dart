@@ -858,9 +858,6 @@ class RefreshConfiguration extends InheritedWidget {
   /// when listView data small(not enough one page) , it should be hide
   final bool hideFooterWhenNotFull;
 
-  /// whether footer can trigger load by reaching footerDistance when idle
-  final bool autoLoad;
-
   /// whether user can drag viewport when twoLeveling
   final bool enableScrollWhenTwoLevel;
 
@@ -932,7 +929,6 @@ class RefreshConfiguration extends InheritedWidget {
       this.twiceTriggerDistance: 150.0,
       this.closeTwoLevelDistance: 80.0,
       this.skipCanRefresh: false,
-      this.autoLoad: true,
       this.maxOverScrollExtent,
       this.enableBallisticLoad: true,
       this.maxUnderScrollExtent,
@@ -971,7 +967,6 @@ class RefreshConfiguration extends InheritedWidget {
     double? twiceTriggerDistance,
     double? closeTwoLevelDistance,
     bool? skipCanRefresh,
-    bool? autoLoad,
     double? maxOverScrollExtent,
     double? maxUnderScrollExtent,
     double? topHitBoundary,
@@ -983,7 +978,6 @@ class RefreshConfiguration extends InheritedWidget {
     bool? hideFooterWhenNotFull,
   })  : assert(RefreshConfiguration.of(context) != null,
             "search RefreshConfiguration anscestor return null,please  Make sure that RefreshConfiguration is the ancestor of that element"),
-        autoLoad = autoLoad ?? RefreshConfiguration.of(context)!.autoLoad,
         headerBuilder =
             headerBuilder ?? RefreshConfiguration.of(context)!.headerBuilder,
         footerBuilder =
@@ -1038,7 +1032,7 @@ class RefreshConfiguration extends InheritedWidget {
 
   @override
   bool updateShouldNotify(RefreshConfiguration oldWidget) {
-    return autoLoad != oldWidget.autoLoad ||
+    return
         skipCanRefresh != oldWidget.skipCanRefresh ||
         hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||
         dragSpeedRatio != oldWidget.dragSpeedRatio ||

@@ -405,9 +405,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             configuration!.footerTriggerDistance &&
         _position!.extentBefore > 2.0 &&
         _enableLoading) {
-      if (!configuration!.autoLoad && mode == LoadStatus.idle) {
-        return false;
-      }
       if (!configuration!.enableLoadingWhenFailed &&
           mode == LoadStatus.failed) {
         return false;
@@ -558,10 +555,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             return GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                if ((mode == LoadStatus.idle && !configuration!.autoLoad) ||
-                    (_mode!.value == LoadStatus.failed)) {
-                  enterLoading();
-                }
                 if (widget.onClick != null) {
                   widget.onClick!();
                 }
