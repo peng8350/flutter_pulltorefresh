@@ -1,3 +1,21 @@
+## 2.0.0
+### Breaking Changes:
+* Remove onOffsetChange in SmartRefresher,autoLoad in RefreshConfiguration,scrollController in RefreshController
+* add argument to onTwoLevel(callback when closed)
+
+### features
+* migrate null-safety
+* add needCallback in requestRefresh and requestLoading for avoiding the callback of onRefresh or onLoading
+
+### Bug fix
+* In NestedScrollView+ClampingScrollPhysics(Android ScrollBehaviour),header can be seen when fling to top.
+* unMounted widget used crash error when fast rebuild in requestRefresh
+
+### Other
+* Add assert to avoid invalid usage
+
+
+
 ## 1.6.5
 * fix check full page logic.
 * fix crash "locking up a deactive widget is unsafe".

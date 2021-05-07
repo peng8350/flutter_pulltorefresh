@@ -334,12 +334,12 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
       ),
       height: 100.0,
     );
-  }}
+  }
+}
 
 class _WaterPainter extends CustomPainter {
   final Color? color;
   final Animation<Offset>? listener;
-
 
   Offset get offset => listener!.value;
   final double? ratio;

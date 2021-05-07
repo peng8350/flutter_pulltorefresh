@@ -217,9 +217,6 @@ void main() {
       count++;
       await tester.pump(Duration(milliseconds: 20));
     }
-
-
-
   });
 
   testWidgets(" verity smartRefresher and NestedScrollView", (tester) async {

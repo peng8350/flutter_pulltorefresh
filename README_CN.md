@@ -12,9 +12,6 @@
 ## 介绍
 一个提供上拉加载和下拉刷新的组件,同时支持Android和Ios<br>
 
-[下载Demo(Android)](demo.apk):
-
-![二维码](arts/qr_code.png)
 
 
 ## 特性

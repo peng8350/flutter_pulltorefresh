@@ -1,5 +1,5 @@
 /*
-    Author: Jpeng
+    Author: JPeng
     Email: peng8350@gmail.com
     createTime:2018-05-14 15:39
  */
@@ -247,8 +247,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         if (!mounted) return;
         floating = false;
         if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
-          refresherState
-              !.setCanDrag(configuration!.enableScrollWhenRefreshCompleted);
+          refresherState!
+              .setCanDrag(configuration!.enableScrollWhenRefreshCompleted);
         }
         update();
         /*
@@ -576,8 +576,6 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   RefreshConfiguration? configuration;
   SmartRefresherState? refresherState;
 
-
-
   bool _floating = false;
 
   set floating(floating) => _floating = floating;
@@ -592,7 +590,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   ScrollActivity? get activity => _position!.activity;
 
-  // it doesn't support get the ScrollController as the listener, because it will cause "multiple scrollview use one ScollController"
+  // it doesn't support get the ScrollController as the listener, because it will cause "multiple scrollview use one ScrollController"
   // error,only replace the ScrollPosition to listen the offset
   ScrollPosition? _position;
 

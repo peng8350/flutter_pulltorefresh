@@ -75,48 +75,42 @@ void testRequestFun(bool full) {
     expect(_refreshController.headerStatus, RefreshStatus.idle);
   });
 
-  testWidgets("requestRefresh needCallBack test",
-          (tester) async {
-        final RefreshController _refreshController =
+  testWidgets("requestRefresh needCallBack test", (tester) async {
+    final RefreshController _refreshController =
         RefreshController(initialRefresh: false);
-        int timerr = 0;
-        await tester
-            .pumpWidget(Directionality(
-          textDirection: TextDirection.ltr,
-          child: Container(
-            width: 375.0,
-            height: 690.0,
-            child: SmartRefresher(
-              header: TestHeader(),
-              footer: TestFooter(),
-              enablePullDown: true,
-              enablePullUp: true,
-              onRefresh: (){
-                timerr++;
-
-              },
-              onLoading: (){
-                timerr++;
-
-              },
-              child: ListView.builder(
-                itemBuilder: (c, i) => Text(data[i]),
-                itemCount: 20,
-                itemExtent: 100,
-              ),
-              controller: _refreshController,
-            ),
+    int timerr = 0;
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: 375.0,
+        height: 690.0,
+        child: SmartRefresher(
+          header: TestHeader(),
+          footer: TestFooter(),
+          enablePullDown: true,
+          enablePullUp: true,
+          onRefresh: () {
+            timerr++;
+          },
+          onLoading: () {
+            timerr++;
+          },
+          child: ListView.builder(
+            itemBuilder: (c, i) => Text(data[i]),
+            itemCount: 20,
+            itemExtent: 100,
           ),
-        ));
-        _refreshController.requestRefresh(needCallback: false);
-        await tester.pumpAndSettle();
-        expect(timerr, 0);
+          controller: _refreshController,
+        ),
+      ),
+    ));
+    _refreshController.requestRefresh(needCallback: false);
+    await tester.pumpAndSettle();
+    expect(timerr, 0);
 
-        _refreshController.requestLoading(needCallback: false);
-        await tester.pumpAndSettle();
-         expect(timerr, 0);
-
-
+    _refreshController.requestLoading(needCallback: false);
+    await tester.pumpAndSettle();
+    expect(timerr, 0);
   });
 }
 

@@ -458,10 +458,8 @@ void main() {
     });
   });
 
-  testWidgets("when enableLoadingWhenFailed = true",
-      (tester) async {
-
-    RefreshController _refreshController  = RefreshController();
+  testWidgets("when enableLoadingWhenFailed = true", (tester) async {
+    RefreshController _refreshController = RefreshController();
     await tester.pumpWidget(Directionality(
       textDirection: TextDirection.ltr,
       child: RefreshConfiguration(
@@ -479,7 +477,6 @@ void main() {
           ),
           controller: _refreshController,
         ),
-
         enableLoadingWhenFailed: true,
       ),
     ));

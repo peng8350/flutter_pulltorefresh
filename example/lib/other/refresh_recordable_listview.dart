@@ -58,7 +58,6 @@ class RefreshReorderableListView extends StatefulWidget {
 
   final Function onRefresh, onLoading;
 
-
   final RefreshController refreshController;
 
   /// Creates a reorderable list.

@@ -25,8 +25,9 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
       children: <Widget>[
         FlatButton(
             onPressed: () {
-
-              _refreshController.requestRefresh(needCallback: false).then((value) async {
+              _refreshController
+                  .requestRefresh(needCallback: false)
+                  .then((value) async {
                 print("requestRefresh");
                 await Future.delayed(const Duration(milliseconds: 5000));
                 _refreshController.refreshCompleted();
@@ -35,7 +36,9 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
             child: Text("请求刷新")),
         FlatButton(
             onPressed: () {
-              _refreshController.requestLoading(needCallback: false).then((value) async {
+              _refreshController
+                  .requestLoading(needCallback: false)
+                  .then((value) async {
                 print("requestLoading");
                 await Future.delayed(const Duration(milliseconds: 5000));
                 _refreshController.loadComplete();

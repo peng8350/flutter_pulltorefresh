@@ -130,7 +130,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                       _refreshController1.refreshCompleted();
                     },
                     onTwoLevel: (bool isOpen) {
-                      print("twoLevel opening:"+isOpen.toString());
+                      print("twoLevel opening:" + isOpen.toString());
                     },
                   );
                 },
@@ -164,15 +164,15 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                   _refreshController2.refreshCompleted();
                 },
                 onTwoLevel: (bool isOpen) {
-                  if(isOpen){
+                  if (isOpen) {
                     print("Asd");
                     _refreshController2.position.hold(() {});
                     Navigator.of(context)
                         .push(MaterialPageRoute(
-                        builder: (c) => Scaffold(
-                          appBar: AppBar(),
-                          body: Text("二楼刷新"),
-                        )))
+                            builder: (c) => Scaffold(
+                                  appBar: AppBar(),
+                                  body: Text("二楼刷新"),
+                                )))
                         .whenComplete(() {
                       _refreshController2.twoLevelComplete(
                           duration: Duration(microseconds: 1));
