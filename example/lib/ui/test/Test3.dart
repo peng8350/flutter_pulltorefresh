@@ -25,12 +25,21 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
       children: <Widget>[
         FlatButton(
             onPressed: () {
-              _refreshController.requestRefresh();
+
+              _refreshController.requestRefresh(needCallback: false).then((value) async {
+                print("requestRefresh");
+                await Future.delayed(const Duration(milliseconds: 5000));
+                _refreshController.refreshCompleted();
+              });
             },
             child: Text("请求刷新")),
         FlatButton(
             onPressed: () {
-              _refreshController.requestLoading();
+              _refreshController.requestLoading(needCallback: false).then((value) async {
+                print("requestLoading");
+                await Future.delayed(const Duration(milliseconds: 5000));
+                _refreshController.loadComplete();
+              });
             },
             child: Text("请求加载数据"))
       ],
@@ -167,7 +176,7 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
           slivers: <Widget>[
             SliverFillViewport(
                 delegate: SliverChildListDelegate(
-                    [Text("第一页"), Text("第一页"), Text("第一页"), Text("第一页")]))
+                    [data[0], data[1], Text("第一页"), Text("第一页")]))
           ],
           physics: PageScrollPhysics(),
         ),

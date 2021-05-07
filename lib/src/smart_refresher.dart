@@ -561,10 +561,10 @@ class RefreshController {
   SmartRefresherState? _refresherState;
 
   /// header status mode controll
-  ValueNotifier<RefreshStatus>? headerMode;
+  RefreshNotifier<RefreshStatus>? headerMode;
 
   /// footer status mode controll
-  ValueNotifier<LoadStatus>? footerMode;
+  RefreshNotifier<LoadStatus>? footerMode;
 
   /// the scrollable inner's position
   ///
@@ -596,8 +596,8 @@ class RefreshController {
       {this.initialRefresh: false,
       RefreshStatus? initialRefreshStatus,
       LoadStatus? initialLoadStatus}) {
-    this.headerMode = ValueNotifier(initialRefreshStatus ?? RefreshStatus.idle);
-    this.footerMode = ValueNotifier(initialLoadStatus ?? LoadStatus.idle);
+    this.headerMode = RefreshNotifier(initialRefreshStatus ?? RefreshStatus.idle);
+    this.footerMode = RefreshNotifier(initialLoadStatus ?? LoadStatus.idle);
   }
 
   void _bindState(SmartRefresherState state){
@@ -647,6 +647,7 @@ class RefreshController {
   /// make the header enter refreshing state,and callback onRefresh
   Future<void>? requestRefresh(
       {bool needMove: true,
+      bool needCallback:true,
       Duration duration: const Duration(milliseconds: 500),
       Curve curve: Curves.linear}) {
     assert(position != null,
@@ -661,29 +662,38 @@ class RefreshController {
     if (needMove&&   _refresherState!.mounted)
       _refresherState
           !.setCanDrag(false);
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      if (needMove) {
-        Future.delayed(const Duration(milliseconds: 50)).then((_) async {
-          // - 0.0001 is for NestedScrollView.
-          await position
-              ?.animateTo(position!.minScrollExtent - 0.0001,
-                  duration: duration, curve: curve)
-              .then((_) {
+    if (needMove) {
+      return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
+        // - 0.0001 is for NestedScrollView.
+        await position
+            ?.animateTo(position!.minScrollExtent - 0.0001,
+            duration: duration, curve: curve)
+            .then((_) {
 
           if(_refresherState!=null&&_refresherState!.mounted){
+
             _refresherState!.setCanDrag(true);
-            headerMode!.value = RefreshStatus.refreshing;
+            if(needCallback){
+              headerMode!.value = RefreshStatus.refreshing;
+            }
+            else{
+              headerMode!.setValueWithNoNotify(RefreshStatus.refreshing);
+              if(indicatorElement.state.mounted)
+                (indicatorElement.state as RefreshIndicatorState).setState(() {
+
+                });
+            }
+
           }
 
-          });
         });
-      } else {
-        Future.value().then((_) {
-          headerMode!.value = RefreshStatus.refreshing;
-        });
-      }
-    });
-    return Future.value();
+      });
+    } else {
+      Future.value().then((_) {
+        headerMode!.value = RefreshStatus.refreshing;
+      });
+    }
+
   }
 
   /// make the header enter refreshing state,and callback onRefresh
@@ -702,6 +712,7 @@ class RefreshController {
   /// make the footer enter loading state,and callback onLoading
   Future<void>? requestLoading(
       {bool needMove: true,
+        bool needCallback:true,
       Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
     assert(position != null,
@@ -724,7 +735,16 @@ class RefreshController {
 
                 if(_refresherState!=null&&_refresherState!.mounted){
                   _refresherState!.setCanDrag(true);
-                  footerMode!.value = LoadStatus.loading;
+                  if(needCallback){
+                    footerMode!.value = LoadStatus.loading;
+                  }
+                  else{
+                    footerMode!.setValueWithNoNotify(LoadStatus.loading);
+                    if(indicatorElement.state.mounted)
+                      (indicatorElement.state as LoadIndicatorState).setState(() {
+
+                      });
+                  }
                 }
 
         });
@@ -1039,4 +1059,29 @@ class RefreshConfiguration extends InheritedWidget {
         enableLoadMoreVibrate != oldWidget.enableLoadMoreVibrate ||
         bottomHitBoundary != oldWidget.bottomHitBoundary;
   }
+}
+
+class RefreshNotifier<T> extends ChangeNotifier implements ValueListenable<T> {
+  /// Creates a [ChangeNotifier] that wraps this value.
+  RefreshNotifier(this._value);
+  T _value;
+
+  @override
+  T get value => _value;
+
+  set value(T newValue) {
+    if (_value == newValue)
+      return;
+    _value = newValue;
+    notifyListeners();
+  }
+
+  void setValueWithNoNotify(T newValue){
+    if (_value == newValue)
+      return;
+    _value = newValue;
+  }
+
+  @override
+  String toString() => '${describeIdentity(this)}($value)';
 }
