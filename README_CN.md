@@ -33,9 +33,8 @@
 
    dependencies:
 
-    pull_to_refresh: ^1.6.5
-    # null-safety version
-    # pull_to_refresh: 1.6.4-nullsafety.0 
+    pull_to_refresh: ^2.0.0
+
 
 ```
 

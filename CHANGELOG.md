@@ -5,11 +5,12 @@
 
 ### features
 * migrate null-safety
-* add needCallback in requestRefresh and requestLoading for avoiding the callback of onRefresh or onLoading
+* add needCallback in requestRefresh and requestLoading for avflutoiding the callback of onRefresh or onLoading
 
 ### Bug fix
 * In NestedScrollView+ClampingScrollPhysics(Android ScrollBehaviour),header can be seen when fling to top.
 * unMounted widget used crash error when fast rebuild in requestRefresh
+* fix sliverRefreshBody layoutSize instead of -0.001,it will crash error when viewportMainAxis=0
 
 ### Other
 * Add assert to avoid invalid usage
