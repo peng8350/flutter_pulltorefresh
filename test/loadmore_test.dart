@@ -609,9 +609,11 @@ void main() {
       ),
     ));
     await tester.drag(find.byType(Scrollable), const Offset(0, -200.0));
-    await tester.pump();
+    await tester.pumpWidget(Container());
+
     expect(_refreshController.position!.pixels, 0);
     await tester.pumpAndSettle();
+
     await tester.pumpWidget(RefreshConfiguration(
       maxUnderScrollExtent: 0,
       child: Directionality(

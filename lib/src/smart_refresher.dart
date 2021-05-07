@@ -516,6 +516,7 @@ class SmartRefresherState extends State<SmartRefresher> {
         if (mounted) widget.controller.requestRefresh();
       });
     }
+    widget.controller._bindState(this);
     super.initState();
   }
 
@@ -557,6 +558,8 @@ class SmartRefresherState extends State<SmartRefresher> {
 ///
 /// * [SmartRefresher],a widget help you attach refresh and load more function easily
 class RefreshController {
+  SmartRefresherState? _refresherState;
+
   /// header status mode controll
   ValueNotifier<RefreshStatus>? headerMode;
 
@@ -597,6 +600,11 @@ class RefreshController {
     this.footerMode = ValueNotifier(initialLoadStatus ?? LoadStatus.idle);
   }
 
+  void _bindState(SmartRefresherState state){
+    assert(_refresherState == null,"Don't use one refreshController to multiple SmartRefresher,It will cause some unexpected bugs mostly in TabBarView");
+    _refresherState = state;
+  }
+
   /// callback when the indicator is builded,and catch the scrollable's inner position
   void onPositionUpdated(ScrollPosition newPosition) {
     position?.isScrollingNotifier.removeListener(_listenScrollEnd);
@@ -605,6 +613,7 @@ class RefreshController {
   }
 
   void _detachPosition() {
+    _refresherState = null;
     position?.isScrollingNotifier.removeListener(_listenScrollEnd);
   }
 
@@ -645,13 +654,13 @@ class RefreshController {
     if (isRefresh) return Future.value();
     StatefulElement? indicatorElement =
         _findIndicator(position!.context.storageContext, RefreshIndicator);
-    SmartRefresherState? refresherState = SmartRefresher.ofState(indicatorElement);
-    if (indicatorElement == null||refresherState==null) return null;
+
+    if (indicatorElement == null||_refresherState==null) return null;
     (indicatorElement.state as RefreshIndicatorState).floating = true;
 
-    if (needMove&&   refresherState.mounted)
-      refresherState
-          .setCanDrag(false);
+    if (needMove&&   _refresherState!.mounted)
+      _refresherState
+          !.setCanDrag(false);
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (needMove) {
         Future.delayed(const Duration(milliseconds: 50)).then((_) async {
@@ -660,10 +669,12 @@ class RefreshController {
               ?.animateTo(position!.minScrollExtent - 0.0001,
                   duration: duration, curve: curve)
               .then((_) {
-          if(refresherState.mounted)
-            refresherState
-                .setCanDrag(true);
+
+          if(_refresherState!=null&&_refresherState!.mounted){
+            _refresherState!.setCanDrag(true);
             headerMode!.value = RefreshStatus.refreshing;
+          }
+
           });
         });
       } else {
@@ -698,12 +709,12 @@ class RefreshController {
     if (isLoading) return Future.value();
     StatefulElement? indicatorElement =
         _findIndicator(position!.context.storageContext, LoadIndicator);
-    SmartRefresherState? refresherState = SmartRefresher.ofState(indicatorElement);
-    if (indicatorElement == null||refresherState==null) return null;
+
+    if (indicatorElement == null||_refresherState==null) return null;
     (indicatorElement.state as LoadIndicatorState).floating = true;
-    if (needMove&&refresherState.mounted)
-      refresherState
-          .setCanDrag(false);
+    if (needMove&& _refresherState!.mounted)
+      _refresherState
+          !.setCanDrag(false);
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         await position
@@ -711,10 +722,11 @@ class RefreshController {
                 duration: duration, curve: curve)
             .then((_) {
 
-                if(refresherState.mounted)
-          refresherState
-              .setCanDrag(true);
-          footerMode!.value = LoadStatus.loading;
+                if(_refresherState!=null&&_refresherState!.mounted){
+                  _refresherState!.setCanDrag(true);
+                  footerMode!.value = LoadStatus.loading;
+                }
+
         });
       });
     } else {
