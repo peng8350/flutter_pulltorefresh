@@ -80,6 +80,7 @@ class RefreshLocalizations {
     'sv': SvRefreshString(),
     'pt': PtRefreshString(),
     'ko': KrRefreshString(),
+    'vi': ViRefreshString(),
   };
 
   RefreshString? get currentLocalization {
@@ -116,7 +117,8 @@ class RefreshLocalizationsDelegate
       'pt',
       'sv',
       'nl',
-      'es'
+      'es',
+      'vi'
     ].contains(locale.languageCode);
   }
 
@@ -634,4 +636,40 @@ class KrRefreshString implements RefreshString {
 
   @override
   String? refreshingText = "새로 고침 중…";
+}
+
+/// Vietnamese
+class ViRefreshString implements RefreshString {
+  @override
+  String canLoadingText = "Thả để tải thêm";
+
+  @override
+  String canRefreshText = "Thả để làm mới";
+
+  @override
+  String canTwoLevelText = "Thả để xem màn hình hai";
+
+  @override
+  String idleLoadingText = "Kéo lên để tải thêm";
+
+  @override
+  String idleRefreshText = "Kéo xuống để làm mới";
+
+  @override
+  String loadFailedText = "Tải thất bại";
+
+  @override
+  String loadingText = "Đang tải...";
+
+  @override
+  String noMoreText = "Đã tải hết";
+
+  @override
+  String refreshCompleteText = "Làm mới xong";
+
+  @override
+  String refreshFailedText = "Làm mới thất bại";
+
+  @override
+  String refreshingText = "Đang làm mới...";
 }
