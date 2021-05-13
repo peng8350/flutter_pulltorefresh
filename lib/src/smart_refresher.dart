@@ -146,7 +146,7 @@ class SmartRefresher extends StatefulWidget {
   // This bool will affect whether or not to have the function of drop-up load.
   final bool enablePullUp;
 
-  /// controll whether open the second floor function
+  /// control whether open the second floor function
   final bool enableTwoLevel;
 
   /// This bool will affect whether or not to have the function of drop-down refresh.
@@ -234,8 +234,8 @@ class SmartRefresher extends StatefulWidget {
   /// controller must not be null,builder must not be null
   /// this constructor use to handle some special third party widgets,this widget need to pass slivers ,but they are
   /// not extends ScrollView,so my widget inner will wrap child to SliverToBoxAdapter,which cause scrollable wrapping scrollable.
-  /// for example,NestedScrollView is a StalessWidget,it's headerSliversbuilder can return a slivers array,So if we want to do
-  /// refresh above NestedScrollVIew,we must use this constrctor to implements refresh above NestedScrollView,but for now,NestedScrollView
+  /// for example,NestedScrollView is a StatelessWidget,it's headerSliversBuilder can return a slivers array,So if we want to do
+  /// refresh above NestedScrollVIew,we must use this constructor to implements refresh above NestedScrollView,but for now,NestedScrollView
   /// can not support overscroll out of edge
   SmartRefresher.builder({
     Key? key,
