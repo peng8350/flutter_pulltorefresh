@@ -1,8 +1,25 @@
-## 1.6.4-nullsafety.1
-* headerMode and footerMode change to not nullable
+## 2.0.0
+### Breaking Changes:
+* Remove onOffsetChange in SmartRefresher,autoLoad in RefreshConfiguration,scrollController in RefreshController
+* add argument to onTwoLevel(callback when closed)
 
-## 1.6.4-nullsafety.0
-* add nullsafety feature
+### features
+* migrate null-safety
+* add needCallback in requestRefresh and requestLoading for avflutoiding the callback of onRefresh or onLoading
+
+### Bug fix
+* In NestedScrollView+ClampingScrollPhysics(Android ScrollBehaviour),header can be seen when fling to top.
+* unMounted widget used crash error when fast rebuild in requestRefresh
+* fix sliverRefreshBody layoutSize instead of -0.001,it will crash error when viewportMainAxis=0
+
+### Other
+* Add assert to avoid invalid usage
+
+
+
+## 1.6.5
+* fix check full page logic.
+* fix crash "locking up a deactive widget is unsafe".
 
 ## 1.6.4
 * fix error crash by deprecated function removed 

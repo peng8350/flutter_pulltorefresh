@@ -111,7 +111,6 @@ class Test1State extends State<Test1> {
                     });
                 });
               },
-              onOffsetChange: _onOffsetCallback,
               child: ListView.builder(
                 itemExtent: 100.0,
                 itemCount: data.length,

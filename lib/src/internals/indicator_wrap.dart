@@ -1,5 +1,5 @@
 /*
-    Author: Jpeng
+    Author: JPeng
     Email: peng8350@gmail.com
     createTime:2018-05-14 15:39
  */
@@ -142,7 +142,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
             ? (mode == RefreshStatus.twoLeveling ||
                     mode == RefreshStatus.twoLevelOpening ||
                     mode == RefreshStatus.twoLevelClosing
-                ? SmartRefresher.ofState(context)!.viewportExtent
+                ? refresherState!.viewportExtent
                 : widget.height)
             : 0.0) -
         (_position?.pixels as num);
@@ -240,15 +240,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
       resetValue();
 
-      if (mode == RefreshStatus.idle)
-        SmartRefresher.ofState(context)!.setCanDrag(true);
+      if (mode == RefreshStatus.idle) refresherState!.setCanDrag(true);
     }
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
       endRefresh().then((_) {
         if (!mounted) return;
         floating = false;
         if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
-          SmartRefresher.ofState(context)!
+          refresherState!
               .setCanDrag(configuration!.enableScrollWhenRefreshCompleted);
         }
         update();
@@ -287,7 +286,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (refresher!.onRefresh != null) refresher!.onRefresh!();
     } else if (mode == RefreshStatus.twoLevelOpening) {
       floating = true;
-      SmartRefresher.ofState(context)!.setCanDrag(false);
+      refresherState!.setCanDrag(false);
       WidgetsBinding.instance!.addPostFrameCallback((_) {
         if (!mounted) return;
         activity!.resetActivity();
@@ -298,15 +297,15 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
             .whenComplete(() {
           mode = RefreshStatus.twoLeveling;
         });
-        if (refresher!.onTwoLevel != null) refresher!.onTwoLevel!();
+        if (refresher!.onTwoLevel != null) refresher!.onTwoLevel!(true);
       });
     } else if (mode == RefreshStatus.twoLevelClosing) {
       floating = false;
-      SmartRefresher.ofState(context)!.setCanDrag(false);
+      refresherState!.setCanDrag(false);
       update();
+      if (refresher!.onTwoLevel != null) refresher!.onTwoLevel!(false);
     } else if (mode == RefreshStatus.twoLeveling) {
-      SmartRefresher.ofState(context)!
-          .setCanDrag(configuration!.enableScrollWhenTwoLevel);
+      refresherState!.setCanDrag(configuration!.enableScrollWhenTwoLevel);
     }
     onModeChange(mode);
   }
@@ -342,7 +341,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||
                 mode == RefreshStatus.twoLevelOpening ||
                 mode == RefreshStatus.twoLevelClosing
-            ? SmartRefresher.ofState(context)!.viewportExtent
+            ? refresherState!.viewportExtent
             : widget.height,
         refreshStyle: widget.refreshStyle);
   }
@@ -407,9 +406,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             configuration!.footerTriggerDistance &&
         _position!.extentBefore > 2.0 &&
         _enableLoading) {
-      if (!configuration!.autoLoad && mode == LoadStatus.idle) {
-        return false;
-      }
       if (!configuration!.enableLoadingWhenFailed &&
           mode == LoadStatus.failed) {
         return false;
@@ -565,10 +561,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             return GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                if ((mode == LoadStatus.idle && !configuration!.autoLoad) ||
-                    (_mode!.value == LoadStatus.failed)) {
-                  enterLoading();
-                }
                 if (widget.onClick != null) {
                   widget.onClick!();
                 }
@@ -587,6 +579,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   SmartRefresher? refresher;
 
   RefreshConfiguration? configuration;
+  SmartRefresherState? refresherState;
 
   bool _floating = false;
 
@@ -598,11 +591,11 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   get mode => _mode?.value;
 
-  ValueNotifier<V?>? _mode;
+  RefreshNotifier<V?>? _mode;
 
   ScrollActivity? get activity => _position!.activity;
 
-  // it doesn't support get the ScrollController as the listener, because it will cause "multiple scrollview use one ScollController"
+  // it doesn't support get the ScrollController as the listener, because it will cause "multiple scrollview use one ScrollController"
   // error,only replace the ScrollPosition to listen the offset
   ScrollPosition? _position;
 
@@ -619,9 +612,6 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
     if (overscrollPast < 0.0) {
       return;
     }
-    if (refresher!.onOffsetChange != null) {
-      refresher!.onOffsetChange!(V == RefreshStatus, overscrollPast);
-    }
     _dispatchModeByOffset(overscrollPast);
   }
 
@@ -635,9 +625,10 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   void _updateListener() {
     configuration = RefreshConfiguration.of(context);
     refresher = SmartRefresher.of(context);
-    ValueNotifier<V>? newMode = V == RefreshStatus
-        ? refresher!.controller.headerMode as ValueNotifier<V>?
-        : refresher!.controller.footerMode as ValueNotifier<V>?;
+    refresherState = SmartRefresher.ofState(context);
+    RefreshNotifier<V>? newMode = V == RefreshStatus
+        ? refresher!.controller.headerMode as RefreshNotifier<V>?
+        : refresher!.controller.footerMode as RefreshNotifier<V>?;
     final ScrollPosition newPosition = Scrollable.of(context)!.position;
     if (newMode != _mode) {
       _mode?.removeListener(_handleModeChange);

@@ -12,7 +12,7 @@
 | enablePullUp |   switch of pullupload | boolean | false | optional |
 | onRefresh | callback when refreshing  | () => Void | null | optional |
 | onLoading | callback when loading   | () => Void | null | optional |
-| onOffsetChange | callBack the Visible range of indicator  | (bool,double) => Void | null | optional |
+| onOffsetChange(2.0.0 removed) | callBack the Visible range of indicator  | (bool,double) => Void | null | optional |
 | onTwoLevel | callback when second floor is opening   | () => Void | null | 可选 |
 
 
@@ -78,7 +78,7 @@ Load more(footer):
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | footerBuilder      | the footer indicator builder   | () =>  ? extends LoadIndicator  |   null |  可选 |
 | hideWhenNotFull | whether to hide footer when scrollview not enough one page   | bool | true | 可选 |
-| autoLoad | Autoload more, if false, sliding bottom will not trigger, but provide more click loading methods  | bool | true | 可选 |
+| autoLoad(2.0.0 removed) | Autoload more, if false, sliding bottom will not trigger, but provide more click loading methods  | bool | true | 可选 |
 | enableLoadingWhenFailed |  whether allowed to use gesture pull-up trigger to load more when failed state  | bool | true| 可选 |
 | enableLoadingWhenNoData |  whether allowed to use gesture pull-up trigger to load more when no more data state  | bool | false| 可选 |
 | maxUnderScrollExtent | max underScroll distance  | double | ios:inf,android:0 | 可选 |

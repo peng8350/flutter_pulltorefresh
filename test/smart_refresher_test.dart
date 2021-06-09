@@ -210,29 +210,6 @@ void main() {
     logs.clear();
     _refreshController.loadComplete();
 
-    await tester.pumpWidget(Directionality(
-      textDirection: TextDirection.ltr,
-      child: SmartRefresher(
-        header: TestHeader(),
-        footer: TestFooter(),
-        enablePullDown: true,
-        enablePullUp: true,
-        child: ListView.builder(
-          itemBuilder: (c, i) => Center(
-            child: Text(data[i]),
-          ),
-          itemCount: 20,
-          itemExtent: 100,
-        ),
-        onOffsetChange: (up, offset) {
-          logs.add(offset);
-        },
-        controller: _refreshController,
-      ),
-    ));
-
-    // check onOffsetChange(top)
-    _refreshController.position!.jumpTo(0.0);
     double count = 1;
     while (count < 11) {
       await tester.drag(find.byType(Scrollable), Offset(0, 20),
@@ -240,26 +217,6 @@ void main() {
       count++;
       await tester.pump(Duration(milliseconds: 20));
     }
-    for (double i in logs as Iterable<double>) {
-      expect(i, greaterThanOrEqualTo(0));
-    }
-    logs.clear();
-    // check onOffsetChange
-    _refreshController.position!
-        .jumpTo(_refreshController.position!.maxScrollExtent);
-    count = 1;
-    while (count < 11) {
-      await tester.drag(find.byType(Scrollable), Offset(0, -20),
-          touchSlopY: 0.0);
-      count++;
-      await tester.pump(Duration(milliseconds: 20));
-    }
-    expect(logs.length, greaterThan(0));
-    for (double i in logs as Iterable<double>) {
-      expect(i, greaterThanOrEqualTo(0));
-    }
-    logs.clear();
-    await tester.pump(Duration(milliseconds: 20));
   });
 
   testWidgets(" verity smartRefresher and NestedScrollView", (tester) async {
@@ -366,7 +323,6 @@ void main() {
       dragSpeedRatio: 0.8,
       closeTwoLevelDistance: 100,
       footerTriggerDistance: 150,
-      autoLoad: false,
       enableScrollWhenRefreshCompleted: true,
       child: Builder(
         builder: (c1) {
