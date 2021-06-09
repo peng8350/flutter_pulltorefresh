@@ -12,7 +12,7 @@
 | enablePullUp |   是否允许上拉 | boolean | false | 可选 |
 | onRefresh | 进入下拉刷新时的回调   | () => Void | null | 可选 |
 | onLoading | 进入上拉加载时的回调   | () => Void | null | 可选 |
-| onOffsetChange | 它将在超出边缘范围拖动时回调  | (bool,double) => Void | null | 可选 |
+| onOffsetChange(2.0.0 removed) | 它将在超出边缘范围拖动时回调  | (bool,double) => Void | null | 可选 |
 | onTwoLevel | 当准备打开二楼时的回调   | () => Void | null | 可选 |
 
 
@@ -83,7 +83,7 @@
 |---------|--------------------------|:-----:|:-----:|:-----:|
 | footerBuilder      | 默认尾部指示器全局构造器   | () =>  ? extends LoadIndicator  |   null |  可选 |
 | hideWhenNotFull | 当ScrollView不满一页时,是否要隐藏底部指示器   | bool | false | 可选 |
-| autoLoad | 自动加载更多,假如为false,滑动底部不会触发,但提供点击加载更多的方法  | bool | true | 可选 |
+| autoLoad(2.0.0 removed) | 自动加载更多,假如为false,滑动底部不会触发,但提供点击加载更多的方法  | bool | true | 可选 |
 | enableLoadingWhenFailed |  是否允许通过手势来触发加载更多当失败的状态  | bool | true| 可选 |
 | enableLoadingWhenNodata |  是否允许通过手势来触发加载更多当没有更多数据的状态  | bool | false| 可选 |
 | footerTriggerDistance |   距离底部边缘触发加载更多的距离,注意这个属性和header的不同,它可以为负数,负数代表越界 | double | 15.0 | 可选 |

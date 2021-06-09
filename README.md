@@ -3,7 +3,7 @@
   <img src="https://img.shields.io/pub/v/pull_to_refresh.svg"/>
 </a>
 <a href="https://flutter.dev/">
-  <img src="https://img.shields.io/badge/flutter-%3E%3D%201.2.1-green.svg"/>
+  <img src="https://img.shields.io/badge/flutter-%3E%3D%202.0.0-green.svg"/>
 </a>
 <a href="https://opensource.org/licenses/MIT">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg"/>
@@ -13,9 +13,7 @@
 a widget provided to the flutter scroll component drop-down refresh and pull up load.support android and ios.
 If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter_pulltorefresh/blob/master/README_CN.md))
 
-[Download Demo(Android)](demo.apk):
 
-![qrCode](arts/qr_code.png)
 
 ## Features
 * pull up load and pull down refresh
@@ -36,7 +34,7 @@ add this line to pubspec.yaml
 
    dependencies:
 
-    pull_to_refresh: 1.6.4-nullsafety.1
+    pull_to_refresh: ^2.0.0
 
 
 ```

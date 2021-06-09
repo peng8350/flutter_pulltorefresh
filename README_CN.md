@@ -3,7 +3,7 @@
   <img src="https://img.shields.io/pub/v/pull_to_refresh.svg"/>
 </a>
 <a href="https://flutter.dev/">
-  <img src="https://img.shields.io/badge/flutter-%3E%3D%201.2.1-green.svg"/>
+  <img src="https://img.shields.io/badge/flutter-%3E%3D%202.0.0-green.svg"/>
 </a>
 <a href="https://opensource.org/licenses/MIT">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg"/>
@@ -12,9 +12,6 @@
 ## 介绍
 一个提供上拉加载和下拉刷新的组件,同时支持Android和Ios<br>
 
-[下载Demo(Android)](demo.apk):
-
-![二维码](arts/qr_code.png)
 
 
 ## 特性
@@ -36,7 +33,7 @@
 
    dependencies:
 
-    pull_to_refresh: 1.6.4-nullsafety.1
+    pull_to_refresh: ^2.0.0
 
 
 ```

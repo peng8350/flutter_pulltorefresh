@@ -19,10 +19,8 @@ import 'indicator/material_indicator.dart';
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
 // ignore_for_file: DEPRECATED_MEMBER_USE
 
-/// callback when the indicator scroll out of edge
-/// up: indicate header or footer callback
-/// offset: the distance of indicator out of edge
-typedef void OnOffsetChange(bool up, double offset);
+/// when viewport not full one page, for different state,whether it should follow the content
+typedef void OnTwoLevel(bool isOpen);
 
 /// when viewport not full one page, for different state,whether it should follow the content
 typedef bool ShouldFollowContent(LoadStatus? status);
@@ -169,10 +167,7 @@ class SmartRefresher extends StatefulWidget {
   /// callback when header ready to twoLevel
   ///
   /// If you want to close twoLevel,you should use [RefreshController.closeTwoLevel]
-  final VoidCallback? onTwoLevel;
-
-  /// callback when the indicator scroll out of edge
-  final OnOffsetChange? onOffsetChange;
+  final OnTwoLevel? onTwoLevel;
 
   /// Controll inner state
   final RefreshController controller;
@@ -224,7 +219,6 @@ class SmartRefresher extends StatefulWidget {
       this.onRefresh,
       this.onLoading,
       this.onTwoLevel,
-      this.onOffsetChange,
       this.dragStartBehavior,
       this.primary,
       this.cacheExtent,
@@ -243,18 +237,17 @@ class SmartRefresher extends StatefulWidget {
   /// for example,NestedScrollView is a StalessWidget,it's headerSliversbuilder can return a slivers array,So if we want to do
   /// refresh above NestedScrollVIew,we must use this constrctor to implements refresh above NestedScrollView,but for now,NestedScrollView
   /// can not support overscroll out of edge
-  SmartRefresher.builder(
-      {Key? key,
-      required this.controller,
-      required this.builder,
-      this.enablePullDown: true,
-      this.enablePullUp: false,
-      this.enableTwoLevel: false,
-      this.onRefresh,
-      this.onLoading,
-      this.onTwoLevel,
-      this.onOffsetChange})
-      : header = null,
+  SmartRefresher.builder({
+    Key? key,
+    required this.controller,
+    required this.builder,
+    this.enablePullDown: true,
+    this.enablePullUp: false,
+    this.enableTwoLevel: false,
+    this.onRefresh,
+    this.onLoading,
+    this.onTwoLevel,
+  })  : header = null,
         footer = null,
         child = null,
         scrollController = null,
@@ -267,12 +260,12 @@ class SmartRefresher extends StatefulWidget {
         primary = null,
         super(key: key);
 
-  static SmartRefresher? of(BuildContext context) {
-    return context.findAncestorWidgetOfExactType<SmartRefresher>();
+  static SmartRefresher? of(BuildContext? context) {
+    return context!.findAncestorWidgetOfExactType<SmartRefresher>();
   }
 
-  static SmartRefresherState? ofState(BuildContext context) {
-    return context.findAncestorStateOfType<SmartRefresherState>();
+  static SmartRefresherState? ofState(BuildContext? context) {
+    return context!.findAncestorStateOfType<SmartRefresherState>();
   }
 
   @override
@@ -296,8 +289,8 @@ class SmartRefresherState extends State<SmartRefresher> {
   final LoadIndicator defaultFooter = ClassicFooter();
 
   //build slivers from child Widget
-  List<Widget>? _buildSliversByChild(
-      BuildContext context, Widget? child, RefreshConfiguration? configuration) {
+  List<Widget>? _buildSliversByChild(BuildContext context, Widget? child,
+      RefreshConfiguration? configuration) {
     List<Widget>? slivers;
     if (child is ScrollView) {
       if (child is BoxScrollView) {
@@ -410,15 +403,6 @@ class SmartRefresherState extends State<SmartRefresher> {
         restorationId = restorationId ?? childView.restorationId;
         clipBehavior = clipBehavior ?? childView.clipBehavior;
         scrollController = scrollController ?? childView.controller;
-
-        // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
-        widget.controller.scrollController = scrollController ??
-            childView.controller ??
-            (childView.primary ? PrimaryScrollController.of(context) : null);
-      } else {
-        // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
-        widget.controller.scrollController =
-            PrimaryScrollController.of(context);
       }
       body = CustomScrollView(
         // ignore: DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE
@@ -449,7 +433,8 @@ class SmartRefresherState extends State<SmartRefresher> {
         semanticChildCount: childView.semanticChildCount,
         dragStartBehavior: childView.dragStartBehavior,
         viewportBuilder: (context, offset) {
-          Viewport viewport = childView.viewportBuilder(context, offset) as Viewport;
+          Viewport viewport =
+              childView.viewportBuilder(context, offset) as Viewport;
           if (widget.enablePullDown) {
             viewport.children.insert(
                 0,
@@ -531,6 +516,7 @@ class SmartRefresherState extends State<SmartRefresher> {
         if (mounted) widget.controller.requestRefresh();
       });
     }
+    widget.controller._bindState(this);
     super.initState();
   }
 
@@ -543,11 +529,14 @@ class SmartRefresherState extends State<SmartRefresher> {
 
   @override
   Widget build(BuildContext context) {
-    final RefreshConfiguration? configuration = RefreshConfiguration.of(context);
+    final RefreshConfiguration? configuration =
+        RefreshConfiguration.of(context);
     Widget? body;
     if (widget.builder != null)
-      body = widget.builder!(context,
-          _getScrollPhysics(configuration, AlwaysScrollableScrollPhysics()) as RefreshPhysics);
+      body = widget.builder!(
+          context,
+          _getScrollPhysics(configuration, AlwaysScrollableScrollPhysics())
+              as RefreshPhysics);
     else {
       List<Widget>? slivers =
           _buildSliversByChild(context, widget.child, configuration);
@@ -572,22 +561,19 @@ class SmartRefresherState extends State<SmartRefresher> {
 ///
 /// * [SmartRefresher],a widget help you attach refresh and load more function easily
 class RefreshController {
+  SmartRefresherState? _refresherState;
+
   /// header status mode controll
-  ValueNotifier<RefreshStatus>? headerMode;
+  RefreshNotifier<RefreshStatus>? headerMode;
 
   /// footer status mode controll
-  ValueNotifier<LoadStatus>? footerMode;
+  RefreshNotifier<LoadStatus>? footerMode;
 
   /// the scrollable inner's position
   ///
   /// notice that: position is null before build,
   /// the value is get when the header or footer callback onPositionUpdated
   ScrollPosition? position;
-
-  /// deprecated member,not suggest to use it,it contain share position bug
-  @Deprecated(
-      'advice set ScrollController to child,use it directly will cause bug when call jumpTo() and animateTo()')
-  ScrollController? scrollController;
 
   RefreshStatus? get headerStatus => headerMode?.value;
 
@@ -613,8 +599,15 @@ class RefreshController {
       {this.initialRefresh: false,
       RefreshStatus? initialRefreshStatus,
       LoadStatus? initialLoadStatus}) {
-    this.headerMode = ValueNotifier(initialRefreshStatus ?? RefreshStatus.idle);
-    this.footerMode = ValueNotifier(initialLoadStatus ?? LoadStatus.idle);
+    this.headerMode =
+        RefreshNotifier(initialRefreshStatus ?? RefreshStatus.idle);
+    this.footerMode = RefreshNotifier(initialLoadStatus ?? LoadStatus.idle);
+  }
+
+  void _bindState(SmartRefresherState state) {
+    assert(_refresherState == null,
+        "Don't use one refreshController to multiple SmartRefresher,It will cause some unexpected bugs mostly in TabBarView");
+    _refresherState = state;
   }
 
   /// callback when the indicator is builded,and catch the scrollable's inner position
@@ -625,6 +618,7 @@ class RefreshController {
   }
 
   void _detachPosition() {
+    _refresherState = null;
     position?.isScrollingNotifier.removeListener(_listenScrollEnd);
   }
 
@@ -658,6 +652,7 @@ class RefreshController {
   /// make the header enter refreshing state,and callback onRefresh
   Future<void>? requestRefresh(
       {bool needMove: true,
+      bool needCallback: true,
       Duration duration: const Duration(milliseconds: 500),
       Curve curve: Curves.linear}) {
     assert(position != null,
@@ -665,31 +660,37 @@ class RefreshController {
     if (isRefresh) return Future.value();
     StatefulElement? indicatorElement =
         _findIndicator(position!.context.storageContext, RefreshIndicator);
-    if (indicatorElement == null) return null;
+
+    if (indicatorElement == null || _refresherState == null) return null;
     (indicatorElement.state as RefreshIndicatorState).floating = true;
-    if (needMove)
-      SmartRefresher.ofState(position!.context.storageContext)
-          ?.setCanDrag(false);
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      if (needMove) {
-        Future.delayed(const Duration(milliseconds: 50)).then((_) async {
-          // - 0.0001 is for NestedScrollView.
-          await position
-              ?.animateTo(position!.minScrollExtent - 0.0001,
-                  duration: duration, curve: curve)
-              .then((_) {
-            SmartRefresher.ofState(position!.context.storageContext)
-                ?.setCanDrag(true);
-            headerMode!.value = RefreshStatus.refreshing;
-          });
+
+    if (needMove && _refresherState!.mounted)
+      _refresherState!.setCanDrag(false);
+    if (needMove) {
+      return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
+        // - 0.0001 is for NestedScrollView.
+        await position
+            ?.animateTo(position!.minScrollExtent - 0.0001,
+                duration: duration, curve: curve)
+            .then((_) {
+          if (_refresherState != null && _refresherState!.mounted) {
+            _refresherState!.setCanDrag(true);
+            if (needCallback) {
+              headerMode!.value = RefreshStatus.refreshing;
+            } else {
+              headerMode!.setValueWithNoNotify(RefreshStatus.refreshing);
+              if (indicatorElement.state.mounted)
+                (indicatorElement.state as RefreshIndicatorState)
+                    .setState(() {});
+            }
+          }
         });
-      } else {
-        Future.value().then((_) {
-          headerMode!.value = RefreshStatus.refreshing;
-        });
-      }
-    });
-    return Future.value();
+      });
+    } else {
+      Future.value().then((_) {
+        headerMode!.value = RefreshStatus.refreshing;
+      });
+    }
   }
 
   /// make the header enter refreshing state,and callback onRefresh
@@ -708,6 +709,7 @@ class RefreshController {
   /// make the footer enter loading state,and callback onLoading
   Future<void>? requestLoading(
       {bool needMove: true,
+      bool needCallback: true,
       Duration duration: const Duration(milliseconds: 300),
       Curve curve: Curves.linear}) {
     assert(position != null,
@@ -715,20 +717,27 @@ class RefreshController {
     if (isLoading) return Future.value();
     StatefulElement? indicatorElement =
         _findIndicator(position!.context.storageContext, LoadIndicator);
-    if (indicatorElement == null) return null;
+
+    if (indicatorElement == null || _refresherState == null) return null;
     (indicatorElement.state as LoadIndicatorState).floating = true;
-    if (needMove)
-      SmartRefresher.ofState(position!.context.storageContext)
-          ?.setCanDrag(false);
+    if (needMove && _refresherState!.mounted)
+      _refresherState!.setCanDrag(false);
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         await position
             ?.animateTo(position!.maxScrollExtent,
                 duration: duration, curve: curve)
             .then((_) {
-          SmartRefresher.ofState(position!.context.storageContext)
-              ?.setCanDrag(true);
-          footerMode!.value = LoadStatus.loading;
+          if (_refresherState != null && _refresherState!.mounted) {
+            _refresherState!.setCanDrag(true);
+            if (needCallback) {
+              footerMode!.value = LoadStatus.loading;
+            } else {
+              footerMode!.setValueWithNoNotify(LoadStatus.loading);
+              if (indicatorElement.state.mounted)
+                (indicatorElement.state as LoadIndicatorState).setState(() {});
+            }
+          }
         });
       });
     } else {
@@ -840,9 +849,6 @@ class RefreshConfiguration extends InheritedWidget {
   /// when listView data small(not enough one page) , it should be hide
   final bool hideFooterWhenNotFull;
 
-  /// whether footer can trigger load by reaching footerDistance when idle
-  final bool autoLoad;
-
   /// whether user can drag viewport when twoLeveling
   final bool enableScrollWhenTwoLevel;
 
@@ -914,7 +920,6 @@ class RefreshConfiguration extends InheritedWidget {
       this.twiceTriggerDistance: 150.0,
       this.closeTwoLevelDistance: 80.0,
       this.skipCanRefresh: false,
-      this.autoLoad: true,
       this.maxOverScrollExtent,
       this.enableBallisticLoad: true,
       this.maxUnderScrollExtent,
@@ -953,7 +958,6 @@ class RefreshConfiguration extends InheritedWidget {
     double? twiceTriggerDistance,
     double? closeTwoLevelDistance,
     bool? skipCanRefresh,
-    bool? autoLoad,
     double? maxOverScrollExtent,
     double? maxUnderScrollExtent,
     double? topHitBoundary,
@@ -965,7 +969,6 @@ class RefreshConfiguration extends InheritedWidget {
     bool? hideFooterWhenNotFull,
   })  : assert(RefreshConfiguration.of(context) != null,
             "search RefreshConfiguration anscestor return null,please  Make sure that RefreshConfiguration is the ancestor of that element"),
-        autoLoad = autoLoad ?? RefreshConfiguration.of(context)!.autoLoad,
         headerBuilder =
             headerBuilder ?? RefreshConfiguration.of(context)!.headerBuilder,
         footerBuilder =
@@ -1020,8 +1023,7 @@ class RefreshConfiguration extends InheritedWidget {
 
   @override
   bool updateShouldNotify(RefreshConfiguration oldWidget) {
-    return autoLoad != oldWidget.autoLoad ||
-        skipCanRefresh != oldWidget.skipCanRefresh ||
+    return skipCanRefresh != oldWidget.skipCanRefresh ||
         hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||
         dragSpeedRatio != oldWidget.dragSpeedRatio ||
         enableScrollWhenRefreshCompleted !=
@@ -1041,4 +1043,27 @@ class RefreshConfiguration extends InheritedWidget {
         enableLoadMoreVibrate != oldWidget.enableLoadMoreVibrate ||
         bottomHitBoundary != oldWidget.bottomHitBoundary;
   }
+}
+
+class RefreshNotifier<T> extends ChangeNotifier implements ValueListenable<T> {
+  /// Creates a [ChangeNotifier] that wraps this value.
+  RefreshNotifier(this._value);
+  T _value;
+
+  @override
+  T get value => _value;
+
+  set value(T newValue) {
+    if (_value == newValue) return;
+    _value = newValue;
+    notifyListeners();
+  }
+
+  void setValueWithNoNotify(T newValue) {
+    if (_value == newValue) return;
+    _value = newValue;
+  }
+
+  @override
+  String toString() => '${describeIdentity(this)}($value)';
 }
