@@ -19,7 +19,7 @@ class TestHeader extends RefreshIndicator {
 
 class _TestHeaderState extends RefreshIndicatorState<TestHeader> {
   @override
-  Widget buildContent(BuildContext context, RefreshStatus mode) {
+  Widget buildContent(BuildContext context, RefreshStatus? mode) {
     // TODO: implement buildContent
     return Text(mode == RefreshStatus.idle
         ? "idle"
@@ -52,7 +52,7 @@ class TestFooter extends LoadIndicator {
 
 class _TestFooterState extends LoadIndicatorState<TestFooter> {
   @override
-  Widget buildContent(BuildContext context, LoadStatus mode) {
+  Widget buildContent(BuildContext context, LoadStatus? mode) {
     // TODO: implement buildContent
     return Text(mode == LoadStatus.failed
         ? "failed"

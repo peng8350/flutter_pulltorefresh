@@ -4,14 +4,12 @@
     createTime:2018-05-14 15:39
  */
 
-import 'dart:math' as math;
-
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-
+import 'dart:math' as math;
 import '../smart_refresher.dart';
 import 'slivers.dart';
 
@@ -19,12 +17,12 @@ typedef VoidFutureCallBack = Future<void> Function();
 
 typedef void OffsetCallBack(double offset);
 
-typedef void ModeChangeCallBack<T>(T mode);
+typedef void ModeChangeCallBack<T>(T? mode);
 
 /// a widget  implements ios pull down refresh effect and Android material RefreshIndicator overScroll effect
 abstract class RefreshIndicator extends StatefulWidget {
   /// refresh display style
-  final RefreshStyle refreshStyle;
+  final RefreshStyle? refreshStyle;
 
   /// the visual extent indicator
   final double height;
@@ -36,7 +34,11 @@ abstract class RefreshIndicator extends StatefulWidget {
   final Duration completeDuration;
 
   const RefreshIndicator(
-      {Key key, this.height: 60.0, this.offset: 0.0, this.completeDuration: const Duration(milliseconds: 500), this.refreshStyle: RefreshStyle.Follow})
+      {Key? key,
+      this.height: 60.0,
+      this.offset: 0.0,
+      this.completeDuration: const Duration(milliseconds: 500),
+      this.refreshStyle: RefreshStyle.Follow})
       : super(key: key);
 }
 
@@ -49,9 +51,14 @@ abstract class LoadIndicator extends StatefulWidget {
   final double height;
 
   /// callback when user click footer
-  final VoidCallback onClick;
+  final VoidCallback? onClick;
 
-  const LoadIndicator({Key key, this.onClick, this.loadStyle: LoadStyle.ShowAlways, this.height: 60.0}) : super(key: key);
+  const LoadIndicator(
+      {Key? key,
+      this.onClick,
+      this.loadStyle: LoadStyle.ShowAlways,
+      this.height: 60.0})
+      : super(key: key);
 }
 
 /// Internal Implementation of Head Indicator
@@ -123,18 +130,22 @@ abstract class LoadIndicator extends StatefulWidget {
 ///  }
 /// }
 /// ```
-abstract class RefreshIndicatorState<T extends RefreshIndicator> extends State<T> with IndicatorStateMixin<T, RefreshStatus>, RefreshProcessor {
+abstract class RefreshIndicatorState<T extends RefreshIndicator>
+    extends State<T>
+    with IndicatorStateMixin<T, RefreshStatus>, RefreshProcessor {
   bool _inVisual() {
-    return _position.pixels < 0.0;
+    return _position!.pixels < 0.0;
   }
 
   double _calculateScrollOffset() {
     return (floating
-            ? (mode == RefreshStatus.twoLeveling || mode == RefreshStatus.twoLevelOpening || mode == RefreshStatus.twoLevelClosing
-                ? SmartRefresher.ofState(context).viewportExtent
+            ? (mode == RefreshStatus.twoLeveling ||
+                    mode == RefreshStatus.twoLevelOpening ||
+                    mode == RefreshStatus.twoLevelClosing
+                ? SmartRefresher.ofState(context)!.viewportExtent
                 : widget.height)
             : 0.0) -
-        _position?.pixels;
+        (_position?.pixels as num);
   }
 
   @override
@@ -148,12 +159,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator> extends State<T
   // handle the  state change between canRefresh and idle canRefresh  before refreshing
   void _dispatchModeByOffset(double offset) {
     if (mode == RefreshStatus.twoLeveling) {
-      if (_position.pixels > configuration.closeTwoLevelDistance && activity is BallisticScrollActivity) {
-        refresher.controller.twoLevelComplete();
+      if (_position!.pixels > configuration!.closeTwoLevelDistance &&
+          activity is BallisticScrollActivity) {
+        refresher!.controller.twoLevelComplete();
         return;
       }
     }
-    if (RefreshStatus.twoLevelOpening == mode || mode == RefreshStatus.twoLevelClosing) {
+    if (RefreshStatus.twoLevelOpening == mode ||
+        mode == RefreshStatus.twoLevelClosing) {
       return;
     }
     if (floating) return;
@@ -163,15 +176,19 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator> extends State<T
     }
 
     // If FrontStyle overScroll,it shouldn't disable gesture in scrollable
-    if (_position.extentBefore == 0.0 && widget.refreshStyle == RefreshStyle.Front) {
-      _position.context.setIgnorePointer(false);
+    if (_position!.extentBefore == 0.0 &&
+        widget.refreshStyle == RefreshStyle.Front) {
+      _position!.context.setIgnorePointer(false);
     }
     // Sometimes different devices return velocity differently, so it's impossible to judge from velocity whether the user
     // has invoked animateTo (0.0) or the user is dragging the view.Sometimes animateTo (0.0) does not return velocity = 0.0
     // velocity < 0.0 may be spring up,>0.0 spring down
-    if ((configuration.enableBallisticRefresh && activity.velocity < 0.0) || activity is DragScrollActivity || activity is DrivenScrollActivity) {
-      if (refresher.enablePullDown && offset >= configuration.headerTriggerDistance) {
-        if (!configuration.skipCanRefresh) {
+    if ((configuration!.enableBallisticRefresh && activity!.velocity < 0.0) ||
+        activity is DragScrollActivity ||
+        activity is DrivenScrollActivity) {
+      if (refresher!.enablePullDown &&
+          offset >= configuration!.headerTriggerDistance) {
+        if (!configuration!.skipCanRefresh) {
           mode = RefreshStatus.canRefresh;
         } else {
           floating = true;
@@ -181,12 +198,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator> extends State<T
             mode = RefreshStatus.refreshing;
           });
         }
-      } else if (refresher.enablePullDown) {
+      } else if (refresher!.enablePullDown) {
         mode = RefreshStatus.idle;
       }
-      if (refresher.enableTwoLevel && offset >= configuration.twiceTriggerDistance) {
+      if (refresher!.enableTwoLevel &&
+          offset >= configuration!.twiceTriggerDistance) {
         mode = RefreshStatus.canTwoLevel;
-      } else if (refresher.enableTwoLevel && !refresher.enablePullDown) {
+      } else if (refresher!.enableTwoLevel && !refresher!.enablePullDown) {
         mode = RefreshStatus.idle;
       }
     }
@@ -222,14 +240,16 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator> extends State<T
 
       resetValue();
 
-      if (mode == RefreshStatus.idle) SmartRefresher.ofState(context).setCanDrag(true);
+      if (mode == RefreshStatus.idle)
+        SmartRefresher.ofState(context)!.setCanDrag(true);
     }
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
       endRefresh().then((_) {
         if (!mounted) return;
         floating = false;
         if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
-          SmartRefresher.ofState(context).setCanDrag(configuration.enableScrollWhenRefreshCompleted);
+          SmartRefresher.ofState(context)!
+              .setCanDrag(configuration!.enableScrollWhenRefreshCompleted);
         }
         update();
         /*
@@ -238,20 +258,20 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator> extends State<T
           the _onOffsetChange didn't callback,it will keep failed or success state.
           2. As FrontStyle,when user dragging in 0~100 in refreshing state,it should be reset after the state change
           */
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
           if (!mounted) {
             return;
           }
           if (widget.refreshStyle == RefreshStyle.Front) {
             if (_inVisual()) {
-              _position.jumpTo(0.0);
+              _position!.jumpTo(0.0);
             }
             mode = RefreshStatus.idle;
           } else {
             if (!_inVisual()) {
               mode = RefreshStatus.idle;
             } else {
-              activity.delegate.goBallistic(0.0);
+              activity!.delegate.goBallistic(0.0);
             }
           }
         });
@@ -261,27 +281,32 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator> extends State<T
         floating = true;
         readyToRefresh();
       }
-      if (configuration.enableRefreshVibrate ?? false) {
+      if (configuration!.enableRefreshVibrate) {
         HapticFeedback.vibrate();
       }
-      if (refresher.onRefresh != null) refresher.onRefresh();
+      if (refresher!.onRefresh != null) refresher!.onRefresh!();
     } else if (mode == RefreshStatus.twoLevelOpening) {
       floating = true;
-      SmartRefresher.ofState(context).setCanDrag(false);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      SmartRefresher.ofState(context)!.setCanDrag(false);
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         if (!mounted) return;
-        activity.resetActivity();
-        _position.animateTo(0.0, duration: const Duration(milliseconds: 500), curve: Curves.linear).whenComplete(() {
+        activity!.resetActivity();
+        _position!
+            .animateTo(0.0,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.linear)
+            .whenComplete(() {
           mode = RefreshStatus.twoLeveling;
         });
-        if (refresher.onTwoLevel != null) refresher.onTwoLevel();
+        if (refresher!.onTwoLevel != null) refresher!.onTwoLevel!();
       });
     } else if (mode == RefreshStatus.twoLevelClosing) {
       floating = false;
-      SmartRefresher.ofState(context).setCanDrag(false);
+      SmartRefresher.ofState(context)!.setCanDrag(false);
       update();
     } else if (mode == RefreshStatus.twoLeveling) {
-      SmartRefresher.ofState(context).setCanDrag(configuration.enableScrollWhenTwoLevel);
+      SmartRefresher.ofState(context)!
+          .setCanDrag(configuration!.enableScrollWhenTwoLevel);
     }
     onModeChange(mode);
   }
@@ -308,24 +333,31 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator> extends State<T
         paintOffsetY: widget.offset,
         child: RotatedBox(
           child: buildContent(context, mode),
-          quarterTurns: needReverseAll() && Scrollable.of(context).axisDirection == AxisDirection.up ? 10 : 0,
+          quarterTurns: needReverseAll() &&
+                  Scrollable.of(context)!.axisDirection == AxisDirection.up
+              ? 10
+              : 0,
         ),
         floating: floating,
-        refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling || mode == RefreshStatus.twoLevelOpening || mode == RefreshStatus.twoLevelClosing
-            ? SmartRefresher.ofState(context).viewportExtent
+        refreshIndicatorLayoutExtent: mode == RefreshStatus.twoLeveling ||
+                mode == RefreshStatus.twoLevelOpening ||
+                mode == RefreshStatus.twoLevelClosing
+            ? SmartRefresher.ofState(context)!.viewportExtent
             : widget.height,
         refreshStyle: widget.refreshStyle);
   }
 }
 
-abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with IndicatorStateMixin<T, LoadStatus>, LoadingProcessor {
+abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
+    with IndicatorStateMixin<T, LoadStatus>, LoadingProcessor {
   // use to update between one page and above one page
   bool _isHide = false;
   bool _enableLoading = false;
-  LoadStatus _lastMode = LoadStatus.idle;
+  LoadStatus? _lastMode = LoadStatus.idle;
 
   double _calculateScrollOffset() {
-    final double overScrollPastEnd = math.max(_position.pixels - _position.maxScrollExtent, 0.0);
+    final double overScrollPastEnd =
+        math.max(_position!.pixels - _position!.maxScrollExtent, 0.0);
     return overScrollPastEnd;
   }
 
@@ -358,10 +390,10 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
       }
 
       // this line for patch bug temporary:indicator disappears fastly when load more complete
-      if (mounted) Scrollable.of(context).position.correctBy(0.00001);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) Scrollable.of(context)!.position.correctBy(0.00001);
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         if (mounted && _position?.outOfRange == true) {
-          activity.delegate.goBallistic(0);
+          activity!.delegate.goBallistic(0);
         }
       });
       setState(() {
@@ -371,17 +403,23 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
   }
 
   bool _checkIfCanLoading() {
-    if (_position.maxScrollExtent - _position.pixels <= configuration.footerTriggerDistance && _position.extentBefore > 2.0 && _enableLoading) {
-      if (!configuration.autoLoad && mode == LoadStatus.idle) {
+    if (_position!.maxScrollExtent - _position!.pixels <=
+            configuration!.footerTriggerDistance &&
+        _position!.extentBefore > 2.0 &&
+        _enableLoading) {
+      if (!configuration!.autoLoad && mode == LoadStatus.idle) {
         return false;
       }
-      if (!configuration.enableLoadingWhenFailed && mode == LoadStatus.failed) {
+      if (!configuration!.enableLoadingWhenFailed &&
+          mode == LoadStatus.failed) {
         return false;
       }
-      if (!configuration.enableLoadingWhenNoData && mode == LoadStatus.noMore) {
+      if (!configuration!.enableLoadingWhenNoData &&
+          mode == LoadStatus.noMore) {
         return false;
       }
-      if (mode != LoadStatus.canLoading && _position.userScrollDirection == ScrollDirection.forward) {
+      if (mode != LoadStatus.canLoading &&
+          _position!.userScrollDirection == ScrollDirection.forward) {
         return false;
       }
       return true;
@@ -395,11 +433,17 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
     }
 
     update();
-    if (mode == LoadStatus.idle || mode == LoadStatus.failed || mode == LoadStatus.noMore) {
+    if (mode == LoadStatus.idle ||
+        mode == LoadStatus.failed ||
+        mode == LoadStatus.noMore) {
       // #292,#265,#208
       // stop the slow bouncing when load more too fast
-      if (_position.activity.velocity < 0 && _lastMode == LoadStatus.loading && !_position.outOfRange && _position is ScrollActivityDelegate) {
-        _position.beginActivity(IdleScrollActivity(_position as ScrollActivityDelegate));
+      if (_position!.activity!.velocity < 0 &&
+          _lastMode == LoadStatus.loading &&
+          !_position!.outOfRange &&
+          _position is ScrollActivityDelegate) {
+        _position!.beginActivity(
+            IdleScrollActivity(_position as ScrollActivityDelegate));
       }
 
       finishLoading();
@@ -408,11 +452,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
       if (!floating) {
         enterLoading();
       }
-      if (configuration.enableLoadMoreVibrate ?? false) {
+      if (configuration!.enableLoadMoreVibrate) {
         HapticFeedback.vibrate();
       }
-      if (refresher.onLoading != null) {
-        refresher.onLoading();
+      if (refresher!.onLoading != null) {
+        refresher!.onLoading!();
       }
       if (widget.loadStyle == LoadStyle.ShowWhenLoading) {
         floating = true;
@@ -441,7 +485,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
       }
     }
     if (activity is BallisticScrollActivity || activity is IdleScrollActivity) {
-      if (configuration.enableBallisticLoad ?? true) {
+      if (configuration!.enableBallisticLoad) {
         if (_checkIfCanLoading()) enterLoading();
       } else if (mode == LoadStatus.canLoading) {
         enterLoading();
@@ -459,7 +503,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
   }
 
   void _listenScrollEnd() {
-    if (!_position.isScrollingNotifier.value) {
+    if (!_position!.isScrollingNotifier.value) {
       // when user release gesture from screen
       if (_isHide || mode == LoadStatus.loading || mode == LoadStatus.noMore) {
         return;
@@ -467,7 +511,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
 
       if (_checkIfCanLoading()) {
         if (activity is IdleScrollActivity) {
-          if ((configuration.enableBallisticLoad ?? true) || ((!configuration.enableBallisticLoad ?? true) && mode == LoadStatus.canLoading)) enterLoading();
+          if ((configuration!.enableBallisticLoad) ||
+              ((!configuration!.enableBallisticLoad) &&
+                  mode == LoadStatus.canLoading)) enterLoading();
         }
       }
     } else {
@@ -478,8 +524,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
   }
 
   void _onPositionUpdated(ScrollPosition newPosition) {
-    _position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
-    newPosition?.isScrollingNotifier?.addListener(_listenScrollEnd);
+    _position?.isScrollingNotifier.removeListener(_listenScrollEnd);
+    newPosition.isScrollingNotifier.addListener(_listenScrollEnd);
     super._onPositionUpdated(newPosition);
   }
 
@@ -493,7 +539,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
   @override
   void dispose() {
     // TODO: implement dispose
-    _position?.isScrollingNotifier?.removeListener(_listenScrollEnd);
+    _position?.isScrollingNotifier.removeListener(_listenScrollEnd);
     super.dispose();
   }
 
@@ -501,14 +547,16 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
   Widget build(BuildContext context) {
     // TODO: implement build
     return SliverLoading(
-        hideWhenNotFull: configuration.hideFooterWhenNotFull,
+        hideWhenNotFull: configuration!.hideFooterWhenNotFull,
         floating: widget.loadStyle == LoadStyle.ShowAlways
             ? true
             : widget.loadStyle == LoadStyle.HideAlways
                 ? false
                 : floating,
         shouldFollowContent:
-            configuration.shouldFooterFollowWhenNotFull != null ? configuration.shouldFooterFollowWhenNotFull(mode) : mode == LoadStatus.noMore,
+            configuration!.shouldFooterFollowWhenNotFull != null
+                ? configuration!.shouldFooterFollowWhenNotFull!(mode)
+                : mode == LoadStatus.noMore,
         layoutExtent: widget.height,
         mode: mode,
         child: LayoutBuilder(
@@ -517,11 +565,12 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
             return GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                if ((mode == LoadStatus.idle && !configuration.autoLoad) || (_mode.value == LoadStatus.failed)) {
+                if ((mode == LoadStatus.idle && !configuration!.autoLoad) ||
+                    (_mode!.value == LoadStatus.failed)) {
                   enterLoading();
                 }
                 if (widget.onClick != null) {
-                  widget.onClick();
+                  widget.onClick!();
                 }
               },
               child: buildContent(context, mode),
@@ -535,9 +584,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T> with
 ///
 /// help to finish the work that the header indicator and footer indicator need to do
 mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
-  SmartRefresher refresher;
+  SmartRefresher? refresher;
 
-  RefreshConfiguration configuration;
+  RefreshConfiguration? configuration;
 
   bool _floating = false;
 
@@ -549,13 +598,13 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   get mode => _mode?.value;
 
-  ValueNotifier<V> _mode;
+  ValueNotifier<V?>? _mode;
 
-  ScrollActivity get activity => _position.activity;
+  ScrollActivity? get activity => _position!.activity;
 
   // it doesn't support get the ScrollController as the listener, because it will cause "multiple scrollview use one ScollController"
   // error,only replace the ScrollPosition to listen the offset
-  ScrollPosition _position;
+  ScrollPosition? _position;
 
   // update ui
   void update() {
@@ -570,8 +619,8 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
     if (overscrollPast < 0.0) {
       return;
     }
-    if (refresher.onOffsetChange != null) {
-      refresher.onOffsetChange(V == RefreshStatus, overscrollPast);
+    if (refresher!.onOffsetChange != null) {
+      refresher!.onOffsetChange!(V == RefreshStatus, overscrollPast);
     }
     _dispatchModeByOffset(overscrollPast);
   }
@@ -586,8 +635,10 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   void _updateListener() {
     configuration = RefreshConfiguration.of(context);
     refresher = SmartRefresher.of(context);
-    ValueNotifier<V> newMode = V == RefreshStatus ? refresher.controller.headerMode : refresher.controller.footerMode;
-    final ScrollPosition newPosition = Scrollable.of(context).position;
+    ValueNotifier<V>? newMode = V == RefreshStatus
+        ? refresher!.controller.headerMode as ValueNotifier<V>?
+        : refresher!.controller.footerMode as ValueNotifier<V>?;
+    final ScrollPosition newPosition = Scrollable.of(context)!.position;
     if (newMode != _mode) {
       _mode?.removeListener(_handleModeChange);
       _mode = newMode;
@@ -605,7 +656,8 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   void initState() {
     // TODO: implement initState
     if (V == RefreshStatus) {
-      SmartRefresher.of(context)?.controller?.headerMode?.value = RefreshStatus.idle;
+      SmartRefresher.of(context)?.controller.headerMode?.value =
+          RefreshStatus.idle;
     }
     super.initState();
   }
@@ -635,7 +687,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   }
 
   void _onPositionUpdated(ScrollPosition newPosition) {
-    refresher.controller.onPositionUpdated(newPosition);
+    refresher!.controller.onPositionUpdated(newPosition);
   }
 
   void _handleModeChange();
@@ -653,7 +705,7 @@ abstract class RefreshProcessor {
   void onOffsetChange(double offset) {}
 
   /// mode change callback
-  void onModeChange(RefreshStatus mode) {}
+  void onModeChange(RefreshStatus? mode) {}
 
   /// when indicator is ready into refresh,it will call back and waiting for this function finish,then callback onRefresh
   Future readyToRefresh() {
@@ -673,7 +725,7 @@ abstract class RefreshProcessor {
 abstract class LoadingProcessor {
   void onOffsetChange(double offset) {}
 
-  void onModeChange(LoadStatus mode) {}
+  void onModeChange(LoadStatus? mode) {}
 
   /// when indicator is ready into refresh,it will call back and waiting for this function finish,then callback onRefresh
   Future readyToLoad() {

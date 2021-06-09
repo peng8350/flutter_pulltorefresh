@@ -12,10 +12,10 @@ class LinkHeader extends RefreshIndicator {
   final Key linkKey;
 
   const LinkHeader(
-      {Key key,
-      @required this.linkKey,
+      {Key? key,
+      required this.linkKey,
       double height: 0.0,
-      RefreshStyle refreshStyle,
+      RefreshStyle? refreshStyle,
       Duration completeDuration: const Duration(milliseconds: 200)})
       : super(
             height: height,
@@ -46,7 +46,7 @@ class _LinkHeaderState extends RefreshIndicatorState<LinkHeader> {
   }
 
   @override
-  void onModeChange(RefreshStatus mode) {
+  void onModeChange(RefreshStatus? mode) {
     // TODO: implement onModeChange
     ((widget.linkKey as GlobalKey).currentState as RefreshProcessor)
         .onModeChange(mode);
@@ -67,7 +67,7 @@ class _LinkHeaderState extends RefreshIndicatorState<LinkHeader> {
   }
 
   @override
-  Widget buildContent(BuildContext context, RefreshStatus mode) {
+  Widget buildContent(BuildContext context, RefreshStatus? mode) {
     // TODO: implement buildContent
     return Container();
   }
@@ -79,8 +79,8 @@ class LinkFooter extends LoadIndicator {
   final Key linkKey;
 
   const LinkFooter(
-      {Key key,
-      @required this.linkKey,
+      {Key? key,
+      required this.linkKey,
       double height: 0.0,
       LoadStyle loadStyle: LoadStyle.ShowAlways})
       : super(height: height, loadStyle: loadStyle, key: key);
@@ -94,7 +94,7 @@ class LinkFooter extends LoadIndicator {
 
 class _LinkFooterState extends LoadIndicatorState<LinkFooter> {
   @override
-  void onModeChange(LoadStatus mode) {
+  void onModeChange(LoadStatus? mode) {
     // TODO: implement onModeChange
     ((widget.linkKey as GlobalKey).currentState as LoadingProcessor)
         .onModeChange(mode);
@@ -108,7 +108,7 @@ class _LinkFooterState extends LoadIndicatorState<LinkFooter> {
   }
 
   @override
-  Widget buildContent(BuildContext context, LoadStatus mode) {
+  Widget buildContent(BuildContext context, LoadStatus? mode) {
     // TODO: implement buildContent
     return Container();
   }
