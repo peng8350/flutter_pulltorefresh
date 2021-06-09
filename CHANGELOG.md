@@ -1,3 +1,9 @@
+## 1.6.4-nullsafety.1
+* headerMode and footerMode change to not nullable
+
+## 1.6.4-nullsafety.0
+* add nullsafety feature
+
 ## 1.6.4
 * fix error crash by deprecated function removed 
 * add extra ScrollView reference parameter

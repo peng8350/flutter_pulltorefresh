@@ -56,22 +56,22 @@ enum TwoLevelDisplayAlignment { fromTop, fromCenter, fromBottom }
 /// ```
 class TwoLevelHeader extends StatelessWidget {
   /// this  attr mostly put image or color
-  final BoxDecoration decoration;
+  final BoxDecoration? decoration;
 
   /// the content in TwoLevel,display in (twoLevelOpening,closing,TwoLeveling state)
-  final Widget twoLevelWidget;
+  final Widget? twoLevelWidget;
 
   /// fromTop use with RefreshStyle.Behind,from bottom use with Follow Style
   final TwoLevelDisplayAlignment displayAlignment;
   // the following is the same with ClassicHeader
-  final String releaseText,
+  final String? releaseText,
       idleText,
       refreshingText,
       completeText,
       failedText,
       canTwoLevelText;
 
-  final Widget releaseIcon,
+  final Widget? releaseIcon,
       idleIcon,
       refreshingIcon,
       completeIcon,
@@ -88,7 +88,7 @@ class TwoLevelHeader extends StatelessWidget {
   final Duration completeDuration;
 
   const TwoLevelHeader(
-      {Key key,
+      {Key? key,
       this.height: 80.0,
       this.decoration,
       this.displayAlignment: TwoLevelDisplayAlignment.fromBottom,
@@ -135,8 +135,8 @@ class TwoLevelHeader extends StatelessWidget {
       textStyle: textStyle,
       iconPos: iconPos,
       outerBuilder: (child) {
-        final RefreshStatus mode =
-            SmartRefresher.of(context).controller.headerStatus;
+        final RefreshStatus? mode =
+            SmartRefresher.of(context)!.controller.headerStatus;
         final bool isTwoLevel = (mode == RefreshStatus.twoLevelClosing ||
             mode == RefreshStatus.twoLeveling ||
             mode == RefreshStatus.twoLevelOpening);
@@ -145,7 +145,7 @@ class TwoLevelHeader extends StatelessWidget {
             decoration: !isTwoLevel
                 ? (decoration ?? BoxDecoration(color: Colors.redAccent))
                 : null,
-            height: SmartRefresher.ofState(context).viewportExtent,
+            height: SmartRefresher.ofState(context)!.viewportExtent,
             alignment: isTwoLevel ? null : Alignment.bottomCenter,
             child: isTwoLevel
                 ? twoLevelWidget

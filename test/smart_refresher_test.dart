@@ -232,7 +232,7 @@ void main() {
     ));
 
     // check onOffsetChange(top)
-    _refreshController.position.jumpTo(0.0);
+    _refreshController.position!.jumpTo(0.0);
     double count = 1;
     while (count < 11) {
       await tester.drag(find.byType(Scrollable), Offset(0, 20),
@@ -240,13 +240,13 @@ void main() {
       count++;
       await tester.pump(Duration(milliseconds: 20));
     }
-    for (double i in logs) {
+    for (double i in logs as Iterable<double>) {
       expect(i, greaterThanOrEqualTo(0));
     }
     logs.clear();
     // check onOffsetChange
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent);
     count = 1;
     while (count < 11) {
       await tester.drag(find.byType(Scrollable), Offset(0, -20),
@@ -255,7 +255,7 @@ void main() {
       await tester.pump(Duration(milliseconds: 20));
     }
     expect(logs.length, greaterThan(0));
-    for (double i in logs) {
+    for (double i in logs as Iterable<double>) {
       expect(i, greaterThanOrEqualTo(0));
     }
     logs.clear();
@@ -301,14 +301,14 @@ void main() {
     await tester.fling(find.byType(Viewport), const Offset(0, -1000), 3000);
     await tester.pumpAndSettle();
     expect(_refreshController.footerStatus, LoadStatus.loading);
-    _refreshController.footerMode.value = LoadStatus.idle;
+    _refreshController.footerMode!.value = LoadStatus.idle;
     await tester.pumpAndSettle();
     // test drag up
-    _refreshController.position
-        .jumpTo(_refreshController.position.maxScrollExtent);
+    _refreshController.position!
+        .jumpTo(_refreshController.position!.maxScrollExtent);
     await tester.drag(find.byType(Viewport), const Offset(0, -100));
     await tester.pumpAndSettle();
-    expect(_refreshController.position.extentAfter, 0.0);
+    expect(_refreshController.position!.extentAfter, 0.0);
     _refreshController.loadComplete();
     expect(time, 3);
   });
@@ -351,7 +351,7 @@ void main() {
     expect(_refreshController.headerStatus, RefreshStatus.canRefresh);
     await tester.pump(Duration(milliseconds: 2));
     expect(_refreshController.headerStatus, RefreshStatus.refreshing);
-    expect(_refreshController.position.pixels, lessThan(0.0));
+    expect(_refreshController.position!.pixels, lessThan(0.0));
     await tester.tapAt(Offset(30, 30));
     expect(time, 1);
   });
@@ -360,7 +360,7 @@ void main() {
       (tester) async {
     final RefreshController _refreshController = RefreshController();
 
-    BuildContext context2;
+    late BuildContext context2;
     await tester.pumpWidget(RefreshConfiguration(
       hideFooterWhenNotFull: true,
       dragSpeedRatio: 0.8,
@@ -407,12 +407,12 @@ void main() {
         },
       ),
     ));
-    expect(RefreshConfiguration.of(context2).maxUnderScrollExtent, 100);
-    expect(RefreshConfiguration.of(context2).dragSpeedRatio, 0.7);
-    expect(RefreshConfiguration.of(context2).hideFooterWhenNotFull, true);
-    expect(RefreshConfiguration.of(context2).closeTwoLevelDistance, 100);
-    expect(RefreshConfiguration.of(context2).footerTriggerDistance, 150);
-    expect(RefreshConfiguration.of(context2).enableScrollWhenTwoLevel, true);
-    expect(RefreshConfiguration.of(context2).enableBallisticRefresh, false);
+    expect(RefreshConfiguration.of(context2)!.maxUnderScrollExtent, 100);
+    expect(RefreshConfiguration.of(context2)!.dragSpeedRatio, 0.7);
+    expect(RefreshConfiguration.of(context2)!.hideFooterWhenNotFull, true);
+    expect(RefreshConfiguration.of(context2)!.closeTwoLevelDistance, 100);
+    expect(RefreshConfiguration.of(context2)!.footerTriggerDistance, 150);
+    expect(RefreshConfiguration.of(context2)!.enableScrollWhenTwoLevel, true);
+    expect(RefreshConfiguration.of(context2)!.enableBallisticRefresh, false);
   });
 }
