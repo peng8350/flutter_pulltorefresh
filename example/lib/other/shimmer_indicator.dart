@@ -21,14 +21,14 @@ class ShimmerHeader extends RefreshIndicator {
   final Widget text;
   final Duration period;
   final ShimmerDirection direction;
-  final Function outerBuilder;
+  final Function? outerBuilder;
 
-  ShimmerHeader(
-      {@required this.text,
+  const ShimmerHeader(
+      {required this.text,
       this.baseColor = Colors.grey,
       this.highlightColor = Colors.white,
       this.outerBuilder,
-      double height: 80.0,
+      double height = 80.0,
       this.period = const Duration(milliseconds: 1000),
       this.direction = ShimmerDirection.ltr})
       : super(height: height, refreshStyle: RefreshStyle.Behind);
@@ -42,8 +42,8 @@ class ShimmerHeader extends RefreshIndicator {
 
 class _ShimmerHeaderState extends RefreshIndicatorState<ShimmerHeader>
     with TickerProviderStateMixin {
-  AnimationController _scaleController;
-  AnimationController _fadeController;
+  late AnimationController _scaleController;
+  late AnimationController _fadeController;
 
   @override
   void initState() {
@@ -57,8 +57,8 @@ class _ShimmerHeaderState extends RefreshIndicatorState<ShimmerHeader>
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
     if (!floating) {
-      _scaleController.value = offset / configuration.headerTriggerDistance;
-      _fadeController.value = offset / configuration.footerTriggerDistance;
+      _scaleController.value = offset / configuration!.headerTriggerDistance;
+      _fadeController.value = offset / configuration!.footerTriggerDistance;
     }
   }
 
@@ -86,11 +86,11 @@ class _ShimmerHeaderState extends RefreshIndicatorState<ShimmerHeader>
       ),
     );
     return widget.outerBuilder != null
-        ? widget.outerBuilder(body)
+        ? widget.outerBuilder!(body)
         : Container(
             alignment: prefix0.Alignment.center,
+            decoration: const prefix0.BoxDecoration(color: Colors.black12),
             child: body,
-            decoration: prefix0.BoxDecoration(color: Colors.black12),
           );
   }
 }
@@ -100,19 +100,19 @@ class ShimmerFooter extends LoadIndicator {
   final Widget text, failed, noMore;
   final Duration period;
   final ShimmerDirection direction;
-  final Function outerBuilder;
+  final Function? outerBuilder;
 
-  ShimmerFooter(
-      {@required this.text,
+  const ShimmerFooter(
+      {required this.text,
       this.baseColor = Colors.grey,
       this.highlightColor = Colors.white,
       this.outerBuilder,
-      double height: 80.0,
-      this.failed,
-      this.noMore,
+      double height = 80.0,
+      required this.failed,
+      required this.noMore,
       this.period = const Duration(milliseconds: 1000),
       this.direction = ShimmerDirection.ltr,
-      LoadStyle loadStyle: LoadStyle.ShowAlways})
+      LoadStyle loadStyle = LoadStyle.ShowAlways})
       : super(height: height, loadStyle: loadStyle);
 
   @override
@@ -143,11 +143,11 @@ class _ShimmerFooterState extends LoadIndicatorState<ShimmerFooter> {
                     ),
                   );
     return widget.outerBuilder != null
-        ? widget.outerBuilder(body)
+        ? widget.outerBuilder!(body)
         : Container(
             height: widget.height,
+            decoration:const prefix0.BoxDecoration(color: Colors.black12),
             child: body,
-            decoration: prefix0.BoxDecoration(color: Colors.black12),
           );
   }
 }
