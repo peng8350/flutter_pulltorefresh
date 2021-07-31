@@ -3,7 +3,6 @@
  * Email: peng8350@gmail.com
  * Time:  2019-07-08 10:51
  */
-import 'package:flutter/material.dart' as prefix0;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
@@ -88,8 +87,8 @@ class _ShimmerHeaderState extends RefreshIndicatorState<ShimmerHeader>
     return widget.outerBuilder != null
         ? widget.outerBuilder!(body)
         : Container(
-            alignment: prefix0.Alignment.center,
-            decoration: const prefix0.BoxDecoration(color: Colors.black12),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(color: Colors.black12),
             child: body,
           );
   }
@@ -146,7 +145,7 @@ class _ShimmerFooterState extends LoadIndicatorState<ShimmerFooter> {
         ? widget.outerBuilder!(body)
         : Container(
             height: widget.height,
-            decoration:const prefix0.BoxDecoration(color: Colors.black12),
+            decoration:const BoxDecoration(color: Colors.black12),
             child: body,
           );
   }
