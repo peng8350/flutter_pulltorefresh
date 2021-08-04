@@ -107,11 +107,18 @@ class RefreshPhysics extends ScrollPhysics {
     }
   }
 
+  BuildContext? get storageContext {
+    ScrollContext? context = controller!.position?.context;
+    if(context == null || (context is State && !(context as State).mounted)) {
+      return null;
+    }
+    return context.storageContext;
+  }
+
   @override
   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
     // TODO: implement applyPhysicsToUserOffset
-    viewportRender ??=
-        findViewport(controller!.position?.context.storageContext);
+    viewportRender ??= findViewport(storageContext);
     if (controller!.headerMode!.value == RefreshStatus.twoLeveling) {
       if (offset > 0.0) {
         return parent!.applyPhysicsToUserOffset(position, offset);
@@ -170,8 +177,7 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     final ScrollPosition scrollPosition = position as ScrollPosition;
-    viewportRender ??=
-        findViewport(controller!.position?.context.storageContext);
+    viewportRender ??= findViewport(storageContext);
     bool notFull = position.minScrollExtent == position.maxScrollExtent;
     final bool enablePullDown = viewportRender == null
         ? false
@@ -264,8 +270,7 @@ class RefreshPhysics extends ScrollPhysics {
   Simulation? createBallisticSimulation(
       ScrollMetrics position, double velocity) {
     // TODO: implement createBallisticSimulation
-    viewportRender ??=
-        findViewport(controller!.position?.context.storageContext);
+    viewportRender ??= findViewport(storageContext);
 
     final bool enablePullDown = viewportRender == null
         ? false
