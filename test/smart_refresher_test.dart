@@ -371,4 +371,61 @@ void main() {
     expect(RefreshConfiguration.of(context2)!.enableScrollWhenTwoLevel, true);
     expect(RefreshConfiguration.of(context2)!.enableBallisticRefresh, false);
   });
+
+  /// Rebuild the widget after 'refresh' or 'loadmore' is completed, check
+  /// their callbaks can get a correct timestamp(defined in 'builder').
+  /// If get a wrong timestamp, consider memory leak.
+  testWidgets("test memory leak", (tester) async {
+    final controller = RefreshController();
+    int currentTimestamp = 0;
+    await tester.pumpWidget(MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Builder(
+            key: Key('builder'),
+            builder: (context) {
+              int timestamp = DateTime.now().millisecondsSinceEpoch;
+              currentTimestamp = timestamp;
+              return SmartRefresher(
+                controller: controller,
+                enablePullUp: true,
+                onLoading: () {
+                  controller.loadComplete();
+                  expect(timestamp, currentTimestamp);
+                  tester
+                      .firstElement(find.byKey(Key('builder')))
+                      .markNeedsBuild();
+                },
+                onRefresh: () {
+                  controller.refreshCompleted();
+                  expect(timestamp, currentTimestamp);
+                  tester
+                      .firstElement(find.byKey(Key('builder')))
+                      .markNeedsBuild();
+                },
+                child: ListView(
+                  children: List<Widget>.generate(20, (index) {
+                    return Container(height: 50, child: Text('Item: $index'));
+                  }),
+                ),
+              );
+            }),
+      ),
+    ));
+
+    // test pull refresh
+    await tester.drag(find.byType(Scrollable), const Offset(0, 100.0),
+        touchSlopY: 0.0);
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(Scrollable), const Offset(0, 100.0),
+        touchSlopY: 0.0);
+    await tester.pumpAndSettle();
+
+    // test load more
+    controller.position!.jumpTo(controller.position!.maxScrollExtent - 30.0);
+    await tester.drag(find.byType(Scrollable), const Offset(0, -30.0));
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(Scrollable), const Offset(0, -30.0));
+    await tester.pumpAndSettle();
+  });
 }
