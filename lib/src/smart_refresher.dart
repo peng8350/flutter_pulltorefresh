@@ -281,12 +281,12 @@ class SmartRefresherState extends State<SmartRefresher> {
   double viewportExtent = 0;
   bool _canDrag = true;
 
-  final RefreshIndicator defaultHeader =
+  RefreshIndicator get defaultHeader =>
       defaultTargetPlatform == TargetPlatform.iOS
           ? ClassicHeader()
           : MaterialClassicHeader();
 
-  final LoadIndicator defaultFooter = ClassicFooter();
+  LoadIndicator get defaultFooter => ClassicFooter();
 
   //build slivers from child Widget
   List<Widget>? _buildSliversByChild(BuildContext context, Widget? child,
