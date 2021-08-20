@@ -478,7 +478,7 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     if (active) {
       // consider reverse loading and HideAlways==loadStyle
       geometry = SliverGeometry(
-        scrollExtent: !_hasLayoutExtent! || !_computeIfFull(constraints)
+        scrollExtent: !_hasLayoutExtent! || (!_computeIfFull(constraints) && mode != LoadStatus.noMore)
             ? 0
             : layoutExtent,
         paintExtent: paintedChildSize,
