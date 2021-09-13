@@ -80,6 +80,7 @@ class RefreshLocalizations {
     'sv': SvRefreshString(),
     'pt': PtRefreshString(),
     'ko': KrRefreshString(),
+    'ar': ArRefreshString(),
   };
 
   RefreshString? get currentLocalization {
@@ -116,7 +117,8 @@ class RefreshLocalizationsDelegate
       'pt',
       'sv',
       'nl',
-      'es'
+      'es',
+      'ar'
     ].contains(locale.languageCode);
   }
 
@@ -634,4 +636,40 @@ class KrRefreshString implements RefreshString {
 
   @override
   String? refreshingText = "새로 고침 중…";
+}
+
+/// Arabic
+class ArRefreshString implements RefreshString {
+  @override
+  String? canLoadingText = "اسحب لتحميل المزيد";
+
+  @override
+  String? canRefreshText = "اسحب للتحديث";
+
+  @override
+  String? canTwoLevelText = "حرر للدخول الى المستوى الثاني";
+
+  @override
+  String? idleLoadingText = "اسحب للأعلى لتحميل المزيد";
+
+  @override
+  String? idleRefreshText = "اسحب للأسفل للتحديث";
+
+  @override
+  String? loadFailedText = "فشل في التحميل";
+
+  @override
+  String? loadingText = "تحميل…";
+
+  @override
+  String? noMoreText = "لم يعد يوجد بيانات";
+
+  @override
+  String? refreshCompleteText = "انتهى التحديث";
+
+  @override
+  String? refreshFailedText = "فشل في التحديث";
+
+  @override
+  String? refreshingText = "جاري التحديث…";
 }
