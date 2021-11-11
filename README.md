@@ -274,6 +274,17 @@ Demonstrate another wrong doing,put ScrollView in another widget
 The above mistake led to scrollable nesting another scrollable, causing you to not see the header and footer no matter how slippery you are.
 Similarly, you may need to work with components like NotificationListener, ScrollConfiguration..., remember, don't store them outside ScrollView (you want to add refresh parts) and Smart Refresher memory.。
 
+## Put SmartRefresher in a Column
+If you want to put SmartRefresher inside a column you need to wrap it inside `Expanded()` Widget
+for e.g
+```
+Column(
+    children: [
+        Text('hello world', 
+        Expanded(child: SmartRefresher(...))
+    ],
+)
+```
 
 ## More
 - [Property Document](propertys_en.md) or [Api/Doc](https://pub.dev/documentation/pull_to_refresh/latest/pulltorefresh/SmartRefresher-class.html)
