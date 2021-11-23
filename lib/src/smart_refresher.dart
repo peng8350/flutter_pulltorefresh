@@ -653,11 +653,12 @@ class RefreshController {
   Future<void>? requestRefresh(
       {bool needMove: true,
       bool needCallback: true,
-      Duration duration: const Duration(milliseconds: 500),
+      bool overrideOngoingRequest: true,
+      Duration duration: const Duration(milliseconds: 50),
       Curve curve: Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    if (isRefresh) return Future.value();
+    if (isRefresh && !overrideOngoingRequest) return Future.value();
     StatefulElement? indicatorElement =
         _findIndicator(position!.context.storageContext, RefreshIndicator);
 
