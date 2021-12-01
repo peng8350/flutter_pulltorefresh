@@ -16,6 +16,9 @@ import '../smart_refresher.dart';
 
 /// QQ ios refresh  header effect
 class WaterDropHeader extends RefreshIndicator {
+  /// background color
+  final Color? backgroundColor;
+
   /// refreshing content
   final Widget? refresh;
 
@@ -43,6 +46,7 @@ class WaterDropHeader extends RefreshIndicator {
       size: 15,
       color: Colors.white,
     ),
+    this.backgroundColor,
   }) : super(
             key: key,
             height: 60.0,
@@ -150,8 +154,10 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
             ],
           );
     } else if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
-      return FadeTransition(
-          child: Container(
+      return Container(
+        color: widget.backgroundColor,
+        height: 60.0,
+        child: FadeTransition(
             child: Stack(
               children: <Widget>[
                 RotatedBox(
@@ -182,12 +188,12 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                 )
               ],
             ),
-            height: 60.0,
-          ),
-          opacity: _dismissCtl);
+            opacity: _dismissCtl),
+      );
     }
     return Container(
       height: 60.0,
+      color: widget.backgroundColor,
       child: Center(
         child: child,
       ),
