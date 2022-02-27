@@ -80,6 +80,7 @@ class RefreshLocalizations {
     'sv': SvRefreshString(),
     'pt': PtRefreshString(),
     'ko': KrRefreshString(),
+    'no': NoRefreshString(),
   };
 
   RefreshString? get currentLocalization {
@@ -116,7 +117,8 @@ class RefreshLocalizationsDelegate
       'pt',
       'sv',
       'nl',
-      'es'
+      'es',
+      'no'
     ].contains(locale.languageCode);
   }
 
@@ -634,4 +636,40 @@ class KrRefreshString implements RefreshString {
 
   @override
   String? refreshingText = "새로 고침 중…";
+}
+
+/// Norwegian
+class NoRefreshString implements RefreshString {
+  @override
+  String? canLoadingText = "Slipp for å laste flere";
+
+  @override
+  String? canRefreshText = "Slipp for å oppdatere";
+
+  @override
+  String? canTwoLevelText = "Slip for å gå til neste nivå";
+
+  @override
+  String? idleLoadingText = "Dra opp for å laste flere";
+
+  @override
+  String? idleRefreshText = "Dra ned for å oppdatere";
+
+  @override
+  String? loadFailedText = "Lastingen mislyktes";
+
+  @override
+  String? loadingText = "Laster…";
+
+  @override
+  String? noMoreText = "Ingen flere data";
+
+  @override
+  String? refreshCompleteText = "Oppdatert";
+
+  @override
+  String? refreshFailedText = "Kunne ikke oppdatere";
+
+  @override
+  String? refreshingText = "Oppdaterer…";
 }
