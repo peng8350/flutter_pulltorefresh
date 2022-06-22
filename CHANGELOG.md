@@ -1,3 +1,6 @@
+## 2.0.1
+* support flutter3
+
 ## 2.0.0
 ### Breaking Changes:
 * Remove onOffsetChange in SmartRefresher,autoLoad in RefreshConfiguration,scrollController in RefreshController

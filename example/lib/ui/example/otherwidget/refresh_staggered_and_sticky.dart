@@ -4,7 +4,7 @@
  * Time:  2019-07-23 21:09
  */
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
@@ -17,12 +17,10 @@ class RefreshStaggeredAndSticky extends StatefulWidget {
   RefreshStaggeredAndSticky({Key key}) : super(key: key);
 
   @override
-  RefreshStaggeredAndStickyState createState() =>
-      RefreshStaggeredAndStickyState();
+  RefreshStaggeredAndStickyState createState() => RefreshStaggeredAndStickyState();
 }
 
-class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
-    with TickerProviderStateMixin {
+class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky> with TickerProviderStateMixin {
   RefreshController _refreshController;
 
   List<Widget> data = [];
@@ -49,8 +47,7 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
         child: Container(
           color: Color.fromARGB(255, 250, 250, 250),
           child: Card(
-            margin:
-                EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+            margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
             child: Center(
               child: Text('Data $i'),
             ),
@@ -131,8 +128,7 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
               child: new Text('$index'),
             ),
           )),
-      staggeredTileBuilder: (int index) =>
-          new StaggeredTile.count(2, index.isEven ? 2 : 1),
+      staggeredTileBuilder: (int index) => new StaggeredTile.count(2, index.isEven ? 2 : 1),
       mainAxisSpacing: 4.0,
       crossAxisSpacing: 4.0,
     ));

@@ -4,10 +4,9 @@
  *   createTime:2018-05-14 17:39
  */
 
-import 'package:flutter/material.dart'
-    hide RefreshIndicator, RefreshIndicatorState;
+import 'package:flutter/material.dart' hide RefreshIndicator, RefreshIndicatorState;
 import 'package:flutter/widgets.dart';
-import '../../pull_to_refresh.dart';
+import '../../pull_to_refresh_flutter3.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,19 +36,8 @@ class ClassicHeader extends RefreshIndicator {
   /// ````
   /// In this example,it will help to add backgroundColor in indicator
   final OuterBuilder? outerBuilder;
-  final String? releaseText,
-      idleText,
-      refreshingText,
-      completeText,
-      failedText,
-      canTwoLevelText;
-  final Widget? releaseIcon,
-      idleIcon,
-      refreshingIcon,
-      completeIcon,
-      failedIcon,
-      canTwoLevelIcon,
-      twoLevelView;
+  final String? releaseText, idleText, refreshingText, completeText, failedText, canTwoLevelText;
+  final Widget? releaseIcon, idleIcon, refreshingIcon, completeIcon, failedIcon, canTwoLevelIcon, twoLevelView;
 
   /// icon and text middle margin
   final double spacing;
@@ -95,9 +83,7 @@ class ClassicHeader extends RefreshIndicator {
 
 class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
   Widget _buildText(mode) {
-    RefreshString strings =
-        RefreshLocalizations.of(context)?.currentLocalization ??
-            EnRefreshString();
+    RefreshString strings = RefreshLocalizations.of(context)?.currentLocalization ?? EnRefreshString();
     return Text(
         mode == RefreshStatus.canRefresh
             ? widget.releaseText ?? strings.canRefreshText!
@@ -110,8 +96,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                         : mode == RefreshStatus.idle
                             ? widget.idleText ?? strings.idleRefreshText!
                             : mode == RefreshStatus.canTwoLevel
-                                ? widget.canTwoLevelText ??
-                                    strings.canTwoLevelText!
+                                ? widget.canTwoLevelText ?? strings.canTwoLevelText!
                                 : "",
         style: widget.textStyle);
   }
@@ -134,11 +119,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                                     SizedBox(
                                       width: 25.0,
                                       height: 25.0,
-                                      child: defaultTargetPlatform ==
-                                              TargetPlatform.iOS
-                                          ? const CupertinoActivityIndicator()
-                                          : const CircularProgressIndicator(
-                                              strokeWidth: 2.0),
+                                      child: defaultTargetPlatform == TargetPlatform.iOS ? const CupertinoActivityIndicator() : const CircularProgressIndicator(strokeWidth: 2.0),
                                     )
                                 : widget.twoLevelView;
     return icon ?? Container();
@@ -158,17 +139,10 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
     List<Widget> children = <Widget>[iconWidget, textWidget];
     final Widget container = Wrap(
       spacing: widget.spacing,
-      textDirection: widget.iconPos == IconPosition.left
-          ? TextDirection.ltr
-          : TextDirection.rtl,
-      direction: widget.iconPos == IconPosition.bottom ||
-              widget.iconPos == IconPosition.top
-          ? Axis.vertical
-          : Axis.horizontal,
+      textDirection: widget.iconPos == IconPosition.left ? TextDirection.ltr : TextDirection.rtl,
+      direction: widget.iconPos == IconPosition.bottom || widget.iconPos == IconPosition.top ? Axis.vertical : Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,
-      verticalDirection: widget.iconPos == IconPosition.bottom
-          ? VerticalDirection.up
-          : VerticalDirection.down,
+      verticalDirection: widget.iconPos == IconPosition.bottom ? VerticalDirection.up : VerticalDirection.down,
       alignment: WrapAlignment.center,
       children: children,
     );
@@ -251,9 +225,7 @@ class ClassicFooter extends LoadIndicator {
 
 class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
   Widget _buildText(LoadStatus? mode) {
-    RefreshString strings =
-        RefreshLocalizations.of(context)?.currentLocalization ??
-            EnRefreshString();
+    RefreshString strings = RefreshLocalizations.of(context)?.currentLocalization ?? EnRefreshString();
     return Text(
         mode == LoadStatus.loading
             ? widget.loadingText ?? strings.loadingText!
@@ -273,9 +245,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
             SizedBox(
               width: 25.0,
               height: 25.0,
-              child: defaultTargetPlatform == TargetPlatform.iOS
-                  ? const CupertinoActivityIndicator()
-                  : const CircularProgressIndicator(strokeWidth: 2.0),
+              child: defaultTargetPlatform == TargetPlatform.iOS ? const CupertinoActivityIndicator() : const CircularProgressIndicator(strokeWidth: 2.0),
             )
         : mode == LoadStatus.noMore
             ? widget.noMoreIcon
@@ -301,17 +271,10 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
     List<Widget> children = <Widget>[iconWidget, textWidget];
     final Widget container = Wrap(
       spacing: widget.spacing,
-      textDirection: widget.iconPos == IconPosition.left
-          ? TextDirection.ltr
-          : TextDirection.rtl,
-      direction: widget.iconPos == IconPosition.bottom ||
-              widget.iconPos == IconPosition.top
-          ? Axis.vertical
-          : Axis.horizontal,
+      textDirection: widget.iconPos == IconPosition.left ? TextDirection.ltr : TextDirection.rtl,
+      direction: widget.iconPos == IconPosition.bottom || widget.iconPos == IconPosition.top ? Axis.vertical : Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,
-      verticalDirection: widget.iconPos == IconPosition.bottom
-          ? VerticalDirection.up
-          : VerticalDirection.down,
+      verticalDirection: widget.iconPos == IconPosition.bottom ? VerticalDirection.up : VerticalDirection.down,
       alignment: WrapAlignment.center,
       children: children,
     );

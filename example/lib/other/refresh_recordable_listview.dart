@@ -5,7 +5,7 @@
 import 'dart:math';
 
 import 'package:flutter/rendering.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:flutter/material.dart' hide RefreshIndicator;
 
 // Examples can assume:
@@ -135,8 +135,7 @@ class RefreshReorderableListView extends StatefulWidget {
 // insert Draggables into the Overlay above itself.
 class _ReorderableListViewState extends State<RefreshReorderableListView> {
   // We use an inner overlay so that the dragging list item doesn't draw outside of the list itself.
-  final GlobalKey _overlayKey =
-      GlobalKey(debugLabel: '$ReorderableListView overlay key');
+  final GlobalKey _overlayKey = GlobalKey(debugLabel: '$ReorderableListView overlay key');
 
   // This entry contains the scrolling list itself.
   OverlayEntry _listOverlayEntry;
@@ -219,8 +218,7 @@ class _ReorderableListContent extends StatefulWidget {
   _ReorderableListContentState createState() => _ReorderableListContentState();
 }
 
-class _ReorderableListContentState extends State<_ReorderableListContent>
-    with TickerProviderStateMixin<_ReorderableListContent> {
+class _ReorderableListContentState extends State<_ReorderableListContent> with TickerProviderStateMixin<_ReorderableListContent> {
   // The extent along the [widget.scrollDirection] axis to allow a child to
   // drop into when the user reorders list children.
   //
@@ -292,17 +290,14 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
   @override
   void initState() {
     super.initState();
-    _entranceController =
-        AnimationController(vsync: this, duration: _reorderAnimationDuration);
-    _ghostController =
-        AnimationController(vsync: this, duration: _reorderAnimationDuration);
+    _entranceController = AnimationController(vsync: this, duration: _reorderAnimationDuration);
+    _ghostController = AnimationController(vsync: this, duration: _reorderAnimationDuration);
     _entranceController.addStatusListener(_onEntranceStatusChanged);
   }
 
   @override
   void didChangeDependencies() {
-    _scrollController =
-        PrimaryScrollController.of(context) ?? ScrollController();
+    _scrollController = PrimaryScrollController.of(context) ?? ScrollController();
     super.didChangeDependencies();
   }
 
@@ -339,8 +334,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
   void _scrollTo(BuildContext context) {
     if (_scrolling) return;
     final RenderObject contextObject = context.findRenderObject();
-    final RenderAbstractViewport viewport =
-        RenderAbstractViewport.of(contextObject);
+    final RenderAbstractViewport viewport = RenderAbstractViewport.of(contextObject);
     assert(viewport != null);
     // If and only if the current scroll offset falls in-between the offsets
     // necessary to reveal the selected context at the top or bottom of the
@@ -355,8 +349,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
       _scrollController.position.maxScrollExtent,
       viewport.getOffsetToReveal(contextObject, 1.0).offset + margin,
     );
-    final bool onScreen =
-        scrollOffset <= topOffset && scrollOffset >= bottomOffset;
+    final bool onScreen = scrollOffset <= topOffset && scrollOffset >= bottomOffset;
 
     // If the context is off screen, then we request a scroll to make it visible.
     if (!onScreen) {
@@ -428,8 +421,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
 
     Widget wrapWithSemantics() {
       // First, determine which semantics actions apply.
-      final Map<CustomSemanticsAction, VoidCallback> semanticsActions =
-          <CustomSemanticsAction, VoidCallback>{};
+      final Map<CustomSemanticsAction, VoidCallback> semanticsActions = <CustomSemanticsAction, VoidCallback>{};
 
       // Create the appropriate semantics actions.
       void moveToStart() => reorder(index, 0);
@@ -439,36 +431,26 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
       // before index+2, which is after the space at index+1.
       void moveAfter() => reorder(index, index + 2);
 
-      final MaterialLocalizations localizations =
-          MaterialLocalizations.of(context);
+      final MaterialLocalizations localizations = MaterialLocalizations.of(context);
 
       // If the item can move to before its current position in the list.
       if (index > 0) {
-        semanticsActions[CustomSemanticsAction(
-            label: localizations.reorderItemToStart)] = moveToStart;
+        semanticsActions[CustomSemanticsAction(label: localizations.reorderItemToStart)] = moveToStart;
         String reorderItemBefore = localizations.reorderItemUp;
         if (widget.scrollDirection == Axis.horizontal) {
-          reorderItemBefore = Directionality.of(context) == TextDirection.ltr
-              ? localizations.reorderItemLeft
-              : localizations.reorderItemRight;
+          reorderItemBefore = Directionality.of(context) == TextDirection.ltr ? localizations.reorderItemLeft : localizations.reorderItemRight;
         }
-        semanticsActions[CustomSemanticsAction(label: reorderItemBefore)] =
-            moveBefore;
+        semanticsActions[CustomSemanticsAction(label: reorderItemBefore)] = moveBefore;
       }
 
       // If the item can move to after its current position in the list.
       if (index < widget.children.length - 1) {
         String reorderItemAfter = localizations.reorderItemDown;
         if (widget.scrollDirection == Axis.horizontal) {
-          reorderItemAfter = Directionality.of(context) == TextDirection.ltr
-              ? localizations.reorderItemRight
-              : localizations.reorderItemLeft;
+          reorderItemAfter = Directionality.of(context) == TextDirection.ltr ? localizations.reorderItemRight : localizations.reorderItemLeft;
         }
-        semanticsActions[CustomSemanticsAction(label: reorderItemAfter)] =
-            moveAfter;
-        semanticsActions[
-                CustomSemanticsAction(label: localizations.reorderItemToEnd)] =
-            moveToEnd;
+        semanticsActions[CustomSemanticsAction(label: reorderItemAfter)] = moveAfter;
+        semanticsActions[CustomSemanticsAction(label: localizations.reorderItemToEnd)] = moveToEnd;
       }
 
       // We pass toWrap with a GlobalKey into the Draggable so that when a list
@@ -488,8 +470,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
       );
     }
 
-    Widget buildDragTarget(BuildContext context, List<Key> acceptedCandidates,
-        List<dynamic> rejectedCandidates) {
+    Widget buildDragTarget(BuildContext context, List<Key> acceptedCandidates, List<dynamic> rejectedCandidates) {
       final Widget toWrapWithSemantics = wrapWithSemantics();
 
       // We build the draggable inside of a layout builder so that we can
@@ -590,8 +571,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
   @override
   Widget build(BuildContext context) {
     // We use the layout builder to constrain the cross-axis size of dragging child widgets.
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
+    return LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
       final List<Widget> wrappedChildren = <Widget>[];
       if (widget.header != null) {
         wrappedChildren.add(widget.header);
@@ -631,9 +611,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
       return SmartRefresher(
         child: ListView(
           scrollDirection: widget.scrollDirection,
-          children: [
-            _buildContainerForScrollDirection(children: wrappedChildren)
-          ],
+          children: [_buildContainerForScrollDirection(children: wrappedChildren)],
           padding: widget.padding,
           controller: _scrollController,
           reverse: widget.reverse,

@@ -4,9 +4,8 @@
  * Time: 2019/5/5 下午6:10
  */
 
-import 'package:flutter/material.dart'
-    hide RefreshIndicator, RefreshIndicatorState;
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter/material.dart' hide RefreshIndicator, RefreshIndicatorState;
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import '../../Item.dart';
 
 class IndicatorActivity extends StatefulWidget {
@@ -19,12 +18,7 @@ class IndicatorActivity extends StatefulWidget {
   final bool enableOverScroll;
   final bool reverse;
 
-  IndicatorActivity(
-      {this.title,
-      this.header,
-      this.reverse: false,
-      this.footer,
-      this.enableOverScroll: true});
+  IndicatorActivity({this.title, this.header, this.reverse: false, this.footer, this.enableOverScroll: true});
 
   @override
   State<StatefulWidget> createState() {

@@ -6,7 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 /*
     achieve requirement
@@ -24,8 +24,7 @@ class TapButtonRefreshExample extends StatefulWidget {
 
 class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
   List<String> data = [];
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
   bool _enablePullDown = false;
 
   Widget buildEmpty() {

@@ -11,7 +11,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import '../../Item.dart';
 
 class LinkHeaderExample extends StatefulWidget {
@@ -99,8 +99,7 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
             Container(
               height: 64.0,
               child: AppBar(
-                backgroundColor:
-                    dismissAppbar ? Colors.blueAccent : Colors.transparent,
+                backgroundColor: dismissAppbar ? Colors.blueAccent : Colors.transparent,
                 elevation: dismissAppbar ? 1.0 : 0.0,
                 title: SimpleLinkBar(
                   key: linkKey,
@@ -125,8 +124,7 @@ class SimpleLinkBar extends StatefulWidget {
   }
 }
 
-class _SimpleLinkBarState extends State<SimpleLinkBar>
-    with RefreshProcessor, SingleTickerProviderStateMixin {
+class _SimpleLinkBarState extends State<SimpleLinkBar> with RefreshProcessor, SingleTickerProviderStateMixin {
   RefreshStatus _status = RefreshStatus.idle;
   AnimationController _animationController;
 
@@ -153,8 +151,7 @@ class _SimpleLinkBarState extends State<SimpleLinkBar>
   @override
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
-    if (_status != RefreshStatus.refreshing)
-      _animationController.value = offset / 80.0;
+    if (_status != RefreshStatus.refreshing) _animationController.value = offset / 80.0;
     super.onOffsetChange(offset);
   }
 

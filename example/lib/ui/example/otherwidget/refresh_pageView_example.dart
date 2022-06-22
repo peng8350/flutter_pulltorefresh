@@ -7,7 +7,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 /*
   this example will show you how to use vertical PageView as child in SmartRefresher(vertical refresh)
@@ -19,8 +19,7 @@ class PageViewExample extends StatefulWidget {
   PageViewExampleState createState() => PageViewExampleState();
 }
 
-class PageViewExampleState extends State<PageViewExample>
-    with TickerProviderStateMixin {
+class PageViewExampleState extends State<PageViewExample> with TickerProviderStateMixin {
   RefreshController _refreshController;
   int _lastReportedPage = 0;
   List<Widget> data = [];
@@ -49,8 +48,7 @@ class PageViewExampleState extends State<PageViewExample>
   Widget build(BuildContext context) {
     return NotificationListener(
       onNotification: (ScrollNotification notification) {
-        if (notification.depth == 0 &&
-            notification is ScrollUpdateNotification) {
+        if (notification.depth == 0 && notification is ScrollUpdateNotification) {
           final PageMetrics metrics = notification.metrics as PageMetrics;
           final int currentPage = metrics.page.round();
           if (currentPage != _lastReportedPage) {
@@ -80,13 +78,7 @@ class PageViewExampleState extends State<PageViewExample>
           physics: PageScrollPhysics(),
           controller: _pageController,
           slivers: <Widget>[
-            SliverFillViewport(
-                delegate: SliverChildListDelegate([
-              Center(child: Text("第一页")),
-              Center(child: Text("第二页")),
-              Center(child: Text("第三页")),
-              Center(child: Text("第四页"))
-            ]))
+            SliverFillViewport(delegate: SliverChildListDelegate([Center(child: Text("第一页")), Center(child: Text("第二页")), Center(child: Text("第三页")), Center(child: Text("第四页"))]))
           ],
         ),
         onLoading: () {

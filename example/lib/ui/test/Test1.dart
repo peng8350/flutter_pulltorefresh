@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart' hide RefreshIndicator;
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart' hide RefreshIndicator;
 
 class Test1 extends StatefulWidget {
   Test1({Key key}) : super(key: key);
@@ -31,8 +31,7 @@ class Test1State extends State<Test1> {
   }
 
   void scrollTop() {
-    _scrollController.animateTo(0.0,
-        duration: const Duration(milliseconds: 200), curve: Curves.linear);
+    _scrollController.animateTo(0.0, duration: const Duration(milliseconds: 200), curve: Curves.linear);
   }
 
   void enterRefresh() {
@@ -84,8 +83,7 @@ class Test1State extends State<Test1> {
               onRefresh: () {
                 Future.delayed(const Duration(milliseconds: 2009)).then((val) {
                   data.add(Card(
-                    margin: EdgeInsets.only(
-                        left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                    margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
                     child: Center(
                       child: Text('Data '),
                     ),
@@ -101,8 +99,7 @@ class Test1State extends State<Test1> {
                   if (mounted)
                     setState(() {
                       data.add(Card(
-                        margin: EdgeInsets.only(
-                            left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                        margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
                         child: Center(
                           child: Text('Data '),
                         ),

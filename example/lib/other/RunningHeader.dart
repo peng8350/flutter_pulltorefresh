@@ -4,9 +4,8 @@
  * Time:  2019-05-26 23:09
  */
 
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:flutter/material.dart'
-    hide RefreshIndicator, RefreshIndicatorState;
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+import 'package:flutter/material.dart' hide RefreshIndicator, RefreshIndicatorState;
 
 class RunningHeader extends RefreshIndicator {
   @override
@@ -16,8 +15,7 @@ class RunningHeader extends RefreshIndicator {
   }
 }
 
-class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
-    with TickerProviderStateMixin {
+class RunningHeaderState extends RefreshIndicatorState<RunningHeader> with TickerProviderStateMixin {
   AnimationController _scaleAnimation;
   AnimationController _offsetController;
   Tween<Offset> offsetTween;
@@ -26,8 +24,7 @@ class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
   void initState() {
     // TODO: implement initState
     _scaleAnimation = AnimationController(vsync: this);
-    _offsetController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1000));
+    _offsetController = AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
     offsetTween = Tween(end: Offset(0.6, 0.0), begin: Offset(0.0, 0.0));
     super.initState();
   }
@@ -67,9 +64,7 @@ class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
     // TODO: implement buildContent
     return SlideTransition(
       child: ScaleTransition(
-        child: (mode != RefreshStatus.idle || mode != RefreshStatus.canRefresh)
-            ? Image.asset("images/custom_2.gif")
-            : Image.asset("images/custom_1.jpg"),
+        child: (mode != RefreshStatus.idle || mode != RefreshStatus.canRefresh) ? Image.asset("images/custom_2.gif") : Image.asset("images/custom_1.jpg"),
         scale: _scaleAnimation,
       ),
       position: offsetTween.animate(_offsetController),

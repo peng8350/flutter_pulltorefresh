@@ -4,9 +4,8 @@
  * Time:  2019-07-08 10:51
  */
 import 'package:flutter/material.dart' as prefix0;
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:flutter/material.dart'
-    hide RefreshIndicator, RefreshIndicatorState;
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+import 'package:flutter/material.dart' hide RefreshIndicator, RefreshIndicatorState;
 import 'package:shimmer/shimmer.dart';
 /*
    use to implements indicaotr
@@ -40,8 +39,7 @@ class ShimmerHeader extends RefreshIndicator {
   }
 }
 
-class _ShimmerHeaderState extends RefreshIndicatorState<ShimmerHeader>
-    with TickerProviderStateMixin {
+class _ShimmerHeaderState extends RefreshIndicatorState<ShimmerHeader> with TickerProviderStateMixin {
   AnimationController _scaleController;
   AnimationController _fadeController;
 
