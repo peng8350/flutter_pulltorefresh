@@ -34,7 +34,7 @@ add this line to pubspec.yaml
 
    dependencies:
 
-    pull_to_refresh: ^2.0.1
+    pull_to_refresh_flutter3: ^2.0.1
 
 
 ```
