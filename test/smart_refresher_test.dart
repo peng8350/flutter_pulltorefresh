@@ -7,7 +7,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:flutter/material.dart';
 import 'dataSource.dart';
 import 'test_indicator.dart';
@@ -191,8 +191,7 @@ void main() {
     ));
 
     // check onRefresh,onLoading
-    await tester.drag(find.byType(Scrollable), Offset(0, 100.0),
-        touchSlopY: 0.0);
+    await tester.drag(find.byType(Scrollable), Offset(0, 100.0), touchSlopY: 0.0);
     await tester.pump(Duration(milliseconds: 20));
     await tester.pump(Duration(milliseconds: 20));
     expect(logs.length, 1);
@@ -201,8 +200,7 @@ void main() {
     _refreshController.refreshCompleted();
     await tester.pumpAndSettle(Duration(milliseconds: 600));
 
-    await tester.drag(find.byType(Scrollable), Offset(0, -4000.0),
-        touchSlopY: 0.0);
+    await tester.drag(find.byType(Scrollable), Offset(0, -4000.0), touchSlopY: 0.0);
     await tester.pump(Duration(milliseconds: 20)); //canRefresh
     await tester.pump(Duration(milliseconds: 20)); //refreshing
     expect(logs.length, 1);
@@ -212,8 +210,7 @@ void main() {
 
     double count = 1;
     while (count < 11) {
-      await tester.drag(find.byType(Scrollable), Offset(0, 20),
-          touchSlopY: 0.0);
+      await tester.drag(find.byType(Scrollable), Offset(0, 20), touchSlopY: 0.0);
       count++;
       await tester.pump(Duration(milliseconds: 20));
     }
@@ -261,8 +258,7 @@ void main() {
     _refreshController.footerMode!.value = LoadStatus.idle;
     await tester.pumpAndSettle();
     // test drag up
-    _refreshController.position!
-        .jumpTo(_refreshController.position!.maxScrollExtent);
+    _refreshController.position!.jumpTo(_refreshController.position!.maxScrollExtent);
     await tester.drag(find.byType(Viewport), const Offset(0, -100));
     await tester.pumpAndSettle();
     expect(_refreshController.position!.extentAfter, 0.0);
@@ -313,8 +309,7 @@ void main() {
     expect(time, 1);
   });
 
-  testWidgets("test RefreshConfiguration new Constructor valid",
-      (tester) async {
+  testWidgets("test RefreshConfiguration new Constructor valid", (tester) async {
     final RefreshController _refreshController = RefreshController();
 
     late BuildContext context2;

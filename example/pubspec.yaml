@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  pull_to_refresh:
+  pull_to_refresh_flutter3:
     path: ../
 
 

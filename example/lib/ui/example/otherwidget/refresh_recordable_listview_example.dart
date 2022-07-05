@@ -12,7 +12,7 @@ import 'package:example/other/refresh_recordable_listview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 enum _ReorderableListType {
   /// A list tile that contains a [CircleAvatar].
@@ -43,8 +43,7 @@ class _ListItem {
 }
 
 class _ListDemoState extends State<ReorderableListDemo> {
-  static final GlobalKey<ScaffoldState> scaffoldKey =
-      GlobalKey<ScaffoldState>();
+  static final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   PersistentBottomSheetController<void> _bottomSheet;
   RefreshController _refreshController = RefreshController();
   _ReorderableListType _itemType = _ReorderableListType.threeLine;
@@ -98,8 +97,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
   void _showConfigurationSheet() {
     if (mounted)
       setState(() {
-        _bottomSheet = scaffoldKey.currentState
-            .showBottomSheet<void>((BuildContext bottomSheetContext) {
+        _bottomSheet = scaffoldKey.currentState.showBottomSheet<void>((BuildContext bottomSheetContext) {
           return DecoratedBox(
             decoration: const BoxDecoration(
               border: Border(top: BorderSide(color: Colors.black26)),
@@ -215,17 +213,13 @@ class _ListDemoState extends State<ReorderableListDemo> {
               if (mounted)
                 setState(() {
                   _reverseSort = !_reverseSort;
-                  _items.sort((_ListItem a, _ListItem b) => _reverseSort
-                      ? b.value.compareTo(a.value)
-                      : a.value.compareTo(b.value));
+                  _items.sort((_ListItem a, _ListItem b) => _reverseSort ? b.value.compareTo(a.value) : a.value.compareTo(b.value));
                 });
             },
           ),
           IconButton(
             icon: Icon(
-              Theme.of(context).platform == TargetPlatform.iOS
-                  ? Icons.more_horiz
-                  : Icons.more_vert,
+              Theme.of(context).platform == TargetPlatform.iOS ? Icons.more_horiz : Icons.more_vert,
             ),
             tooltip: 'Show menu',
             onPressed: _bottomSheet == null ? _showConfigurationSheet : null,
@@ -235,16 +229,11 @@ class _ListDemoState extends State<ReorderableListDemo> {
       body: Scrollbar(
         child: RefreshReorderableListView(
           header: _itemType != _ReorderableListType.threeLine
-              ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Header of the list',
-                      style: Theme.of(context).textTheme.headline1))
+              ? Padding(padding: const EdgeInsets.all(8.0), child: Text('Header of the list', style: Theme.of(context).textTheme.headline1))
               : null,
           onReorder: _onReorder,
           reverse: _reverse,
-          scrollDirection: _itemType == _ReorderableListType.horizontalAvatar
-              ? Axis.horizontal
-              : Axis.vertical,
+          scrollDirection: _itemType == _ReorderableListType.horizontalAvatar ? Axis.horizontal : Axis.vertical,
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           children: _items.map<Widget>(buildListTile).toList(),
           refreshController: _refreshController,

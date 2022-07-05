@@ -3,7 +3,7 @@ import 'dart:convert' show json;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as HTTP;
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class Test2 extends StatefulWidget {
   @override
@@ -16,10 +16,7 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
   List<String> data = [];
 
   void _fetch() {
-    HTTP
-        .get(
-            'https://gank.io/api/v2/data/category/Girl/type/Girl/page/$indexPage/count/10')
-        .then((HTTP.Response response) {
+    HTTP.get('https://gank.io/api/v2/data/category/Girl/type/Girl/page/$indexPage/count/10').then((HTTP.Response response) {
       Map map = json.decode(response.body);
       return map["data"];
     }).then((array) {
@@ -96,8 +93,7 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
       onLoading: _onLoading,
       child: GridView.builder(
         primary: false,
-        gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: data.length,
         itemBuilder: buildImage,
       ),

@@ -6,7 +6,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 import 'dataSource.dart';
 import 'test_indicator.dart';
@@ -38,13 +38,10 @@ Widget buildRefresher(RefreshController controller, {int count: 20}) {
 
 // consider two situation, the one is Viewport full,second is Viewport not full
 void testRequestFun(bool full) {
-  testWidgets("requestRefresh(init),requestLoading function,requestTwoLevel",
-      (tester) async {
-    final RefreshController _refreshController =
-        RefreshController(initialRefresh: true);
+  testWidgets("requestRefresh(init),requestLoading function,requestTwoLevel", (tester) async {
+    final RefreshController _refreshController = RefreshController(initialRefresh: true);
 
-    await tester
-        .pumpWidget(buildRefresher(_refreshController, count: full ? 20 : 1));
+    await tester.pumpWidget(buildRefresher(_refreshController, count: full ? 20 : 1));
     //init Refresh
     await tester.pumpAndSettle();
     expect(_refreshController.headerStatus, RefreshStatus.refreshing);
@@ -53,8 +50,7 @@ void testRequestFun(bool full) {
     expect(_refreshController.headerStatus, RefreshStatus.idle);
 
     _refreshController.position!.jumpTo(200.0);
-    _refreshController.requestRefresh(
-        duration: Duration(milliseconds: 500), curve: Curves.linear);
+    _refreshController.requestRefresh(duration: Duration(milliseconds: 500), curve: Curves.linear);
     await tester.pumpAndSettle();
     _refreshController.refreshCompleted();
     await tester.pumpAndSettle(const Duration(milliseconds: 500));
@@ -76,8 +72,7 @@ void testRequestFun(bool full) {
   });
 
   testWidgets("requestRefresh needCallBack test", (tester) async {
-    final RefreshController _refreshController =
-        RefreshController(initialRefresh: false);
+    final RefreshController _refreshController = RefreshController(initialRefresh: false);
     int timerr = 0;
     await tester.pumpWidget(Directionality(
       textDirection: TextDirection.ltr,
@@ -116,21 +111,15 @@ void testRequestFun(bool full) {
 
 void main() {
   test("check RefreshController inital param ", () async {
-    final RefreshController _refreshController = RefreshController(
-        initialRefreshStatus: RefreshStatus.idle,
-        initialLoadStatus: LoadStatus.noMore);
+    final RefreshController _refreshController = RefreshController(initialRefreshStatus: RefreshStatus.idle, initialLoadStatus: LoadStatus.noMore);
 
     expect(_refreshController.headerMode!.value, RefreshStatus.idle);
 
     expect(_refreshController.footerMode!.value, LoadStatus.noMore);
   });
 
-  testWidgets(
-      "resetNoMoreData only can reset when footer mode is Nomore,if state is loading,may disable change state",
-      (tester) async {
-    final RefreshController _refreshController = RefreshController(
-        initialLoadStatus: LoadStatus.loading,
-        initialRefreshStatus: RefreshStatus.refreshing);
+  testWidgets("resetNoMoreData only can reset when footer mode is Nomore,if state is loading,may disable change state", (tester) async {
+    final RefreshController _refreshController = RefreshController(initialLoadStatus: LoadStatus.loading, initialRefreshStatus: RefreshStatus.refreshing);
     _refreshController.refreshCompleted(resetFooterState: true);
     expect(_refreshController.footerMode!.value, LoadStatus.loading);
 

@@ -6,7 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 /*
    when listView have no data,sometime we should return a view that indicate empty state
@@ -24,8 +24,7 @@ class RefreshWithEmptyView extends StatefulWidget {
 
 class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
   List<String> data = [];
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   Widget buildEmpty() {
     // there are two ways

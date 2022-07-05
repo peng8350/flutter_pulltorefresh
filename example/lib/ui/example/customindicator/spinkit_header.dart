@@ -10,7 +10,7 @@
 
 import 'package:flutter/material.dart';
 import '../../../other/custom_spinkit.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 /*
    this example show you how to custom your indicator with CustomHeader and CustomFooter,
@@ -27,8 +27,7 @@ class CustomHeaderExample extends StatefulWidget {
   }
 }
 
-class _CustomHeaderExampleState extends State<CustomHeaderExample>
-    with TickerProviderStateMixin {
+class _CustomHeaderExampleState extends State<CustomHeaderExample> with TickerProviderStateMixin {
   AnimationController _anicontroller, _scaleController;
   AnimationController _footerController;
   RefreshController _refreshController = RefreshController();
@@ -36,12 +35,9 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
   @override
   void initState() {
     // TODO: implement initState
-    _anicontroller = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 2000));
-    _scaleController =
-        AnimationController(value: 0.0, vsync: this, upperBound: 1.0);
-    _footerController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 2000));
+    _anicontroller = AnimationController(vsync: this, duration: Duration(milliseconds: 2000));
+    _scaleController = AnimationController(value: 0.0, vsync: this, upperBound: 1.0);
+    _footerController = AnimationController(vsync: this, duration: Duration(milliseconds: 2000));
     _refreshController.headerMode.addListener(() {
       if (_refreshController.headerStatus == RefreshStatus.idle) {
         _scaleController.value = 0.0;
@@ -128,8 +124,7 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
         header: CustomHeader(
           refreshStyle: RefreshStyle.Behind,
           onOffsetChange: (offset) {
-            if (_refreshController.headerMode.value != RefreshStatus.refreshing)
-              _scaleController.value = offset / 80.0;
+            if (_refreshController.headerMode.value != RefreshStatus.refreshing) _scaleController.value = offset / 80.0;
           },
           builder: (c, m) {
             return Container(

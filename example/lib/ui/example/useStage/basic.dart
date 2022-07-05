@@ -12,7 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import '../../Item.dart';
 
 /*
@@ -32,8 +32,7 @@ class BasicExample extends StatefulWidget {
   }
 }
 
-class _BasicExampleState extends State<BasicExample>
-    with SingleTickerProviderStateMixin {
+class _BasicExampleState extends State<BasicExample> with SingleTickerProviderStateMixin {
 //  int pageIndex = 0;
   List<String> data1 = [], data2 = [], data3 = [];
   TabController _tabController;
@@ -131,8 +130,7 @@ class OnlyListView extends StatefulWidget {
 }
 
 class _OnlyListViewState extends State<OnlyListView> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
   GlobalKey _contentKey = GlobalKey();
   GlobalKey _refresherKey = GlobalKey();
@@ -208,15 +206,13 @@ class OnlyGridView extends StatefulWidget {
 }
 
 class _OnlyGridViewState extends State<OnlyGridView> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   Widget buildCtn() {
     return GridView.builder(
       physics: ClampingScrollPhysics(),
-      gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (c, i) => Item(
         title: data[i],
       ),
@@ -276,8 +272,7 @@ class NoScrollable extends StatefulWidget {
 }
 
 class _NoScrollableState extends State<NoScrollable> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   Widget buildCtn() {
@@ -359,8 +354,7 @@ class SliverAppBarWithList extends StatefulWidget {
 }
 
 class _SliverAppBarWithListState extends State<SliverAppBarWithList> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   Widget buildCtn() {
@@ -431,16 +425,14 @@ class GridAndList extends StatefulWidget {
 }
 
 class _GridAndListState extends State<GridAndList> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   Widget buildCtn() {
     return CustomScrollView(
       slivers: <Widget>[
         SliverGrid(
-          gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
           delegate: SliverChildBuilderDelegate(
             (c, i) => Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -509,8 +501,7 @@ class SwiperAndList extends StatefulWidget {
 }
 
 class _SwiperAndListState extends State<SwiperAndList> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   Widget buildCtn() {
@@ -519,13 +510,8 @@ class _SwiperAndListState extends State<SwiperAndList> {
         SliverToBoxAdapter(
           child: Swiper(
               layout: SwiperLayout.CUSTOM,
-              customLayoutOption:
-                  new CustomLayoutOption(startIndex: -1, stateCount: 3)
-                      .addRotate([-45.0 / 180, 0.0, 45.0 / 180]).addTranslate([
-                new Offset(-370.0, -40.0),
-                new Offset(0.0, 0.0),
-                new Offset(370.0, -40.0)
-              ]),
+              customLayoutOption: new CustomLayoutOption(startIndex: -1, stateCount: 3)
+                  .addRotate([-45.0 / 180, 0.0, 45.0 / 180]).addTranslate([new Offset(-370.0, -40.0), new Offset(0.0, 0.0), new Offset(370.0, -40.0)]),
               itemWidth: double.infinity,
               itemHeight: 200,
               itemBuilder: (context, index) {

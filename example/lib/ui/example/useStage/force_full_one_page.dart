@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/widgets.dart' as prefix0;
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 /// This example aim to fix the viewport not enough one page,there must be exist some problems that you don't hope that.
 /// relevant issue:#183,#166*
@@ -22,8 +22,7 @@ class SliverFillEmptySpace extends SingleChildRenderObjectWidget {
   }) : super(key: key, child: Container());
 
   @override
-  RenderSliverFillEmptySpace createRenderObject(BuildContext context) =>
-      RenderSliverFillEmptySpace();
+  RenderSliverFillEmptySpace createRenderObject(BuildContext context) => RenderSliverFillEmptySpace();
 }
 
 class RenderSliverFillEmptySpace extends RenderSliverSingleBoxAdapter {
@@ -34,17 +33,13 @@ class RenderSliverFillEmptySpace extends RenderSliverSingleBoxAdapter {
 
   @override
   void performLayout() {
-    double emptySpaceExtent =
-        constraints.viewportMainAxisExtent - constraints.precedingScrollExtent;
+    double emptySpaceExtent = constraints.viewportMainAxisExtent - constraints.precedingScrollExtent;
 
     if (emptySpaceExtent > 0) {
-      child.layout(constraints.asBoxConstraints(maxExtent: emptySpaceExtent),
-          parentUsesSize: true);
+      child.layout(constraints.asBoxConstraints(maxExtent: emptySpaceExtent), parentUsesSize: true);
       double childExtent = emptySpaceExtent;
-      final double paintedChildSize =
-          calculatePaintOffset(constraints, from: 0.0, to: childExtent);
-      final double cacheExtent =
-          calculateCacheOffset(constraints, from: 0.0, to: childExtent);
+      final double paintedChildSize = calculatePaintOffset(constraints, from: 0.0, to: childExtent);
+      final double cacheExtent = calculateCacheOffset(constraints, from: 0.0, to: childExtent);
       geometry = SliverGeometry(
         scrollExtent: childExtent,
         paintExtent: paintedChildSize,
@@ -121,12 +116,10 @@ class ForceFullExample extends StatelessWidget {
         loadStyle: LoadStyle.ShowWhenLoading,
       ),
       child: FillEmptyCustomScrollView(
-        enableFillEmpty:
-            _refreshController.footerMode.value != LoadStatus.noMore,
+        enableFillEmpty: _refreshController.footerMode.value != LoadStatus.noMore,
         slivers: <Widget>[
           SliverToBoxAdapter(
-            child: Text(
-                "有很多时候,不满一屏时,会出现很多问题,比如底部指示器加载触发只能隐藏回去,而不能在底部卡着显示,等加载完毕再隐藏回去,解决这个问题,我们可以通过把Viewport剩余空间给填充满,来达到底部能看到的效果。"),
+            child: Text("有很多时候,不满一屏时,会出现很多问题,比如底部指示器加载触发只能隐藏回去,而不能在底部卡着显示,等加载完毕再隐藏回去,解决这个问题,我们可以通过把Viewport剩余空间给填充满,来达到底部能看到的效果。"),
           )
         ],
       ),
