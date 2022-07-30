@@ -5,16 +5,12 @@
  */
 
 import 'dart:async';
-import 'package:flutter/material.dart'
-    hide RefreshIndicatorState, RefreshIndicator;
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' hide RefreshIndicatorState, RefreshIndicator;
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../internals/indicator_wrap.dart';
 import 'package:flutter/cupertino.dart';
-import '../smart_refresher.dart';
 
-/// QQ ios refresh  header effect
+/// QQ ios refresh header effect
 class WaterDropHeader extends RefreshIndicator {
   /// refreshing content
   final Widget? refresh;
@@ -31,6 +27,12 @@ class WaterDropHeader extends RefreshIndicator {
   /// waterDrop color,default grey
   final Color waterDropColor;
 
+  // Color of the loading indicator, uses system default if not specified.
+  final Color? loadingIndicatorColor;
+
+  // Color of text and icons, defaults to grey.
+  final Color textColor;
+
   const WaterDropHeader({
     Key? key,
     this.refresh,
@@ -38,22 +40,22 @@ class WaterDropHeader extends RefreshIndicator {
     Duration completeDuration: const Duration(milliseconds: 600),
     this.failed,
     this.waterDropColor: Colors.grey,
+    this.loadingIndicatorColor,
+    this.textColor: Colors.grey,
     this.idleIcon: const Icon(
       Icons.autorenew,
       size: 15,
       color: Colors.white,
     ),
   }) : super(
-            key: key,
-            height: 60.0,
-            completeDuration: completeDuration,
-            refreshStyle: RefreshStyle.UnFollow);
+          key: key,
+          height: 60.0,
+          completeDuration: completeDuration,
+          refreshStyle: RefreshStyle.UnFollow,
+        );
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _WaterDropHeaderState();
-  }
+  State<StatefulWidget> createState() => _WaterDropHeaderState();
 }
 
 class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
@@ -63,31 +65,23 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 
   @override
   void onOffsetChange(double offset) {
-    // TODO: implement onOffsetChange
-    final double realOffset =
-        offset - 44.0; //55.0 mean circleHeight(24) + originH (20) in Painter
+    final double realOffset = offset - 44.0; //55.0 mean circleHeight(24) + originH (20) in Painter
     // when readyTorefresh
-    if (!_animationController!.isAnimating)
-      _animationController!.value = realOffset;
+    if (!_animationController!.isAnimating) _animationController!.value = realOffset;
   }
 
   @override
   Future<void> readyToRefresh() {
-    // TODO: implement readyToRefresh
     _dismissCtl.animateTo(0.0);
     return _animationController!.animateTo(0.0);
   }
 
   @override
   void initState() {
-    // TODO: implement initState
-    _dismissCtl = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 400), value: 1.0);
+    _dismissCtl =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 400), value: 1.0);
     _animationController = AnimationController(
-        vsync: this,
-        lowerBound: 0.0,
-        upperBound: 50.0,
-        duration: Duration(milliseconds: 400));
+        vsync: this, lowerBound: 0.0, upperBound: 50.0, duration: Duration(milliseconds: 400));
     super.initState();
   }
 
@@ -107,26 +101,30 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
             width: 25.0,
             height: 25.0,
             child: defaultTargetPlatform == TargetPlatform.iOS
-                ? const CupertinoActivityIndicator()
-                : const CircularProgressIndicator(strokeWidth: 2.0),
+                ? CupertinoActivityIndicator(
+                    color: widget.loadingIndicatorColor,
+                  )
+                : CircularProgressIndicator(
+                    strokeWidth: 2.0,
+                    color: widget.loadingIndicatorColor,
+                  ),
           );
     } else if (mode == RefreshStatus.completed) {
       child = widget.complete ??
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Icon(
+              Icon(
                 Icons.done,
-                color: Colors.grey,
+                color: widget.textColor,
               ),
               Container(
                 width: 15.0,
               ),
               Text(
-                (RefreshLocalizations.of(context)?.currentLocalization ??
-                        EnRefreshString())
+                (RefreshLocalizations.of(context)?.currentLocalization ?? EnRefreshString())
                     .refreshCompleteText!,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: widget.textColor),
               )
             ],
           );
@@ -135,18 +133,17 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Icon(
+              Icon(
                 Icons.close,
-                color: Colors.grey,
+                color: widget.textColor,
               ),
               Container(
                 width: 15.0,
               ),
               Text(
-                  (RefreshLocalizations.of(context)?.currentLocalization ??
-                          EnRefreshString())
+                  (RefreshLocalizations.of(context)?.currentLocalization ?? EnRefreshString())
                       .refreshFailedText!,
-                  style: TextStyle(color: Colors.grey))
+                  style: TextStyle(color: widget.textColor))
             ],
           );
     } else if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
@@ -164,20 +161,15 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                       listener: _animationController,
                     ),
                   ),
-                  quarterTurns:
-                      Scrollable.of(context)!.axisDirection == AxisDirection.up
-                          ? 10
-                          : 0,
+                  quarterTurns: Scrollable.of(context)!.axisDirection == AxisDirection.up ? 10 : 0,
                 ),
                 Container(
-                  alignment:
-                      Scrollable.of(context)!.axisDirection == AxisDirection.up
-                          ? Alignment.bottomCenter
-                          : Alignment.topCenter,
-                  margin:
-                      Scrollable.of(context)!.axisDirection == AxisDirection.up
-                          ? EdgeInsets.only(bottom: 12.0)
-                          : EdgeInsets.only(top: 12.0),
+                  alignment: Scrollable.of(context)!.axisDirection == AxisDirection.up
+                      ? Alignment.bottomCenter
+                      : Alignment.topCenter,
+                  margin: Scrollable.of(context)!.axisDirection == AxisDirection.up
+                      ? EdgeInsets.only(bottom: 12.0)
+                      : EdgeInsets.only(top: 12.0),
                   child: widget.idleIcon,
                 )
               ],
@@ -196,14 +188,12 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 
   @override
   void resetValue() {
-    // TODO: implement resetValue
     _animationController!.reset();
     _dismissCtl.value = 1.0;
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _dismissCtl.dispose();
     _animationController!.dispose();
     super.dispose();
@@ -236,15 +226,9 @@ class _QqPainter extends CustomPainter {
     path.moveTo(middleW - circleSize, originH);
 
     //drawleft
-    path.cubicTo(
-        middleW - circleSize,
-        originH,
-        middleW - circleSize + value * scaleRatio,
-        originH + offset / 5,
-        middleW - circleSize + value * scaleRatio * 2,
-        originH + offset);
-    path.lineTo(
-        middleW + circleSize - value * scaleRatio * 2, originH + offset);
+    path.cubicTo(middleW - circleSize, originH, middleW - circleSize + value * scaleRatio,
+        originH + offset / 5, middleW - circleSize + value * scaleRatio * 2, originH + offset);
+    path.lineTo(middleW + circleSize - value * scaleRatio * 2, originH + offset);
     //draw right
     path.cubicTo(
         middleW + circleSize - value * scaleRatio * 2,
@@ -255,22 +239,16 @@ class _QqPainter extends CustomPainter {
         originH);
     //draw upper circle
     path.moveTo(middleW - circleSize, originH);
-    path.arcToPoint(Offset(middleW + circleSize, originH),
-        radius: Radius.circular(circleSize));
+    path.arcToPoint(Offset(middleW + circleSize, originH), radius: Radius.circular(circleSize));
 
-    //draw lowwer circle
-    path.moveTo(
-        middleW + circleSize - value * scaleRatio * 2, originH + offset);
-    path.arcToPoint(
-        Offset(middleW - circleSize + value * scaleRatio * 2, originH + offset),
+    //draw lower circle
+    path.moveTo(middleW + circleSize - value * scaleRatio * 2, originH + offset);
+    path.arcToPoint(Offset(middleW - circleSize + value * scaleRatio * 2, originH + offset),
         radius: Radius.circular(value * scaleRatio));
     path.close();
     canvas.drawPath(path, painter);
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
-    return oldDelegate != this;
-  }
+  bool shouldRepaint(CustomPainter oldDelegate) => oldDelegate != this;
 }
