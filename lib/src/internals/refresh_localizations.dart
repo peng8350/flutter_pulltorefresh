@@ -80,6 +80,7 @@ class RefreshLocalizations {
     'sv': SvRefreshString(),
     'pt': PtRefreshString(),
     'ko': KrRefreshString(),
+    'he': HeRefreshString(),
   };
 
   RefreshString? get currentLocalization {
@@ -116,7 +117,8 @@ class RefreshLocalizationsDelegate
       'pt',
       'sv',
       'nl',
-      'es'
+      'es',
+      'he'
     ].contains(locale.languageCode);
   }
 
@@ -634,4 +636,40 @@ class KrRefreshString implements RefreshString {
 
   @override
   String? refreshingText = "새로 고침 중…";
+}
+
+/// Hebrew
+class HeRefreshString implements RefreshString {
+  @override
+  String? canLoadingText = "שחרר כדי לטעון עוד";
+
+  @override
+  String? canRefreshText = "שחרר כדי לרענן";
+
+  @override
+  String? canTwoLevelText = "שחרר כדי להיכנס לקומה השנייה";
+
+  @override
+  String? idleLoadingText = "משוך למעלה טען עוד";
+
+  @override
+  String? idleRefreshText = "משוך מטה רענן";
+
+  @override
+  String? loadFailedText = "רענון נכשל";
+
+  @override
+  String? loadingText = "טוען...";
+
+  @override
+  String? noMoreText = "אין יותר נתונים";
+
+  @override
+  String? refreshCompleteText = "הרענון הושלם";
+
+  @override
+  String? refreshFailedText = "רענון נכשל";
+
+  @override
+  String? refreshingText = "מרענן...";
 }
