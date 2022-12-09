@@ -671,5 +671,5 @@ class HeRefreshString implements RefreshString {
   String? refreshFailedText = "רענון נכשל";
 
   @override
-  String? refreshingText = "מְרַעֲנֵן…";
+  String? refreshingText = "מרענן...";
 }
