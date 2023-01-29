@@ -201,17 +201,16 @@ class RefreshPhysics extends ScrollPhysics {
     if (enablePullUp) {
       final RenderSliverLoading? sliverFooter =
           viewportRender!.lastChild as RenderSliverLoading?;
+      BuildContext? context = controller!.position?.context.storageContext;
+      bool enableLoadingWhenNoData = false;
+      bool hideFooterWhenNotFull = false;
+      if(context != null){
+        enableLoadingWhenNoData = RefreshConfiguration.of(context)!.enableLoadingWhenNoData;
+        hideFooterWhenNotFull = RefreshConfiguration.of(context)!.hideFooterWhenNotFull;
+      }
       bottomExtra = (!notFull && sliverFooter!.geometry!.scrollExtent != 0) ||
-              (notFull &&
-                  controller!.footerStatus == LoadStatus.noMore &&
-                  !RefreshConfiguration.of(
-                          controller!.position!.context.storageContext)!
-                      .enableLoadingWhenNoData) ||
-              (notFull &&
-                  (RefreshConfiguration.of(
-                              controller!.position!.context.storageContext)
-                          ?.hideFooterWhenNotFull ??
-                      false))
+              (notFull && controller!.footerStatus == LoadStatus.noMore && !enableLoadingWhenNoData) ||
+              (notFull && (hideFooterWhenNotFull))
           ? 0.0
           : sliverFooter!.layoutExtent;
     }
