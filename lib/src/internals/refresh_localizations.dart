@@ -80,6 +80,8 @@ class RefreshLocalizations {
     'sv': SvRefreshString(),
     'pt': PtRefreshString(),
     'ko': KrRefreshString(),
+    'ar': ArRefreshString(),
+    'uz': UzRefreshString(),
   };
 
   RefreshString? get currentLocalization {
@@ -116,7 +118,9 @@ class RefreshLocalizationsDelegate
       'pt',
       'sv',
       'nl',
-      'es'
+      'es',
+      'ar',
+      'uz'
     ].contains(locale.languageCode);
   }
 
@@ -634,4 +638,78 @@ class KrRefreshString implements RefreshString {
 
   @override
   String? refreshingText = "새로 고침 중…";
+}
+
+
+/// Arabic
+class ArRefreshString implements RefreshString {
+  @override
+  String? canLoadingText = "حرر لتحميل المزيد";
+
+  @override
+  String? canRefreshText = "حرر للتحديث";
+
+  @override
+  String? canTwoLevelText = "حرر للدخول إلى الطابق الثاني";
+
+  @override
+  String? idleLoadingText = "سحب ما يصل تحميل أكثر";
+
+  @override
+  String? idleRefreshText = "اسحب التحديث";
+
+  @override
+  String? loadFailedText = "فشل التحميل";
+
+  @override
+  String? loadingText = "تحميل...";
+
+  @override
+  String? noMoreText = "لا مزيد من البيانات";
+
+  @override
+  String? refreshCompleteText = "اكتمل التحديث";
+
+  @override
+  String? refreshFailedText = "فشل التحديث";
+
+  @override
+  String? refreshingText = "منعش...";
+}
+
+
+/// Uzbek
+class UzRefreshString implements RefreshString {
+  @override
+  String? canLoadingText = "Ko'proq yuklash uchun qo'yib yuboring";
+
+  @override
+  String? canRefreshText = "Yangilash uchun qo'yib yuboring";
+
+  @override
+  String? canTwoLevelText = "Ikkinchi qavatga kirish uchun qo'yib yuboring";
+
+  @override
+  String? idleLoadingText = "Yuqoriga torting Ko'proq yuklang";
+
+  @override
+  String? idleRefreshText = "Yangilash-ni pastga torting";
+
+  @override
+  String? loadFailedText = "Yuklanmadi";
+
+  @override
+  String? loadingText = "Yuklanmoqda…";
+
+  @override
+  String? noMoreText = "Boshqa maʼlumot yoʻq";
+
+  @override
+  String? refreshCompleteText = "Yangilash tugallandi";
+
+  @override
+  String? refreshFailedText = "Yangilash amalga oshmadi";
+
+  @override
+  String? refreshingText = "Yangilanmoqda…";
 }
