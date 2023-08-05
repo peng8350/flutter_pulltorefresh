@@ -152,6 +152,56 @@ attributes that are not empty.
 
 ```
 
+To use this package on Flutter web drag devices need to be specified.
+
+```dart
+ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(
+        dragDevices: {
+          PointerDeviceKind.touch,
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.trackpad,
+          PointerDeviceKind.stylus,
+        },
+      ),
+      child: SmartRefresher(
+        enablePullDown: true,
+        header: WaterDropHeader(),
+        enablePullDown: true,
+        enablePullUp: true,
+        footer: CustomFooter(
+          builder: (BuildContext context,LoadStatus mode){
+            Widget body ;
+            if(mode==LoadStatus.idle){
+              body =  Text("pull up load");
+            }
+            else if(mode==LoadStatus.loading){
+              body =  CupertinoActivityIndicator();
+            }
+            else if(mode == LoadStatus.failed){
+              body = Text("Load Failed!Click retry!");
+            }
+            else if(mode == LoadStatus.canLoading){
+                body = Text("release to load more");
+            }
+            else{
+              body = Text("No more Data");
+            }
+            return Container(
+              height: 55.0,
+              child: Center(child:body),
+            );
+          },
+        ),
+        controller: _refreshController,
+        onRefresh: _onRefresh, //Check example above for this method
+        onLoading: _onLoading, //Check example above for this method
+        child: Offstage(), //Replace with your own widget
+      ),
+    );
+```
+
+
 1.5.6 add new feather: localization ,you can add following code in MaterialApp or CupertinoApp:
 
 ```dart
@@ -284,7 +334,7 @@ Similarly, you may need to work with components like NotificationListener, Scrol
 - [FAQ](problems_en.md)
 
 
-## Exist Problems
+## Existing Problems
 * about NestedScrollView,When you slide down and then slide up quickly, it will return back. The main reason is that
  NestedScrollView does not consider the problem of cross-border elasticity under
  bouncingScrollPhysics. Relevant flutter issues: 34316, 33367, 29264. This problem
