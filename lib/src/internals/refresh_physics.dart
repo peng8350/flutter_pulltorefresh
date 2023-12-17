@@ -5,13 +5,12 @@
  */
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:pull_to_refresh/src/internals/slivers.dart';
+
 
 /// a scrollPhysics for config refresh scroll effect,enable viewport out of edge whatever physics it is
 /// in [ClampingScrollPhysics], it doesn't allow to flip out of edge,but in RefreshPhysics,it will allow to do that,
@@ -297,7 +296,7 @@ class RefreshPhysics extends ScrollPhysics {
             controller!.headerMode!.value == RefreshStatus.twoLeveling
                 ? 0.0
                 : position.maxScrollExtent,
-        tolerance: tolerance,
+        tolerance: Tolerance.defaultTolerance,
       );
     }
     return super.createBallisticSimulation(position, velocity);

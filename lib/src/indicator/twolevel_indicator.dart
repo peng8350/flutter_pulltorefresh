@@ -5,8 +5,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'classic_indicator.dart';
 import '../smart_refresher.dart';
 
@@ -89,11 +87,11 @@ class TwoLevelHeader extends StatelessWidget {
 
   const TwoLevelHeader(
       {Key? key,
-      this.height: 80.0,
+      this.height = 80.0,
       this.decoration,
-      this.displayAlignment: TwoLevelDisplayAlignment.fromBottom,
-      this.completeDuration: const Duration(milliseconds: 600),
-      this.textStyle: const TextStyle(color: const Color(0xff555555)),
+      this.displayAlignment = TwoLevelDisplayAlignment.fromBottom,
+      this.completeDuration = const Duration(milliseconds: 600),
+      this.textStyle = const TextStyle(color: const Color(0xff555555)),
       this.releaseText,
       this.refreshingText,
       this.canTwoLevelIcon,
@@ -101,11 +99,11 @@ class TwoLevelHeader extends StatelessWidget {
       this.completeText,
       this.failedText,
       this.idleText,
-      this.iconPos: IconPosition.left,
-      this.spacing: 15.0,
+      this.iconPos = IconPosition.left,
+      this.spacing = 15.0,
       this.refreshingIcon,
-      this.failedIcon: const Icon(Icons.error, color: Colors.grey),
-      this.completeIcon: const Icon(Icons.done, color: Colors.grey),
+      this.failedIcon = const Icon(Icons.error, color: Colors.grey),
+      this.completeIcon = const Icon(Icons.done, color: Colors.grey),
       this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
       this.releaseIcon = const Icon(Icons.refresh, color: Colors.grey),
       this.twoLevelWidget});

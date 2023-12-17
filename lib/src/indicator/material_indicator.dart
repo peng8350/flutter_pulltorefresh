@@ -4,10 +4,8 @@
  * Time: 2019/5/19 下午9:23
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
-import 'package:flutter/widgets.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 
@@ -34,12 +32,12 @@ class MaterialClassicHeader extends RefreshIndicator {
 
   const MaterialClassicHeader({
     Key? key,
-    double height: 80.0,
+    double height = 80.0,
     this.semanticsLabel,
     this.semanticsValue,
     this.color,
-    double offset: 0,
-    this.distance: 50.0,
+    double offset = 0,
+    this.distance = 50.0,
     this.backgroundColor,
   }) : super(
           key: key,
@@ -95,7 +93,7 @@ class _MaterialClassicHeaderState
   @override
   void didUpdateWidget(covariant MaterialClassicHeader oldWidget) {
     // TODO: implement didUpdateWidget
-    _position = Scrollable.of(context)!.position;
+    _position = Scrollable.of(context).position;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -113,7 +111,7 @@ class _MaterialClassicHeaderState
           alignment: Alignment.topCenter,
           child: RefreshProgressIndicator(
             semanticsLabel: widget.semanticsLabel ??
-                MaterialLocalizations?.of(context)
+                MaterialLocalizations.of(context)
                     .refreshIndicatorSemanticLabel,
             semanticsValue: widget.semanticsValue,
             value: floating ? null : _valueAni.value,
@@ -157,7 +155,7 @@ class _MaterialClassicHeaderState
   @override
   void didChangeDependencies() {
     final ThemeData theme = Theme.of(context);
-    _position = Scrollable.of(context)!.position;
+    _position = Scrollable.of(context).position;
     _valueColor = _positionController.drive(
       ColorTween(
         begin: (widget.color ?? theme.primaryColor).withOpacity(0.0),
@@ -195,10 +193,10 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
   const WaterDropMaterialHeader({
     Key? key,
     String? semanticsLabel,
-    double distance: 60.0,
-    double offset: 0,
+    double distance = 60.0,
+    double offset = 0,
     String? semanticsValue,
-    Color color: Colors.white,
+    Color color = Colors.white,
     Color? backgroundColor,
   }) : super(
             key: key,
