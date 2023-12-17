@@ -4,15 +4,11 @@
  * Time:  2019-08-02 19:20
  */
 
-import 'package:flutter/animation.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
-import 'package:pull_to_refresh/src/internals/indicator_wrap.dart';
 import 'dart:math' as math;
 import 'package:flutter/physics.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 enum BezierDismissType { None, RectSpread, ScaleToCenter }
 
@@ -38,15 +34,15 @@ class BezierHeader extends RefreshIndicator {
   final double rectHeight;
 
   BezierHeader(
-      {this.child: const Text(""),
+      {this.child = const Text(""),
       this.onOffsetChange,
       this.onModeChange,
       this.readyRefresh,
-      this.enableChildOverflow: false,
+      this.enableChildOverflow = false,
       this.endRefresh,
       this.onResetValue,
-      this.dismissType: BezierDismissType.RectSpread,
-      this.rectHeight: 70,
+      this.dismissType = BezierDismissType.RectSpread,
+      this.rectHeight = 70,
       this.bezierColor})
       : super(refreshStyle: RefreshStyle.UnFollow, height: rectHeight);
 
@@ -306,12 +302,12 @@ class BezierCircleHeader extends StatefulWidget {
 
   BezierCircleHeader(
       {this.bezierColor,
-      this.rectHeight: 70,
-      this.circleColor: Colors.white,
-      this.enableChildOverflow: false,
-      this.dismissType: BezierDismissType.RectSpread,
-      this.circleType: BezierCircleType.Progress,
-      this.circleRadius: 12});
+      this.rectHeight = 70,
+      this.circleColor = Colors.white,
+      this.enableChildOverflow = false,
+      this.dismissType = BezierDismissType.RectSpread,
+      this.circleType = BezierCircleType.Progress,
+      this.circleRadius = 12});
 
   @override
   State<StatefulWidget> createState() {

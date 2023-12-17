@@ -70,9 +70,9 @@ class CustomHeader extends RefreshIndicator {
     this.onOffsetChange,
     this.onModeChange,
     this.onResetValue,
-    double height: 60.0,
-    Duration completeDuration: const Duration(milliseconds: 600),
-    RefreshStyle refreshStyle: RefreshStyle.Follow,
+    double height = 60.0,
+    Duration completeDuration = const Duration(milliseconds: 600),
+    RefreshStyle refreshStyle = RefreshStyle.Follow,
   }) : super(
             key: key,
             completeDuration: completeDuration,
@@ -147,12 +147,12 @@ class CustomFooter extends LoadIndicator {
 
   const CustomFooter({
     Key? key,
-    double height: 60.0,
+    double height = 60.0,
     this.onModeChange,
     this.onOffsetChange,
     this.readyLoading,
     this.endLoading,
-    LoadStyle loadStyle: LoadStyle.ShowAlways,
+    LoadStyle loadStyle = LoadStyle.ShowAlways,
     required this.builder,
     Function? onClick,
   }) : super(
